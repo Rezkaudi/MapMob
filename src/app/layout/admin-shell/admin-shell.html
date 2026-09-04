@@ -1,0 +1,9 @@
+<div class="flex h-dvh">
+  <div class="flex min-w-0 flex-1 flex-col">
+    <app-top-bar [userName]="userName" [userRole]="userRole" />
+    <main class="flex-1 overflow-y-auto p-8">
+      <router-outlet />
+    </main>
+  </div>
+  <app-sidebar />
+</div>

@@ -1,0 +1,13 @@
+<span class="inline-flex items-center gap-1">
+  <span class="text-sm font-medium text-text-primary">{{ value() }}</span>
+  @for (isFilled of stars(); track $index) {
+    <svg
+      lucideStar
+      [attr.data-filled]="isFilled"
+      class="h-4 w-4"
+      [class.text-warning]="isFilled"
+      [class.fill-warning]="isFilled"
+      [class.text-border]="!isFilled"
+    ></svg>
+  }
+</span>

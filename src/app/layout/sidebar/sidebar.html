@@ -1,0 +1,19 @@
+<aside class="flex h-full w-70 flex-col gap-6 border-s border-border bg-surface p-6">
+  <div class="flex items-center gap-2 text-lg font-bold text-text-primary">
+    <ng-container [ngComponentOutlet]="brandIcon" [ngComponentOutletInputs]="{ size: 20 }" />
+    MapMob
+  </div>
+
+  <nav class="flex flex-col gap-1">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-primary-soft text-primary"
+        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-muted"
+      >
+        <ng-container [ngComponentOutlet]="item.icon" [ngComponentOutletInputs]="{ size: 18 }" />
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+</aside>

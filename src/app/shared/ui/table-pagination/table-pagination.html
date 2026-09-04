@@ -1,0 +1,37 @@
+<div class="flex items-center justify-between gap-4 text-sm text-text-secondary">
+  <div class="flex items-center gap-2">
+    <button
+      type="button"
+      class="rounded-lg border border-border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-40"
+      [disabled]="pageIndex() === 0"
+      (click)="goTo(pageIndex() - 1)"
+    >
+      السابق
+    </button>
+
+    @for (page of pageNumbers(); track page) {
+      <button
+        type="button"
+        class="h-8 w-8 rounded-lg text-sm"
+        [class.bg-primary]="page === pageIndex()"
+        [class.text-white]="page === pageIndex()"
+        [class.border]="page !== pageIndex()"
+        [class.border-border]="page !== pageIndex()"
+        (click)="goTo(page)"
+      >
+        {{ page + 1 }}
+      </button>
+    }
+
+    <button
+      type="button"
+      class="rounded-lg border border-border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-40"
+      [disabled]="pageIndex() >= pageCount() - 1"
+      (click)="goTo(pageIndex() + 1)"
+    >
+      التالي
+    </button>
+  </div>
+
+  <span>عرض {{ rangeStart() }}- {{ rangeEnd() }} من {{ totalCount() }}</span>
+</div>

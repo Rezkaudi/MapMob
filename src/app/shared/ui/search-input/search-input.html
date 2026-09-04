@@ -1,0 +1,9 @@
+<label class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5">
+  <svg lucideSearch class="h-4 w-4 text-placeholder"></svg>
+  <input
+    type="search"
+    class="w-full border-0 bg-transparent text-sm text-text-primary outline-none placeholder:text-placeholder"
+    [placeholder]="placeholder()"
+    (input)="onInput($event)"
+  />
+</label>

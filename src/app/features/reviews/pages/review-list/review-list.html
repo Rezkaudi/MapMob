@@ -1,0 +1,93 @@
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4">
+    <div class="text-start">
+      <h1 class="text-2xl font-bold text-text-primary">التقييمات والمراجعات</h1>
+      <p class="mt-1 text-sm text-text-secondary">
+        إدارة ومتابعة آراء وملاحظات المستخدمين والتحقق من جودة ومصداقية المحتوى المنشور
+      </p>
+    </div>
+    <button app-button variant="secondary">
+      <svg lucideDownload class="h-4 w-4"></svg>
+      تصدير
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <app-stat-card
+      [icon]="starIcon"
+      label="مبلغ عنها"
+      [value]="store.summary()?.reportedCount ?? 0"
+    />
+    <app-stat-card
+      [icon]="starIcon"
+      label="التقييمات الجديدة"
+      [value]="store.summary()?.newCount ?? 0"
+    />
+    <app-stat-card
+      [icon]="starIcon"
+      label="متوسط التقييم العام"
+      [value]="(store.summary()?.averageRating ?? 0 | number: '1.1-1') ?? '0'"
+    />
+    <app-stat-card
+      [icon]="starIcon"
+      label="إجمالي التقييمات"
+      [value]="(store.summary()?.totalCount ?? 0 | number) ?? '0'"
+    />
+  </div>
+
+  <div class="rounded-2xl border border-border bg-surface">
+    <div class="flex items-center justify-between gap-4 border-b border-border p-4">
+      <app-search-input placeholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-max text-sm">
+        <thead>
+          <tr class="border-b border-border text-start text-text-secondary">
+            <th class="p-4 font-medium">اسم المستخدم</th>
+            <th class="p-4 font-medium">المكان</th>
+            <th class="p-4 font-medium">التقييم</th>
+            <th class="p-4 font-medium">نص المراجعة والتعليق</th>
+            <th class="p-4 font-medium">التاريخ</th>
+            <th class="p-4 font-medium">الحالة</th>
+            <th class="p-4 font-medium">الإجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (review of store.reviews(); track review.id) {
+            <tr class="border-b border-border last:border-0">
+              <td class="p-4 font-medium text-text-primary">{{ review.userName }}</td>
+              <td class="p-4 text-text-secondary">{{ review.placeName }}</td>
+              <td class="p-4"><app-star-rating [value]="review.rating" /></td>
+              <td class="max-w-xs truncate p-4 text-text-secondary">{{ review.comment }}</td>
+              <td class="p-4 text-text-secondary">{{ review.createdAt | date: 'd MMMM y' }}</td>
+              <td class="p-4">
+                <app-badge [tone]="statusTone[review.status]">{{
+                  statusLabel[review.status]
+                }}</app-badge>
+              </td>
+              <td class="p-4">
+                <button
+                  type="button"
+                  class="rounded-lg p-1.5 hover:bg-surface-muted"
+                  [attr.aria-label]="'إجراءات ' + review.userName"
+                >
+                  <svg lucideMoreVertical class="h-4 w-4 text-text-secondary"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="p-4">
+      <app-table-pagination
+        [pageIndex]="store.pageIndex()"
+        [pageSize]="store.pageSize()"
+        [totalCount]="store.totalCount()"
+        (pageIndexChange)="onPageChange($event)"
+      />
+    </div>
+  </div>
+</div>

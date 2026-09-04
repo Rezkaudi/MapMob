@@ -1,0 +1,98 @@
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4">
+    <div class="text-start">
+      <h1 class="text-2xl font-bold text-text-primary">المستخدمين</h1>
+      <p class="mt-1 text-sm text-text-secondary">إدارة ومتابعة مستخدمي المنصة</p>
+    </div>
+    <button app-button variant="secondary">
+      <svg lucideDownload class="h-4 w-4"></svg>
+      تصدير
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <app-stat-card
+      [icon]="usersIcon"
+      label="إجمالي المستخدمين"
+      [value]="(store.summary()?.totalUserCount ?? 0 | number) ?? '0'"
+    />
+    <app-stat-card
+      [icon]="usersIcon"
+      label="المستخدمون النشطون"
+      [value]="(store.summary()?.activeUserCount ?? 0 | number) ?? '0'"
+    />
+    <app-stat-card
+      [icon]="usersIcon"
+      label="المستخدمون الموثقون"
+      [value]="store.summary()?.verifiedUserCount ?? 0"
+    />
+    <app-stat-card
+      [icon]="usersIcon"
+      label="المستخدمون الجدد"
+      [value]="(store.summary()?.newUserCount ?? 0) + '+'"
+    />
+  </div>
+
+  <div class="rounded-2xl border border-border bg-surface">
+    <div class="flex items-center justify-between gap-4 border-b border-border p-4">
+      <app-search-input placeholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-max text-sm">
+        <thead>
+          <tr class="border-b border-border text-start text-text-secondary">
+            <th class="p-4 font-medium">اسم المستخدم</th>
+            <th class="p-4 font-medium">البريد/الهاتف</th>
+            <th class="p-4 font-medium">نوع الحساب</th>
+            <th class="p-4 font-medium">تاريخ التسجيل</th>
+            <th class="p-4 font-medium">آخر نشاط</th>
+            <th class="p-4 font-medium">الحالة</th>
+            <th class="p-4 font-medium">الإجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of store.users(); track user.id) {
+            <tr class="border-b border-border last:border-0">
+              <td class="p-4 font-medium text-text-primary">{{ user.name }}</td>
+              <td class="p-4 text-primary underline">{{ user.email }}</td>
+              <td class="p-4 text-text-secondary">{{ user.accountType }}</td>
+              <td class="p-4 text-text-secondary">{{ user.registeredAt | date: 'd MMMM y' }}</td>
+              <td class="p-4 text-text-secondary">{{ user.lastActiveLabel }}</td>
+              <td class="p-4">
+                <app-badge [tone]="statusTone[user.status]">{{
+                  statusLabel[user.status]
+                }}</app-badge>
+              </td>
+              <td class="p-4">
+                <app-action-menu>
+                  <button
+                    type="button"
+                    class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                  >
+                    عرض الملف
+                  </button>
+                  <button
+                    type="button"
+                    class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
+                  >
+                    تعليق الحساب
+                  </button>
+                </app-action-menu>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="p-4">
+      <app-table-pagination
+        [pageIndex]="store.pageIndex()"
+        [pageSize]="store.pageSize()"
+        [totalCount]="store.totalCount()"
+        (pageIndexChange)="onPageChange($event)"
+      />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<div class="flex flex-col gap-6">
+  <div class="text-start">
+    <h1 class="text-2xl font-bold text-text-primary">نظرة عامة</h1>
+    <p class="mt-1 text-sm text-text-secondary">ملخص لأهم مؤشرات المنصة وأدائها</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <app-stat-card
+      [icon]="revenueIcon"
+      label="الإيرادات"
+      [value]="(store.summary()?.revenue ?? 0) + ' ل.س'"
+    />
+    <app-stat-card
+      [icon]="clockIcon"
+      label="بانتظار المراجعة"
+      [value]="store.summary()?.pendingReviewCount ?? 0"
+    />
+    <app-stat-card
+      [icon]="buildingIcon"
+      label="الشركات والمتاجر"
+      [value]="(store.summary()?.placeCount ?? 0 | number) ?? '0'"
+    />
+    <app-stat-card
+      [icon]="usersIcon"
+      label="إجمالي المستخدمين"
+      [value]="(store.summary()?.userCount ?? 0 | number) ?? '0'"
+    />
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-base font-semibold text-text-primary">الإيرادات</h2>
+        <div class="flex gap-1 rounded-lg bg-surface-muted p-1 text-xs">
+          @for (period of periods; track period.value) {
+            <button
+              type="button"
+              class="rounded-md px-2.5 py-1"
+              [class.bg-surface]="period.value === store.period()"
+              [class.font-semibold]="period.value === store.period()"
+              (click)="onPeriodChange(period.value)"
+            >
+              {{ period.label }}
+            </button>
+          }
+        </div>
+      </div>
+      <apx-chart
+        [chart]="revenueChart().chart"
+        [series]="revenueChart().series"
+        [xaxis]="revenueChart().xaxis"
+        [stroke]="revenueChart().stroke"
+        [colors]="revenueChart().colors"
+        [dataLabels]="revenueChart().dataLabels"
+      />
+    </div>
+
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <h2 class="mb-4 text-base font-semibold text-text-primary">نمو الشركات والمستخدمين</h2>
+      <apx-chart
+        [chart]="growthChart().chart"
+        [series]="growthChart().series"
+        [xaxis]="growthChart().xaxis"
+        [stroke]="growthChart().stroke"
+        [colors]="growthChart().colors"
+        [dataLabels]="growthChart().dataLabels"
+      />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-base font-semibold text-text-primary">يحتاج إلى إجراء</h2>
+        <a class="text-sm font-medium text-primary" href="javascript:void(0)">عرض الكل</a>
+      </div>
+      <ul class="flex flex-col gap-2">
+        @for (item of store.actionItems(); track item.id) {
+          <li
+            class="flex items-center justify-between rounded-xl px-3 py-2.5"
+            [class]="actionToneClasses[item.tone]"
+          >
+            <span class="text-sm font-medium">{{ item.label }} {{ item.count }} جديد</span>
+            <span class="text-sm font-semibold">مراجعة</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-base font-semibold text-text-primary">أحدث الشركات والمتاجر</h2>
+        <a class="text-sm font-medium text-primary" href="javascript:void(0)">عرض الكل</a>
+      </div>
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-text-secondary">
+            <th class="p-2 text-start font-medium">الشركة</th>
+            <th class="p-2 text-start font-medium">الفئة</th>
+            <th class="p-2 text-start font-medium">الموقع</th>
+            <th class="p-2 text-start font-medium">الحالة</th>
+            <th class="p-2 text-start font-medium">التقييم</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (place of store.recentPlaces(); track place.id) {
+            <tr class="border-t border-border">
+              <td class="p-2 font-medium text-text-primary">{{ place.name }}</td>
+              <td class="p-2 text-text-secondary">{{ place.category }}</td>
+              <td class="p-2 text-text-secondary">{{ place.city }}</td>
+              <td class="p-2">
+                <app-badge [tone]="placeStatusTone[place.status]">{{
+                  placeStatusLabel[place.status]
+                }}</app-badge>
+              </td>
+              <td class="p-2"><app-star-rating [value]="place.rating" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
