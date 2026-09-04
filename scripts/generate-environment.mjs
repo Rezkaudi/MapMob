@@ -1,4 +1,5 @@
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 
 const ENV_FILE = '.env';
 const EXAMPLE_ENV_FILE = '.env.example';
@@ -19,6 +20,8 @@ if (!apiBaseUrl) {
 }
 
 const useMockApi = (process.env[USE_MOCK_API_KEY] ?? 'true').trim().toLowerCase() === 'true';
+
+mkdirSync(dirname(OUTPUT_FILE), { recursive: true });
 
 writeFileSync(
   OUTPUT_FILE,
