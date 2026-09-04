@@ -1,0 +1,20 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NG_APP_API_BASE_URL: ${NG_APP_API_BASE_URL}
+    ports:
+      - "8080:80"
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      NG_APP_API_BASE_URL: ${NG_APP_API_BASE_URL}
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
