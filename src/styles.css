@@ -58,3 +58,23 @@ body {
 .font-latin {
   font-family: var(--font-latin);
 }
+
+/*
+ * Tailwind 4's reset sets buttons to `cursor: default`. Everything the user can
+ * click — buttons, links, arrows, checkboxes — gets the pointer back.
+ */
+button:not(:disabled),
+a[href],
+[role='button']:not([aria-disabled='true']),
+label:has(input[type='checkbox']),
+input[type='checkbox'],
+input[type='radio'],
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
