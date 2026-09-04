@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 export type BadgeTone = 'success' | 'warning' | 'error' | 'info' | 'neutral';
 
+/** Status pills are solid with white text in the design. */
 const TONE_CLASSES: Record<BadgeTone, string> = {
-  success: 'bg-success-soft text-success',
-  warning: 'bg-warning-soft text-warning',
-  error: 'bg-error-soft text-error',
-  info: 'bg-info-soft text-info',
-  neutral: 'bg-surface-muted text-text-secondary',
+  success: 'bg-status-success text-white',
+  warning: 'bg-status-warning text-white',
+  error: 'bg-status-error text-white',
+  info: 'bg-primary text-white',
+  neutral: 'bg-text-secondary text-white',
 };
 
 @Component({

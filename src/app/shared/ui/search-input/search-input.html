@@ -1,8 +1,10 @@
-<label class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5">
-  <svg lucideSearch class="h-4 w-4 text-placeholder"></svg>
+<label
+  class="flex h-12 w-full items-center gap-2 rounded-xl border border-[#e6e6e6] bg-[rgba(90,90,90,0.06)] px-[13px]"
+>
+  <app-icon name="search" [size]="16" class="text-text-secondary" />
   <input
     type="search"
-    class="w-full border-0 bg-transparent text-sm text-text-primary outline-none placeholder:text-placeholder"
+    class="w-full border-0 bg-transparent text-right text-sm text-text-primary outline-none placeholder:text-text-secondary"
     [placeholder]="placeholder()"
     (input)="onInput($event)"
   />

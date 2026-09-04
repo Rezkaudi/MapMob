@@ -1,12 +1,12 @@
 <div class="relative inline-block">
   <button
     type="button"
-    class="rounded-lg p-1.5 hover:bg-surface-muted"
+    class="rounded-md px-1 pt-1 pb-[11px] text-text-secondary hover:bg-surface-muted"
     aria-haspopup="true"
     [attr.aria-expanded]="isOpen()"
     (click)="toggle()"
   >
-    <svg lucideMoreVertical class="h-4 w-4 text-text-secondary"></svg>
+    <app-icon name="more-vertical" [size]="14" />
   </button>
 
   @if (isOpen()) {

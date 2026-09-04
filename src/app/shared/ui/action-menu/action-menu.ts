@@ -6,11 +6,11 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { LucideMoreVertical } from '@lucide/angular';
+import { AppIcon } from '../app-icon/app-icon';
 
 @Component({
   selector: 'app-action-menu',
-  imports: [LucideMoreVertical],
+  imports: [AppIcon],
   templateUrl: './action-menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

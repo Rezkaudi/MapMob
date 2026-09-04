@@ -1,28 +1,22 @@
-<header class="flex items-center justify-between gap-4 border-b border-border bg-surface px-8 py-4">
-  <div class="flex items-center gap-3">
-    <button
-      type="button"
-      class="flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-surface-muted"
-    >
-      <app-avatar [name]="userName()" [imageUrl]="avatarUrl()" />
-      <span class="flex flex-col items-start text-start">
-        <span class="text-sm font-semibold text-text-primary">{{ userName() }}</span>
-        <span class="text-xs text-text-secondary">{{ userRole() }}</span>
+<!-- RTL puts the first child on the right, so the search sits right and the account cluster left. -->
+<header
+  class="flex items-center justify-between bg-surface px-6 py-2 backdrop-blur-[6px] drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]"
+>
+  <app-search-input placeholder="البحث" class="w-[340px]" />
+
+  <div class="flex items-center gap-6">
+    <button type="button" class="relative text-text-primary" aria-label="الإشعارات">
+      <app-icon name="notification" [size]="24" />
+      <span class="absolute end-0 top-0 h-2 w-2 rounded-full bg-error"></span>
+    </button>
+
+    <button type="button" class="flex items-center gap-1">
+      <app-avatar [name]="userName()" [imageUrl]="avatarUrl()" [size]="48" />
+      <span class="flex w-12 flex-col items-end justify-center gap-1 text-right">
+        <span class="w-full text-[16px]/[24px] font-medium text-text-navy">{{ userName() }}</span>
+        <span class="w-full text-[14px]/[20px] text-text-muted">{{ userRole() }}</span>
       </span>
-      <svg lucideChevronDown class="h-4 w-4 text-text-secondary"></svg>
+      <app-icon name="chevron-left" [size]="16" class="text-text-primary" />
     </button>
-
-    <button
-      type="button"
-      class="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-muted"
-      aria-label="الإشعارات"
-    >
-      <svg lucideBell class="h-5 w-5 text-text-secondary"></svg>
-      <span class="absolute end-2.5 top-2.5 h-2 w-2 rounded-full bg-error"></span>
-    </button>
-  </div>
-
-  <div class="w-full max-w-sm">
-    <app-search-input placeholder="البحث" />
   </div>
 </header>

@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { LucideStar } from '@lucide/angular';
 import { StatCard } from './stat-card';
 
 @Component({
   imports: [StatCard],
-  template: `<app-stat-card [icon]="icon" label="إجمالي التقييمات" value="3,000" />`,
+  template: `<app-stat-card icon="reviews" label="إجمالي التقييمات" value="3,000" />`,
 })
-class HostComponent {
-  readonly icon = LucideStar;
-}
+class HostComponent {}
 
 describe('StatCard', () => {
   it('renders the label and value', () => {

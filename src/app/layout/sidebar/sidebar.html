@@ -1,19 +1,47 @@
-<aside class="flex h-full w-70 flex-col gap-6 border-s border-border bg-surface p-6">
-  <div class="flex items-center gap-2 text-lg font-bold text-text-primary">
-    <ng-container [ngComponentOutlet]="brandIcon" [ngComponentOutletInputs]="{ size: 20 }" />
-    MapMob
+<aside class="flex h-full w-[280px] shrink-0 flex-col bg-surface shadow-panel">
+  <div class="flex items-center justify-between px-6 pt-10">
+    <button type="button" class="text-text-primary" aria-label="طي القائمة">
+      <app-icon name="arrow-left" [size]="20" class="rotate-180" />
+    </button>
+
+    <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
+    <a routerLink="/dashboard" class="flex items-center gap-1 text-primary" dir="ltr">
+      <img src="assets/mapmob-logo-primary.svg" alt="" class="h-8 w-8 object-contain" />
+      <span class="font-brand text-[32px] leading-none font-bold">MapMob</span>
+    </a>
   </div>
 
-  <nav class="flex flex-col gap-1">
-    @for (item of navItems; track item.route) {
-      <a
-        [routerLink]="item.route"
-        routerLinkActive="bg-primary-soft text-primary"
-        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-muted"
-      >
-        <ng-container [ngComponentOutlet]="item.icon" [ngComponentOutletInputs]="{ size: 18 }" />
-        {{ item.label }}
-      </a>
-    }
+  <nav class="mt-[52px] flex flex-1 flex-col gap-3 overflow-y-auto px-[7px] pb-6">
+    <ul class="flex flex-col gap-2">
+      @for (item of navItems; track item.route) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="!bg-primary-tint !text-primary border-e-4 border-primary"
+            class="flex h-11 w-full items-center justify-end gap-3 rounded px-2 text-sm font-medium text-text-primary"
+          >
+            <span class="text-right">{{ item.label }}</span>
+            <app-icon [name]="item.icon" [size]="20" />
+          </a>
+        </li>
+      }
+    </ul>
+
+    <hr class="border-border" />
+
+    <ul class="flex flex-col gap-3">
+      @for (item of secondaryNavItems; track item.route) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="!bg-primary-tint !text-primary border-e-4 border-primary"
+            class="flex h-11 w-full items-center justify-end gap-3 rounded px-2 text-sm font-medium text-text-primary"
+          >
+            <span class="text-right">{{ item.label }}</span>
+            <app-icon [name]="item.icon" [size]="20" />
+          </a>
+        </li>
+      }
+    </ul>
   </nav>
 </aside>

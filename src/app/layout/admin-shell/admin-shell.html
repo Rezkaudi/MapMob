@@ -1,9 +1,10 @@
+<!-- The page is RTL, so the first flex child lands on the right: the sidebar, as in the design. -->
 <div class="flex h-dvh">
+  <app-sidebar />
   <div class="flex min-w-0 flex-1 flex-col">
-    <app-top-bar [userName]="userName" [userRole]="userRole" />
+    <app-top-bar [userName]="userName" [userRole]="userRole" [avatarUrl]="avatarUrl" />
     <main class="flex-1 overflow-y-auto p-8">
       <router-outlet />
     </main>
   </div>
-  <app-sidebar />
 </div>

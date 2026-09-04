@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { LucidePlus } from '@lucide/angular';
+import { DecimalPipe } from '@angular/common';
+import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
-import { Button } from '../../../../shared/ui/button/button';
 import { EmptyState } from '../../../../shared/ui/empty-state/empty-state';
-import { SearchInput } from '../../../../shared/ui/search-input/search-input';
-import { StarRating } from '../../../../shared/ui/star-rating/star-rating';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
+import { TableToolbar } from '../../../../shared/ui/table-toolbar/table-toolbar';
+import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PlacesStore } from '../../state/places.store';
 
@@ -20,15 +19,14 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
 @Component({
   selector: 'app-place-list',
   imports: [
+    AppIcon,
     ActionMenu,
     Badge,
-    Button,
     EmptyState,
-    SearchInput,
-    StarRating,
     TablePagination,
-    DatePipe,
-    LucidePlus,
+    TableToolbar,
+    ArabicDatePipe,
+    DecimalPipe,
   ],
   templateUrl: './place-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,99 @@
+<div class="flex h-dvh bg-white">
+  <!-- Brand panel: 860px gradient column pinned to the page's right edge, as in the design. -->
+  <div
+    class="relative hidden w-[860px] shrink-0 overflow-hidden lg:block"
+    style="background: linear-gradient(180deg, #0583ec 0%, #0030a8 84.788%, #001e8f 100%)"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-end gap-4"
+    >
+      <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
+      <div class="flex items-center gap-1" dir="ltr">
+        <img src="assets/mapmob-logo-white.svg" alt="" class="h-10 w-10 -rotate-4 object-contain" />
+        <span class="font-brand text-[40px] leading-none font-bold text-white">MapMob</span>
+      </div>
+      <p class="w-[399px] text-right text-[18px] font-medium text-white">
+        منصة متكاملة لإدارة الأماكن والخدمات والمستخدمين
+      </p>
+    </div>
+
+    <img
+      src="assets/login-rings.svg"
+      alt=""
+      class="pointer-events-none absolute top-[673px] left-[361px] h-[457.763px] w-[532.434px] max-w-none -rotate-12 skew-x-2"
+    />
+  </div>
+
+  <!-- Form column: 382px wide, centred in the remaining 580px, matching x=99 in the design. -->
+  <div class="flex flex-1 items-center justify-center px-6">
+    <div class="flex w-[382px] flex-col items-end gap-8">
+      <div class="flex w-full flex-col items-end gap-4 text-right tracking-[0.5px]">
+        <h1 class="w-full text-[24px]/[24px] font-bold text-text-primary">أهلاً بعودتك</h1>
+        <p class="w-full text-[16px]/[24px] text-text-secondary">سجّل الدخول إلى لوحة التحكم</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex w-full flex-col items-end gap-6">
+        <div class="flex w-full flex-col items-end gap-2">
+          <label
+            for="email"
+            class="text-[14px]/[20px] font-medium tracking-[0.7px] text-text-primary"
+          >
+            البريد الالكتروني
+          </label>
+          <div class="w-full rounded-lg border border-text-primary px-[13px] pt-[14px] pb-[15px]">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="name@gmail.com"
+              class="font-latin w-full border-0 bg-transparent text-right text-[12px] text-placeholder outline-none placeholder:text-placeholder"
+            />
+          </div>
+        </div>
+
+        <div class="flex w-full flex-col items-end gap-2">
+          <label
+            for="password"
+            class="text-[14px]/[20px] font-medium tracking-[0.7px] text-text-primary"
+          >
+            كلمة المرور
+          </label>
+          <div
+            class="flex w-full items-center gap-2 rounded-lg border border-text-primary px-[13px] pt-[14px] pb-[15px]"
+          >
+            <button
+              type="button"
+              class="text-placeholder"
+              [attr.aria-label]="isPasswordVisible() ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'"
+              (click)="togglePasswordVisibility()"
+            >
+              <app-icon name="eye-off" [size]="16" />
+            </button>
+            <input
+              id="password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="12345678"
+              class="font-latin w-full border-0 bg-transparent text-right text-[12px] text-placeholder outline-none placeholder:text-placeholder"
+            />
+          </div>
+          <a href="javascript:void(0)" class="text-[11px]/[16.5px] text-accent"
+            >نسيت كلمة المرور؟</a
+          >
+        </div>
+
+        @if (store.error(); as error) {
+          <p class="w-full text-right text-[12px] text-error">{{ error }}</p>
+        }
+
+        <button
+          type="submit"
+          class="h-12 w-full rounded-lg bg-primary px-5 py-3 text-[16px]/[24px] font-bold tracking-[0.5px] text-white disabled:opacity-60"
+          [disabled]="store.isLoading()"
+        >
+          تسجيل دخول
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

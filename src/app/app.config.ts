@@ -12,6 +12,7 @@ import { provideDashboardFeature } from './features/dashboard/dashboard.provider
 import { provideUsersFeature } from './features/users/users.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { providePlacesFeature } from './features/places/places.providers';
+import { provideAuthFeature } from './features/auth/auth.providers';
 
 registerLocaleData(localeAr);
 
@@ -28,5 +29,6 @@ export const appConfig: ApplicationConfig = {
     provideUsersFeature(),
     provideRegionsFeature(),
     providePlacesFeature(),
+    provideAuthFeature(),
   ],
 };

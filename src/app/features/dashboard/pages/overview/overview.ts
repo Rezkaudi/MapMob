@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ChartComponent } from 'ng-apexcharts';
-import { LucideBanknote, LucideBuilding2, LucideClock, LucideUsers } from '@lucide/angular';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { Badge } from '../../../../shared/ui/badge/badge';
 import { BadgeTone } from '../../../../shared/ui/badge/badge';
-import { StarRating } from '../../../../shared/ui/star-rating/star-rating';
 import { DashboardStore } from '../../state/dashboard.store';
 import { ActionItemTone } from '../../models/action-item';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/recent-place';
@@ -32,17 +30,17 @@ const PERIODS: readonly { readonly value: ChartPeriod; readonly label: string }[
 
 @Component({
   selector: 'app-overview',
-  imports: [DecimalPipe, ChartComponent, StatCard, Badge, StarRating],
+  imports: [DecimalPipe, ChartComponent, StatCard, Badge],
   templateUrl: './overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Overview {
   protected readonly store = inject(DashboardStore);
 
-  protected readonly revenueIcon = LucideBanknote;
-  protected readonly clockIcon = LucideClock;
-  protected readonly buildingIcon = LucideBuilding2;
-  protected readonly usersIcon = LucideUsers;
+  protected readonly revenueIcon = 'payments';
+  protected readonly clockIcon = 'clock';
+  protected readonly buildingIcon = 'places';
+  protected readonly usersIcon = 'users';
 
   protected readonly periods = PERIODS;
   protected readonly actionToneClasses = ACTION_TONE_CLASSES;

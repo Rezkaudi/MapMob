@@ -1,7 +1,6 @@
-import { Type } from '@angular/core';
-
 export interface NavItem {
   readonly label: string;
   readonly route: string;
-  readonly icon: Type<unknown>;
+  /** Matches a file in `public/assets/icons`. */
+  readonly icon: string;
 }

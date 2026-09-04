@@ -1,31 +1,45 @@
 @import 'tailwindcss';
 
 @theme {
+  /* Typography — Tajawal carries the Arabic UI, Almarai the wordmark, DM Sans the Latin text. */
   --font-sans:
-    'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-brand: 'Almarai', 'Tajawal', sans-serif;
+  --font-latin:
+    'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   --color-primary: #0583ec;
   --color-primary-hover: #0470cc;
   --color-primary-soft: #eaf5fe;
+  /* Active nav tint, taken from the sidebar spec: rgba(5, 131, 236, 0.16) */
+  --color-primary-tint: rgba(5, 131, 236, 0.16);
 
   --color-text-primary: #0f172a;
   --color-text-secondary: #64748b;
   --color-text-navy: #151d48;
   --color-text-muted: #737791;
-  --color-placeholder: #94a3b8;
+  --color-placeholder: #6b7280;
 
   --color-border: #e2e8f0;
   --color-surface: #ffffff;
   --color-surface-muted: #f8fafc;
 
+  /* Solid status pill colours, straight from the table spec. */
+  --color-status-success: #10b981;
+  --color-status-error: #d92d20;
+  --color-status-warning: #f5a623;
+
   --color-success: #17a672;
   --color-success-soft: #e7f8f1;
   --color-warning: #f5a623;
   --color-warning-soft: #fdf3e2;
+  --color-accent: #f59e0b;
   --color-error: #eb5757;
   --color-error-soft: #fdecec;
   --color-info: #0583ec;
   --color-info-soft: #eaf5fe;
+
+  --shadow-panel: 0 8px 50px 0 rgb(0 0 0 / 0.04);
 }
 
 html,
@@ -38,4 +52,9 @@ body {
   background-color: var(--color-surface-muted);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+}
+
+/* Latin runs (emails, numbers, placeholders) render in DM Sans as in the design. */
+.font-latin {
+  font-family: var(--font-latin);
 }

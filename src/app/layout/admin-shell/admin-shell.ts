@@ -12,4 +12,5 @@ import { TopBar } from '../top-bar/top-bar';
 export class AdminShell {
   protected readonly userName = 'أحمد';
   protected readonly userRole = 'Admin';
+  protected readonly avatarUrl = 'assets/admin-avatar.jpg';
 }

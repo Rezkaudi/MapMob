@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { LucideDownload, LucideUsers } from '@lucide/angular';
+import { DecimalPipe } from '@angular/common';
+import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
-import { Button } from '../../../../shared/ui/button/button';
-import { SearchInput } from '../../../../shared/ui/search-input/search-input';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
+import { TableToolbar } from '../../../../shared/ui/table-toolbar/table-toolbar';
+import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { USER_STATUS_LABEL, UserStatus } from '../../models/user-status';
 import { UsersStore } from '../../state/users.store';
 
@@ -18,22 +18,20 @@ const STATUS_TONE: Record<UserStatus, BadgeTone> = {
 @Component({
   selector: 'app-user-list',
   imports: [
+    AppIcon,
     ActionMenu,
     Badge,
-    Button,
-    SearchInput,
     StatCard,
     TablePagination,
-    DatePipe,
+    TableToolbar,
+    ArabicDatePipe,
     DecimalPipe,
-    LucideDownload,
   ],
   templateUrl: './user-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserList {
   protected readonly store = inject(UsersStore);
-  protected readonly usersIcon = LucideUsers;
   protected readonly statusLabel = USER_STATUS_LABEL;
   protected readonly statusTone = STATUS_TONE;
 

@@ -1,14 +1,22 @@
 <div class="flex flex-col gap-6">
   <div class="text-start">
-    <h1 class="text-2xl font-bold text-text-primary">نظرة عامة</h1>
-    <p class="mt-1 text-sm text-text-secondary">ملخص لأهم مؤشرات المنصة وأدائها</p>
+    <h1 class="text-[28px] font-bold text-black">نظرة عامة</h1>
+    <p class="mt-1 text-[14px]/[20px] text-text-secondary">ملخص لأهم مؤشرات المنصة وأدائها</p>
   </div>
 
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <!-- RTL puts the first card on the right, so the design's left-to-right order is reversed here. -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
     <app-stat-card
-      [icon]="revenueIcon"
-      label="الإيرادات"
-      [value]="(store.summary()?.revenue ?? 0) + ' ل.س'"
+      [icon]="usersIcon"
+      label="إجمالي المستخدمين"
+      [value]="(store.summary()?.userCount ?? 0 | number) ?? '0'"
+      [delta]="(store.summary()?.newUserCount ?? 0) + ' جديد'"
+    />
+    <app-stat-card
+      [icon]="buildingIcon"
+      label="الشركات والمتاجر"
+      [value]="(store.summary()?.placeCount ?? 0 | number) ?? '0'"
+      [delta]="(store.summary()?.newPlaceCount ?? 0) + ' جديد'"
     />
     <app-stat-card
       [icon]="clockIcon"
@@ -16,18 +24,25 @@
       [value]="store.summary()?.pendingReviewCount ?? 0"
     />
     <app-stat-card
-      [icon]="buildingIcon"
-      label="الشركات والمتاجر"
-      [value]="(store.summary()?.placeCount ?? 0 | number) ?? '0'"
-    />
-    <app-stat-card
-      [icon]="usersIcon"
-      label="إجمالي المستخدمين"
-      [value]="(store.summary()?.userCount ?? 0 | number) ?? '0'"
+      [icon]="revenueIcon"
+      label="الإيرادات"
+      [value]="(store.summary()?.revenue ?? 0) + ' ل.س'"
     />
   </div>
 
+  <!-- RTL: the growth chart sits on the right, revenue on the left, as in the design. -->
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <h2 class="mb-4 text-base font-semibold text-text-primary">نمو الشركات والمستخدمين</h2>
+      <apx-chart
+        [chart]="growthChart().chart"
+        [series]="growthChart().series"
+        [xaxis]="growthChart().xaxis"
+        [stroke]="growthChart().stroke"
+        [colors]="growthChart().colors"
+        [dataLabels]="growthChart().dataLabels"
+      />
+    </div>
     <div class="rounded-2xl border border-border bg-surface p-4">
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-base font-semibold text-text-primary">الإيرادات</h2>
@@ -54,39 +69,9 @@
         [dataLabels]="revenueChart().dataLabels"
       />
     </div>
-
-    <div class="rounded-2xl border border-border bg-surface p-4">
-      <h2 class="mb-4 text-base font-semibold text-text-primary">نمو الشركات والمستخدمين</h2>
-      <apx-chart
-        [chart]="growthChart().chart"
-        [series]="growthChart().series"
-        [xaxis]="growthChart().xaxis"
-        [stroke]="growthChart().stroke"
-        [colors]="growthChart().colors"
-        [dataLabels]="growthChart().dataLabels"
-      />
-    </div>
   </div>
 
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-    <div class="rounded-2xl border border-border bg-surface p-4">
-      <div class="mb-3 flex items-center justify-between">
-        <h2 class="text-base font-semibold text-text-primary">يحتاج إلى إجراء</h2>
-        <a class="text-sm font-medium text-primary" href="javascript:void(0)">عرض الكل</a>
-      </div>
-      <ul class="flex flex-col gap-2">
-        @for (item of store.actionItems(); track item.id) {
-          <li
-            class="flex items-center justify-between rounded-xl px-3 py-2.5"
-            [class]="actionToneClasses[item.tone]"
-          >
-            <span class="text-sm font-medium">{{ item.label }} {{ item.count }} جديد</span>
-            <span class="text-sm font-semibold">مراجعة</span>
-          </li>
-        }
-      </ul>
-    </div>
-
     <div class="rounded-2xl border border-border bg-surface p-4">
       <div class="mb-3 flex items-center justify-between">
         <h2 class="text-base font-semibold text-text-primary">أحدث الشركات والمتاجر</h2>
@@ -113,11 +98,28 @@
                   placeStatusLabel[place.status]
                 }}</app-badge>
               </td>
-              <td class="p-2"><app-star-rating [value]="place.rating" /></td>
+              <td class="p-2 text-text-secondary">{{ place.rating }}</td>
             </tr>
           }
         </tbody>
       </table>
+    </div>
+    <div class="rounded-2xl border border-border bg-surface p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-base font-semibold text-text-primary">يحتاج إلى إجراء</h2>
+        <a class="text-sm font-medium text-primary" href="javascript:void(0)">عرض الكل</a>
+      </div>
+      <ul class="flex flex-col gap-2">
+        @for (item of store.actionItems(); track item.id) {
+          <li
+            class="flex items-center justify-between rounded-xl px-3 py-2.5"
+            [class]="actionToneClasses[item.tone]"
+          >
+            <span class="text-sm font-medium">{{ item.label }} {{ item.count }} جديد</span>
+            <span class="text-sm font-semibold">مراجعة</span>
+          </li>
+        }
+      </ul>
     </div>
   </div>
 </div>

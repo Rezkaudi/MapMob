@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { LucideSearch } from '@lucide/angular';
+import { AppIcon } from '../app-icon/app-icon';
 
 @Component({
   selector: 'app-search-input',
-  imports: [LucideSearch],
+  imports: [AppIcon],
   templateUrl: './search-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

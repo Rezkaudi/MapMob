@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { LucideBell, LucideChevronDown } from '@lucide/angular';
+import { AppIcon } from '../../shared/ui/app-icon/app-icon';
 import { Avatar } from '../../shared/ui/avatar/avatar';
 import { SearchInput } from '../../shared/ui/search-input/search-input';
 
 @Component({
   selector: 'app-top-bar',
-  imports: [Avatar, SearchInput, LucideBell, LucideChevronDown],
+  imports: [AppIcon, Avatar, SearchInput],
   templateUrl: './top-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,11 +1,16 @@
-<div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4">
-  <span
-    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white"
-  >
-    <ng-container [ngComponentOutlet]="icon()" [ngComponentOutletInputs]="{ size: 20 }" />
+<div class="flex h-[82px] items-center gap-4 rounded-2xl border border-border bg-surface px-4">
+  <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white">
+    <app-icon [name]="icon()" [size]="20" />
   </span>
-  <div class="flex flex-col gap-1">
+  <div class="flex flex-1 flex-col items-end gap-1 text-right">
     <span class="text-sm text-text-secondary">{{ label() }}</span>
-    <span class="text-2xl font-semibold text-text-primary">{{ value() }}</span>
+    <span class="flex items-center gap-2">
+      @if (delta(); as deltaLabel) {
+        <span class="rounded-md bg-success-soft px-1.5 py-0.5 text-[11px] font-medium text-success">
+          ↑ {{ deltaLabel }}
+        </span>
+      }
+      <span class="text-2xl font-bold text-text-primary">{{ value() }}</span>
+    </span>
   </div>
 </div>

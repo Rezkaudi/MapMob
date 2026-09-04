@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { LucidePlus } from '@lucide/angular';
+import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
-import { Button } from '../../../../shared/ui/button/button';
-import { SearchInput } from '../../../../shared/ui/search-input/search-input';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
+import { TableToolbar } from '../../../../shared/ui/table-toolbar/table-toolbar';
+import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { REGION_STATUS_LABEL, RegionStatus } from '../../models/region-status';
 import { RegionsStore } from '../../state/regions.store';
 
@@ -16,7 +15,7 @@ const STATUS_TONE: Record<RegionStatus, BadgeTone> = {
 
 @Component({
   selector: 'app-region-list',
-  imports: [ActionMenu, Badge, Button, SearchInput, TablePagination, DatePipe, LucidePlus],
+  imports: [AppIcon, ActionMenu, Badge, TablePagination, TableToolbar, ArabicDatePipe],
   templateUrl: './region-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
