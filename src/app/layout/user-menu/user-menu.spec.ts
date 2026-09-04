@@ -120,4 +120,15 @@ describe('UserMenu', () => {
     expect(navigate).toHaveBeenCalledWith('/login');
     expect(menu(fixture)).toBeNull();
   });
+
+  it('links each item through the router', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const link: HTMLAnchorElement = menu(fixture)!.querySelector('a[role="menuitem"]')!;
+    expect(link.getAttribute('href')).toBe('/profile');
+  });
 });

@@ -34,6 +34,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/reviews/reviews.routes').then((m) => m.REVIEWS_ROUTES),
       },
+      {
+        path: 'not-found',
+        loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
+      },
+      // Nav links without a feature behind them land here instead of a blank page.
+      { path: '**', redirectTo: 'not-found' },
     ],
   },
 ];

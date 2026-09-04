@@ -7,7 +7,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AppIcon } from '../../shared/ui/app-icon/app-icon';
 import { Avatar } from '../../shared/ui/avatar/avatar';
 import { AuthStore } from '../../features/auth/state/auth.store';
@@ -17,7 +17,7 @@ const LOGIN_ROUTE = '/login';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [AppIcon, Avatar],
+  imports: [AppIcon, Avatar, RouterLink],
   templateUrl: './user-menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

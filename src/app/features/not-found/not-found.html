@@ -1,0 +1,34 @@
+<section
+  class="relative flex min-h-[60vh] flex-col items-center justify-center gap-6 overflow-hidden rounded-2xl border border-border bg-surface px-6 py-16 text-center shadow-panel"
+>
+  <img
+    src="assets/login-rings.svg"
+    alt=""
+    class="pointer-events-none absolute -bottom-24 -left-24 w-[420px] max-w-none opacity-10"
+  />
+
+  <span class="font-latin text-[96px]/[96px] font-bold text-primary">404</span>
+
+  <div class="flex flex-col gap-2">
+    <h1 class="text-[24px]/[32px] font-bold text-text-primary">الصفحة غير موجودة</h1>
+    <p class="text-[16px]/[24px] text-text-secondary">
+      الرابط الذي فتحته غير صحيح أو تم نقل الصفحة إلى مكان آخر.
+    </p>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <a
+      routerLink="/dashboard"
+      class="rounded-lg bg-primary px-5 py-3 text-[16px]/[24px] font-bold text-white"
+    >
+      العودة إلى الرئيسية
+    </a>
+    <button
+      type="button"
+      class="rounded-lg border border-border px-5 py-3 text-[16px]/[24px] font-bold text-text-primary"
+      (click)="goBack()"
+    >
+      الرجوع
+    </button>
+  </div>
+</section>

@@ -25,7 +25,7 @@
       @for (item of items; track item.route) {
         <a
           role="menuitem"
-          [href]="item.route"
+          [routerLink]="item.route"
           class="flex items-center gap-3 px-4 py-2.5 text-[14px] text-text-primary hover:bg-surface-muted"
           (click)="close()"
         >
