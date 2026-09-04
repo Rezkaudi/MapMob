@@ -20,7 +20,7 @@
     <img
       src="assets/login-rings.svg"
       alt=""
-      class="pointer-events-none absolute top-[673px] left-[361px] h-[457.763px] w-[532.434px] max-w-none -rotate-12 skew-x-2"
+      class="pointer-events-none absolute bottom-[-107px] left-[361px] h-[457.763px] w-[532.434px] max-w-none -rotate-12 skew-x-2"
     />
   </div>
 
@@ -61,6 +61,14 @@
           <div
             class="flex w-full items-center gap-2 rounded-lg border border-text-primary px-[13px] pt-[14px] pb-[15px]"
           >
+            <!-- RTL: the input leads on the right, so the eye toggle lands on the left. -->
+            <input
+              id="password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="12345678"
+              class="font-latin w-full min-w-0 flex-1 border-0 bg-transparent text-right text-[12px] text-placeholder outline-none placeholder:text-placeholder"
+            />
             <button
               type="button"
               class="text-placeholder"
@@ -69,13 +77,6 @@
             >
               <app-icon name="eye-off" [size]="16" />
             </button>
-            <input
-              id="password"
-              [type]="isPasswordVisible() ? 'text' : 'password'"
-              formControlName="password"
-              placeholder="12345678"
-              class="font-latin w-full border-0 bg-transparent text-right text-[12px] text-placeholder outline-none placeholder:text-placeholder"
-            />
           </div>
           <a href="javascript:void(0)" class="text-[11px]/[16.5px] text-accent"
             >نسيت كلمة المرور؟</a

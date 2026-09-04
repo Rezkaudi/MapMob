@@ -14,4 +14,5 @@ export interface RecentPlace {
   readonly rating: number;
   readonly status: PlaceStatus;
   readonly joinedAt: string;
+  readonly logoUrl: string | null;
 }

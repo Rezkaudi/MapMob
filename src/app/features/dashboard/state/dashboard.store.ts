@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of, forkJoin } from 'rxjs';
+import { pipe, switchMap, tap, catchError, of, forkJoin, map } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { ActionItem } from '../models/action-item';
 import { ChartSeries } from '../models/chart-point';
@@ -15,16 +15,19 @@ interface DashboardState {
   readonly recentPlaces: readonly RecentPlace[];
   readonly revenueSeries: ChartSeries | null;
   readonly growthSeries: readonly ChartSeries[];
-  readonly period: ChartPeriod;
+  readonly revenuePeriod: ChartPeriod;
+  readonly growthPeriod: ChartPeriod;
 }
 
+/** The design marks شهري active on the revenue chart and اسبوعي on the growth chart. */
 const initialState: DashboardState = {
   summary: null,
   actionItems: [],
   recentPlaces: [],
   revenueSeries: null,
   growthSeries: [],
-  period: 'monthly',
+  revenuePeriod: 'monthly',
+  growthPeriod: 'weekly',
 };
 
 export const DashboardStore = signalStore(
@@ -40,8 +43,8 @@ export const DashboardStore = signalStore(
             summary: repository.getSummary(),
             actionItems: repository.getActionItems(),
             recentPlaces: repository.getRecentPlaces(),
-            revenueSeries: repository.getRevenueSeries(store.period()),
-            growthSeries: repository.getGrowthSeries(store.period()),
+            revenueSeries: repository.getRevenueSeries(store.revenuePeriod()),
+            growthSeries: repository.getGrowthSeries(store.growthPeriod()),
           }).pipe(
             tap((result) => {
               patchState(store, result);
@@ -55,11 +58,35 @@ export const DashboardStore = signalStore(
         ),
       ),
     ),
-  })),
-  withMethods((store) => ({
-    setPeriod(period: ChartPeriod): void {
-      patchState(store, { period });
-      store.loadDashboard();
-    },
+
+    setRevenuePeriod: rxMethod<ChartPeriod>(
+      pipe(
+        tap((revenuePeriod) => patchState(store, { revenuePeriod })),
+        switchMap((period) =>
+          repository.getRevenueSeries(period).pipe(
+            map((revenueSeries) => patchState(store, { revenueSeries })),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    setGrowthPeriod: rxMethod<ChartPeriod>(
+      pipe(
+        tap((growthPeriod) => patchState(store, { growthPeriod })),
+        switchMap((period) =>
+          repository.getGrowthSeries(period).pipe(
+            map((growthSeries) => patchState(store, { growthSeries })),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
+          ),
+        ),
+      ),
+    ),
   })),
 );

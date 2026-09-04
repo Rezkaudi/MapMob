@@ -1,27 +1,52 @@
-<aside class="flex h-full w-[280px] shrink-0 flex-col bg-surface shadow-panel">
-  <div class="flex items-center justify-between px-6 pt-10">
-    <button type="button" class="text-text-primary" aria-label="طي القائمة">
-      <app-icon name="arrow-left" [size]="20" class="-rotate-90" />
-    </button>
+<aside
+  class="flex h-full shrink-0 flex-col bg-surface shadow-panel transition-[width] duration-200"
+  [class]="isCollapsed() ? 'w-[88px]' : 'w-[280px]'"
+>
+  <!-- RTL puts the first child on the right: the wordmark right, the arrow left. -->
+  <div class="flex items-center justify-center gap-[60px] pt-10">
+    @if (!isCollapsed()) {
+      <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
+      <a routerLink="/dashboard" class="flex items-center gap-1 text-primary" dir="ltr">
+        <img src="assets/mapmob-logo-primary.svg" alt="" class="h-8 w-8 object-contain" />
+        <span class="font-brand text-[32px] leading-none font-bold">MapMob</span>
+      </a>
+    }
 
-    <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
-    <a routerLink="/dashboard" class="flex items-center gap-1 text-primary" dir="ltr">
-      <img src="assets/mapmob-logo-primary.svg" alt="" class="h-8 w-8 object-contain" />
-      <span class="font-brand text-[32px] leading-none font-bold">MapMob</span>
-    </a>
+    <button
+      type="button"
+      class="text-text-primary"
+      id="sidebar-collapse"
+      aria-controls="sidebar-nav"
+      [attr.aria-expanded]="!isCollapsed()"
+      [attr.aria-label]="isCollapsed() ? 'فتح القائمة' : 'طي القائمة'"
+      (click)="toggleCollapse()"
+    >
+      <app-icon
+        name="arrow-left"
+        [size]="20"
+        [class]="isCollapsed() ? 'rotate-90' : '-rotate-90'"
+      />
+    </button>
   </div>
 
-  <nav class="mt-[52px] flex flex-1 flex-col gap-3 overflow-y-auto px-[7px] pb-6">
+  <nav
+    id="sidebar-nav"
+    class="mt-[52px] flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto px-[7px] pb-6"
+  >
     <ul class="flex flex-col gap-2">
       @for (item of navItems; track item.route) {
         <li>
           <a
             [routerLink]="item.route"
-            routerLinkActive="!bg-primary-tint !text-primary border-e-4 border-primary"
-            class="flex h-11 w-full items-center justify-end gap-3 rounded px-2 text-sm font-medium text-text-primary"
+            [title]="item.label"
+            routerLinkActive="!bg-primary-tint !text-primary border-s-4 border-primary"
+            class="flex h-11 w-full items-center gap-3 rounded px-2 text-sm font-medium text-text-primary"
+            [class]="isCollapsed() ? 'justify-center' : 'justify-start'"
           >
-            <span class="text-right">{{ item.label }}</span>
             <app-icon [name]="item.icon" [size]="20" />
+            @if (!isCollapsed()) {
+              <span class="text-right whitespace-nowrap">{{ item.label }}</span>
+            }
           </a>
         </li>
       }
@@ -34,11 +59,15 @@
         <li>
           <a
             [routerLink]="item.route"
-            routerLinkActive="!bg-primary-tint !text-primary border-e-4 border-primary"
-            class="flex h-11 w-full items-center justify-end gap-3 rounded px-2 text-sm font-medium text-text-primary"
+            [title]="item.label"
+            routerLinkActive="!bg-primary-tint !text-primary border-s-4 border-primary"
+            class="flex h-11 w-full items-center gap-3 rounded px-2 text-sm font-medium text-text-primary"
+            [class]="isCollapsed() ? 'justify-center' : 'justify-start'"
           >
-            <span class="text-right">{{ item.label }}</span>
             <app-icon [name]="item.icon" [size]="20" />
+            @if (!isCollapsed()) {
+              <span class="text-right whitespace-nowrap">{{ item.label }}</span>
+            }
           </a>
         </li>
       }

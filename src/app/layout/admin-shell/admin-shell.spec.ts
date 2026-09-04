@@ -1,10 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { AuthRepository } from '../../features/auth/data/auth.repository';
 import { AdminShell } from './admin-shell';
+
+const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
 
 describe('AdminShell', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+      ],
+    });
   });
 
   it('renders the sidebar, top bar and a router outlet', () => {

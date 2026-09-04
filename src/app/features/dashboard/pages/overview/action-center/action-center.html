@@ -1,0 +1,40 @@
+<section
+  class="flex flex-col gap-6 rounded-2xl border border-border bg-surface px-[17px] py-[25px] drop-shadow-[0_4px_10px_rgba(238,238,238,0.9)]"
+>
+  <header class="flex items-center justify-between gap-4">
+    <div class="flex flex-col items-end">
+      <h2 class="text-[16px]/[24px] font-bold text-text-primary">يحتاج إلى إجراء</h2>
+      <p class="text-[16px]/[24px] text-text-secondary">عناصر تحتاج إلى مراجعتك</p>
+    </div>
+    <a href="javascript:void(0)" class="text-[14px]/[24px] font-bold text-accent">عرض الكل</a>
+  </header>
+
+  <ul class="flex flex-col gap-4">
+    @for (item of items(); track item.id) {
+      <li
+        class="flex h-[60px] items-center justify-between rounded-xl p-4"
+        [class]="rowClasses[item.tone]"
+      >
+        <!-- RTL: the tinted icon tile leads on the right, the review button sits on the left. -->
+        <div class="flex items-center gap-4">
+          <span
+            class="flex shrink-0 items-center justify-center rounded-lg p-2 text-white"
+            [class]="iconClasses[item.tone]"
+          >
+            <app-icon [name]="iconNames[item.tone]" [size]="18" />
+          </span>
+          <span class="text-[14px]/[24px] text-text-primary"
+            >{{ item.count }} {{ item.label }}</span
+          >
+        </div>
+
+        <button
+          type="button"
+          class="rounded-lg px-4 py-2 text-[16px]/[24px] font-bold text-text-primary"
+        >
+          مراجعة
+        </button>
+      </li>
+    }
+  </ul>
+</section>

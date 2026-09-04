@@ -40,4 +40,24 @@ describe('Overview', () => {
     expect(text).toContain('23000');
     expect(text).toContain('مراجعة');
   });
+
+  it('draws the growth chart the way the design does', () => {
+    const fixture = TestBed.createComponent(Overview);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance as unknown as {
+      growthChart: () => {
+        chart: { type: string };
+        stroke: { curve: string };
+        markers: { size: number };
+        yaxis: { min: number };
+      };
+    };
+    const chart = component.growthChart();
+
+    expect(chart.chart.type).toBe('area');
+    expect(chart.stroke.curve).toBe('straight');
+    expect(chart.markers.size).toBeGreaterThan(0);
+    expect(chart.yaxis.min).toBe(0);
+  });
 });

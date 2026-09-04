@@ -1,0 +1,32 @@
+<section class="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-panel">
+  <header class="flex items-center justify-between gap-4">
+    <h2 class="text-[18px]/[27px] font-bold text-text-primary">{{ title() }}</h2>
+
+    <!-- RTL puts the first tab on the right, so the periods read from short to long. -->
+    <div class="flex items-center gap-2">
+      @for (period of periods(); track period.value) {
+        <button
+          type="button"
+          class="h-10 rounded-lg px-4 text-[14px]/[21px] font-bold whitespace-nowrap"
+          [class]="
+            period.value === activePeriod()
+              ? 'border border-border bg-surface text-text-primary'
+              : 'text-text-secondary'
+          "
+          [attr.aria-pressed]="period.value === activePeriod()"
+          (click)="periodChange.emit(period.value)"
+        >
+          {{ period.label }}
+        </button>
+      }
+      <span
+        aria-hidden="true"
+        class="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#94a3b8]/10 text-text-secondary"
+      >
+        <app-icon name="calendar" [size]="18" />
+      </span>
+    </div>
+  </header>
+
+  <ng-content />
+</section>

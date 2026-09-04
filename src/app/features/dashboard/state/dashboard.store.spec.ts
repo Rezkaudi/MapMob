@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { DashboardRepository } from '../data/dashboard.repository';
+import { ChartPeriod, DashboardRepository } from '../data/dashboard.repository';
 import { DashboardStore } from './dashboard.store';
 
 const SUMMARY = {
@@ -40,28 +40,54 @@ describe('DashboardStore', () => {
     expect(store.isLoading()).toBe(false);
   });
 
-  it('defaults the chart period to monthly', () => {
+  it('starts the two charts on the periods the design marks active', () => {
     const store = createStore({});
 
-    expect(store.period()).toBe('monthly');
+    expect(store.revenuePeriod()).toBe('monthly');
+    expect(store.growthPeriod()).toBe('weekly');
   });
 
-  it('setPeriod reloads the charts for the new period', () => {
-    let requestedPeriod: string | null = null;
+  it('setRevenuePeriod reloads only the revenue series', () => {
+    let revenueRequest: ChartPeriod | null = null;
+    let growthRequests = 0;
     const store = createStore({
-      getSummary: () => of(SUMMARY),
-      getActionItems: () => of([]),
-      getRecentPlaces: () => of([]),
       getRevenueSeries: (period) => {
-        requestedPeriod = period;
+        revenueRequest = period;
         return of(REVENUE_SERIES);
       },
-      getGrowthSeries: () => of(GROWTH_SERIES),
+      getGrowthSeries: () => {
+        growthRequests += 1;
+        return of(GROWTH_SERIES);
+      },
     });
 
-    store.setPeriod('weekly');
+    store.setRevenuePeriod('daily');
 
-    expect(store.period()).toBe('weekly');
-    expect(requestedPeriod).toBe('weekly');
+    expect(store.revenuePeriod()).toBe('daily');
+    expect(revenueRequest).toBe('daily');
+    expect(growthRequests).toBe(0);
+    expect(store.revenueSeries()).toEqual(REVENUE_SERIES);
+  });
+
+  it('setGrowthPeriod reloads only the growth series', () => {
+    let growthRequest: ChartPeriod | null = null;
+    let revenueRequests = 0;
+    const store = createStore({
+      getRevenueSeries: () => {
+        revenueRequests += 1;
+        return of(REVENUE_SERIES);
+      },
+      getGrowthSeries: (period) => {
+        growthRequest = period;
+        return of(GROWTH_SERIES);
+      },
+    });
+
+    store.setGrowthPeriod('yearly');
+
+    expect(store.growthPeriod()).toBe('yearly');
+    expect(growthRequest).toBe('yearly');
+    expect(revenueRequests).toBe(0);
+    expect(store.growthSeries()).toEqual(GROWTH_SERIES);
   });
 });

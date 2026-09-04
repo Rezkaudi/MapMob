@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { AppIcon } from '../../shared/ui/app-icon/app-icon';
-import { Avatar } from '../../shared/ui/avatar/avatar';
 import { SearchInput } from '../../shared/ui/search-input/search-input';
+import { UserMenu } from '../user-menu/user-menu';
 
 @Component({
   selector: 'app-top-bar',
-  imports: [AppIcon, Avatar, SearchInput],
+  imports: [SearchInput, UserMenu],
   templateUrl: './top-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

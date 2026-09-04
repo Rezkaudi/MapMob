@@ -2,75 +2,93 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { DecimalPipe } from '@angular/common';
 import { ChartComponent } from 'ng-apexcharts';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
-import { Badge } from '../../../../shared/ui/badge/badge';
-import { BadgeTone } from '../../../../shared/ui/badge/badge';
+import { ChartPanel } from '../../../../shared/ui/chart-panel/chart-panel';
+import { ChartPeriodOption } from '../../../../shared/ui/chart-panel/chart-period-option';
 import { DashboardStore } from '../../state/dashboard.store';
-import { ActionItemTone } from '../../models/action-item';
-import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/recent-place';
 import { ChartPeriod } from '../../data/dashboard.repository';
+import { ActionCenter } from './action-center/action-center';
+import { RecentPlacesTable } from './recent-places-table/recent-places-table';
 
-const ACTION_TONE_CLASSES: Record<ActionItemTone, string> = {
-  error: 'bg-error-soft text-error',
-  warning: 'bg-warning-soft text-warning',
-  info: 'bg-info-soft text-info',
-  success: 'bg-success-soft text-success',
-};
-
-const PLACE_STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
-  active: 'success',
-  suspended: 'error',
-  pending: 'warning',
-};
-
-const PERIODS: readonly { readonly value: ChartPeriod; readonly label: string }[] = [
+const REVENUE_PERIODS: readonly ChartPeriodOption[] = [
   { value: 'daily', label: 'يومي' },
   { value: 'weekly', label: 'اسبوعي' },
   { value: 'monthly', label: 'شهري' },
 ];
 
+const GROWTH_PERIODS: readonly ChartPeriodOption[] = [
+  { value: 'weekly', label: 'اسبوعي' },
+  { value: 'monthly', label: 'شهري' },
+  { value: 'yearly', label: 'سنوي' },
+];
+
+const COMPANY_COLOR = '#0583ec';
+const USER_COLOR = '#f5a623';
+const GRID_COLOR = '#f1f5f9';
+const MARKER_FILL_OPACITY = 0.18;
+
 @Component({
   selector: 'app-overview',
-  imports: [DecimalPipe, ChartComponent, StatCard, Badge],
+  imports: [DecimalPipe, ChartComponent, StatCard, ChartPanel, ActionCenter, RecentPlacesTable],
   templateUrl: './overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Overview {
   protected readonly store = inject(DashboardStore);
 
-  protected readonly revenueIcon = 'payments';
-  protected readonly clockIcon = 'clock';
-  protected readonly buildingIcon = 'places';
-  protected readonly usersIcon = 'users';
-
-  protected readonly periods = PERIODS;
-  protected readonly actionToneClasses = ACTION_TONE_CLASSES;
-  protected readonly placeStatusLabel = PLACE_STATUS_LABEL;
-  protected readonly placeStatusTone = PLACE_STATUS_TONE;
+  protected readonly revenuePeriods = REVENUE_PERIODS;
+  protected readonly growthPeriods = GROWTH_PERIODS;
 
   protected readonly revenueChart = computed(() => {
     const series = this.store.revenueSeries();
     return {
-      chart: { type: 'area' as const, toolbar: { show: false }, height: 260 },
+      chart: { type: 'area' as const, toolbar: { show: false }, height: 230 },
       series: [{ name: series?.name ?? '', data: (series?.points ?? []).map((p) => p.value) }],
-      xaxis: { categories: (series?.points ?? []).map((p) => p.label) },
+      xaxis: {
+        categories: (series?.points ?? []).map((p) => p.label),
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+      // The design's revenue chart is a bare wave: no value axis, only faint month rules.
+      yaxis: { show: false },
+      grid: {
+        borderColor: GRID_COLOR,
+        xaxis: { lines: { show: true } },
+        yaxis: { lines: { show: false } },
+      },
+      legend: { show: false },
       stroke: { curve: 'smooth' as const, width: 3 },
-      colors: ['#0583ec'],
+      colors: [COMPANY_COLOR],
       dataLabels: { enabled: false },
     };
   });
 
   protected readonly growthChart = computed(() => {
     const [companies, users] = this.store.growthSeries();
-    const categories = (companies?.points ?? []).map((p) => p.label);
     return {
-      chart: { type: 'line' as const, toolbar: { show: false }, height: 260 },
+      chart: { type: 'area' as const, toolbar: { show: false }, height: 230 },
       series: [
         { name: companies?.name ?? '', data: (companies?.points ?? []).map((p) => p.value) },
         { name: users?.name ?? '', data: (users?.points ?? []).map((p) => p.value) },
       ],
-      xaxis: { categories },
-      stroke: { curve: 'smooth' as const, width: 2 },
-      colors: ['#0583ec', '#f5a623'],
+      xaxis: {
+        categories: (companies?.points ?? []).map((p) => p.label),
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+      // The design draws straight segments, a tinted area and a hollow dot per point.
+      yaxis: { show: true, min: 0, tickAmount: 3, forceNiceScale: true },
+      grid: { borderColor: GRID_COLOR },
+      legend: { show: true, position: 'bottom' as const, horizontalAlign: 'center' as const },
+      stroke: { curve: 'straight' as const, width: 2 },
+      fill: { type: 'solid' as const, opacity: MARKER_FILL_OPACITY },
+      markers: {
+        size: 5,
+        strokeWidth: 2,
+        colors: ['#ffffff'],
+        strokeColors: [COMPANY_COLOR, USER_COLOR],
+        hover: { sizeOffset: 2 },
+      },
+      colors: [COMPANY_COLOR, USER_COLOR],
       dataLabels: { enabled: false },
     };
   });
@@ -79,7 +97,11 @@ export class Overview {
     this.store.loadDashboard();
   }
 
-  protected onPeriodChange(period: ChartPeriod): void {
-    this.store.setPeriod(period);
+  protected onRevenuePeriodChange(period: string): void {
+    this.store.setRevenuePeriod(period as ChartPeriod);
+  }
+
+  protected onGrowthPeriodChange(period: string): void {
+    this.store.setGrowthPeriod(period as ChartPeriod);
   }
 }

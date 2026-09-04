@@ -32,11 +32,12 @@ const RECENT_PLACES: readonly RecentPlace[] = Array.from({ length: 4 }, (_, i) =
   rating: 4.9,
   status: (['active', 'suspended', 'active', 'pending'] as const)[i],
   joinedAt: '2024-01-12',
+  logoUrl: 'assets/pharmacy-logo.jpg',
 }));
 
 const PERIOD_LABELS: Record<ChartPeriod, readonly string[]> = {
-  daily: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-  weekly: ['W1', 'W2', 'W3', 'W4'],
+  daily: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+  weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   yearly: ['2021', '2022', '2023', '2024', '2025'],
 };

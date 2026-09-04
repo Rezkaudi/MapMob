@@ -1,0 +1,81 @@
+<section
+  class="flex flex-col gap-6 rounded-2xl border border-border bg-surface px-3 py-6 drop-shadow-[0_4px_10px_rgba(238,238,238,0.9)]"
+>
+  <header class="flex items-center justify-between gap-4">
+    <h2 class="text-[16px]/[24px] font-bold text-text-primary">أحدث الشركات والمتاجر</h2>
+    <a href="javascript:void(0)" class="text-[14px]/[24px] font-bold text-accent">عرض الكل</a>
+  </header>
+
+  <div class="overflow-x-auto rounded-xl border-[0.5px] border-border">
+    <table class="w-full border-collapse text-right">
+      <thead>
+        <tr class="border-b border-border bg-surface-muted">
+          @for (
+            column of ['الشركة', 'الفئة', 'الموقع', 'الحالة', 'التقييم', 'تاريخ الانضمام'];
+            track column
+          ) {
+            <th
+              class="px-4 py-3.5 text-[13px]/[16px] font-bold whitespace-nowrap text-text-secondary"
+            >
+              {{ column }}
+            </th>
+          }
+          <th class="px-4 py-3.5 text-center text-[13px]/[16px] font-bold text-text-secondary">
+            الإجراء
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (place of places(); track place.id) {
+          <tr class="border-b border-border">
+            <td class="px-4 py-3.5">
+              <span class="flex items-center gap-0.5">
+                @if (place.logoUrl; as logoUrl) {
+                  <img
+                    [src]="logoUrl"
+                    [alt]="place.name"
+                    class="size-8 shrink-0 rounded-lg object-cover"
+                  />
+                } @else {
+                  <span
+                    data-role="logo-fallback"
+                    class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-[13px] font-bold text-primary"
+                    aria-hidden="true"
+                    >{{ place.name.charAt(0) }}</span
+                  >
+                }
+                <span class="text-[14px] font-bold whitespace-nowrap text-text-primary">
+                  {{ place.name }}
+                </span>
+              </span>
+            </td>
+            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
+              {{ place.category }}
+            </td>
+            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
+              {{ place.city }}
+            </td>
+            <td class="px-4 py-3.5">
+              <app-badge [tone]="statusTone[place.status]">{{
+                statusLabel[place.status]
+              }}</app-badge>
+            </td>
+            <td class="px-4 py-3.5 text-[14px] font-bold text-text-primary">{{ place.rating }}</td>
+            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-secondary">
+              {{ place.joinedAt | arabicDate }}
+            </td>
+            <td class="px-4 py-3.5 text-center">
+              <button
+                type="button"
+                class="rounded-md p-1 text-text-secondary"
+                [attr.aria-label]="'إجراءات ' + place.name"
+              >
+                <app-icon name="more-vertical" [size]="14" />
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

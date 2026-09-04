@@ -5,18 +5,11 @@
   <app-search-input placeholder="البحث" class="w-[340px]" />
 
   <div class="flex items-center gap-6">
-    <button type="button" class="relative text-text-primary" aria-label="الإشعارات">
-      <app-icon name="notification" [size]="24" />
-      <span class="absolute end-0 top-0 h-2 w-2 rounded-full bg-error"></span>
+    <!-- The exported bell already carries its red dot, so it renders as an image, not a mask. -->
+    <button type="button" aria-label="الإشعارات">
+      <img src="assets/icons/notification.svg" alt="" class="h-6 w-6" />
     </button>
 
-    <button type="button" class="flex items-center gap-1">
-      <app-avatar [name]="userName()" [imageUrl]="avatarUrl()" [size]="48" />
-      <span class="flex w-12 flex-col items-end justify-center gap-1 text-right">
-        <span class="w-full text-[16px]/[24px] font-medium text-text-navy">{{ userName() }}</span>
-        <span class="w-full text-[14px]/[20px] text-text-muted">{{ userRole() }}</span>
-      </span>
-      <app-icon name="chevron-left" [size]="16" class="text-text-primary" />
-    </button>
+    <app-user-menu [userName]="userName()" [userRole]="userRole()" [avatarUrl]="avatarUrl()" />
   </div>
 </header>
