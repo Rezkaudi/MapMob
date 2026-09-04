@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminShell } from './layout/admin-shell/admin-shell';
+import { signedInGuard } from './features/auth/guards/signed-in.guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminShell,
+    canActivate: [signedInGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {

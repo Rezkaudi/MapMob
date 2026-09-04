@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthStore } from '../../features/auth/state/auth.store';
 import { Sidebar } from '../sidebar/sidebar';
 import { TopBar } from '../top-bar/top-bar';
+
+const FALLBACK_AVATAR_URL = 'assets/admin-avatar.jpg';
 
 @Component({
   selector: 'app-admin-shell',
@@ -10,7 +13,11 @@ import { TopBar } from '../top-bar/top-bar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminShell {
-  protected readonly userName = 'أحمد';
-  protected readonly userRole = 'Admin';
-  protected readonly avatarUrl = 'assets/admin-avatar.jpg';
+  private readonly store = inject(AuthStore);
+
+  protected readonly userName = computed(() => this.store.user()?.name ?? '');
+  protected readonly userRole = computed(() => this.store.user()?.role ?? '');
+  protected readonly avatarUrl = computed(
+    () => this.store.user()?.avatarUrl ?? FALLBACK_AVATAR_URL,
+  );
 }
