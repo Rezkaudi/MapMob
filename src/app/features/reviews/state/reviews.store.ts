@@ -28,8 +28,9 @@ export const ReviewsStore = signalStore(
   withState(initialState),
   withRequestStatus(),
   withPagination(),
-  withComputed(({ summary }) => ({
+  withComputed(({ summary, reviews, isLoading }) => ({
     hasSummary: computed(() => summary() !== null),
+    hasNoResults: computed(() => !isLoading() && reviews().length === 0),
   })),
   withMethods((store, repository = inject(ReviewRepository)) => ({
     loadReviews: rxMethod<void>(

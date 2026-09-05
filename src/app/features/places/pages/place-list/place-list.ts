@@ -8,6 +8,9 @@ import { BulkActionBar } from '../../../../shared/ui/bulk-action-bar/bulk-action
 import { ChipOption } from '../../../../shared/ui/filter-chips/chip-option';
 import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
 import { EmptyState } from '../../../../shared/ui/empty-state/empty-state';
+import { ErrorState } from '../../../../shared/ui/error-state/error-state';
+import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
+import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
 import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
@@ -32,6 +35,9 @@ const STATUS_DOT: Record<PlaceStatus, string> = {
   suspended: 'bg-status-error',
 };
 
+/** Tick box, seven data columns and the action column. */
+const TABLE_COLUMN_COUNT = 9;
+
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const ALL_STATUSES: readonly PlaceStatus[] = ['active', 'pending', 'suspended'];
 
@@ -48,6 +54,9 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
     BulkActionBar,
     ConfirmDialog,
     EmptyState,
+    ErrorState,
+    TableEmpty,
+    TableSkeleton,
     PackageBadge,
     PlaceFilters,
     PlaceLogo,
@@ -62,6 +71,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
 export class PlaceList {
   protected readonly store = inject(PlacesStore);
   protected readonly statusLabel = PLACE_STATUS_LABEL;
+  protected readonly tableColumnCount = TABLE_COLUMN_COUNT;
   protected readonly statusTone = STATUS_TONE;
 
   protected readonly categoryOptions: SelectOption[] = CATEGORIES.map((category) => ({
@@ -93,6 +103,11 @@ export class PlaceList {
   });
 
   constructor() {
+    this.store.loadPlaces();
+    this.store.loadStatusCounts();
+  }
+
+  protected reload(): void {
     this.store.loadPlaces();
     this.store.loadStatusCounts();
   }

@@ -42,3 +42,18 @@ describe('ActionCenter', () => {
     expect(buttons[0].textContent.trim()).toBe('مراجعة');
   });
 });
+
+describe('ActionCenter while loading', () => {
+  @Component({
+    imports: [ActionCenter],
+    template: `<app-action-center [items]="[]" [isLoading]="true" />`,
+  })
+  class HostLoadingComponent {}
+
+  it('draws placeholder rows', () => {
+    const fixture = TestBed.createComponent(HostLoadingComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('app-skeleton').length).toBeGreaterThan(0);
+  });
+});

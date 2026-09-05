@@ -44,4 +44,11 @@ describe('RegionsStore', () => {
     expect(requestedSearch).toBe('حمص');
     expect(store.pageIndex()).toBe(0);
   });
+  it('reports no results only once the load has finished', () => {
+    const store = createStore({ getRegions: () => of({ items: [], totalCount: 0 }) });
+
+    store.loadRegions();
+
+    expect(store.hasNoResults()).toBe(true);
+  });
 });

@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 import { AuthStore } from '../../state/auth.store';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, AppIcon],
+  imports: [ReactiveFormsModule, AppIcon, Spinner],
   templateUrl: './login.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

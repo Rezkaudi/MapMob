@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { DecimalPipe } from '@angular/common';
 import { ChartComponent } from 'ng-apexcharts';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
+import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { ChartPanel } from '../../../../shared/ui/chart-panel/chart-panel';
 import { ChartPeriodOption } from '../../../../shared/ui/chart-panel/chart-period-option';
 import { DashboardStore } from '../../state/dashboard.store';
@@ -28,7 +29,15 @@ const MARKER_FILL_OPACITY = 0.18;
 
 @Component({
   selector: 'app-overview',
-  imports: [DecimalPipe, ChartComponent, StatCard, ChartPanel, ActionCenter, RecentPlacesTable],
+  imports: [
+    DecimalPipe,
+    ChartComponent,
+    StatCard,
+    ChartPanel,
+    ErrorState,
+    ActionCenter,
+    RecentPlacesTable,
+  ],
   templateUrl: './overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

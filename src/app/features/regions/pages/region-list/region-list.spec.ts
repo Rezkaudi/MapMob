@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { RegionRepository } from '../../data/region.repository';
 import { RegionList } from './region-list';
 
@@ -37,5 +37,35 @@ describe('RegionList', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('المحافظات والمناطق');
     expect(text).toContain('طرطوس');
+  });
+});
+
+describe('RegionList while loading', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: RegionRepository, useValue: { getRegions: () => NEVER } }],
+    });
+  });
+
+  it('draws placeholder rows while the regions load', () => {
+    const fixture = TestBed.createComponent(RegionList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+  });
+  it('says so when there are no regions to show', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: RegionRepository,
+          useValue: { getRegions: () => of({ items: [], totalCount: 0 }) },
+        },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(RegionList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-table-empty')).toBeTruthy();
   });
 });

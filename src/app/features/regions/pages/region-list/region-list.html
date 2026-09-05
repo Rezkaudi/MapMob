@@ -15,83 +15,103 @@
     </button>
   </div>
 
-  <app-table-toolbar searchPlaceholder="ابحث عن محافظة..." (queryChange)="onSearch($event)" />
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="store.loadRegions()" />
+  } @else {
+    <app-table-toolbar searchPlaceholder="ابحث عن محافظة..." (queryChange)="onSearch($event)" />
 
-  <div class="overflow-hidden rounded-xl border border-border">
-    <table class="w-full text-right">
-      <thead>
-        <tr class="border-b border-border bg-surface-muted">
-          <th class="w-[67px] px-4 py-[14px]">
-            <input
-              type="checkbox"
-              aria-label="تحديد الكل"
-              class="size-[18px] rounded border border-placeholder bg-white"
-            />
-          </th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">المحافظة</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">عدد المناطق</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">عدد الأماكن</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">آخر تحديث</th>
-          <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
-            الإجراء
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (region of store.regions(); track region.id) {
-          <tr class="border-b border-border bg-surface last:border-0">
-            <td class="px-4 py-[14px]">
+    <div class="overflow-hidden rounded-xl border border-border">
+      <table class="w-full text-right">
+        <thead>
+          <tr class="border-b border-border bg-surface-muted">
+            <th class="w-[67px] px-4 py-[14px]">
               <input
                 type="checkbox"
-                [attr.aria-label]="'تحديد ' + region.name"
+                aria-label="تحديد الكل"
                 class="size-[18px] rounded border border-placeholder bg-white"
               />
-            </td>
-            <td class="px-4 py-[14px] text-sm font-bold text-text-primary">{{ region.name }}</td>
-            <td class="px-4 py-[14px] text-sm text-text-secondary">{{ region.districtCount }}</td>
-            <td class="px-4 py-[14px] text-sm text-text-secondary">{{ region.placeCount }}</td>
-            <td class="px-4 py-[14px]">
-              <app-badge [tone]="statusTone[region.status]">
-                {{ statusLabel[region.status] }}
-              </app-badge>
-            </td>
-            <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
-              {{ region.updatedAt | arabicDate }}
-            </td>
-            <td class="px-4 py-[14px] text-center">
-              <app-action-menu>
-                <button
-                  type="button"
-                  class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
-                >
-                  تعديل
-                </button>
-                <button
-                  type="button"
-                  class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
-                >
-                  تغيير الحالة
-                </button>
-                <button
-                  type="button"
-                  class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
-                >
-                  حذف
-                </button>
-              </app-action-menu>
-            </td>
+            </th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">المحافظة</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">عدد المناطق</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">عدد الأماكن</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">آخر تحديث</th>
+            <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
+              الإجراء
+            </th>
           </tr>
+        </thead>
+        @if (store.isLoading()) {
+          <tbody
+            app-table-skeleton
+            [columnCount]="tableColumnCount"
+            [rowCount]="store.pageSize()"
+          ></tbody>
+        } @else {
+          <tbody>
+            @for (region of store.regions(); track region.id) {
+              <tr class="border-b border-border bg-surface last:border-0">
+                <td class="px-4 py-[14px]">
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="'تحديد ' + region.name"
+                    class="size-[18px] rounded border border-placeholder bg-white"
+                  />
+                </td>
+                <td class="px-4 py-[14px] text-sm font-bold text-text-primary">
+                  {{ region.name }}
+                </td>
+                <td class="px-4 py-[14px] text-sm text-text-secondary">
+                  {{ region.districtCount }}
+                </td>
+                <td class="px-4 py-[14px] text-sm text-text-secondary">{{ region.placeCount }}</td>
+                <td class="px-4 py-[14px]">
+                  <app-badge [tone]="statusTone[region.status]">
+                    {{ statusLabel[region.status] }}
+                  </app-badge>
+                </td>
+                <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
+                  {{ region.updatedAt | arabicDate }}
+                </td>
+                <td class="px-4 py-[14px] text-center">
+                  <app-action-menu>
+                    <button
+                      type="button"
+                      class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      type="button"
+                      class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                    >
+                      تغيير الحالة
+                    </button>
+                    <button
+                      type="button"
+                      class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
+                    >
+                      حذف
+                    </button>
+                  </app-action-menu>
+                </td>
+              </tr>
+            }
+          </tbody>
         }
-      </tbody>
-    </table>
-  </div>
+      </table>
 
-  <app-table-pagination
-    [pageIndex]="store.pageIndex()"
-    [pageSize]="store.pageSize()"
-    [totalCount]="store.totalCount()"
-    itemNoun="محافظة"
-    (pageIndexChange)="onPageChange($event)"
-  />
+      @if (store.hasNoResults()) {
+        <app-table-empty message="لا توجد محافظات لعرضها" />
+      }
+    </div>
+
+    <app-table-pagination
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="محافظة"
+      (pageIndexChange)="onPageChange($event)"
+    />
+  }
 </div>

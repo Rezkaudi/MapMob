@@ -1,0 +1,16 @@
+@if (hasFailed()) {
+  <ng-content />
+} @else {
+  @if (!isLoaded()) {
+    <span class="absolute inset-0">
+      <app-skeleton width="100%" height="100%" [shape]="skeletonShape()" />
+    </span>
+  }
+  <img
+    [src]="src()"
+    [alt]="alt()"
+    [class]="imageClasses()"
+    (load)="markLoaded()"
+    (error)="markFailed()"
+  />
+}

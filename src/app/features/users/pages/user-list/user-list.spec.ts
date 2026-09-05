@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { UserRepository } from '../../data/user.repository';
 import { UserList } from './user-list';
 
@@ -46,5 +46,41 @@ describe('UserList', () => {
     expect(text).toContain('المستخدمين');
     expect(text).toContain('أحمد جمال');
     expect(text).toContain('3,000');
+  });
+});
+
+describe('UserList while loading', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: UserRepository, useValue: { getUsers: () => NEVER, getSummary: () => NEVER } },
+      ],
+    });
+  });
+
+  it('draws placeholder rows and placeholder stat cards', () => {
+    const fixture = TestBed.createComponent(UserList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelectorAll('app-skeleton').length).toBeGreaterThan(0);
+  });
+  it('says so when there are no users to show', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: UserRepository,
+          useValue: {
+            getUsers: () => of({ items: [], totalCount: 0 }),
+            getSummary: () => of({}),
+          },
+        },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(UserList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-table-empty')).toBeTruthy();
   });
 });

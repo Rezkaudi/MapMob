@@ -1,6 +1,6 @@
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { PlaceRepository } from '../../data/place.repository';
 import { createPlace } from '../../testing/place-fixture';
 import { PlaceList } from './place-list';
@@ -94,5 +94,33 @@ describe('PlaceList', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('لا توجد أماكن مضافة حتى الآن');
+  });
+  it('shows placeholder rows while the places load', () => {
+    configure({ getPlaces: () => NEVER });
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+    expect(fixture.nativeElement.textContent).not.toContain('لا توجد أماكن مضافة حتى الآن');
+  });
+
+  it('offers a retry when the places cannot be loaded', () => {
+    let callCount = 0;
+    configure({
+      getPlaces: () => {
+        callCount += 1;
+        return throwError(() => new Error('تعذر الاتصال بالخادم'));
+      },
+    });
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    const alert: HTMLElement = fixture.nativeElement.querySelector('[role="alert"]');
+    expect(alert.textContent).toContain('تعذر الاتصال بالخادم');
+
+    alert.querySelector('button')!.click();
+    expect(callCount).toBe(2);
   });
 });

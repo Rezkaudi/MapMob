@@ -29,4 +29,10 @@ describe('MapPicker', () => {
 
     expect(picked).toEqual({ latitude: 30, longitude: 40 });
   });
+  it('lifts the loading cover once leaflet is ready', () => {
+    const fixture = render();
+
+    expect(fixture.nativeElement.querySelector('app-skeleton')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-map-canvas]')).toBeTruthy();
+  });
 });

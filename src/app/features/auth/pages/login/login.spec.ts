@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { AuthRepository } from '../../data/auth.repository';
 import { Login } from './login';
 
@@ -53,5 +53,37 @@ describe('Login', () => {
     fixture.detectChanges();
 
     expect(passwordInput().type).toBe('text');
+  });
+});
+
+describe('Login while signing in', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: AuthRepository, useValue: { signIn: () => NEVER } },
+      ],
+    });
+  });
+
+  it('spins inside the submit button and blocks a second submit', () => {
+    const fixture = TestBed.createComponent(Login);
+    fixture.detectChanges();
+
+    const email: HTMLInputElement = fixture.nativeElement.querySelector('#email');
+    const password: HTMLInputElement = fixture.nativeElement.querySelector('#password');
+    email.value = 'admin@mapmob.com';
+    email.dispatchEvent(new Event('input'));
+    password.value = '12345678';
+    password.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    const submit: HTMLButtonElement = fixture.nativeElement.querySelector('button[type="submit"]');
+    submit.click();
+    fixture.detectChanges();
+
+    expect(submit.disabled).toBe(true);
+    expect(submit.getAttribute('aria-busy')).toBe('true');
+    expect(submit.querySelector('app-spinner')).toBeTruthy();
   });
 });

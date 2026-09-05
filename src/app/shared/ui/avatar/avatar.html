@@ -1,11 +1,18 @@
 @if (imageUrl(); as url) {
-  <img
+  <app-lazy-image
     [src]="url"
     [alt]="name()"
-    class="rounded-full object-cover"
+    skeletonShape="circle"
+    imageClass="size-full rounded-full object-cover"
     [style.width]="sizeInPixels()"
     [style.height]="sizeInPixels()"
-  />
+  >
+    <span
+      class="flex size-full items-center justify-center rounded-full bg-primary-soft text-sm font-medium text-primary"
+    >
+      {{ initials() }}
+    </span>
+  </app-lazy-image>
 } @else {
   <span
     class="flex items-center justify-center rounded-full bg-primary-soft text-sm font-medium text-primary"

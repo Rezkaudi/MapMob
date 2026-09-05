@@ -1,5 +1,5 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, of } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
@@ -22,6 +22,9 @@ export const RegionsStore = signalStore(
   withState(initialState),
   withRequestStatus(),
   withPagination(),
+  withComputed(({ regions, isLoading }) => ({
+    hasNoResults: computed(() => !isLoading() && regions().length === 0),
+  })),
   withMethods((store, repository = inject(RegionRepository)) => ({
     loadRegions: rxMethod<void>(
       pipe(

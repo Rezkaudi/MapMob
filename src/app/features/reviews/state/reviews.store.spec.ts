@@ -80,4 +80,14 @@ describe('ReviewsStore', () => {
 
     expect(requestedPageIndex).toBe(2);
   });
+  it('reports no results only once the load has finished', () => {
+    const store = createStore({
+      getReviews: () => of({ items: [], totalCount: 0 } satisfies PagedResult<Review>),
+      getSummary: () => of(SUMMARY),
+    });
+
+    store.loadReviews();
+
+    expect(store.hasNoResults()).toBe(true);
+  });
 });

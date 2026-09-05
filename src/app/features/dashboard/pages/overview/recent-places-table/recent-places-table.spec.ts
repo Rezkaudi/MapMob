@@ -82,3 +82,18 @@ describe('RecentPlacesTable', () => {
     ).toBe('ص');
   });
 });
+
+describe('RecentPlacesTable while loading', () => {
+  @Component({
+    imports: [RecentPlacesTable],
+    template: `<app-recent-places-table [places]="[]" [isLoading]="true" />`,
+  })
+  class HostLoadingComponent {}
+
+  it('draws placeholder rows', () => {
+    const fixture = TestBed.createComponent(HostLoadingComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+  });
+});

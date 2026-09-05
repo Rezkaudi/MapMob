@@ -23,6 +23,19 @@ class HostComponent {
   readonly activePeriod = signal('monthly');
 }
 
+@Component({
+  imports: [ChartPanel],
+  template: `<app-chart-panel
+    title="الإيرادات"
+    [periods]="[]"
+    activePeriod="monthly"
+    [isLoading]="true"
+  >
+    <p data-role="chart">chart</p>
+  </app-chart-panel>`,
+})
+class HostLoadingComponent {}
+
 describe('ChartPanel', () => {
   it('renders the title and one button per period', () => {
     const fixture = TestBed.createComponent(HostComponent);
@@ -54,5 +67,22 @@ describe('ChartPanel', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.activePeriod()).toBe('daily');
+  });
+});
+
+describe('ChartPanel while loading', () => {
+  it('draws a placeholder in place of the chart', () => {
+    const fixture = TestBed.createComponent(HostLoadingComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-skeleton')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-role="chart"]')).toBeNull();
+  });
+
+  it('keeps showing its title', () => {
+    const fixture = TestBed.createComponent(HostLoadingComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('الإيرادات');
   });
 });

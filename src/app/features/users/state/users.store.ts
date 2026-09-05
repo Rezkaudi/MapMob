@@ -1,5 +1,5 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, of, forkJoin } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
@@ -25,6 +25,9 @@ export const UsersStore = signalStore(
   withState(initialState),
   withRequestStatus(),
   withPagination(),
+  withComputed(({ users, isLoading }) => ({
+    hasNoResults: computed(() => !isLoading() && users().length === 0),
+  })),
   withMethods((store, repository = inject(UserRepository)) => ({
     loadUsers: rxMethod<void>(
       pipe(

@@ -51,4 +51,10 @@ describe('AdminShell', () => {
     expect(el.textContent).toContain('سارة');
     expect(el.textContent).toContain('Editor');
   });
+  it('carries the route progress bar for lazy pages', () => {
+    const fixture = TestBed.createComponent(AdminShell);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-route-progress')).toBeTruthy();
+  });
 });

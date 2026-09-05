@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { ChartPeriod, DashboardRepository } from '../data/dashboard.repository';
 import { DashboardStore } from './dashboard.store';
 
@@ -89,5 +89,34 @@ describe('DashboardStore', () => {
     expect(growthRequest).toBe('yearly');
     expect(revenueRequests).toBe(0);
     expect(store.growthSeries()).toEqual(GROWTH_SERIES);
+  });
+  it('marks the revenue chart as loading while a new period is fetched', () => {
+    const store = createStore({ getRevenueSeries: () => NEVER });
+
+    store.setRevenuePeriod('daily');
+
+    expect(store.isRevenueLoading()).toBe(true);
+  });
+
+  it('marks the growth chart as loading while a new period is fetched', () => {
+    const store = createStore({ getGrowthSeries: () => NEVER });
+
+    store.setGrowthPeriod('daily');
+
+    expect(store.isGrowthLoading()).toBe(true);
+  });
+  it('treats a full page load as both charts loading', () => {
+    const store = createStore({
+      getSummary: () => NEVER,
+      getActionItems: () => NEVER,
+      getRecentPlaces: () => NEVER,
+      getRevenueSeries: () => NEVER,
+      getGrowthSeries: () => NEVER,
+    });
+
+    store.loadDashboard();
+
+    expect(store.isRevenueChartLoading()).toBe(true);
+    expect(store.isGrowthChartLoading()).toBe(true);
   });
 });

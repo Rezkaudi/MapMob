@@ -2,11 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { RouterLink } from '@angular/router';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
+import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { InfoCard } from '../../../../shared/ui/info-card/info-card';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PlaceDetailStore } from '../../state/place-detail.store';
+import { PlaceDetailSkeleton } from './place-detail-skeleton/place-detail-skeleton';
 import { PlaceGallery } from './place-gallery/place-gallery';
 import { PlaceContactCard } from './place-contact-card/place-contact-card';
 import { PlaceHoursCard } from './place-hours-card/place-hours-card';
@@ -29,7 +31,9 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
   imports: [
     AppIcon,
     Badge,
+    ErrorState,
     InfoCard,
+    PlaceDetailSkeleton,
     PlaceGallery,
     PlaceContactCard,
     PlaceHoursCard,
@@ -55,5 +59,9 @@ export class PlaceDetail {
 
   constructor() {
     this.store.loadPlace(this.id);
+  }
+
+  protected reload(): void {
+    this.store.loadPlace(this.id());
   }
 }

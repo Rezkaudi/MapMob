@@ -4,7 +4,16 @@
   [style.height]="sizeInPixels"
 >
   @if (imageUrl()) {
-    <img [src]="imageUrl()" [alt]="name()" class="size-full object-cover" />
+    <app-lazy-image
+      [src]="imageUrl()"
+      [alt]="name()"
+      imageClass="size-full object-cover"
+      class="size-full"
+    >
+      <span class="flex size-full items-center justify-center text-sm font-bold text-white">
+        {{ initial() }}
+      </span>
+    </app-lazy-image>
   } @else {
     <span class="text-sm font-bold text-white">{{ initial() }}</span>
   }

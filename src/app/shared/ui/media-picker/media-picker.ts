@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
 import { FileDropzone } from '../file-dropzone/file-dropzone';
+import { LazyImage } from '../lazy-image/lazy-image';
 import { FileRules, findFileError } from './file-rules';
 import { MediaFile } from './media-file';
 
@@ -19,7 +20,7 @@ const BYTES_PER_MEGABYTE = 1024 * 1024;
 
 @Component({
   selector: 'app-media-picker',
-  imports: [AppIcon, FileDropzone],
+  imports: [AppIcon, FileDropzone, LazyImage],
   templateUrl: './media-picker.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

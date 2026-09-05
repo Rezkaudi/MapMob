@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { ReviewRepository } from '../../data/review.repository';
 import { ReviewList } from './review-list';
 
@@ -43,5 +43,43 @@ describe('ReviewList', () => {
     expect(text).toContain('أحمد جمال');
     expect(text).toContain('صيدلية الحياة');
     expect(text).toContain('3,000');
+  });
+});
+
+describe('ReviewList while loading', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ReviewRepository,
+          useValue: { getReviews: () => NEVER, getSummary: () => NEVER },
+        },
+      ],
+    });
+  });
+
+  it('draws placeholder rows while the reviews load', () => {
+    const fixture = TestBed.createComponent(ReviewList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+  });
+  it('says so when there are no reviews to show', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ReviewRepository,
+          useValue: {
+            getReviews: () => of({ items: [], totalCount: 0 }),
+            getSummary: () => of({}),
+          },
+        },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(ReviewList);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-table-empty')).toBeTruthy();
   });
 });

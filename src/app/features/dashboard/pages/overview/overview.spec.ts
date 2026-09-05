@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { DashboardRepository } from '../../data/dashboard.repository';
 import { Overview } from './overview';
 
@@ -59,5 +59,39 @@ describe('Overview', () => {
     expect(chart.stroke.curve).toBe('straight');
     expect(chart.markers.size).toBeGreaterThan(0);
     expect(chart.yaxis.min).toBe(0);
+  });
+});
+
+describe('Overview while loading', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: DashboardRepository,
+          useValue: {
+            getSummary: () => NEVER,
+            getActionItems: () => NEVER,
+            getRecentPlaces: () => NEVER,
+            getRevenueSeries: () => NEVER,
+            getGrowthSeries: () => NEVER,
+          },
+        },
+      ],
+    });
+  });
+
+  it('draws placeholders for the stat cards, the charts and the panels', () => {
+    const fixture = TestBed.createComponent(Overview);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('app-skeleton').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
+  });
+
+  it('keeps the page title while the data loads', () => {
+    const fixture = TestBed.createComponent(Overview);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('نظرة عامة');
   });
 });

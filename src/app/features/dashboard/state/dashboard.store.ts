@@ -1,7 +1,7 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of, forkJoin, map } from 'rxjs';
+import { pipe, switchMap, tap, catchError, of, forkJoin } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { ActionItem } from '../models/action-item';
 import { ChartSeries } from '../models/chart-point';
@@ -17,6 +17,8 @@ interface DashboardState {
   readonly growthSeries: readonly ChartSeries[];
   readonly revenuePeriod: ChartPeriod;
   readonly growthPeriod: ChartPeriod;
+  readonly isRevenueLoading: boolean;
+  readonly isGrowthLoading: boolean;
 }
 
 /** The design marks شهري active on the revenue chart and اسبوعي on the growth chart. */
@@ -28,12 +30,18 @@ const initialState: DashboardState = {
   growthSeries: [],
   revenuePeriod: 'monthly',
   growthPeriod: 'weekly',
+  isRevenueLoading: false,
+  isGrowthLoading: false,
 };
 
 export const DashboardStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withRequestStatus(),
+  withComputed(({ isLoading, isRevenueLoading, isGrowthLoading }) => ({
+    isRevenueChartLoading: computed(() => isLoading() || isRevenueLoading()),
+    isGrowthChartLoading: computed(() => isLoading() || isGrowthLoading()),
+  })),
   withMethods((store, repository = inject(DashboardRepository)) => ({
     loadDashboard: rxMethod<void>(
       pipe(
@@ -61,11 +69,12 @@ export const DashboardStore = signalStore(
 
     setRevenuePeriod: rxMethod<ChartPeriod>(
       pipe(
-        tap((revenuePeriod) => patchState(store, { revenuePeriod })),
+        tap((revenuePeriod) => patchState(store, { revenuePeriod, isRevenueLoading: true })),
         switchMap((period) =>
           repository.getRevenueSeries(period).pipe(
-            map((revenueSeries) => patchState(store, { revenueSeries })),
+            tap((revenueSeries) => patchState(store, { revenueSeries, isRevenueLoading: false })),
             catchError((error: Error) => {
+              patchState(store, { isRevenueLoading: false });
               store.setError(error.message);
               return of(null);
             }),
@@ -76,11 +85,12 @@ export const DashboardStore = signalStore(
 
     setGrowthPeriod: rxMethod<ChartPeriod>(
       pipe(
-        tap((growthPeriod) => patchState(store, { growthPeriod })),
+        tap((growthPeriod) => patchState(store, { growthPeriod, isGrowthLoading: true })),
         switchMap((period) =>
           repository.getGrowthSeries(period).pipe(
-            map((growthSeries) => patchState(store, { growthSeries })),
+            tap((growthSeries) => patchState(store, { growthSeries, isGrowthLoading: false })),
             catchError((error: Error) => {
+              patchState(store, { isGrowthLoading: false });
               store.setError(error.message);
               return of(null);
             }),

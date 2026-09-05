@@ -29,7 +29,12 @@
             preload="metadata"
           ></video>
         } @else {
-          <img [src]="item.previewUrl" [alt]="item.name" class="size-full object-cover" />
+          <app-lazy-image
+            [src]="item.previewUrl"
+            [alt]="item.name"
+            imageClass="size-full object-cover"
+            class="size-full"
+          />
         }
 
         @if (first && kind() === 'image') {

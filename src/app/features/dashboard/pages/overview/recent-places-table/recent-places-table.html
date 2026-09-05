@@ -25,57 +25,63 @@
           </th>
         </tr>
       </thead>
-      <tbody>
-        @for (place of places(); track place.id) {
-          <tr class="border-b border-border">
-            <td class="px-4 py-3.5">
-              <span class="flex items-center gap-0.5">
-                @if (place.logoUrl; as logoUrl) {
-                  <img
-                    [src]="logoUrl"
-                    [alt]="place.name"
-                    class="size-8 shrink-0 rounded-lg object-cover"
-                  />
-                } @else {
-                  <span
-                    data-role="logo-fallback"
-                    class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-[13px] font-bold text-primary"
-                    aria-hidden="true"
-                    >{{ place.name.charAt(0) }}</span
-                  >
-                }
-                <span class="text-[14px] font-bold whitespace-nowrap text-text-primary">
-                  {{ place.name }}
+      @if (isLoading()) {
+        <tbody app-table-skeleton [columnCount]="tableColumnCount" [rowCount]="4"></tbody>
+      } @else {
+        <tbody>
+          @for (place of places(); track place.id) {
+            <tr class="border-b border-border">
+              <td class="px-4 py-3.5">
+                <span class="flex items-center gap-0.5">
+                  @if (place.logoUrl; as logoUrl) {
+                    <app-lazy-image
+                      [src]="logoUrl"
+                      [alt]="place.name"
+                      imageClass="size-8 rounded-lg object-cover"
+                    />
+                  } @else {
+                    <span
+                      data-role="logo-fallback"
+                      class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-[13px] font-bold text-primary"
+                      aria-hidden="true"
+                      >{{ place.name.charAt(0) }}</span
+                    >
+                  }
+                  <span class="text-[14px] font-bold whitespace-nowrap text-text-primary">
+                    {{ place.name }}
+                  </span>
                 </span>
-              </span>
-            </td>
-            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
-              {{ place.category }}
-            </td>
-            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
-              {{ place.city }}
-            </td>
-            <td class="px-4 py-3.5">
-              <app-badge [tone]="statusTone[place.status]">{{
-                statusLabel[place.status]
-              }}</app-badge>
-            </td>
-            <td class="px-4 py-3.5 text-[14px] font-bold text-text-primary">{{ place.rating }}</td>
-            <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-secondary">
-              {{ place.joinedAt | arabicDate }}
-            </td>
-            <td class="px-4 py-3.5 text-center">
-              <button
-                type="button"
-                class="rounded-md p-1 text-text-secondary"
-                [attr.aria-label]="'إجراءات ' + place.name"
-              >
-                <app-icon name="more-vertical" [size]="14" />
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
+              </td>
+              <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
+                {{ place.category }}
+              </td>
+              <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-primary">
+                {{ place.city }}
+              </td>
+              <td class="px-4 py-3.5">
+                <app-badge [tone]="statusTone[place.status]">{{
+                  statusLabel[place.status]
+                }}</app-badge>
+              </td>
+              <td class="px-4 py-3.5 text-[14px] font-bold text-text-primary">
+                {{ place.rating }}
+              </td>
+              <td class="px-4 py-3.5 text-[14px] whitespace-nowrap text-text-secondary">
+                {{ place.joinedAt | arabicDate }}
+              </td>
+              <td class="px-4 py-3.5 text-center">
+                <button
+                  type="button"
+                  class="rounded-md p-1 text-text-secondary"
+                  [attr.aria-label]="'إجراءات ' + place.name"
+                >
+                  <app-icon name="more-vertical" [size]="14" />
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      }
     </table>
   </div>
 </section>

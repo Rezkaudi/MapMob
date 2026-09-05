@@ -19,6 +19,12 @@ class HostComponent {}
 })
 class HostWithDeltaComponent {}
 
+@Component({
+  imports: [StatCard],
+  template: `<app-stat-card icon="users" label="إجمالي المستخدمين" value="0" [isLoading]="true" />`,
+})
+class HostLoadingComponent {}
+
 describe('StatCard', () => {
   it('renders the label and value', () => {
     const fixture = TestBed.createComponent(HostComponent);
@@ -43,5 +49,15 @@ describe('StatCard', () => {
     const chip: HTMLElement = fixture.nativeElement.querySelector('[data-role="delta"]');
     expect(chip.textContent).toContain('320 جديد');
     expect(chip.querySelector('app-icon')).toBeTruthy();
+  });
+});
+
+describe('StatCard while loading', () => {
+  it('draws placeholders instead of the label and value', () => {
+    const fixture = TestBed.createComponent(HostLoadingComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('app-skeleton').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.textContent).not.toContain('إجمالي المستخدمين');
   });
 });

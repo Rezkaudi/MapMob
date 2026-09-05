@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
+import { LazyImage } from '../../../../../shared/ui/lazy-image/lazy-image';
 
 const THUMBNAIL_COUNT = 2;
 
 @Component({
   selector: 'app-place-gallery',
-  imports: [AppIcon],
+  imports: [AppIcon, LazyImage],
   templateUrl: './place-gallery.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

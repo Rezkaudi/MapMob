@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { LazyImage } from '../lazy-image/lazy-image';
 
 const INITIALS_LENGTH = 2;
 const DEFAULT_SIZE_PX = 40;
 
 @Component({
   selector: 'app-avatar',
+  imports: [LazyImage],
   templateUrl: './avatar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

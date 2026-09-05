@@ -1,0 +1,14 @@
+<div role="alert" class="flex flex-col items-center justify-center gap-4 py-16 text-center">
+  <span class="flex size-12 items-center justify-center rounded-full bg-error-soft text-error">
+    <app-icon name="info" [size]="24" />
+  </span>
+  <p class="text-[16px]/[24px] font-bold text-text-primary">{{ message() }}</p>
+  <button
+    type="button"
+    class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text-primary hover:bg-surface-muted"
+    (click)="retry.emit()"
+  >
+    <span>{{ retryLabel() }}</span>
+    <app-icon name="refresh" [size]="14" />
+  </button>
+</div>

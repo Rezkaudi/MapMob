@@ -1,0 +1,7 @@
+@for (row of rows(); track row) {
+  <tr class="h-16 border-b border-border last:border-0">
+    @for (column of columns(); track column) {
+      <td class="px-4 py-[14px]"><app-skeleton height="14px" shape="text" /></td>
+    }
+  </tr>
+}

@@ -55,4 +55,14 @@ describe('UsersStore', () => {
     expect(requestedSearch).toBe('أحمد');
     expect(store.pageIndex()).toBe(0);
   });
+  it('reports no results only once the load has finished', () => {
+    const store = createStore({
+      getUsers: () => of({ items: [], totalCount: 0 }),
+      getSummary: () => of(SUMMARY),
+    });
+
+    store.loadUsers();
+
+    expect(store.hasNoResults()).toBe(true);
+  });
 });

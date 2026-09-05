@@ -89,10 +89,14 @@
 
         <button
           type="submit"
-          class="h-12 w-full rounded-lg bg-primary px-5 py-3 text-[16px]/[24px] font-bold tracking-[0.5px] text-white disabled:opacity-60"
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-[16px]/[24px] font-bold tracking-[0.5px] text-white disabled:opacity-60"
           [disabled]="store.isLoading()"
+          [attr.aria-busy]="store.isLoading() ? 'true' : null"
         >
-          تسجيل دخول
+          @if (store.isLoading()) {
+            <app-spinner [size]="20" label="جاري تسجيل الدخول" />
+          }
+          <span>تسجيل دخول</span>
         </button>
       </form>
     </div>

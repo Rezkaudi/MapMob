@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
+import { Skeleton } from '../../../../../shared/ui/skeleton/skeleton';
 import { ActionItem, ActionItemTone } from '../../../models/action-item';
 
 /** Tinted row background per tone, straight from the design. */
@@ -17,6 +18,9 @@ const ICON_CLASSES: Record<ActionItemTone, string> = {
   success: 'bg-status-success',
 };
 
+/** Rows drawn while the list loads. */
+const PLACEHOLDER_ROWS = [0, 1, 2, 3];
+
 const ICON_NAMES: Record<ActionItemTone, string> = {
   error: 'complaints',
   warning: 'reviews',
@@ -26,12 +30,15 @@ const ICON_NAMES: Record<ActionItemTone, string> = {
 
 @Component({
   selector: 'app-action-center',
-  imports: [AppIcon],
+  imports: [AppIcon, Skeleton],
   templateUrl: './action-center.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionCenter {
   readonly items = input.required<readonly ActionItem[]>();
+  readonly isLoading = input<boolean>(false);
+
+  protected readonly placeholderRows = PLACEHOLDER_ROWS;
 
   protected readonly rowClasses = ROW_CLASSES;
   protected readonly iconClasses = ICON_CLASSES;

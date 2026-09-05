@@ -25,7 +25,9 @@
     }
   </div>
 
-  @if (store.hasNoResults() && !store.search()) {
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="reload()" />
+  } @else if (store.hasNoResults() && !store.search()) {
     <app-empty-state
       title="لا توجد أماكن مضافة حتى الآن"
       description="أضف أول مكان إلى المنصة للبدء بإدارة الشركات والمتاجر."
@@ -89,84 +91,96 @@
             </th>
           </tr>
         </thead>
-        <tbody>
-          @for (place of store.places(); track place.id) {
-            <tr class="h-16 border-b border-border last:border-0">
-              <td class="px-4">
-                <input
-                  type="checkbox"
-                  [attr.aria-label]="'تحديد ' + place.name"
-                  class="size-[18px] rounded border border-placeholder bg-white accent-primary"
-                  [checked]="store.isSelected(place.id)"
-                  (change)="store.toggleSelected(place.id)"
-                />
-              </td>
-              <td class="px-4">
-                <div class="flex items-center gap-3">
-                  <app-place-logo [name]="place.name" [imageUrl]="place.logoUrl" />
-                  <div class="flex flex-col">
-                    <span class="text-[14px]/[17px] font-bold text-text-primary">
-                      {{ place.name }}
-                    </span>
-                    <span class="font-latin text-[12px]/[14px] text-text-secondary">
-                      ID #{{ place.code }}
-                    </span>
+        @if (store.isLoading()) {
+          <tbody
+            app-table-skeleton
+            [columnCount]="tableColumnCount"
+            [rowCount]="store.pageSize()"
+          ></tbody>
+        } @else {
+          <tbody>
+            @for (place of store.places(); track place.id) {
+              <tr class="h-16 border-b border-border last:border-0">
+                <td class="px-4">
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="'تحديد ' + place.name"
+                    class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+                    [checked]="store.isSelected(place.id)"
+                    (change)="store.toggleSelected(place.id)"
+                  />
+                </td>
+                <td class="px-4">
+                  <div class="flex items-center gap-3">
+                    <app-place-logo [name]="place.name" [imageUrl]="place.logoUrl" />
+                    <div class="flex flex-col">
+                      <span class="text-[14px]/[17px] font-bold text-text-primary">
+                        {{ place.name }}
+                      </span>
+                      <span class="font-latin text-[12px]/[14px] text-text-secondary">
+                        ID #{{ place.code }}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td class="px-4 text-sm text-text-secondary">{{ place.category }}</td>
-              <td class="px-4 text-sm text-text-secondary">{{ place.city }}</td>
-              <td class="px-4">
-                <app-badge [tone]="statusTone[place.status]">
-                  {{ statusLabel[place.status] }}
-                </app-badge>
-              </td>
-              <td class="px-4 font-latin text-sm font-bold text-text-primary">
-                {{ place.rating | number: '1.1-1' }}
-              </td>
-              <td class="px-4">
-                <app-package-badge [package]="place.package" />
-              </td>
-              <td class="px-4 text-sm whitespace-nowrap text-text-secondary">
-                {{ place.joinedAt | arabicDate }}
-              </td>
-              <td class="px-4 text-center">
-                <app-action-menu>
-                  <a
-                    [routerLink]="['/places', place.id]"
-                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
-                  >
-                    <span>عرض التفاصيل</span>
-                    <app-icon name="eye" [size]="16" class="text-text-secondary" />
-                  </a>
-                  <a
-                    [routerLink]="['/places', place.id, 'edit']"
-                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
-                  >
-                    <span>تعديل</span>
-                    <app-icon name="edit" [size]="14" class="text-text-secondary" />
-                  </a>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
-                  >
-                    <span>تغيير الحالة</span>
-                    <app-icon name="refresh" [size]="12" class="text-text-secondary" />
-                  </button>
-                  <span class="my-1 block h-px bg-border"></span>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
-                  >
-                    <span>حذف</span>
-                    <app-icon name="trash" [size]="14" />
-                  </button>
-                </app-action-menu>
-              </td>
-            </tr>
-          }
-        </tbody>
+                </td>
+                <td class="px-4 text-sm text-text-secondary">{{ place.category }}</td>
+                <td class="px-4 text-sm text-text-secondary">{{ place.city }}</td>
+                <td class="px-4">
+                  <app-badge [tone]="statusTone[place.status]">
+                    {{ statusLabel[place.status] }}
+                  </app-badge>
+                </td>
+                <td class="px-4 font-latin text-sm font-bold text-text-primary">
+                  {{ place.rating | number: '1.1-1' }}
+                </td>
+                <td class="px-4">
+                  <app-package-badge [package]="place.package" />
+                </td>
+                <td class="px-4 text-sm whitespace-nowrap text-text-secondary">
+                  {{ place.joinedAt | arabicDate }}
+                </td>
+                <td class="px-4 text-center">
+                  <app-action-menu>
+                    <a
+                      [routerLink]="['/places', place.id]"
+                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                    >
+                      <span>عرض التفاصيل</span>
+                      <app-icon name="eye" [size]="16" class="text-text-secondary" />
+                    </a>
+                    <a
+                      [routerLink]="['/places', place.id, 'edit']"
+                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                    >
+                      <span>تعديل</span>
+                      <app-icon name="edit" [size]="14" class="text-text-secondary" />
+                    </a>
+                    <button
+                      type="button"
+                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                    >
+                      <span>تغيير الحالة</span>
+                      <app-icon name="refresh" [size]="12" class="text-text-secondary" />
+                    </button>
+                    <span class="my-1 block h-px bg-border"></span>
+                    <button
+                      type="button"
+                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
+                    >
+                      <span>حذف</span>
+                      <app-icon name="trash" [size]="14" />
+                    </button>
+                  </app-action-menu>
+                </td>
+              </tr>
+            }
+          </tbody>
+        }
       </table>
+
+      @if (store.hasNoResults() && store.search()) {
+        <app-table-empty message="لا توجد نتائج مطابقة لبحثك" />
+      }
 
       <app-table-pagination
         [pageIndex]="store.pageIndex()"

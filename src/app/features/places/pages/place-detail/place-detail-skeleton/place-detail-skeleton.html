@@ -1,0 +1,32 @@
+<div class="flex flex-col gap-6">
+  <app-skeleton width="220px" height="12px" shape="text" />
+
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex flex-col gap-3">
+      <app-skeleton width="260px" height="28px" shape="text" />
+      <app-skeleton width="320px" height="14px" shape="text" />
+    </div>
+    <div class="flex items-center gap-3">
+      @for (action of headerActions; track action) {
+        <app-skeleton width="128px" height="44px" />
+      }
+    </div>
+  </div>
+
+  <div class="flex items-start gap-6">
+    <div class="flex min-w-0 flex-1 flex-col gap-6">
+      <app-skeleton height="371px" />
+      <app-skeleton height="220px" />
+      <div class="grid grid-cols-2 gap-6">
+        <app-skeleton height="260px" />
+        <app-skeleton height="260px" />
+      </div>
+    </div>
+
+    <div class="flex w-[353px] shrink-0 flex-col gap-4">
+      @for (card of sideCards; track card) {
+        <app-skeleton height="170px" />
+      }
+    </div>
+  </div>
+</div>

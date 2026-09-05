@@ -1,4 +1,8 @@
-@if (place(); as place) {
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="reload()" />
+} @else if (store.isLoading()) {
+  <app-place-detail-skeleton />
+} @else if (place(); as place) {
   <div class="flex flex-col gap-6">
     <nav class="flex items-center gap-2 text-[12px] text-text-secondary">
       <a routerLink="/places" class="hover:text-primary">الشركات و المتاجر</a>

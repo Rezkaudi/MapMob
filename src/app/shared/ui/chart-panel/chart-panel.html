@@ -1,4 +1,7 @@
-<section class="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-panel">
+<section
+  class="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-panel"
+  [attr.aria-busy]="isLoading() ? 'true' : null"
+>
   <header class="flex items-center justify-between gap-4">
     <h2 class="text-[18px]/[27px] font-bold text-text-primary">{{ title() }}</h2>
 
@@ -28,5 +31,9 @@
     </div>
   </header>
 
-  <ng-content />
+  @if (isLoading()) {
+    <app-skeleton [height]="chartHeight()" />
+  } @else {
+    <ng-content />
+  }
 </section>

@@ -8,9 +8,11 @@ import {
   inject,
   input,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
+import { Skeleton } from '../skeleton/skeleton';
 import { MapPoint } from './map-point';
 
 const DEFAULT_ZOOM = 15;
@@ -28,8 +30,9 @@ const PIN_ICON = L.divIcon({
 
 @Component({
   selector: 'app-map-picker',
+  imports: [Skeleton],
   templateUrl: './map-picker.html',
-  host: { class: 'block' },
+  host: { class: 'relative block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapPicker {
@@ -39,6 +42,9 @@ export class MapPicker {
   readonly locationPicked = output<MapPoint>();
 
   private readonly canvas = viewChild.required<ElementRef<HTMLElement>>('canvas');
+  private readonly mapReady = signal(false);
+
+  protected readonly isMapReady = this.mapReady.asReadonly();
   private map: L.Map | null = null;
   private marker: L.Marker | null = null;
 
@@ -82,6 +88,7 @@ export class MapPicker {
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       this.pickPoint({ latitude: event.latlng.lat, longitude: event.latlng.lng });
     });
+    this.map.whenReady(() => this.mapReady.set(true));
     this.marker.on('dragend', () => {
       const moved = this.marker?.getLatLng();
       if (moved) {

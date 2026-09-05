@@ -4,78 +4,88 @@
     <p class="mt-1 text-[14px]/[19px] text-text-secondary">ملخص لأهم مؤشرات المنصة وأدائها</p>
   </div>
 
-  <!-- RTL puts the first card on the right, so the design's left-to-right order is reversed here. -->
-  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-    <app-stat-card
-      icon="users"
-      label="إجمالي المستخدمين"
-      [value]="(store.summary()?.userCount ?? 0 | number) ?? '0'"
-      [delta]="(store.summary()?.newUserCount ?? 0) + ' جديد'"
-    />
-    <app-stat-card
-      icon="places"
-      label="الشركات والمتاجر"
-      [value]="(store.summary()?.placeCount ?? 0 | number) ?? '0'"
-      [delta]="(store.summary()?.newPlaceCount ?? 0) + ' جديد'"
-    />
-    <app-stat-card
-      icon="clock"
-      label="بانتظار المراجعة"
-      [value]="store.summary()?.pendingReviewCount ?? 0"
-    />
-    <app-stat-card
-      icon="payments"
-      label="الإيرادات"
-      [value]="(store.summary()?.revenue ?? 0) + ' ل س'"
-    />
-  </div>
-
-  <!-- RTL: the growth chart sits on the right, revenue on the left, as in the design. -->
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-    <app-chart-panel
-      title="نمو الشركات والمستخدمين"
-      [periods]="growthPeriods"
-      [activePeriod]="store.growthPeriod()"
-      (periodChange)="onGrowthPeriodChange($event)"
-    >
-      <apx-chart
-        [chart]="growthChart().chart"
-        [series]="growthChart().series"
-        [xaxis]="growthChart().xaxis"
-        [yaxis]="growthChart().yaxis"
-        [grid]="growthChart().grid"
-        [legend]="growthChart().legend"
-        [stroke]="growthChart().stroke"
-        [fill]="growthChart().fill"
-        [markers]="growthChart().markers"
-        [colors]="growthChart().colors"
-        [dataLabels]="growthChart().dataLabels"
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="store.loadDashboard()" />
+  } @else {
+    <!-- RTL puts the first card on the right, so the design's left-to-right order is reversed here. -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <app-stat-card
+        [isLoading]="store.isLoading()"
+        icon="users"
+        label="إجمالي المستخدمين"
+        [value]="(store.summary()?.userCount ?? 0 | number) ?? '0'"
+        [delta]="(store.summary()?.newUserCount ?? 0) + ' جديد'"
       />
-    </app-chart-panel>
-
-    <app-chart-panel
-      title="الإيرادات"
-      [periods]="revenuePeriods"
-      [activePeriod]="store.revenuePeriod()"
-      (periodChange)="onRevenuePeriodChange($event)"
-    >
-      <apx-chart
-        [chart]="revenueChart().chart"
-        [series]="revenueChart().series"
-        [xaxis]="revenueChart().xaxis"
-        [yaxis]="revenueChart().yaxis"
-        [grid]="revenueChart().grid"
-        [legend]="revenueChart().legend"
-        [stroke]="revenueChart().stroke"
-        [colors]="revenueChart().colors"
-        [dataLabels]="revenueChart().dataLabels"
+      <app-stat-card
+        [isLoading]="store.isLoading()"
+        icon="places"
+        label="الشركات والمتاجر"
+        [value]="(store.summary()?.placeCount ?? 0 | number) ?? '0'"
+        [delta]="(store.summary()?.newPlaceCount ?? 0) + ' جديد'"
       />
-    </app-chart-panel>
-  </div>
+      <app-stat-card
+        [isLoading]="store.isLoading()"
+        icon="clock"
+        label="بانتظار المراجعة"
+        [value]="store.summary()?.pendingReviewCount ?? 0"
+      />
+      <app-stat-card
+        [isLoading]="store.isLoading()"
+        icon="payments"
+        label="الإيرادات"
+        [value]="(store.summary()?.revenue ?? 0) + ' ل س'"
+      />
+    </div>
 
-  <!-- RTL: the recent places table takes the wide right column, the action centre the left. -->
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
-    <app-recent-places-table [places]="store.recentPlaces()" />
-    <app-action-center [items]="store.actionItems()" />
-  </div>
+    <!-- RTL: the growth chart sits on the right, revenue on the left, as in the design. -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <app-chart-panel
+        title="نمو الشركات والمستخدمين"
+        [isLoading]="store.isGrowthChartLoading()"
+        [periods]="growthPeriods"
+        [activePeriod]="store.growthPeriod()"
+        (periodChange)="onGrowthPeriodChange($event)"
+      >
+        <apx-chart
+          [chart]="growthChart().chart"
+          [series]="growthChart().series"
+          [xaxis]="growthChart().xaxis"
+          [yaxis]="growthChart().yaxis"
+          [grid]="growthChart().grid"
+          [legend]="growthChart().legend"
+          [stroke]="growthChart().stroke"
+          [fill]="growthChart().fill"
+          [markers]="growthChart().markers"
+          [colors]="growthChart().colors"
+          [dataLabels]="growthChart().dataLabels"
+        />
+      </app-chart-panel>
+
+      <app-chart-panel
+        title="الإيرادات"
+        [isLoading]="store.isRevenueChartLoading()"
+        [periods]="revenuePeriods"
+        [activePeriod]="store.revenuePeriod()"
+        (periodChange)="onRevenuePeriodChange($event)"
+      >
+        <apx-chart
+          [chart]="revenueChart().chart"
+          [series]="revenueChart().series"
+          [xaxis]="revenueChart().xaxis"
+          [yaxis]="revenueChart().yaxis"
+          [grid]="revenueChart().grid"
+          [legend]="revenueChart().legend"
+          [stroke]="revenueChart().stroke"
+          [colors]="revenueChart().colors"
+          [dataLabels]="revenueChart().dataLabels"
+        />
+      </app-chart-panel>
+    </div>
+
+    <!-- RTL: the recent places table takes the wide right column, the action centre the left. -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+      <app-recent-places-table [places]="store.recentPlaces()" [isLoading]="store.isLoading()" />
+      <app-action-center [items]="store.actionItems()" [isLoading]="store.isLoading()" />
+    </div>
+  }
 </div>

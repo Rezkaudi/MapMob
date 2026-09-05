@@ -16,105 +16,129 @@
   </div>
 
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <app-stat-card icon="reviews" label="مبلغ عنها" [value]="store.summary()?.reportedCount ?? 0" />
     <app-stat-card
+      [isLoading]="store.isLoading()"
+      icon="reviews"
+      label="مبلغ عنها"
+      [value]="store.summary()?.reportedCount ?? 0"
+    />
+    <app-stat-card
+      [isLoading]="store.isLoading()"
       icon="reviews"
       label="التقييمات الجديدة"
       [value]="store.summary()?.newCount ?? 0"
     />
     <app-stat-card
+      [isLoading]="store.isLoading()"
       icon="reviews"
       label="متوسط التقييم العام"
       [value]="(store.summary()?.averageRating ?? 0 | number: '1.1-1') ?? '0'"
     />
     <app-stat-card
+      [isLoading]="store.isLoading()"
       icon="reviews"
       label="إجمالي التقييمات"
       [value]="(store.summary()?.totalCount ?? 0 | number) ?? '0'"
     />
   </div>
 
-  <app-table-toolbar searchPlaceholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="store.loadReviews()" />
+  } @else {
+    <app-table-toolbar searchPlaceholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
 
-  <div class="overflow-hidden rounded-xl border border-border">
-    <table class="w-full text-right">
-      <thead>
-        <tr class="border-b border-border bg-surface-muted">
-          <th class="w-[67px] px-4 py-[14px]">
-            <input
-              type="checkbox"
-              aria-label="تحديد الكل"
-              class="size-[18px] rounded border border-placeholder bg-white"
-            />
-          </th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">اسم المستخدم</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">المكان</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التقيييم</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">
-            نص المراجعة والتعليق
-          </th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التاريخ</th>
-          <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
-          <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
-            الإجراء
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (review of store.reviews(); track review.id) {
-          <tr class="border-b border-border bg-surface last:border-0">
-            <td class="px-4 py-[14px]">
+    <div class="overflow-hidden rounded-xl border border-border">
+      <table class="w-full text-right">
+        <thead>
+          <tr class="border-b border-border bg-surface-muted">
+            <th class="w-[67px] px-4 py-[14px]">
               <input
                 type="checkbox"
-                [attr.aria-label]="'تحديد ' + review.userName"
+                aria-label="تحديد الكل"
                 class="size-[18px] rounded border border-placeholder bg-white"
               />
-            </td>
-            <td class="px-4 py-[14px] text-sm font-bold text-text-primary">
-              {{ review.userName }}
-            </td>
-            <td class="px-4 py-[14px] text-sm text-text-primary">{{ review.placeName }}</td>
-            <td class="px-4 py-[14px] text-sm text-text-secondary">
-              {{ review.rating | number: '1.1-1' }}
-            </td>
-            <td class="max-w-[142px] px-4 py-[14px] text-xs/[19.5px] text-text-secondary">
-              {{ review.comment }}
-            </td>
-            <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
-              {{ review.createdAt | arabicDate }}
-            </td>
-            <td class="px-4 py-[14px]">
-              <app-badge [tone]="statusTone[review.status]">
-                {{ statusLabel[review.status] }}
-              </app-badge>
-            </td>
-            <td class="px-4 py-[14px] text-center">
-              <app-action-menu>
-                <button
-                  type="button"
-                  class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
-                >
-                  عرض التفاصيل
-                </button>
-                <button
-                  type="button"
-                  class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
-                >
-                  حذف المراجعة
-                </button>
-              </app-action-menu>
-            </td>
+            </th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">اسم المستخدم</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">المكان</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التقيييم</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">
+              نص المراجعة والتعليق
+            </th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التاريخ</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
+            <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
+              الإجراء
+            </th>
           </tr>
+        </thead>
+        @if (store.isLoading()) {
+          <tbody
+            app-table-skeleton
+            [columnCount]="tableColumnCount"
+            [rowCount]="store.pageSize()"
+          ></tbody>
+        } @else {
+          <tbody>
+            @for (review of store.reviews(); track review.id) {
+              <tr class="border-b border-border bg-surface last:border-0">
+                <td class="px-4 py-[14px]">
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="'تحديد ' + review.userName"
+                    class="size-[18px] rounded border border-placeholder bg-white"
+                  />
+                </td>
+                <td class="px-4 py-[14px] text-sm font-bold text-text-primary">
+                  {{ review.userName }}
+                </td>
+                <td class="px-4 py-[14px] text-sm text-text-primary">{{ review.placeName }}</td>
+                <td class="px-4 py-[14px] text-sm text-text-secondary">
+                  {{ review.rating | number: '1.1-1' }}
+                </td>
+                <td class="max-w-[142px] px-4 py-[14px] text-xs/[19.5px] text-text-secondary">
+                  {{ review.comment }}
+                </td>
+                <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
+                  {{ review.createdAt | arabicDate }}
+                </td>
+                <td class="px-4 py-[14px]">
+                  <app-badge [tone]="statusTone[review.status]">
+                    {{ statusLabel[review.status] }}
+                  </app-badge>
+                </td>
+                <td class="px-4 py-[14px] text-center">
+                  <app-action-menu>
+                    <button
+                      type="button"
+                      class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                    >
+                      عرض التفاصيل
+                    </button>
+                    <button
+                      type="button"
+                      class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
+                    >
+                      حذف المراجعة
+                    </button>
+                  </app-action-menu>
+                </td>
+              </tr>
+            }
+          </tbody>
         }
-      </tbody>
-    </table>
-  </div>
+      </table>
 
-  <app-table-pagination
-    [pageIndex]="store.pageIndex()"
-    [pageSize]="store.pageSize()"
-    [totalCount]="store.totalCount()"
-    itemNoun="مراجعة"
-    (pageIndexChange)="onPageChange($event)"
-  />
+      @if (store.hasNoResults()) {
+        <app-table-empty message="لا توجد مراجعات لعرضها" />
+      }
+    </div>
+
+    <app-table-pagination
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="مراجعة"
+      (pageIndexChange)="onPageChange($event)"
+    />
+  }
 </div>
