@@ -1,0 +1,22 @@
+<app-info-card heading="أوقات العمل" [canEdit]="true">
+  @if (isOpenNow()) {
+    <span
+      class="mb-3 inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-1 text-[12px] font-medium text-success"
+    >
+      <span class="size-1.5 rounded-full bg-success"></span>
+      <span>مفتوح الآن</span>
+    </span>
+  }
+
+  <ul class="flex flex-col">
+    @for (row of rows(); track row.days) {
+      <li
+        class="flex items-center justify-between border-b border-border px-3 py-3 last:border-0"
+        [class]="row.isToday ? 'rounded-lg bg-primary-soft text-primary' : 'text-text-secondary'"
+      >
+        <span class="text-[13px] font-medium">{{ row.days }}</span>
+        <span class="font-latin text-[13px]" dir="ltr">{{ row.hours }}</span>
+      </li>
+    }
+  </ul>
+</app-info-card>

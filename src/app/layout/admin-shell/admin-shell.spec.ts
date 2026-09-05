@@ -29,6 +29,17 @@ describe('AdminShell', () => {
     expect(el.querySelector('router-outlet')).toBeTruthy();
   });
 
+  it('keeps the scrolling inside main so the page cannot be dragged past the app', () => {
+    const fixture = TestBed.createComponent(AdminShell);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const shell = el.querySelector('div') as HTMLElement;
+    expect(shell.className).toContain('overflow-hidden');
+    // Without min-h-0 the column refuses to shrink and main stops clipping.
+    expect(el.querySelector('main')?.parentElement?.className).toContain('min-h-0');
+  });
+
   it('shows the signed-in user in the top bar', () => {
     TestBed.inject(AuthStorage).save({ ...USER, name: 'سارة', role: 'Editor' });
     TestBed.inject(AuthStore);

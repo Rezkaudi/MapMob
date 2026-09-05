@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
 
 @theme {
   /* Typography — Tajawal carries the Arabic UI, Almarai the wordmark, DM Sans the Latin text. */
@@ -42,9 +43,14 @@
   --shadow-panel: 0 8px 50px 0 rgb(0 0 0 / 0.04);
 }
 
+/*
+ * The shell fills the viewport and scrolls inside `main`, so the document itself
+ * must never scroll — otherwise the page can be dragged past the app into blank space.
+ */
 html,
 body {
   height: 100%;
+  overflow: hidden;
 }
 
 body {

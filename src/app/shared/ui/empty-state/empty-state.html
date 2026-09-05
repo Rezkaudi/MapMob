@@ -1,10 +1,9 @@
-<div
-  class="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center"
->
+<!-- The design centres the message on the page background — no card, no border. -->
+<div class="flex flex-col items-center justify-center gap-4 py-24 text-center">
   <ng-content select="[icon]" />
-  <p class="text-base font-semibold text-text-primary">{{ title() }}</p>
+  <p class="text-[22px]/[32px] font-bold text-text-primary">{{ title() }}</p>
   @if (description()) {
-    <p class="text-sm text-text-secondary">{{ description() }}</p>
+    <p class="text-[18px]/[28px] text-text-secondary">{{ description() }}</p>
   }
   <ng-content />
 </div>

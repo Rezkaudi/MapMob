@@ -45,7 +45,8 @@ describe('Login', () => {
     const fixture = TestBed.createComponent(Login);
     fixture.detectChanges();
 
-    const passwordInput = () => fixture.nativeElement.querySelector('#password') as HTMLInputElement;
+    const passwordInput = () =>
+      fixture.nativeElement.querySelector('#password') as HTMLInputElement;
     expect(passwordInput().type).toBe('password');
 
     fixture.nativeElement.querySelector('#password ~ button').click();

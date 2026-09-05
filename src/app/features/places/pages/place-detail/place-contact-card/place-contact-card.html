@@ -1,0 +1,23 @@
+<app-info-card heading="معلومات التوصل" [canEdit]="true">
+  <ul class="flex flex-col gap-4">
+    @for (link of links(); track link.icon) {
+      <li class="flex items-center gap-3">
+        <span
+          class="flex size-8 shrink-0 items-center justify-center rounded-full text-white"
+          [class]="link.colorClass"
+        >
+          <app-icon [name]="link.icon" [size]="16" />
+        </span>
+        <a
+          [href]="link.href"
+          class="font-latin truncate text-[13px] text-text-secondary"
+          dir="ltr"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ link.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</app-info-card>

@@ -1,0 +1,139 @@
+@if (place(); as place) {
+  <div class="flex flex-col gap-6">
+    <nav class="flex items-center gap-2 text-[12px] text-text-secondary">
+      <a routerLink="/places" class="hover:text-primary">الشركات و المتاجر</a>
+      <app-icon name="chevron-left" [size]="8" />
+      <span class="text-text-primary">{{ place.name }}</span>
+    </nav>
+
+    <!-- RTL: the title block comes first so it lands on the right, the actions on the left. -->
+    <div class="flex items-start justify-between gap-4">
+      <div class="text-start">
+        <h1 class="text-[28px]/[29px] font-bold text-text-primary">{{ place.name }}</h1>
+        <div class="mt-2 flex items-center gap-3">
+          <app-badge [tone]="statusTone[place.status]">{{ statusLabel[place.status] }}</app-badge>
+          <span class="text-border">•</span>
+          <span class="flex items-center gap-1 text-[13px] text-text-secondary">
+            <app-icon name="map-pin" [size]="13" />
+            <span>{{ place.location.address }}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          [routerLink]="['/places', place.id, 'edit']"
+          class="flex h-11 w-32 items-center justify-center gap-2 rounded-xl bg-primary text-[14px] font-medium text-white"
+        >
+          <app-icon name="edit" [size]="14" />
+          <span>تعديل المكان</span>
+        </a>
+        <button
+          type="button"
+          class="h-11 w-32 rounded-xl border border-border bg-surface text-[14px] font-medium text-text-primary"
+        >
+          {{ isSuspended() ? 'تفعيل النشاط' : 'إيقاف النشاط' }}
+        </button>
+        <button
+          type="button"
+          class="h-11 w-32 rounded-xl border border-error bg-surface text-[14px] font-medium text-error"
+        >
+          حذف المكان
+        </button>
+      </div>
+    </div>
+
+    <!-- RTL: the wide media column comes first (right), the summary cards sit left. -->
+    <div class="flex items-start gap-6">
+      <div class="flex min-w-0 flex-1 flex-col gap-6">
+        <app-place-gallery [images]="place.images" [name]="place.name" />
+
+        <app-info-card heading="المعلومات الأساسية" [canEdit]="true">
+          <p class="text-[14px]/[24px] text-text-secondary">{{ place.description }}</p>
+          <div class="mt-6 grid grid-cols-2 gap-6">
+            <div>
+              <p class="text-[12px] text-text-secondary">التصنيف الرئيسي</p>
+              <p class="mt-1 text-[14px] text-text-primary">{{ place.mainCategory }}</p>
+            </div>
+            <div>
+              <p class="text-[12px] text-text-secondary">التصنيف الفرعي</p>
+              <p class="mt-1 text-[14px] text-text-primary">{{ place.subCategory }}</p>
+            </div>
+          </div>
+        </app-info-card>
+
+        <div class="grid grid-cols-2 gap-6">
+          <app-place-hours-card [rows]="place.workingHours" [isOpenNow]="place.isOpenNow" />
+          <app-place-contact-card [contact]="place.contact" />
+        </div>
+      </div>
+
+      <div class="flex w-[353px] shrink-0 flex-col gap-4">
+        <app-info-card heading="معلومات المالك" [canEdit]="true">
+          <dl class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">اسم المالك/المسؤول</dt>
+              <dd class="text-[13px] text-text-secondary">{{ place.owner.name }}</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">رقم هاتف المالك/المسؤول</dt>
+              <dd class="font-latin text-[13px] text-text-secondary" dir="ltr">
+                {{ place.owner.phone }}
+              </dd>
+            </div>
+          </dl>
+          <a
+            [href]="'tel:' + place.owner.phone"
+            class="mt-4 flex h-10 items-center justify-center gap-2 rounded-lg border border-primary text-[13px] font-medium text-primary"
+          >
+            <app-icon name="phone" [size]="14" />
+            <span>الاتصال بالمالك</span>
+          </a>
+        </app-info-card>
+
+        <app-info-card heading="الاشتراك" [canEdit]="true">
+          <dl class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">خطة الاشتراك</dt>
+              <dd class="text-[13px] font-medium text-accent">
+                {{ packageLabel[place.subscription.package] }}
+              </dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">الحالة</dt>
+              <dd
+                class="text-[13px] font-medium"
+                [class]="statusTextClass[place.subscription.status]"
+              >
+                {{ statusLabel[place.subscription.status] }}
+              </dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">تاريخ التجديد</dt>
+              <dd class="font-latin text-[13px] text-text-secondary">
+                {{ place.subscription.renewsAt | arabicDate }}
+              </dd>
+            </div>
+          </dl>
+        </app-info-card>
+
+        <app-info-card heading="سجل النشاط">
+          <dl class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">تاريخ الإضافة</dt>
+              <dd class="font-latin text-[13px] text-text-secondary">
+                {{ place.activity.addedAt | arabicDate }}
+              </dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-[13px] text-text-primary">آخر تحديث</dt>
+              <dd class="text-[13px] text-text-secondary">{{ place.activity.updatedLabel }}</dd>
+            </div>
+          </dl>
+        </app-info-card>
+
+        <app-place-location-card [location]="place.location" />
+      </div>
+    </div>
+  </div>
+}

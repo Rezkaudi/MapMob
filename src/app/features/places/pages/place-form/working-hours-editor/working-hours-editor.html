@@ -1,0 +1,36 @@
+<ul>
+  @for (day of week(); track day.day; let index = $index) {
+    <li class="flex items-center gap-4 border-b border-border py-4 last:border-0">
+      <span class="w-24 shrink-0 text-[14px] font-medium text-text-primary">{{ day.day }}</span>
+
+      <div class="flex w-32 shrink-0 items-center gap-2">
+        <app-toggle-switch
+          [isOn]="day.isOpen"
+          [label]="day.day"
+          (toggled)="patchDay(index, { isOpen: $event })"
+        />
+        <span class="text-[13px] text-text-secondary">{{ day.isOpen ? 'مفتوح' : 'مغلق' }}</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <input
+          type="time"
+          class="h-11 w-32 rounded-lg border border-border px-3 text-center font-latin text-[14px] text-text-primary outline-none disabled:bg-surface-muted disabled:text-placeholder"
+          [attr.aria-label]="'وقت فتح ' + day.day"
+          [value]="day.opensAt"
+          [disabled]="!day.isOpen"
+          (input)="onTimeInput(index, 'opensAt', $event)"
+        />
+        <span class="text-[13px] text-text-secondary">إلى</span>
+        <input
+          type="time"
+          class="h-11 w-32 rounded-lg border border-border px-3 text-center font-latin text-[14px] text-text-primary outline-none disabled:bg-surface-muted disabled:text-placeholder"
+          [attr.aria-label]="'وقت إغلاق ' + day.day"
+          [value]="day.closesAt"
+          [disabled]="!day.isOpen"
+          (input)="onTimeInput(index, 'closesAt', $event)"
+        />
+      </div>
+    </li>
+  }
+</ul>

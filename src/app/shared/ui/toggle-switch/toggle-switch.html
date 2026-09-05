@@ -1,0 +1,14 @@
+<button
+  type="button"
+  role="switch"
+  class="inline-flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors"
+  [class]="isOn() ? 'bg-primary' : 'bg-border'"
+  [attr.aria-checked]="isOn()"
+  [attr.aria-label]="label()"
+  (click)="toggled.emit(!isOn())"
+>
+  <span
+    class="size-5 rounded-full bg-white shadow transition-transform"
+    [class]="isOn() ? '-translate-x-5' : 'translate-x-0'"
+  ></span>
+</button>

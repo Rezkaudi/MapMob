@@ -1,0 +1,14 @@
+<section class="rounded-xl border border-border bg-surface">
+  <header
+    class="flex h-[61px] items-center justify-between rounded-t-xl border-b border-border bg-surface-muted px-6"
+  >
+    <div class="flex items-center gap-2 text-accent">
+      <app-icon [name]="icon()" [size]="24" />
+      <h2 class="text-[18px]/[28px] font-bold">{{ heading() }}</h2>
+    </div>
+    <ng-content select="[headerAction]" />
+  </header>
+  <div class="p-6">
+    <ng-content />
+  </div>
+</section>

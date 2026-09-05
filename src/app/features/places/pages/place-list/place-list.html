@@ -4,50 +4,85 @@
       <h1 class="text-[28px] font-bold text-black">الشركات والمتاجر</h1>
       <p class="mt-1 text-[14px]/[20px] text-text-secondary">إدارة المتاجر والشركات ضمن المنصة</p>
     </div>
-    <button
-      type="button"
-      class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white"
-    >
-      <span>إضافة مكان جديد</span>
-      <app-icon name="plus" [size]="16" />
-    </button>
+
+    @if (!store.hasNoResults() || store.search()) {
+      <div class="flex items-center gap-3">
+        <a
+          routerLink="/places/new"
+          class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white"
+        >
+          <span>إضافة مكان جديد</span>
+          <app-icon name="plus" [size]="16" />
+        </a>
+        <button
+          type="button"
+          class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text-primary"
+        >
+          <span>تصدير</span>
+          <app-icon name="export" [size]="16" />
+        </button>
+      </div>
+    }
   </div>
 
   @if (store.hasNoResults() && !store.search()) {
     <app-empty-state
       title="لا توجد أماكن مضافة حتى الآن"
-      description="أضف أول مكان إلى المنصة للبدء بإدارة الشركات والمتاجر"
+      description="أضف أول مكان إلى المنصة للبدء بإدارة الشركات والمتاجر."
     >
-      <button
-        type="button"
+      <a
+        routerLink="/places/new"
         class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white"
       >
         <span>إضافة مكان جديد</span>
         <app-icon name="plus" [size]="16" />
-      </button>
+      </a>
     </app-empty-state>
   } @else {
-    <app-table-toolbar
-      searchPlaceholder="ابحث بالاسم أو المدينة..."
-      (queryChange)="onSearch($event)"
+    <app-place-filters
+      [categories]="categoryOptions"
+      [packages]="packageOptions"
+      [sorts]="sortOptions"
+      [statusChips]="statusChips()"
+      [selectedStatus]="selectedStatus()"
+      (searchChange)="onSearch($event)"
+      (categoryChange)="onCategoryChange($event)"
+      (packageChange)="onPackageChange($event)"
+      (sortChange)="onSortChange($event)"
+      (statusChange)="onStatusChange($event)"
     />
 
-    <div class="overflow-hidden rounded-xl border border-border">
+    @if (store.hasSelection()) {
+      <app-bulk-action-bar
+        [selectedCount]="store.selectedCount()"
+        (activate)="askFor('activate')"
+        (suspend)="askFor('suspend')"
+        (notify)="askFor('notify')"
+        (exportRows)="askFor('export')"
+        (remove)="askFor('delete')"
+        (clear)="store.clearSelection()"
+      />
+    }
+
+    <div class="overflow-hidden rounded-xl border border-border bg-surface">
       <table class="w-full text-right">
         <thead>
-          <tr class="border-b border-border bg-surface-muted">
+          <tr class="border-b border-border">
             <th class="w-[67px] px-4 py-[14px]">
               <input
                 type="checkbox"
                 aria-label="تحديد الكل"
-                class="size-[18px] rounded border border-placeholder bg-white"
+                class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+                [checked]="store.areAllVisibleSelected()"
+                (change)="store.toggleAllVisible()"
               />
             </th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الشركة</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الفئة</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">اسم المكان</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التصنيف</th>
             <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الموقع</th>
             <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
             <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التقييم</th>
+            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الباقة</th>
             <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">تاريخ الانضمام</th>
             <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
               الإجراء
@@ -56,47 +91,75 @@
         </thead>
         <tbody>
           @for (place of store.places(); track place.id) {
-            <tr class="border-b border-border bg-surface last:border-0">
-              <td class="px-4 py-[14px]">
+            <tr class="h-16 border-b border-border last:border-0">
+              <td class="px-4">
                 <input
                   type="checkbox"
                   [attr.aria-label]="'تحديد ' + place.name"
-                  class="size-[18px] rounded border border-placeholder bg-white"
+                  class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+                  [checked]="store.isSelected(place.id)"
+                  (change)="store.toggleSelected(place.id)"
                 />
               </td>
-              <td class="px-4 py-[14px] text-sm font-bold text-text-primary">{{ place.name }}</td>
-              <td class="px-4 py-[14px] text-sm text-text-secondary">{{ place.category }}</td>
-              <td class="px-4 py-[14px] text-sm text-text-secondary">{{ place.city }}</td>
-              <td class="px-4 py-[14px]">
+              <td class="px-4">
+                <div class="flex items-center gap-3">
+                  <app-place-logo [name]="place.name" [imageUrl]="place.logoUrl" />
+                  <div class="flex flex-col">
+                    <span class="text-[14px]/[17px] font-bold text-text-primary">
+                      {{ place.name }}
+                    </span>
+                    <span class="font-latin text-[12px]/[14px] text-text-secondary">
+                      ID #{{ place.code }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 text-sm text-text-secondary">{{ place.category }}</td>
+              <td class="px-4 text-sm text-text-secondary">{{ place.city }}</td>
+              <td class="px-4">
                 <app-badge [tone]="statusTone[place.status]">
                   {{ statusLabel[place.status] }}
                 </app-badge>
               </td>
-              <td class="px-4 py-[14px] text-sm text-text-secondary">
+              <td class="px-4 font-latin text-sm font-bold text-text-primary">
                 {{ place.rating | number: '1.1-1' }}
               </td>
-              <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
+              <td class="px-4">
+                <app-package-badge [package]="place.package" />
+              </td>
+              <td class="px-4 text-sm whitespace-nowrap text-text-secondary">
                 {{ place.joinedAt | arabicDate }}
               </td>
-              <td class="px-4 py-[14px] text-center">
+              <td class="px-4 text-center">
                 <app-action-menu>
+                  <a
+                    [routerLink]="['/places', place.id]"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                  >
+                    <span>عرض التفاصيل</span>
+                    <app-icon name="eye" [size]="16" class="text-text-secondary" />
+                  </a>
+                  <a
+                    [routerLink]="['/places', place.id, 'edit']"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                  >
+                    <span>تعديل</span>
+                    <app-icon name="edit" [size]="14" class="text-text-secondary" />
+                  </a>
                   <button
                     type="button"
-                    class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
                   >
-                    عرض التفاصيل
+                    <span>تغيير الحالة</span>
+                    <app-icon name="refresh" [size]="12" class="text-text-secondary" />
                   </button>
+                  <span class="my-1 block h-px bg-border"></span>
                   <button
                     type="button"
-                    class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
                   >
-                    تعديل
-                  </button>
-                  <button
-                    type="button"
-                    class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
-                  >
-                    حذف
+                    <span>حذف</span>
+                    <app-icon name="trash" [size]="14" />
                   </button>
                 </app-action-menu>
               </td>
@@ -104,14 +167,26 @@
           }
         </tbody>
       </table>
-    </div>
 
-    <app-table-pagination
-      [pageIndex]="store.pageIndex()"
-      [pageSize]="store.pageSize()"
-      [totalCount]="store.totalCount()"
-      itemNoun="شركة"
-      (pageIndexChange)="onPageChange($event)"
-    />
+      <app-table-pagination
+        [pageIndex]="store.pageIndex()"
+        [pageSize]="store.pageSize()"
+        [totalCount]="store.totalCount()"
+        itemNoun="شركة"
+        (pageIndexChange)="onPageChange($event)"
+      />
+    </div>
   }
 </div>
+
+@if (dialog(); as confirm) {
+  <app-confirm-dialog
+    [title]="confirm.title"
+    [message]="confirm.message"
+    [note]="'تم تحديد ' + store.selectedCount() + ' شركات'"
+    [confirmLabel]="confirm.confirmLabel"
+    [tone]="confirm.tone"
+    (confirmed)="confirmAction()"
+    (cancelled)="cancelAction()"
+  />
+}

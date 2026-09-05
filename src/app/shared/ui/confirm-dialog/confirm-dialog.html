@@ -1,0 +1,42 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]"
+  role="dialog"
+  aria-modal="true"
+  (click)="cancelled.emit()"
+>
+  <div
+    class="w-[448px] rounded-2xl bg-surface p-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.15)]"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="mx-auto flex size-16 items-center justify-center rounded-full"
+      [class]="tone() === 'danger' ? 'bg-error-soft text-error' : 'bg-success-soft text-success'"
+    >
+      <app-icon [name]="tone() === 'danger' ? 'trash' : 'check'" [size]="25" />
+    </div>
+
+    <h2 class="mt-4 text-[22px]/[32px] font-bold text-text-primary">{{ title() }}</h2>
+    <p class="mt-1 text-[14px]/[24px] text-text-secondary">{{ message() }}</p>
+    @if (note()) {
+      <p class="mt-1 text-[14px]/[21px] text-accent">{{ note() }}</p>
+    }
+
+    <div class="mt-6 flex items-center gap-4">
+      <button
+        type="button"
+        class="h-10 flex-1 rounded-lg text-[14px] font-medium text-white"
+        [class]="tone() === 'danger' ? 'bg-error' : 'bg-primary'"
+        (click)="confirmed.emit()"
+      >
+        {{ confirmLabel() }}
+      </button>
+      <button
+        type="button"
+        class="h-10 flex-1 rounded-lg border border-border bg-surface-muted text-[14px] font-medium text-text-secondary"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+    </div>
+  </div>
+</div>

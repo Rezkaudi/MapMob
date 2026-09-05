@@ -1,0 +1,59 @@
+<!-- RTL: the tick and the count sit on the right, the actions run leftwards from there. -->
+<div
+  class="flex items-center justify-between rounded-xl border border-primary bg-[#eff7ff] p-[13px] drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]"
+>
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      class="flex size-[18px] items-center justify-center rounded border border-transparent bg-primary p-px text-white"
+      aria-label="إلغاء التحديد"
+      (click)="clear.emit()"
+    >
+      <app-icon name="check" [size]="16" />
+    </button>
+    <span class="text-[14px]/[18.2px] text-primary"
+      >عدد العناصر المحددة: {{ selectedCount() }}</span
+    >
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button
+      type="button"
+      class="h-8 rounded-lg border border-border bg-surface px-[13px] text-[14px]/[21px] font-medium text-text-primary"
+      (click)="activate.emit()"
+    >
+      تفعيل
+    </button>
+    <button
+      type="button"
+      class="h-8 rounded-lg border border-border bg-surface px-[13px] text-[14px]/[21px] font-medium text-text-primary"
+      (click)="suspend.emit()"
+    >
+      إيقاف
+    </button>
+    <button
+      type="button"
+      class="flex h-8 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-[14px]/[21px] font-medium text-text-primary"
+      (click)="notify.emit()"
+    >
+      <span>إرسال إشعارات</span>
+      <app-icon name="send" [size]="12" />
+    </button>
+    <button
+      type="button"
+      class="flex h-8 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-[14px]/[21px] font-medium text-text-primary"
+      (click)="exportRows.emit()"
+    >
+      <span>تصدير</span>
+      <app-icon name="export" [size]="12" />
+    </button>
+    <span class="mx-1 h-6 w-px bg-border"></span>
+    <button
+      type="button"
+      class="h-8 rounded-lg bg-[#ffdad6] px-3 text-[13px]/[18.2px] font-bold text-[#dc2626]"
+      (click)="remove.emit()"
+    >
+      حذف
+    </button>
+  </div>
+</div>

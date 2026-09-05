@@ -1,0 +1,24 @@
+<label
+  class="relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-8 text-center transition-colors"
+  [class]="isDragging() ? 'border-primary bg-primary-soft' : 'border-border'"
+  (dragenter)="onDragOver($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  <app-icon name="upload-cloud" [size]="28" class="text-text-secondary" />
+  <span class="text-[14px] text-text-secondary">
+    <span class="font-medium text-primary">استعرض الملفات</span>
+    أو {{ prompt() }}
+  </span>
+  @if (hint()) {
+    <span class="text-[12px] text-placeholder">{{ hint() }}</span>
+  }
+  <input
+    type="file"
+    multiple
+    class="sr-only"
+    [attr.accept]="accept() || null"
+    (change)="onPick($event)"
+  />
+</label>

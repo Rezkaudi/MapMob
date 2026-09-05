@@ -1,0 +1,21 @@
+<div class="relative h-[371px] overflow-clip rounded-2xl bg-surface-muted">
+  @if (coverImage()) {
+    <img [src]="coverImage()" [alt]="name()" class="size-full object-cover" />
+  } @else {
+    <div class="flex size-full items-center justify-center text-placeholder">
+      <app-icon name="places" [size]="48" />
+    </div>
+  }
+
+  @if (thumbnails().length) {
+    <div class="absolute bottom-4 left-4 flex items-end gap-3">
+      @for (thumbnail of thumbnails(); track thumbnail) {
+        <img
+          [src]="thumbnail"
+          [alt]="name()"
+          class="h-[92px] w-[118px] rounded-lg border-2 border-white object-cover"
+        />
+      }
+    </div>
+  }
+</div>

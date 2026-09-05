@@ -1,7 +1,7 @@
 import { LOCALE_ID, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import localeAr from '@angular/common/locales/ar';
 
 import { routes } from './app.routes';
@@ -19,7 +19,7 @@ registerLocaleData(localeAr);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withFetch()),
     { provide: LOCALE_ID, useValue: 'ar' },
     provideApiBaseUrl(),

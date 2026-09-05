@@ -1,0 +1,6 @@
+<label [attr.for]="forId() || null" class="block text-right text-[13px]/[14px] text-text-primary">
+  {{ text() }}
+  @if (isRequired()) {
+    <span class="text-error">*</span>
+  }
+</label>

@@ -1,0 +1,18 @@
+<section class="rounded-2xl border border-border bg-surface p-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-[16px]/[24px] font-bold text-text-primary">{{ heading() }}</h2>
+    @if (canEdit()) {
+      <button
+        type="button"
+        class="flex items-center gap-1 text-[13px] font-medium text-primary"
+        (click)="edit.emit()"
+      >
+        <app-icon name="edit" [size]="13" />
+        <span>تعديل</span>
+      </button>
+    }
+  </div>
+  <div class="mt-4">
+    <ng-content />
+  </div>
+</section>

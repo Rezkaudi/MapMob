@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Place } from '../models/place';
+import { PlaceDetail } from '../models/place-detail';
 import { PlaceQuery } from '../models/place-query';
+import { PlaceStatusCounts } from '../models/place-status-counts';
 import { PlaceRepository } from './place.repository';
 
 @Injectable()
@@ -20,6 +22,23 @@ export class PlaceHttpRepository implements PlaceRepository {
     if (query.status) {
       params = params.set('status', query.status);
     }
+    if (query.category) {
+      params = params.set('category', query.category);
+    }
+    if (query.package) {
+      params = params.set('package', query.package);
+    }
+    if (query.sort) {
+      params = params.set('sort', query.sort);
+    }
     return this.httpClient.get<PagedResult<Place>>(`${this.apiBaseUrl}/places`, { params });
+  }
+
+  getStatusCounts(): Observable<PlaceStatusCounts> {
+    return this.httpClient.get<PlaceStatusCounts>(`${this.apiBaseUrl}/places/status-counts`);
+  }
+
+  getPlace(id: string): Observable<PlaceDetail> {
+    return this.httpClient.get<PlaceDetail>(`${this.apiBaseUrl}/places/${id}`);
   }
 }

@@ -1,0 +1,32 @@
+<div class="flex flex-wrap items-center gap-2">
+  @for (service of services(); track service) {
+    <span
+      class="flex h-8 items-center gap-2 rounded-full bg-surface-muted px-3 text-[13px] text-text-primary"
+    >
+      <button type="button" [attr.aria-label]="'إزالة ' + service" (click)="remove(service)">
+        <app-icon name="close" [size]="12" class="text-text-secondary" />
+      </button>
+      <span>{{ service }}</span>
+    </span>
+  }
+</div>
+
+<div class="mt-4 flex items-center gap-3">
+  <input
+    type="text"
+    class="h-11 flex-1 rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+    placeholder="أضف خدمة جديدة..."
+    aria-label="أضف خدمة جديدة"
+    [value]="draft()"
+    (input)="onDraftInput($event)"
+    (keydown.enter)="add()"
+  />
+  <button
+    type="button"
+    class="flex h-11 shrink-0 items-center gap-2 rounded-lg bg-primary px-4 text-[14px] font-medium text-white"
+    (click)="add()"
+  >
+    <span>إضافة خدمة</span>
+    <app-icon name="plus" [size]="14" />
+  </button>
+</div>

@@ -1,0 +1,352 @@
+<form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col gap-6">
+  <div>
+    <nav class="flex items-center gap-2 text-[12px] text-text-secondary">
+      <a routerLink="/places" class="hover:text-primary">الشركات و المتاجر</a>
+      <app-icon name="chevron-left" [size]="8" />
+      <span class="text-text-primary">{{ heading() }}</span>
+    </nav>
+    <h1 class="mt-4 text-start text-[24px]/[34px] font-bold text-text-primary">{{ heading() }}</h1>
+    <p class="mt-1 text-start text-[13px]/[19px] text-text-secondary">
+      أضف مكان جديد ليظهر ضمن الأماكن المتاحة.
+    </p>
+  </div>
+
+  <app-form-section heading="المعلومات الأساسية" icon="info">
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <app-field-label text="اسم المكان" forId="place-name" [isRequired]="true" />
+        <input
+          id="place-name"
+          type="text"
+          formControlName="name"
+          placeholder="مثال: صيدلية الحياة"
+          class="mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div>
+        <app-field-label text="اسم المالك / المسؤول" forId="owner-name" />
+        <input
+          id="owner-name"
+          type="text"
+          formControlName="ownerName"
+          class="mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+      </div>
+      <div>
+        <app-field-label text="رقم هاتف المالك /المسؤول" forId="owner-phone" [isRequired]="true" />
+        <input
+          id="owner-phone"
+          type="tel"
+          formControlName="ownerPhone"
+          placeholder="05XXXXXXXX"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div>
+        <app-field-label text="رقم هاتف إضافي للمالك /المسؤول" forId="owner-extra-phone" />
+        <input
+          id="owner-extra-phone"
+          type="tel"
+          formControlName="ownerExtraPhone"
+          placeholder="05XXXXXXXX"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div>
+        <app-field-label text="التصنيف الرئيسي" forId="main-category" [isRequired]="true" />
+        <select
+          id="main-category"
+          formControlName="mainCategory"
+          class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
+        >
+          <option value="">اختر التصنيف...</option>
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <app-field-label text="التصنيف الفرعي" forId="sub-category" />
+        <input
+          id="sub-category"
+          type="text"
+          formControlName="subCategory"
+          class="mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+      </div>
+    </div>
+  </app-form-section>
+
+  <app-form-section heading="موقع المكان" icon="map-pin">
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <app-field-label text="المحافظة" forId="city" [isRequired]="true" />
+        <select
+          id="city"
+          formControlName="city"
+          class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
+        >
+          <option value="">اختر المدينة...</option>
+          @for (city of cities; track city) {
+            <option [value]="city">{{ city }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <app-field-label text="المنطقة" forId="region" [isRequired]="true" />
+        <select
+          id="region"
+          formControlName="region"
+          class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
+        >
+          <option value="">اختر المدينة...</option>
+          @for (city of cities; track city) {
+            <option [value]="city">{{ city }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-span-1">
+        <app-field-label text="العنوان بالتفصيل" forId="address" [isRequired]="true" />
+        <input
+          id="address"
+          type="text"
+          formControlName="address"
+          placeholder="الشارع، رقم المبنى..."
+          class="mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+    </div>
+
+    <div class="relative mt-6 h-64 overflow-clip rounded-xl border border-border">
+      <app-map-picker
+        class="size-full"
+        [latitude]="form.controls.latitude.value"
+        [longitude]="form.controls.longitude.value"
+        (locationPicked)="setPoint($event)"
+      />
+
+      @if (isPickingOnMap()) {
+        <p
+          class="pointer-events-none absolute inset-x-0 top-0 z-1000 bg-primary/90 py-1.5 text-center text-[12px] text-white"
+        >
+          اضغط على الخريطة أو اسحب المؤشر لتحديد الموقع
+        </p>
+      } @else {
+        <!-- RTL: "تحديد موقعي" comes first so it sits rightmost, as the design lays it out. -->
+        <div class="absolute inset-0 z-1000 bg-white/20">
+          <div class="flex gap-4 p-4">
+            <button
+              type="button"
+              class="flex h-11 items-center gap-2 rounded-lg border border-border bg-surface px-4 text-[14px] font-medium text-text-primary"
+              (click)="useMyLocation()"
+            >
+              <app-icon name="crosshair" [size]="16" />
+              <span>تحديد موقعي</span>
+            </button>
+            <button
+              type="button"
+              class="flex h-11 items-center gap-2 rounded-lg bg-primary px-4 text-[14px] font-medium text-white"
+              (click)="startPickingOnMap()"
+            >
+              <app-icon name="map" [size]="16" />
+              <span>اختيار الموقع من الخريطة</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (locationError()) {
+      <p class="mt-2 text-start text-[12px] text-error">{{ locationError() }}</p>
+    }
+  </app-form-section>
+
+  <app-form-section heading="تفاصيل المكان" icon="file-text">
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <app-field-label text="رقم الهاتف" forId="phone" [isRequired]="true" />
+        <input
+          id="phone"
+          type="tel"
+          formControlName="phone"
+          placeholder="05XXXXXXXX"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div>
+        <app-field-label text="رقم الهاتف الإضافي" forId="extra-phone" />
+        <input
+          id="extra-phone"
+          type="tel"
+          formControlName="extraPhone"
+          placeholder="05XXXXXXXX"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div class="col-span-2">
+        <app-field-label text="الموقع الإلكتروني" forId="website" />
+        <input
+          id="website"
+          type="url"
+          formControlName="website"
+          placeholder="https://"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        />
+      </div>
+      <div>
+        <app-field-label text="واتساب" forId="whatsapp" />
+        <input
+          id="whatsapp"
+          type="tel"
+          formControlName="whatsapp"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+        <label class="mt-2 flex items-center gap-2 text-[12px] text-accent">
+          <input
+            type="checkbox"
+            formControlName="useMainPhoneForWhatsapp"
+            class="size-4 rounded border border-accent accent-accent"
+          />
+          <span>استخدام رقم الهاتف الرئيسي للواتساب</span>
+        </label>
+      </div>
+      <div>
+        <app-field-label text="فيسبوك" forId="facebook" />
+        <input
+          id="facebook"
+          type="url"
+          formControlName="facebook"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+      </div>
+      <div>
+        <app-field-label text="إنستغرام" forId="instagram" />
+        <input
+          id="instagram"
+          type="url"
+          formControlName="instagram"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+      </div>
+      <div>
+        <app-field-label text="تلغرام" forId="telegram" />
+        <input
+          id="telegram"
+          type="url"
+          formControlName="telegram"
+          class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none"
+        />
+      </div>
+      <div class="col-span-2">
+        <app-field-label text="وصف المكان" forId="description" />
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="5"
+          placeholder="اكتب وصفاً موجزاً عن المكان وما يقدمه من خدمات..."
+          class="mt-[18px] w-full rounded-lg border border-border p-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        ></textarea>
+      </div>
+    </div>
+  </app-form-section>
+
+  <app-form-section heading="أوقات العمل" icon="clock">
+    <button
+      headerAction
+      type="button"
+      class="text-[13px] font-medium text-primary"
+      (click)="openAllDay()"
+    >
+      مفتوح 24 ساعة
+    </button>
+
+    <app-working-hours-editor [week]="week()" (weekChange)="week.set($event)" />
+  </app-form-section>
+
+  <app-form-section heading="الخدمات والصور" icon="image">
+    <p class="text-start text-[13px] text-text-primary">الخدمات والمرافق</p>
+    <div class="mt-3">
+      <app-services-editor [services]="services()" (servicesChange)="services.set($event)" />
+    </div>
+
+    <p class="mt-8 text-start text-[13px] text-text-primary">صور المكان</p>
+    <div class="mt-3">
+      <app-media-picker
+        prompt="اسحب وأفلت الصور هنا"
+        hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+        accept="image/jpeg,image/png"
+        [rules]="imageRules"
+        [files]="images()"
+        (filesChange)="images.set($event)"
+      />
+    </div>
+
+    <p class="mt-8 text-start text-[13px] text-text-primary">فيديوهات المكان</p>
+    <div class="mt-3">
+      <app-media-picker
+        prompt="اسحب وأفلت الفيديو هنا"
+        accept="video/*"
+        kind="video"
+        [rules]="videoRules"
+        [files]="videos()"
+        (filesChange)="videos.set($event)"
+      />
+    </div>
+  </app-form-section>
+
+  <app-form-section heading="الباقة والحالة" icon="settings">
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <app-field-label text="الباقة" forId="package" [isRequired]="true" />
+        <select
+          id="package"
+          formControlName="package"
+          class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
+        >
+          @for (option of packages; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <app-field-label text="حالة المكان" forId="status" [isRequired]="true" />
+        <select
+          id="status"
+          formControlName="status"
+          class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
+        >
+          @for (option of statuses; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        <p class="mt-2 text-start text-[12px] text-text-secondary">
+          يتم عرض الأماكن "النشطة" فقط للجمهور.
+        </p>
+      </div>
+    </div>
+  </app-form-section>
+
+  <!--
+    The action bar stays on screen while the long form scrolls. The negative margins and
+    `-bottom-8` pull it through main's 32px padding on all sides, so it sits flush against
+    the edges of the scroll area. RTL: `justify-end` packs the buttons against the left
+    edge, and the DOM order runs right to left, so "حفظ المكان" lands leftmost.
+  -->
+  <div
+    class="sticky -bottom-8 z-20 -mx-8 -mb-8 flex items-center justify-end gap-3 border-t border-border bg-surface px-8 py-4 shadow-[0_-4px_16px_rgba(15,23,42,0.06)]"
+  >
+    <a routerLink="/places" class="px-4 text-[14px] font-medium text-error">إلغاء</a>
+    <button
+      type="button"
+      class="h-11.5 rounded-lg border border-border bg-surface-muted px-6 text-[14px] font-medium text-text-primary"
+    >
+      حفظ كمسودة
+    </button>
+    <button
+      type="submit"
+      class="h-11.5 rounded-lg bg-primary px-6 text-[14px] font-medium text-white"
+    >
+      حفظ المكان
+    </button>
+  </div>
+</form>
