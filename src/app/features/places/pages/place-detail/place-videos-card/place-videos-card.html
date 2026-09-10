@@ -1,0 +1,25 @@
+<app-section-panel
+  heading="معرض الفيديوهات"
+  subtitle="الفيديوهات التعريفية للمكان"
+  actionLabel="إضافة فيديو"
+>
+  @if (videos().length) {
+    <!-- A single video fills the 621×168 area of the design; more share the row. -->
+    <div class="flex gap-4">
+      @for (video of videos(); track video) {
+        <video
+          [src]="video"
+          class="h-[168px] min-w-0 flex-1 rounded-xl bg-black object-cover"
+          controls
+          preload="metadata"
+        ></video>
+      }
+    </div>
+  } @else {
+    <p
+      class="flex h-[168px] items-center justify-center rounded-xl border border-dashed border-border text-[13px] text-text-secondary"
+    >
+      لا توجد فيديوهات بعد
+    </p>
+  }
+</app-section-panel>

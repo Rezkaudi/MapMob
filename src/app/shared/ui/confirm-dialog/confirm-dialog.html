@@ -20,6 +20,9 @@
     @if (note()) {
       <p class="mt-1 text-[14px]/[21px] text-accent">{{ note() }}</p>
     }
+    @if (warning()) {
+      <p class="mt-2 text-[13px]/[20px] font-medium text-error">{{ warning() }}</p>
+    }
 
     <div class="mt-6 flex items-center gap-4">
       <button

@@ -1,0 +1,41 @@
+<!--
+  RTL: the heading block comes first so it sits on the right, the action button
+  on the left. The 25px padding and the 20px gap below the header are the design's.
+-->
+<section class="rounded-2xl border border-border bg-surface p-[25px]">
+  <header class="flex items-start justify-between gap-4">
+    <div class="text-start">
+      <div class="flex items-center gap-2">
+        <h2 class="text-[16px]/[24px] font-bold text-text-primary">{{ heading() }}</h2>
+        @if (badge()) {
+          <span
+            data-testid="section-badge"
+            class="flex h-5 items-center rounded-md bg-primary-soft px-2 text-[11px]/[16px] font-medium text-primary"
+          >
+            {{ badge() }}
+          </span>
+        }
+      </div>
+      @if (subtitle()) {
+        <p class="mt-1 text-[12px]/[17px] text-text-secondary">{{ subtitle() }}</p>
+      }
+    </div>
+
+    @if (actionLabel()) {
+      <!-- RTL: the icon leads, so it lands on the right edge of the button. -->
+      <button
+        type="button"
+        class="flex h-7 shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px]/[16px] font-medium text-white"
+        (click)="action.emit()"
+      >
+        <app-icon [name]="actionIcon()" [size]="14" />
+        <span>{{ actionLabel() }}</span>
+      </button>
+    }
+  </header>
+
+  <!-- The header frame is 62px tall against 45px of text, so the content clears it by 37px. -->
+  <div class="mt-[37px]">
+    <ng-content />
+  </div>
+</section>

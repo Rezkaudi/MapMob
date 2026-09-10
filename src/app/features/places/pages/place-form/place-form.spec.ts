@@ -67,4 +67,15 @@ describe('PlaceForm', () => {
     );
     expect(switches.every((toggle) => toggle.getAttribute('aria-checked') === 'true')).toBe(true);
   });
+
+  it('confirms with a toast once the place is saved', () => {
+    const fixture = render();
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('تم حفظ المكان بنجاح');
+    expect(text).toContain('تمت إضافة المكان بنجاح وسيظهر في قائمة الشركات والمتاجر.');
+  });
 });

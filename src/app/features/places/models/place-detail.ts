@@ -1,6 +1,7 @@
 import { PlaceActivity } from './place-activity';
 import { PlaceContact } from './place-contact';
 import { PlaceLocation } from './place-location';
+import { PlaceOffer } from './place-offer';
 import { PlaceOwner } from './place-owner';
 import { PlaceStatus } from './place-status';
 import { PlaceSubscription } from './place-subscription';
@@ -21,5 +22,7 @@ export interface PlaceDetail {
   readonly contact: PlaceContact;
   readonly location: PlaceLocation;
   readonly workingHours: readonly WorkingHoursRow[];
+  readonly offers: readonly PlaceOffer[];
+  readonly videos: readonly string[];
   readonly isOpenNow: boolean;
 }

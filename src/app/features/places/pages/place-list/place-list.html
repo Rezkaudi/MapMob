@@ -59,7 +59,7 @@
         [selectedCount]="store.selectedCount()"
         (activate)="askFor('activate')"
         (suspend)="askFor('suspend')"
-        (notify)="askFor('notify')"
+        (notify)="composeNotification()"
         (exportRows)="askFor('export')"
         (remove)="askFor('delete')"
         (clear)="store.clearSelection()"
@@ -198,9 +198,18 @@
     [title]="confirm.title"
     [message]="confirm.message"
     [note]="'تم تحديد ' + store.selectedCount() + ' شركات'"
+    [warning]="confirm.warning ?? ''"
     [confirmLabel]="confirm.confirmLabel"
     [tone]="confirm.tone"
     (confirmed)="confirmAction()"
     (cancelled)="cancelAction()"
+  />
+}
+
+@if (isComposingNotification()) {
+  <app-notify-dialog
+    [selectedCount]="store.selectedCount()"
+    (sent)="sendNotification()"
+    (cancelled)="cancelNotification()"
   />
 }

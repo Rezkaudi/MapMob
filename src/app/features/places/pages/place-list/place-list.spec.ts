@@ -123,4 +123,42 @@ describe('PlaceList', () => {
     alert.querySelector('button')!.click();
     expect(callCount).toBe(2);
   });
+
+  it('opens the notification composer for the bulk notify action', () => {
+    configure({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) });
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelectorAll('input[type="checkbox"]')[1].click();
+    fixture.detectChanges();
+
+    const buttons: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    );
+    buttons.find((button) => button.textContent?.trim() === 'إرسال إشعارات')?.click();
+    fixture.detectChanges();
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('إرسال إشعار جماعي');
+    expect(text).toContain('نوع وأهمية الإشعار');
+  });
+
+  it('warns that deleting cannot be undone', () => {
+    configure({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) });
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelectorAll('input[type="checkbox"]')[1].click();
+    fixture.detectChanges();
+
+    const buttons: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    );
+    buttons.find((button) => button.textContent?.trim() === 'حذف')?.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('تنبيه: إجراء نهائي لا يمكن التراجع عنه');
+  });
 });

@@ -26,4 +26,15 @@ describe('InfoCard', () => {
 
     expect(fixture.nativeElement.querySelector('button')).toBeNull();
   });
+
+  it('pads the sidebar cards by 16px and the wide cards by 24px', () => {
+    const fixture = TestBed.createComponent(InfoCard);
+    fixture.componentRef.setInput('heading', 'الاشتراك');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('section').className).toContain('p-6');
+
+    fixture.componentRef.setInput('padding', 'compact');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('section').className).toContain('p-4');
+  });
 });

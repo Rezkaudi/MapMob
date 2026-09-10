@@ -9,6 +9,7 @@ import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
 import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
 import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
+import { Toast } from '../../../../shared/ui/toast/toast';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
@@ -50,6 +51,7 @@ const ALL_DAY_CLOSES_AT = '23:59';
     MediaPicker,
     FormSection,
     ServicesEditor,
+    Toast,
     WorkingHoursEditor,
     ReactiveFormsModule,
     RouterLink,
@@ -73,6 +75,7 @@ export class PlaceForm {
     label: PLACE_STATUS_LABEL[value],
   }));
 
+  protected readonly hasSaved = signal(false);
   protected readonly isEditing = computed(() => Boolean(this.id()));
   protected readonly heading = computed(() =>
     this.isEditing() ? 'تعديل المكان' : 'إضافة مكان جديد',
@@ -149,8 +152,13 @@ export class PlaceForm {
     );
   }
 
-  /** The write endpoint is not built yet, so saving only validates for now. */
+  /** The write endpoint is not built yet, so saving only validates and confirms. */
   protected save(): void {
     this.form.markAllAsTouched();
+    this.hasSaved.set(true);
+  }
+
+  protected dismissSavedToast(): void {
+    this.hasSaved.set(false);
   }
 }

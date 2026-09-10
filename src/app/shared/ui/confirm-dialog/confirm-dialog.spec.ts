@@ -34,4 +34,15 @@ describe('ConfirmDialog', () => {
 
     expect(fired).toEqual(['confirmed', 'cancelled']);
   });
+
+  it('shows the final-action warning when one is given', () => {
+    const fixture = TestBed.createComponent(ConfirmDialog);
+    fixture.componentRef.setInput('title', 'حذف الشركات');
+    fixture.componentRef.setInput('message', 'هل أنت متأكد؟');
+    fixture.componentRef.setInput('confirmLabel', 'حذف الشركات');
+    fixture.componentRef.setInput('warning', 'تنبيه: إجراء نهائي لا يمكن التراجع عنه');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('تنبيه: إجراء نهائي لا يمكن التراجع عنه');
+  });
 });

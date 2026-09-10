@@ -1,12 +1,13 @@
 import { ConfirmTone } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
 
-export type BulkAction = 'activate' | 'suspend' | 'notify' | 'export' | 'delete';
+export type BulkAction = 'activate' | 'suspend' | 'export' | 'delete';
 
 interface BulkActionDialog {
   readonly title: string;
   readonly message: string;
   readonly confirmLabel: string;
   readonly tone: ConfirmTone;
+  readonly warning?: string;
 }
 
 /** What the confirm dialog says for each bulk action. */
@@ -23,12 +24,6 @@ export const BULK_ACTION_DIALOG: Record<BulkAction, BulkActionDialog> = {
     confirmLabel: 'إيقاف الشركات',
     tone: 'primary',
   },
-  notify: {
-    title: 'إرسال إشعارات',
-    message: 'هل أنت متأكد من إرسال إشعار إلى الشركات المحددة؟',
-    confirmLabel: 'إرسال الإشعارات',
-    tone: 'primary',
-  },
   export: {
     title: 'تصدير الشركات',
     message: 'هل أنت متأكد من تصدير الشركات المحددة؟',
@@ -37,8 +32,9 @@ export const BULK_ACTION_DIALOG: Record<BulkAction, BulkActionDialog> = {
   },
   delete: {
     title: 'حذف الشركات',
-    message: 'هل أنت متأكد من حذف الشركات المحددة؟',
+    message: 'هل أنت متأكد من رغبتك في حذف الشركات المحددة نهائياً؟',
     confirmLabel: 'حذف الشركات',
     tone: 'danger',
+    warning: 'تنبيه: إجراء نهائي لا يمكن التراجع عنه',
   },
 };

@@ -6,6 +6,7 @@ import { paginate } from '../../../../mock/paginate';
 import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
 import { Place } from '../models/place';
 import { PlaceDetail } from '../models/place-detail';
+import { PlaceOffer } from '../models/place-offer';
 import { PlacePackage } from '../models/place-package';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceSort } from '../models/place-sort';
@@ -22,6 +23,18 @@ const WORKING_HOURS = [
   { days: 'الجمعة', hours: '04:00 PM - 11:00 PM', isToday: false },
   { days: 'السبت (اليوم)', hours: '10:00 AM - 10:00 PM', isToday: true },
 ];
+
+const OFFER_COUNT = 3;
+
+const OFFERS: readonly PlaceOffer[] = Array.from({ length: OFFER_COUNT }, (_, index) => ({
+  id: `offer-${index + 1}`,
+  title: 'خصم 20 % على جميع المنتجات',
+  category: 'الفيتامينات والمكملات',
+  description: 'خصم خاص لفترة محدودة على كافة أصناف المكملات الغذائية',
+  discountLabel: '20%',
+  dateRange: '01 - 15 سبتمبر 2026',
+  imageUrl: '',
+}));
 
 function buildPlaceDetail(place: Place): PlaceDetail {
   return {
@@ -53,6 +66,8 @@ function buildPlaceDetail(place: Place): PlaceDetail {
       longitude: 35.886,
     },
     workingHours: WORKING_HOURS,
+    offers: OFFERS,
+    videos: [],
     isOpenNow: true,
   };
 }

@@ -13,6 +13,8 @@ import { PlaceGallery } from './place-gallery/place-gallery';
 import { PlaceContactCard } from './place-contact-card/place-contact-card';
 import { PlaceHoursCard } from './place-hours-card/place-hours-card';
 import { PlaceLocationCard } from './place-location-card/place-location-card';
+import { PlaceOffersCard } from './place-offers-card/place-offers-card';
+import { PlaceVideosCard } from './place-videos-card/place-videos-card';
 
 const STATUS_TEXT_CLASS: Record<PlaceStatus, string> = {
   active: 'text-success',
@@ -38,6 +40,8 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
     PlaceContactCard,
     PlaceHoursCard,
     PlaceLocationCard,
+    PlaceOffersCard,
+    PlaceVideosCard,
     ArabicDatePipe,
     RouterLink,
   ],

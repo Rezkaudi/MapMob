@@ -20,6 +20,7 @@ import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PlacesStore } from '../../state/places.store';
 import { PackageBadge } from './package-badge/package-badge';
 import { PlaceFilters } from './place-filters/place-filters';
+import { NotifyDialog } from './notify-dialog/notify-dialog';
 import { PlaceLogo } from './place-logo/place-logo';
 import { BulkAction, BULK_ACTION_DIALOG } from './bulk-action';
 
@@ -58,6 +59,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
     TableEmpty,
     TableSkeleton,
     PackageBadge,
+    NotifyDialog,
     PlaceFilters,
     PlaceLogo,
     TablePagination,
@@ -96,6 +98,7 @@ export class PlaceList {
 
   protected readonly selectedStatus = computed(() => this.store.status() ?? 'all');
 
+  protected readonly isComposingNotification = signal(false);
   protected readonly pendingAction = signal<BulkAction | null>(null);
   protected readonly dialog = computed(() => {
     const action = this.pendingAction();
@@ -138,6 +141,20 @@ export class PlaceList {
 
   protected askFor(action: BulkAction): void {
     this.pendingAction.set(action);
+  }
+
+  protected composeNotification(): void {
+    this.isComposingNotification.set(true);
+  }
+
+  /** The notify endpoint is not built yet, so sending only closes the composer. */
+  protected sendNotification(): void {
+    this.isComposingNotification.set(false);
+    this.store.clearSelection();
+  }
+
+  protected cancelNotification(): void {
+    this.isComposingNotification.set(false);
   }
 
   /** The write endpoints are not built yet, so confirming only clears the selection. */

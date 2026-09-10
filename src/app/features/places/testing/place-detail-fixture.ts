@@ -29,6 +29,16 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
       { days: 'الأحد - الخميس', hours: '09:00 AM - 11:00 PM', isToday: false },
       { days: 'السبت (اليوم)', hours: '10:00 AM - 10:00 PM', isToday: true },
     ],
+    offers: Array.from({ length: 3 }, (_, index) => ({
+      id: `offer-${index + 1}`,
+      title: 'خصم 20 % على جميع المنتجات',
+      category: 'الفيتامينات والمكملات',
+      description: 'خصم خاص لفترة محدودة على كافة أصناف المكملات الغذائية',
+      discountLabel: '20%',
+      dateRange: '01 - 15 سبتمبر 2026',
+      imageUrl: '',
+    })),
+    videos: [],
     isOpenNow: true,
     ...overrides,
   };

@@ -1,0 +1,46 @@
+<article
+  class="flex h-[270px] w-[200px] shrink-0 flex-col overflow-clip rounded-xl border border-border bg-surface"
+>
+  <div class="relative h-[144px] shrink-0 bg-surface-muted">
+    @if (offer().imageUrl) {
+      <app-lazy-image
+        [src]="offer().imageUrl"
+        [alt]="offer().title"
+        imageClass="size-full object-cover"
+        class="size-full"
+      />
+    } @else {
+      <div class="flex size-full items-center justify-center text-placeholder">
+        <app-icon name="offers" [size]="28" />
+      </div>
+    }
+
+    <!-- The discount tag sits 8px in from the left edge, as the design places it. -->
+    @if (offer().discountLabel) {
+      <span
+        data-testid="offer-discount"
+        class="font-latin absolute top-2 left-2 flex h-[19px] items-center rounded bg-status-error px-2 text-[11px]/[15px] font-bold text-white"
+      >
+        {{ offer().discountLabel }}
+      </span>
+    }
+  </div>
+
+  <div class="flex flex-1 flex-col p-[14px]">
+    <h3 class="truncate text-start text-[12px]/[17px] font-bold text-text-primary">
+      {{ offer().title }}
+    </h3>
+    <p class="truncate text-start text-[11px]/[17px] text-accent">{{ offer().category }}</p>
+    <p class="mt-1 line-clamp-2 text-start text-[11px]/[18px] text-text-secondary">
+      {{ offer().description }}
+    </p>
+
+    <!-- RTL: the calendar icon leads, so the row reads right to left. -->
+    <div
+      class="mt-auto flex h-7 items-center gap-1 border-t border-border pt-3 text-[11px]/[15px] text-text-secondary"
+    >
+      <app-icon name="calendar" [size]="12" />
+      <span class="font-latin">{{ offer().dateRange }}</span>
+    </div>
+  </div>
+</article>

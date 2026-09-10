@@ -1,0 +1,27 @@
+<!-- RTL: the icon leads on the right, the text follows, the close button ends on the left. -->
+<div
+  role="status"
+  class="fixed bottom-6 left-1/2 z-[1100] flex h-[76px] w-[476px] -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-surface px-[17px] shadow-panel"
+>
+  <span
+    class="flex size-10 shrink-0 items-center justify-center rounded-full"
+    [class]="toneClasses[tone()]"
+  >
+    <app-icon [name]="toneIcons[tone()]" [size]="16" />
+  </span>
+
+  <div class="min-w-0 flex-1 text-start">
+    <p class="text-[16px]/[24px] font-bold text-text-primary">{{ title() }}</p>
+    <p class="text-[12px]/[18px] text-text-secondary">{{ message() }}</p>
+  </div>
+
+  <button
+    type="button"
+    data-testid="toast-close"
+    class="flex size-5 shrink-0 items-center justify-center text-text-secondary"
+    aria-label="إغلاق"
+    (click)="dismissed.emit()"
+  >
+    <app-icon name="close" [size]="14" />
+  </button>
+</div>
