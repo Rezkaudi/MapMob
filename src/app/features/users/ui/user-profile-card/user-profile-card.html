@@ -1,0 +1,87 @@
+<section
+  class="rounded-xl border border-border bg-white p-6 shadow-[0_4px_30px_0_rgba(0,0,0,0.08)]"
+  aria-labelledby="user-profile-name"
+>
+  <!-- RTL: the 80px initials tile on the right, the name and details 24px to its left. -->
+  <div class="flex items-center gap-6">
+    <span
+      data-role="avatar"
+      aria-hidden="true"
+      class="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-accent text-[24px]/[32px] font-bold text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]"
+    >
+      {{ profile().initials }}
+    </span>
+
+    <div class="flex min-w-0 flex-col gap-1">
+      <div class="flex flex-wrap items-center gap-3">
+        <h2 id="user-profile-name" class="text-[30px]/[38px] font-medium text-text-primary">
+          {{ user().name }}
+        </h2>
+        <span class="rounded-xl bg-primary-tint px-2 py-1 text-[12px]/[16px] text-primary">
+          {{ profile().accountTypeLabel }}
+        </span>
+        <span
+          class="flex items-center gap-1 rounded-xl px-2 py-1 text-[12px]/[16px] text-white"
+          [class]="profile().presence.toneClass"
+        >
+          @if (profile().presence.hasDot) {
+            <span class="size-1.5 rounded-full bg-white" aria-hidden="true"></span>
+          }
+          {{ profile().presence.label }}
+        </span>
+      </div>
+
+      <!-- The design sets the detail lines 46px in from the name's right edge. -->
+      <dl class="flex flex-col gap-[17px] ps-[46px] text-[13px]/[18px]">
+        <div class="flex flex-wrap items-center gap-[18px]">
+          <div class="flex items-center gap-1">
+            <app-icon name="mail" [size]="15" class="text-text-secondary" aria-hidden="true" />
+            <dt class="text-text-secondary">البريد الالكتروني:</dt>
+            <dd class="text-[#191c1e]" dir="ltr">{{ profile().emailLabel }}</dd>
+          </div>
+          <span class="w-2 text-center text-[#94a3b8]" aria-hidden="true">•</span>
+          <div class="flex items-center gap-1">
+            <app-icon
+              name="phone-filled"
+              [size]="13.5"
+              class="text-text-secondary"
+              aria-hidden="true"
+            />
+            <dt class="text-text-secondary">رقم الهاتف:</dt>
+            <dd class="text-[#191c1e]" dir="ltr">{{ profile().phoneLabel }}</dd>
+          </div>
+          <span class="w-2 text-center text-[#94a3b8]" aria-hidden="true">•</span>
+          <div class="flex items-center gap-1">
+            <app-icon name="regions" [size]="13.5" class="text-text-secondary" aria-hidden="true" />
+            <dt class="text-text-secondary">المحافظة :</dt>
+            <dd class="text-[#191c1e]">{{ user().governorateName }}</dd>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-[17px]">
+          <div class="flex items-center gap-1">
+            <app-icon
+              name="calendar-filled"
+              [size]="15"
+              class="text-text-secondary"
+              aria-hidden="true"
+            />
+            <dt class="text-text-secondary">تاريخ التسجيل:</dt>
+            <dd class="text-[#191c1e]">{{ user().registeredAt | latinDigitDate }}</dd>
+          </div>
+          <span class="w-2 text-center text-[#94a3b8]" aria-hidden="true">•</span>
+          <div class="flex items-center gap-1">
+            <app-icon
+              name="clock-filled"
+              [size]="15"
+              class="text-text-secondary"
+              aria-hidden="true"
+            />
+            <dt class="text-text-secondary">آخر نشاط:</dt>
+            <dd class="text-[#191c1e]">{{ profile().lastActiveLabel }}</dd>
+          </div>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,59 +1,67 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
-import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
-import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
-import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
+import { Router } from '@angular/router';
+import { CLOCK } from '../../../../core/config/clock';
+import { FileSaver } from '../../../../shared/files/file-saver';
+import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
+import { ConfirmDialogFlow } from '../../../../shared/state/confirm-dialog-flow';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
-import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
-import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
+import { ExportButton } from '../../../../shared/ui/export-button/export-button';
+import { PageHeader } from '../../../../shared/ui/page-header/page-header';
+import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
-import { TableToolbar } from '../../../../shared/ui/table-toolbar/table-toolbar';
-import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
-import { USER_STATUS_LABEL, UserStatus } from '../../models/user-status';
+import { Toast } from '../../../../shared/ui/toast/toast';
+import { AppUser } from '../../models/user';
 import { UsersStore } from '../../state/users.store';
-
-/** Tick box, six data columns and the action column. */
-const TABLE_COLUMN_COUNT = 8;
-
-const STATUS_TONE: Record<UserStatus, BadgeTone> = {
-  active: 'success',
-  inactive: 'neutral',
-};
+import { UserDialogs } from '../../ui/user-dialogs/user-dialogs';
+import { UserTable } from '../../ui/user-table/user-table';
+import { UserToolbar } from '../../ui/user-toolbar/user-toolbar';
 
 @Component({
   selector: 'app-user-list',
   imports: [
-    AppIcon,
-    ActionMenu,
-    Badge,
     ErrorState,
-    TableEmpty,
-    TableSkeleton,
+    ExportButton,
+    PageHeader,
     StatCard,
     TablePagination,
-    TableToolbar,
-    ArabicDatePipe,
-    DecimalPipe,
+    Toast,
+    UserDialogs,
+    UserTable,
+    UserToolbar,
   ],
   templateUrl: './user-list.html',
+  host: { class: 'flex min-h-full flex-col' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserList {
-  protected readonly tableColumnCount = TABLE_COLUMN_COUNT;
+  private readonly router = inject(Router);
+  private readonly fileSaver = inject(FileSaver);
+  private readonly clock = inject(CLOCK);
+
   protected readonly store = inject(UsersStore);
-  protected readonly statusLabel = USER_STATUS_LABEL;
-  protected readonly statusTone = STATUS_TONE;
+  protected readonly dialogFlow = new ConfirmDialogFlow<AppUser>({
+    changeStatus: (id, status) => this.store.changeStatus(id, status),
+    remove: (id) => this.store.deleteUser(id),
+  });
 
   constructor() {
     this.store.loadUsers();
+    this.store.loadSummary();
   }
 
-  protected onSearch(search: string): void {
-    this.store.setSearch(search);
+  protected openDetail(user: AppUser): void {
+    this.router.navigate(['/users', user.id]);
   }
 
-  protected onPageChange(pageIndex: number): void {
-    this.store.changePage(pageIndex);
+  protected async exportUsers(): Promise<void> {
+    const file = await this.store.exportUsers();
+    if (file) {
+      this.fileSaver.save(file, `users-${toCalendarDay(this.clock())}.csv`);
+    }
+  }
+
+  protected closeDialog(): void {
+    this.dialogFlow.close();
+    this.store.clearSaveError();
   }
 }

@@ -1,15 +1,12 @@
-import { signal } from '@angular/core';
-import { statusAfter, statusChangeActionFor } from '../models/confirm-action';
-import { CrudDialogRequest } from './crud-dialog-request';
+import { ConfirmDialogFlow } from './confirm-dialog-flow';
 import { CrudEntry } from './crud-entry';
 import { CrudWriteActions } from './crud-write-actions';
 
-/** Which dialog a list page shows, and what confirming it saves. */
-export class CrudDialogFlow<TEntry extends CrudEntry, TDraft> {
-  private readonly openRequest = signal<CrudDialogRequest<TEntry> | null>(null);
-  readonly request = this.openRequest.asReadonly();
-
-  constructor(private readonly actions: CrudWriteActions<TDraft>) {}
+/** Adds the add and edit form to the status and delete dialogs. */
+export class CrudDialogFlow<TEntry extends CrudEntry, TDraft> extends ConfirmDialogFlow<TEntry> {
+  constructor(private readonly actions: CrudWriteActions<TDraft>) {
+    super(actions);
+  }
 
   openCreate(): void {
     this.openRequest.set({ type: 'form', mode: 'create', entry: null });
@@ -17,18 +14,6 @@ export class CrudDialogFlow<TEntry extends CrudEntry, TDraft> {
 
   openEdit(entry: TEntry): void {
     this.openRequest.set({ type: 'form', mode: 'edit', entry });
-  }
-
-  openStatusChange(entry: TEntry): void {
-    this.openRequest.set({ type: 'confirm', action: statusChangeActionFor(entry.status), entry });
-  }
-
-  openDelete(entry: TEntry): void {
-    this.openRequest.set({ type: 'confirm', action: 'delete', entry });
-  }
-
-  close(): void {
-    this.openRequest.set(null);
   }
 
   async submitDraft(draft: TDraft): Promise<void> {
@@ -40,23 +25,5 @@ export class CrudDialogFlow<TEntry extends CrudEntry, TDraft> {
       ? await this.actions.update(request.entry.id, draft)
       : await this.actions.create(draft);
     this.closeWhenSaved(isSaved);
-  }
-
-  async confirm(): Promise<void> {
-    const request = this.openRequest();
-    if (request?.type !== 'confirm') {
-      return;
-    }
-    const isSaved =
-      request.action === 'delete'
-        ? await this.actions.remove(request.entry.id)
-        : await this.actions.changeStatus(request.entry.id, statusAfter(request.action));
-    this.closeWhenSaved(isSaved);
-  }
-
-  private closeWhenSaved(isSaved: boolean): void {
-    if (isSaved) {
-      this.close();
-    }
   }
 }

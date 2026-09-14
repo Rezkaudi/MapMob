@@ -1,0 +1,20 @@
+@if (rows().length) {
+  <div class="flex flex-col gap-4">
+    @for (row of rows(); track row.id) {
+      <article class="rounded-lg bg-[#f2f4f6] p-4">
+        <!-- RTL: the place on the right, the stars on the left. -->
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex min-w-0 flex-col">
+            <h3 class="text-[16px]/[28px] font-medium text-text-primary">{{ row.placeName }}</h3>
+            <p class="text-[12px]/[14px] text-text-secondary">{{ row.metaLabel }}</p>
+          </div>
+          <app-star-rating class="shrink-0" [rating]="row.rating" />
+        </div>
+        <p class="mt-[11px] text-[12px]/[21px] text-text-primary">{{ row.comment }}</p>
+        <p class="mt-[3px] pt-1 text-[11px]/[14px] text-text-secondary">{{ row.dateLabel }}</p>
+      </article>
+    }
+  </div>
+} @else {
+  <p class="py-6 text-center text-[14px] text-text-secondary">لم يضف المستخدم أي تقييم بعد</p>
+}

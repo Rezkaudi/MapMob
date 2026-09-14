@@ -50,6 +50,14 @@ describe('StatCard', () => {
     expect(chip.textContent).toContain('320 جديد');
     expect(chip.querySelector('app-icon')).toBeTruthy();
   });
+
+  it('keeps the value left-to-right, so "340+" is not flipped to "+340"', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const value: HTMLElement = fixture.nativeElement.querySelector('[data-role="value"]');
+    expect(value.getAttribute('dir')).toBe('ltr');
+  });
 });
 
 describe('StatCard while loading', () => {

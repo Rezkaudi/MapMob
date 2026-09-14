@@ -16,7 +16,7 @@ import { withRequestStatus } from './with-request-status';
 import { withSaveStatus } from './with-save-status';
 import { withSelection } from './with-selection';
 
-/** The region and category tables all draw five rows per page. */
+/** The region and category tables draw five rows per page. */
 export const LIST_PAGE_SIZE = 5;
 
 interface ListTableState<TEntry> {
@@ -27,7 +27,13 @@ interface ListTableState<TEntry> {
 
 type ListTableQueryPatch = Partial<{ readonly search: string; readonly sort: ListSort | null }>;
 
-export function withListTable<TEntry extends { readonly id: string }>() {
+interface ListTableOptions {
+  readonly pageSize: number;
+}
+
+export function withListTable<TEntry extends { readonly id: string }>(
+  options: ListTableOptions = { pageSize: LIST_PAGE_SIZE },
+) {
   return signalStoreFeature(
     withState<ListTableState<TEntry>>({ entries: [], search: '', sort: null }),
     withRequestStatus(),
@@ -36,7 +42,7 @@ export function withListTable<TEntry extends { readonly id: string }>() {
     withSaveStatus(),
     withHooks({
       onInit(store) {
-        store.setPageSize(LIST_PAGE_SIZE);
+        store.setPageSize(options.pageSize);
       },
     }),
     withComputed(({ entries, isLoading, search, selectedIdSet }) => {

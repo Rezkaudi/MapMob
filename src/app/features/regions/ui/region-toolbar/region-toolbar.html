@@ -1,37 +1,9 @@
 <!-- RTL: the 390px search sits on the right with the 139px sort field to its left. -->
 <div class="flex items-center gap-2 rounded-xl border border-border bg-surface p-4">
-  <div class="relative h-10 w-full max-w-[390px]">
-    <input
-      type="search"
-      class="h-10 w-full rounded-lg border border-text-secondary py-[11px] pr-10 pl-4 text-right text-[14px] text-text-primary outline-none placeholder:text-text-primary focus-visible:border-primary"
-      [placeholder]="searchPlaceholder()"
-      [attr.aria-label]="searchPlaceholder()"
-      (input)="onSearchInput($event)"
-    />
-    <app-icon
-      name="search-filled"
-      [size]="15"
-      class="pointer-events-none absolute start-[13px] top-1/2 -translate-y-1/2 text-text-secondary"
-      aria-hidden="true"
-    />
-  </div>
-
-  <div class="relative h-10 w-[139px] shrink-0">
-    <select
-      class="h-10 w-full appearance-none rounded-lg border border-text-secondary bg-transparent pr-3 pl-9 text-right text-[14px]/[20px] text-text-primary/60 outline-none focus-visible:border-primary"
-      aria-label="ترتيب حسب"
-      (change)="onSortChange($event)"
-    >
-      <option value="">ترتيب حسب</option>
-      @for (option of sortOptions; track option.value) {
-        <option [value]="option.value">{{ option.label }}</option>
-      }
-    </select>
-    <app-icon
-      name="sort"
-      [size]="14"
-      class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-text-primary/60"
-      aria-hidden="true"
-    />
-  </div>
+  <app-list-search-field
+    class="w-full max-w-[390px]"
+    [placeholder]="searchPlaceholder()"
+    (searchChange)="searchChange.emit($event)"
+  />
+  <app-sort-select class="shrink-0" (sortChange)="sortChange.emit($event)" />
 </div>

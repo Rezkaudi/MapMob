@@ -1,0 +1,8 @@
+@if (confirmCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="isBusy()"
+    (confirmed)="confirmed.emit()"
+    (cancelled)="closed.emit()"
+  />
+}

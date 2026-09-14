@@ -1,0 +1,21 @@
+<section
+  class="rounded-lg border border-border bg-white p-6 shadow-[0_4px_30px_0_rgba(0,0,0,0.08)]"
+>
+  <!-- RTL: the icon and heading on the right, the link on the left. -->
+  <header class="flex items-start justify-between gap-4 pb-4">
+    <div class="flex items-center gap-3">
+      <app-icon [name]="icon()" [size]="iconSize()" [class]="iconClass()" aria-hidden="true" />
+      <h2 class="text-[16px]/[28px] font-bold text-text-primary">{{ heading() }}</h2>
+    </div>
+    @if (actionLabel()) {
+      <button
+        type="button"
+        class="mt-[5px] text-[12px]/[18px] font-medium text-primary hover:underline"
+        (click)="action.emit()"
+      >
+        {{ actionLabel() }}
+      </button>
+    }
+  </header>
+  <ng-content />
+</section>

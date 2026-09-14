@@ -23,4 +23,13 @@ describe('sortListEntries', () => {
     sortListEntries(ENTRIES, 'name');
     expect(ENTRIES).toEqual([OLD_BAKERY, NEW_CAFE, MID_PHARMACY]);
   });
+
+  it('orders by another date when the caller names it', () => {
+    const early = { name: 'أحمد', registeredAt: '2024-01-01T00:00:00.000Z' };
+    const late = { name: 'سارة', registeredAt: '2024-05-01T00:00:00.000Z' };
+
+    const sorted = sortListEntries([early, late], 'newest', (entry) => entry.registeredAt);
+
+    expect(sorted).toEqual([late, early]);
+  });
 });

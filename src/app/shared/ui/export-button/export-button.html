@@ -1,0 +1,11 @@
+<!-- RTL: the download glyph leads on the right, 8px before the label. -->
+<button
+  type="button"
+  class="flex h-[45px] items-center gap-2 rounded-lg border border-border bg-surface px-4 text-[14px]/[20px] text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+  [disabled]="isBusy()"
+  [attr.aria-busy]="isBusy()"
+  (click)="pressed.emit()"
+>
+  <app-icon name="export" [size]="16" aria-hidden="true" />
+  <span>تصدير</span>
+</button>

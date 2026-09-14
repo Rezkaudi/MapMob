@@ -1,138 +1,73 @@
-<div class="flex flex-col gap-6">
-  <div class="flex items-start justify-between gap-4">
-    <div class="text-start">
-      <h1 class="text-[28px] font-bold text-black">المستخدمين</h1>
-      <p class="mt-1 text-[14px]/[20px] text-text-secondary">إدارة ومتابعة مستخدمي المنصة</p>
-    </div>
-    <button
-      type="button"
-      class="flex h-[45px] items-center gap-2 rounded-lg border border-border bg-surface px-[17px] py-[11px] text-sm text-text-primary"
-    >
-      <span>تصدير</span>
-      <app-icon name="export" [size]="16" />
-    </button>
-  </div>
+<!-- Header, the stat cards 20px below, the toolbar 40px below them, the table 30px below that, paging 8px under it. -->
+<app-page-header
+  title="المستخدمين"
+  description="إدارة ومتابعة مستخدمي المنصة."
+  [isAddVisible]="false"
+>
+  <app-export-button pageHeaderAction [isBusy]="store.isExporting()" (pressed)="exportUsers()" />
+</app-page-header>
 
-  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+<div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  @for (card of store.statCards(); track card.label) {
     <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="users"
-      label="إجمالي المستخدمين"
-      [value]="(store.summary()?.totalUserCount ?? 0 | number) ?? '0'"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="users"
-      label="المستخدمون النشطون"
-      [value]="(store.summary()?.activeUserCount ?? 0 | number) ?? '0'"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="users"
-      label="المستخدمون الموثقون"
-      [value]="store.summary()?.verifiedUserCount ?? 0"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="users"
-      label="المستخدمون الجدد"
-      [value]="(store.summary()?.newUserCount ?? 0) + '+'"
-    />
-  </div>
-
-  @if (store.error(); as error) {
-    <app-error-state [message]="error" (retry)="store.loadUsers()" />
-  } @else {
-    <app-table-toolbar searchPlaceholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
-
-    <div class="overflow-hidden rounded-xl border border-border">
-      <table class="w-full text-right">
-        <thead>
-          <tr class="border-b border-border bg-surface-muted">
-            <th class="w-[67px] px-4 py-[14px]">
-              <input
-                type="checkbox"
-                aria-label="تحديد الكل"
-                class="size-[18px] rounded border border-placeholder bg-white"
-              />
-            </th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">اسم المستخدم</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">البريد/الهاتف</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">نوع الحساب</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">تاريخ التسجيل</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">آخر نشاط</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
-            <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
-              الإجراء
-            </th>
-          </tr>
-        </thead>
-        @if (store.isLoading()) {
-          <tbody
-            app-table-skeleton
-            [columnCount]="tableColumnCount"
-            [rowCount]="store.pageSize()"
-          ></tbody>
-        } @else {
-          <tbody>
-            @for (user of store.users(); track user.id) {
-              <tr class="border-b border-border bg-surface last:border-0">
-                <td class="px-4 py-[14px]">
-                  <input
-                    type="checkbox"
-                    [attr.aria-label]="'تحديد ' + user.name"
-                    class="size-[18px] rounded border border-placeholder bg-white"
-                  />
-                </td>
-                <td class="px-4 py-[14px] text-sm font-bold text-text-primary">{{ user.name }}</td>
-                <td class="font-latin px-4 py-[14px] text-sm text-primary underline">
-                  {{ user.email }}
-                </td>
-                <td class="px-4 py-[14px] text-sm text-text-secondary">{{ user.accountType }}</td>
-                <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
-                  {{ user.registeredAt | arabicDate }}
-                </td>
-                <td class="px-4 py-[14px] text-sm text-text-secondary">
-                  {{ user.lastActiveLabel }}
-                </td>
-                <td class="px-4 py-[14px]">
-                  <app-badge [tone]="statusTone[user.status]">{{
-                    statusLabel[user.status]
-                  }}</app-badge>
-                </td>
-                <td class="px-4 py-[14px] text-center">
-                  <app-action-menu>
-                    <button
-                      type="button"
-                      class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
-                    >
-                      عرض الملف
-                    </button>
-                    <button
-                      type="button"
-                      class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
-                    >
-                      تعليق الحساب
-                    </button>
-                  </app-action-menu>
-                </td>
-              </tr>
-            }
-          </tbody>
-        }
-      </table>
-
-      @if (store.hasNoResults()) {
-        <app-table-empty message="لا يوجد مستخدمون لعرضهم" />
-      }
-    </div>
-
-    <app-table-pagination
-      [pageIndex]="store.pageIndex()"
-      [pageSize]="store.pageSize()"
-      [totalCount]="store.totalCount()"
-      itemNoun="مستخدم"
-      (pageIndexChange)="onPageChange($event)"
+      [isLoading]="store.isSummaryLoading()"
+      [icon]="card.icon"
+      [label]="card.label"
+      [value]="card.value"
     />
   }
 </div>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.loadUsers()" />
+} @else {
+  <app-user-toolbar
+    class="mt-10"
+    [filters]="store.filters()"
+    [activeFilterCount]="store.activeFilterCount()"
+    (searchChange)="store.setSearch($event)"
+    (sortChange)="store.setSort($event)"
+    (filtersApply)="store.applyFilters($event)"
+  />
+
+  <app-user-table
+    class="mt-[30px]"
+    [entries]="store.entries()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    [emptyMessage]="store.emptyMessage()"
+    [rowCount]="store.pageSize()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (view)="openDetail($event)"
+    (statusChange)="dialogFlow.openStatusChange($event)"
+    (remove)="dialogFlow.openDelete($event)"
+  />
+
+  <app-table-pagination
+    class="mt-2"
+    [pageIndex]="store.pageIndex()"
+    [pageSize]="store.pageSize()"
+    [totalCount]="store.totalCount()"
+    itemNoun="مستخدم"
+    (pageIndexChange)="store.changePage($event)"
+  />
+}
+
+<app-user-dialogs
+  [request]="dialogFlow.request()"
+  [isBusy]="store.isSaving()"
+  (confirmed)="dialogFlow.confirm()"
+  (closed)="closeDialog()"
+/>
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

@@ -46,4 +46,24 @@ describe('RowActionsMenu', () => {
     expect(statusChange).toHaveBeenCalledOnce();
     expect(remove).toHaveBeenCalledOnce();
   });
+
+  it('leads with "عرض التفاصيل" and reports a view pick when it opens details', () => {
+    const fixture = TestBed.createComponent(RowActionsMenu);
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.detectChanges();
+    const view = vi.fn();
+    const edit = vi.fn();
+    fixture.componentInstance.view.subscribe(view);
+    fixture.componentInstance.edit.subscribe(edit);
+
+    const panel = openPanel(fixture);
+    const labels = Array.from(panel.querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    itemNamed(panel, 'عرض التفاصيل').click();
+
+    expect(labels).toEqual(['عرض التفاصيل', 'تغيير الحالة', 'حذف']);
+    expect(view).toHaveBeenCalledOnce();
+    expect(edit).not.toHaveBeenCalled();
+  });
 });

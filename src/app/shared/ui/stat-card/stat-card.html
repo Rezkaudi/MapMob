@@ -4,16 +4,18 @@
   [attr.aria-busy]="isLoading() ? 'true' : null"
 >
   @if (isLoading()) {
-    <div class="flex flex-col items-end justify-center gap-2">
+    <div class="flex flex-col items-start justify-center gap-2">
       <app-skeleton width="96px" height="12px" shape="text" />
       <app-skeleton width="64px" height="20px" shape="text" />
     </div>
     <app-skeleton width="44px" height="44px" />
   } @else {
-    <div class="flex flex-col items-end justify-center gap-1.5 text-right">
+    <div class="flex flex-col items-start justify-center gap-1.5 text-right">
       <span class="text-[12px]/[1.5] text-text-secondary">{{ label() }}</span>
       <span class="flex items-center gap-1">
-        <span class="text-[18px]/[28px] font-bold text-text-primary">{{ value() }}</span>
+        <span data-role="value" dir="ltr" class="text-[18px]/[28px] font-bold text-text-primary">{{
+          value()
+        }}</span>
         @if (delta(); as deltaLabel) {
           <span
             data-role="delta"

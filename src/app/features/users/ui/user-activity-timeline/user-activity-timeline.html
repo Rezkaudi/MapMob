@@ -1,0 +1,29 @@
+@if (rows().length) {
+  <!-- RTL: each tile sits on the right over a 2px line that joins them; the text card fills the rest. -->
+  <ol class="relative flex flex-col gap-4 pt-1 pr-2">
+    <span
+      data-role="timeline-line"
+      class="absolute top-3 right-[21px] bottom-3 w-0.5 bg-[#e6e8ea]"
+      aria-hidden="true"
+    ></span>
+    @for (row of rows(); track row.id) {
+      <li class="relative flex items-start gap-4">
+        <span
+          class="flex size-10 shrink-0 items-center justify-center rounded-lg text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+          [class]="row.tileClass"
+          aria-hidden="true"
+        >
+          <app-icon [name]="row.icon" [size]="20" />
+        </span>
+        <div
+          class="flex min-h-[60px] min-w-0 flex-1 items-center justify-between gap-4 rounded-lg bg-[#f2f4f6] px-4 py-4"
+        >
+          <p class="text-[14px]/[28px] font-medium text-text-primary">{{ row.description }}</p>
+          <span class="shrink-0 text-[11px]/[14px] text-text-secondary">{{ row.timeLabel }}</span>
+        </div>
+      </li>
+    }
+  </ol>
+} @else {
+  <p class="py-6 text-center text-[14px] text-text-secondary">لا يوجد نشاط حديث</p>
+}

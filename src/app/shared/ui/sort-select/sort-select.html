@@ -1,0 +1,19 @@
+<!-- RTL: the label reads from the right, the sort glyph sits at the left end, both at 60%. -->
+<div class="relative h-10 w-[139px]">
+  <select
+    class="h-10 w-full appearance-none rounded-lg border border-text-secondary bg-transparent pr-3 pl-9 text-right text-[14px]/[20px] text-text-primary/60 outline-none focus-visible:border-primary"
+    aria-label="ترتيب حسب"
+    (change)="onSortChange($event)"
+  >
+    <option value="">ترتيب حسب</option>
+    @for (option of sortOptions; track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
+  </select>
+  <app-icon
+    name="sort"
+    [size]="14"
+    class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-text-primary/60"
+    aria-hidden="true"
+  />
+</div>
