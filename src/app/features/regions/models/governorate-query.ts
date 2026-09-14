@@ -1,6 +1,3 @@
-import { PagedQuery } from '../../../core/models/paged-query';
-import { RegionSort } from './region-sort';
+import { ListQuery } from '../../../shared/models/list-query';
 
-export interface GovernorateQuery extends PagedQuery {
-  readonly sort?: RegionSort;
-}
+export type GovernorateQuery = ListQuery;

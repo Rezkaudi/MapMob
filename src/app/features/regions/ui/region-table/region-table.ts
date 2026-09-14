@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
-import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
-import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { RowActionsMenu } from '../../../../shared/ui/row-actions-menu/row-actions-menu';
+import { StatusPill } from '../../../../shared/ui/status-pill/status-pill';
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
 import { RegionEntry } from '../../models/region-entry';
-import { RegionStatusPill } from '../region-status-pill/region-status-pill';
+import { REGION_STATUS_LABEL } from '../../models/region-status';
 
 /** Tick box, five data columns and the action column. */
 const TABLE_COLUMN_COUNT = 7;
@@ -21,15 +21,7 @@ interface RegionTableRow {
 
 @Component({
   selector: 'app-region-table',
-  imports: [
-    ActionMenu,
-    AppIcon,
-    ArabicDatePipe,
-    RegionStatusPill,
-    RouterLink,
-    TableEmpty,
-    TableSkeleton,
-  ],
+  imports: [ArabicDatePipe, RouterLink, RowActionsMenu, StatusPill, TableEmpty, TableSkeleton],
   templateUrl: './region-table.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +43,7 @@ export class RegionTable {
   readonly remove = output<RegionEntry>();
 
   protected readonly columnCount = TABLE_COLUMN_COUNT;
+  protected readonly statusLabel = REGION_STATUS_LABEL;
   protected readonly rows = computed<readonly RegionTableRow[]>(() => {
     const linkFor = this.entryLink();
     return this.entries().map((entry) => ({ entry, link: linkFor ? linkFor(entry) : null }));

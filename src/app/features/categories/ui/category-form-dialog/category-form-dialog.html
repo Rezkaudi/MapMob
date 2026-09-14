@@ -1,0 +1,139 @@
+<!-- 580px card: 89px header, 20/24px body, 81px footer. The 4px blur matches the preview. -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] p-6 backdrop-blur-[4px]"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="category-form-title"
+  (click)="cancelled.emit()"
+>
+  <form
+    class="flex max-h-full w-[580px] max-w-full flex-col overflow-hidden rounded-3xl border border-[#f1f5f9] bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+    novalidate
+    (click)="$event.stopPropagation()"
+    (submit)="submit($event)"
+  >
+    <!-- RTL: the badge and heading sit on the right, the close button on the left. -->
+    <header class="flex items-start justify-between border-b border-[#f1f5f9] px-6 pt-6 pb-4">
+      <div class="flex gap-4" [class]="copy().description ? 'items-start' : 'items-center'">
+        <span
+          class="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-[#dbeafe] bg-[#f0f7fe] text-primary shadow-[inset_0_2px_4px_1px_rgba(0,0,0,0.05)]"
+        >
+          <app-icon [name]="copy().badgeIcon" [size]="20" aria-hidden="true" />
+        </span>
+        <div class="flex flex-col gap-[3px] text-start">
+          <h2
+            id="category-form-title"
+            class="text-[20px]/[28px] font-bold tracking-[-0.5px] text-text-primary"
+          >
+            {{ copy().title }}
+          </h2>
+          @if (copy().description) {
+            <p class="font-cairo text-[12px]/[16px] text-text-secondary">
+              {{ copy().description }}
+            </p>
+          }
+        </div>
+      </div>
+      <button
+        type="button"
+        data-testid="category-close"
+        class="flex size-8 shrink-0 items-center justify-center text-[#94a3b8] hover:text-text-primary"
+        aria-label="إغلاق النافذة"
+        (click)="cancelled.emit()"
+      >
+        <app-icon name="dialog-close" [size]="32" aria-hidden="true" />
+      </button>
+    </header>
+
+    <div class="flex flex-col gap-4 overflow-y-auto px-6 pt-5 pb-6">
+      <div class="flex flex-col gap-1.5">
+        <label for="category-name" class="flex h-5 items-center gap-1 text-[12px]/[16px] font-bold">
+          <span>اسم التصنيف</span>
+          <span class="text-[14px]/[20px] text-status-error" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="category-name"
+          data-testid="category-name"
+          type="text"
+          required
+          autocomplete="off"
+          placeholder="اسم التصنيف"
+          class="h-[38px] w-full rounded border border-text-secondary bg-white px-4 py-2.5 text-right text-[12px]/[16px] font-bold text-text-primary outline-none placeholder:text-[#94a3b8] focus-visible:border-primary"
+          [value]="name()"
+          (input)="onNameInput($event)"
+        />
+      </div>
+
+      @if (isCreating()) {
+        <div class="flex flex-col gap-2">
+          <p class="font-cairo text-[12px]/[16px] font-bold text-[#334155]">
+            نوع التصنيف <span class="text-[#f43f5e]" aria-hidden="true">*</span>
+          </p>
+          <app-category-kind-picker [value]="kind()" (valueChange)="kind.set($event)" />
+        </div>
+      }
+
+      @if (isSubCategory()) {
+        <div class="flex flex-col gap-1.5">
+          <label
+            for="category-parent"
+            class="flex h-5 items-center gap-1 text-[12px]/[16px] font-bold"
+          >
+            <span>{{ copy().parentLabel }}</span>
+            <span class="text-[14px]/[20px] text-status-error" aria-hidden="true">*</span>
+          </label>
+          <div class="relative">
+            <select
+              id="category-parent"
+              data-testid="category-parent"
+              class="h-[38px] w-full appearance-none rounded border border-text-secondary bg-white py-2.5 pr-4 pl-10 text-right text-[12px]/[16px] font-bold text-text-primary outline-none focus-visible:border-primary"
+              (change)="onParentChange($event)"
+            >
+              @for (option of parentOptions(); track option.value) {
+                <option [value]="option.value" [selected]="option.value === parentId()">
+                  {{ option.label }}
+                </option>
+              }
+            </select>
+            <app-icon
+              name="chevron-down"
+              [size]="16"
+              class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-text-primary"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+      }
+
+      <div class="flex flex-col gap-4">
+        <p class="font-cairo text-[12px]/[16px] font-bold text-[#334155]">
+          أيقونة التصنيف <span class="text-[#f43f5e]" aria-hidden="true">*</span>
+        </p>
+        <app-category-icon-picker [value]="icon()" (valueChange)="icon.set($event)" />
+      </div>
+    </div>
+
+    <!-- RTL: the blue action sits on the right, cancel on the left. -->
+    <footer
+      class="flex items-center justify-between border-t border-[#f1f5f9] bg-[rgba(248,250,252,0.7)] px-6 pt-4 pb-6"
+    >
+      <button
+        type="submit"
+        data-testid="category-submit"
+        class="h-10 rounded-lg bg-primary px-6 text-[12px]/[16px] font-bold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+        [disabled]="!canSubmit()"
+        [attr.aria-busy]="isBusy()"
+      >
+        {{ copy().submitLabel }}
+      </button>
+      <button
+        type="button"
+        data-testid="category-cancel"
+        class="h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+    </footer>
+  </form>
+</div>

@@ -3,9 +3,9 @@ import { Location } from '@angular/common';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
+import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
-import { routes } from './app.routes';
 
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
 
@@ -58,7 +58,7 @@ describe('app routes', () => {
   it('renders the not-found page inside the admin shell', async () => {
     signIn();
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/categories');
+    await harness.navigateByUrl('/offers');
 
     const el = harness.fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-sidebar')).toBeTruthy();

@@ -67,45 +67,20 @@
               {{ row.entry.placeCount }}
             </td>
             <td class="px-4 text-center">
-              <app-region-status-pill [status]="row.entry.status" />
+              <app-status-pill
+                [status]="row.entry.status"
+                [label]="statusLabel[row.entry.status]"
+              />
             </td>
             <td class="px-4 text-center text-[14px] whitespace-nowrap text-text-secondary">
               {{ row.entry.updatedAt | arabicDate }}
             </td>
             <td class="px-4 text-center">
-              <!-- RTL: each item leads with its icon on the right, then the label. -->
-              <app-action-menu menuStyle="sharp">
-                <button
-                  type="button"
-                  class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-                  (click)="edit.emit(row.entry)"
-                >
-                  <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
-                  <span>تعديل</span>
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-                  (click)="statusChange.emit(row.entry)"
-                >
-                  <app-icon name="change-status" [size]="12" aria-hidden="true" />
-                  <span>تغيير الحالة</span>
-                </button>
-                <span class="block h-px bg-border"></span>
-                <button
-                  type="button"
-                  class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-3 pb-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-                  (click)="remove.emit(row.entry)"
-                >
-                  <app-icon
-                    name="trash-filled"
-                    [size]="14"
-                    class="text-closed"
-                    aria-hidden="true"
-                  />
-                  <span>حذف</span>
-                </button>
-              </app-action-menu>
+              <app-row-actions-menu
+                (edit)="edit.emit(row.entry)"
+                (statusChange)="statusChange.emit(row.entry)"
+                (remove)="remove.emit(row.entry)"
+              />
             </td>
           </tr>
         }

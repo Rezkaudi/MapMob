@@ -1,0 +1,23 @@
+<!-- 142px tinted box: two rows of five 42px buttons, 8px apart, with the design's wide row gap. -->
+<div
+  class="grid grid-cols-5 gap-x-2 gap-y-[36.5px] rounded-xl border border-border bg-[rgba(248,250,252,0.6)] px-[13px] pt-[13px] pb-[8.5px]"
+  role="group"
+  aria-label="أيقونة التصنيف"
+>
+  @for (option of options; track option.icon) {
+    <button
+      type="button"
+      class="flex h-[42px] items-center justify-center rounded-xl transition-colors"
+      [class]="
+        option.icon === value()
+          ? 'border-2 border-primary bg-[#eff7ff] text-primary'
+          : 'border border-border bg-white text-text-secondary hover:border-primary/40'
+      "
+      [attr.aria-label]="option.label"
+      [attr.aria-pressed]="option.icon === value()"
+      (click)="valueChange.emit(option.icon)"
+    >
+      <app-icon [name]="option.assetName" [size]="20" aria-hidden="true" />
+    </button>
+  }
+</div>

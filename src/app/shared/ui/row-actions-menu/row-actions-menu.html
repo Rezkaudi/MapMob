@@ -1,0 +1,28 @@
+<!-- RTL: each item leads with its icon on the right, then the label. -->
+<app-action-menu menuStyle="sharp">
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+    (click)="edit.emit()"
+  >
+    <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
+    <span>تعديل</span>
+  </button>
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+    (click)="statusChange.emit()"
+  >
+    <app-icon name="change-status" [size]="12" aria-hidden="true" />
+    <span>تغيير الحالة</span>
+  </button>
+  <span class="block h-px bg-border"></span>
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-3 pb-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+    (click)="remove.emit()"
+  >
+    <app-icon name="trash-filled" [size]="14" class="text-closed" aria-hidden="true" />
+    <span>حذف</span>
+  </button>
+</app-action-menu>

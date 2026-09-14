@@ -1,0 +1,45 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] p-6 backdrop-blur-[2px]"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="confirm-action-title"
+  (click)="cancelled.emit()"
+>
+  <div
+    class="flex w-full max-w-[448px] flex-col items-center rounded-xl bg-white p-8 text-center shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="pb-4">
+      <span class="flex size-16 items-center justify-center rounded-full" [class]="skin().halo">
+        <app-icon [name]="skin().icon" [size]="skin().iconSize" aria-hidden="true" />
+      </span>
+    </div>
+
+    <h2 id="confirm-action-title" class="text-[24px]/[31.2px] font-bold text-[#191c1d]">
+      {{ copy().title }}
+    </h2>
+    <p class="pb-1 text-[16px]/[24px] text-text-secondary">{{ copy().question }}</p>
+    <p class="pb-1 text-[16px]/[24px] text-text-secondary">{{ copy().detail }}</p>
+
+    <!-- RTL: the coloured action sits on the right, cancel on the left. -->
+    <div class="mt-[53px] flex w-full items-start gap-4">
+      <button
+        type="button"
+        class="h-10 flex-1 rounded-lg px-6 text-[14px]/[14px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+        [class]="skin().confirm"
+        [disabled]="isBusy()"
+        [attr.aria-busy]="isBusy()"
+        (click)="confirmed.emit()"
+      >
+        {{ copy().confirmLabel }}
+      </button>
+      <button
+        type="button"
+        class="h-10 flex-1 rounded-lg border border-text-secondary bg-[#f8f9fa] px-6 text-[14px]/[14px] text-text-secondary hover:bg-surface-muted"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+    </div>
+  </div>
+</div>

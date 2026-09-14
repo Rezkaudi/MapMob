@@ -1,0 +1,18 @@
+@if (form(); as form) {
+  <app-category-form-dialog
+    [mode]="form.mode"
+    [copy]="form.copy"
+    [initialDraft]="form.draft"
+    [parentOptions]="parentOptions()"
+    [isBusy]="isBusy()"
+    (submitted)="draftSubmitted.emit($event)"
+    (cancelled)="closed.emit()"
+  />
+} @else if (confirmCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="isBusy()"
+    (confirmed)="confirmed.emit()"
+    (cancelled)="closed.emit()"
+  />
+}

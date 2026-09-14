@@ -7,12 +7,13 @@ import localeAr from '@angular/common/locales/ar';
 import { routes } from './app.routes';
 import { provideApiBaseUrl } from './core/config/api-base-url';
 import { provideUseMockApi } from './core/config/use-mock-api';
-import { provideReviewsFeature } from './features/reviews/reviews.providers';
-import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
-import { provideUsersFeature } from './features/users/users.providers';
-import { provideRegionsFeature } from './features/regions/regions.providers';
-import { providePlacesFeature } from './features/places/places.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
+import { provideCategoriesFeature } from './features/categories/categories.providers';
+import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
+import { providePlacesFeature } from './features/places/places.providers';
+import { provideRegionsFeature } from './features/regions/regions.providers';
+import { provideReviewsFeature } from './features/reviews/reviews.providers';
+import { provideUsersFeature } from './features/users/users.providers';
 
 registerLocaleData(localeAr);
 
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideDashboardFeature(),
     provideUsersFeature(),
     provideRegionsFeature(),
+    provideCategoriesFeature(),
     providePlacesFeature(),
     provideAuthFeature(),
   ],

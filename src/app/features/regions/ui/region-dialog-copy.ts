@@ -1,7 +1,7 @@
-import { RegionConfirmAction } from '../models/region-confirm-action';
-import { RegionFormMode } from '../models/region-form-mode';
+import { ConfirmAction } from '../../../shared/models/confirm-action';
+import { FormMode } from '../../../shared/models/form-mode';
+import { ConfirmActionCopy } from '../../../shared/ui/confirm-action-dialog/confirm-action-copy';
 import { RegionKind } from '../models/region-kind';
-import { RegionConfirmCopy } from './region-confirm-copy';
 import { RegionFormCopy } from './region-form-copy';
 
 interface RegionNouns {
@@ -27,7 +27,7 @@ const NOUNS: Record<RegionKind, RegionNouns> = {
 
 const SAVE_CHANGES_LABEL = 'حفظ التغييرات';
 
-export function buildFormCopy(kind: RegionKind, mode: RegionFormMode): RegionFormCopy {
+export function buildFormCopy(kind: RegionKind, mode: FormMode): RegionFormCopy {
   const { singular, definite } = NOUNS[kind];
   const nameLabel = `اسم ${definite}`;
   if (mode === 'edit') {
@@ -48,9 +48,9 @@ export function buildFormCopy(kind: RegionKind, mode: RegionFormMode): RegionFor
 
 export function buildConfirmCopy(
   kind: RegionKind,
-  action: RegionConfirmAction,
+  action: ConfirmAction,
   name: string,
-): RegionConfirmCopy {
+): ConfirmActionCopy {
   const { singular, definite, deleteDetail } = NOUNS[kind];
   if (action === 'activate') {
     return {

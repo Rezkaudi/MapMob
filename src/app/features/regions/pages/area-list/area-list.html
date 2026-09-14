@@ -9,7 +9,7 @@
     <span class="text-text-primary" aria-current="page">المناطق</span>
   </nav>
 
-  <app-region-page-header
+  <app-page-header
     class="mt-[17px]"
     [title]="title()"
     [description]="description()"
@@ -28,7 +28,7 @@
         [title]="emptyTitle()"
         description="أضف أول منطقة إلى المنصة ."
       >
-        <app-region-add-button label="إضافة منطقة" (pressed)="dialogFlow.openCreate()" />
+        <app-add-button label="إضافة منطقة" (pressed)="dialogFlow.openCreate()" />
       </app-region-empty-state>
     </div>
   } @else {

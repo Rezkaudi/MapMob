@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { AdminShell } from './layout/admin-shell/admin-shell';
 import { signedInGuard } from './features/auth/guards/signed-in.guard';
+import { AdminShell } from './layout/admin-shell/admin-shell';
 
 export const routes: Routes = [
   {
@@ -21,6 +21,11 @@ export const routes: Routes = [
       {
         path: 'places',
         loadChildren: () => import('./features/places/places.routes').then((m) => m.PLACES_ROUTES),
+      },
+      {
+        path: 'categories',
+        loadChildren: () =>
+          import('./features/categories/categories.routes').then((m) => m.CATEGORIES_ROUTES),
       },
       {
         path: 'regions',

@@ -2,15 +2,16 @@ import { inject } from '@angular/core';
 import { signalStore, withMethods } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, catchError, of, pipe, switchMap, tap } from 'rxjs';
+import { ListSort } from '../../../shared/models/list-sort';
+import { withListTable } from '../../../shared/state/with-list-table';
 import { GovernorateRepository } from '../data/governorate.repository';
 import { RegionDraft } from '../models/region-draft';
-import { RegionSort } from '../models/region-sort';
+import { RegionEntry } from '../models/region-entry';
 import { RegionStatus } from '../models/region-status';
-import { withRegionTable } from './with-region-table';
 
 export const GovernoratesStore = signalStore(
   { providedIn: 'root' },
-  withRegionTable(),
+  withListTable<RegionEntry>(),
   withMethods((store, repository = inject(GovernorateRepository)) => ({
     loadGovernorates: rxMethod<void>(
       pipe(
@@ -36,7 +37,7 @@ export const GovernoratesStore = signalStore(
         store.applyQuery({ search });
         store.loadGovernorates();
       },
-      setSort(sort: RegionSort | null): void {
+      setSort(sort: ListSort | null): void {
         store.applyQuery({ sort });
         store.loadGovernorates();
       },
