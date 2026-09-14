@@ -1,0 +1,128 @@
+<!-- 450px modal: 83px header, 24px body with 24px between fields, tinted footer. -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="region-form-title"
+  (click)="cancelled.emit()"
+>
+  <form
+    class="flex max-h-full w-[450px] max-w-full flex-col overflow-hidden rounded-lg bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]"
+    novalidate
+    (click)="$event.stopPropagation()"
+    (submit)="submit($event)"
+  >
+    <!-- RTL: the heading sits on the right, the close button on the left. -->
+    <header class="flex items-start justify-between gap-4 border-b border-border px-6 py-4">
+      <div class="flex flex-col gap-1 text-start">
+        <h2 id="region-form-title" class="text-[18px]/[28px] font-bold text-text-primary">
+          {{ copy().title }}
+        </h2>
+        <p class="text-[13px]/[18px] text-text-secondary">{{ copy().description }}</p>
+      </div>
+      <button
+        type="button"
+        data-testid="region-close"
+        class="flex h-7 w-[22px] shrink-0 items-center justify-center text-[#404753] hover:text-text-primary"
+        aria-label="إغلاق النافذة"
+        (click)="cancelled.emit()"
+      >
+        <app-icon name="close-bold" [size]="22" aria-hidden="true" />
+      </button>
+    </header>
+
+    <div class="flex flex-col gap-6 overflow-y-auto p-6">
+      @if (lockedGovernorateName()) {
+        <div class="flex flex-col gap-1">
+          <label
+            for="region-governorate"
+            class="text-start text-[12px]/[16px] font-medium text-[#191c1e]"
+          >
+            اسم المحافظة
+          </label>
+          <div class="relative">
+            <input
+              id="region-governorate"
+              data-testid="locked-governorate"
+              type="text"
+              readonly
+              class="h-[42px] w-full cursor-not-allowed rounded border border-[#c0c7d5] bg-border py-[10px] pr-4 pl-11 text-right text-[14px]/[20px] text-text-primary outline-none"
+              [value]="lockedGovernorateName()"
+            />
+            <app-icon
+              name="lock"
+              [size]="16"
+              class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-text-primary"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+      }
+
+      <div class="flex flex-col gap-1">
+        <label for="region-name" class="text-start text-[12px]/[16px] font-medium text-[#191c1e]">
+          {{ copy().nameLabel }}
+        </label>
+        <input
+          id="region-name"
+          data-testid="region-name"
+          type="text"
+          required
+          autocomplete="off"
+          class="h-[42px] w-full rounded border border-[#c0c7d5] bg-white px-4 py-[10px] text-right text-[14px]/[20px] text-text-primary outline-none focus-visible:border-primary"
+          [value]="name()"
+          (input)="onNameInput($event)"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="region-status" class="text-start text-[12px]/[16px] font-medium text-[#191c1e]">
+          الحالة
+        </label>
+        <div class="relative">
+          <select
+            id="region-status"
+            data-testid="region-status"
+            class="h-[42px] w-full appearance-none rounded border border-[#c0c7d5] bg-white py-[10px] pr-4 pl-11 text-right text-[14px]/[20px] text-[#191c1e] outline-none focus-visible:border-primary"
+            (change)="onStatusChange($event)"
+          >
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value" [selected]="option.value === status()">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+          <app-icon
+            name="chevron-down-small"
+            [size]="20"
+            class="pointer-events-none absolute end-[11px] top-1/2 -translate-y-1/2 text-[#404753]"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- RTL: `justify-end` packs the pair to the left edge, so the blue action lands leftmost. -->
+    <footer
+      class="flex items-center justify-end gap-4 border-t border-[#e0e3e5] bg-[#f7f9fb] py-4 pr-6 pl-6"
+    >
+      <button
+        type="button"
+        data-testid="region-cancel"
+        class="h-[34px] rounded border border-text-secondary bg-white px-4 text-[12px]/[16px] text-text-secondary hover:bg-surface-muted"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+      <button
+        type="submit"
+        data-testid="region-submit"
+        class="h-8 rounded bg-primary px-4 text-[12px]/[16px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+        [disabled]="!canSubmit()"
+        [attr.aria-busy]="isBusy()"
+      >
+        {{ copy().submitLabel }}
+      </button>
+    </footer>
+  </form>
+</div>

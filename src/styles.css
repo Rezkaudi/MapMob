@@ -29,6 +29,8 @@
   --color-status-success: #10b981;
   --color-status-error: #d92d20;
   --color-status-warning: #f5a623;
+  /* Suspended regions and their confirm action use the design's "closed" red. */
+  --color-closed: #dc2626;
 
   --color-success: #17a672;
   --color-success-soft: #e7f8f1;

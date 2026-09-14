@@ -1,0 +1,18 @@
+@if (form(); as form) {
+  <app-region-form-dialog
+    [copy]="form.copy"
+    [initialName]="form.name"
+    [initialStatus]="form.status"
+    [lockedGovernorateName]="lockedGovernorateName()"
+    [isBusy]="isBusy()"
+    (submitted)="draftSubmitted.emit($event)"
+    (cancelled)="closed.emit()"
+  />
+} @else if (confirmCopy(); as copy) {
+  <app-region-confirm-dialog
+    [copy]="copy"
+    [isBusy]="isBusy()"
+    (confirmed)="confirmed.emit()"
+    (cancelled)="closed.emit()"
+  />
+}
