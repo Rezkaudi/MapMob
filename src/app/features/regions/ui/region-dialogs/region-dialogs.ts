@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { CrudDialogRequest } from '../../../../shared/state/crud-dialog-request';
+import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { RegionDraft } from '../../models/region-draft';
+import { RegionEntry } from '../../models/region-entry';
 import { RegionKind } from '../../models/region-kind';
-import { RegionConfirmDialog } from '../region-confirm-dialog/region-confirm-dialog';
 import { buildConfirmCopy, buildFormCopy } from '../region-dialog-copy';
-import { RegionDialogRequest } from '../region-dialog-request';
 import { RegionFormDialog } from '../region-form-dialog/region-form-dialog';
 
 @Component({
   selector: 'app-region-dialogs',
-  imports: [RegionConfirmDialog, RegionFormDialog],
+  imports: [ConfirmActionDialog, RegionFormDialog],
   templateUrl: './region-dialogs.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegionDialogs {
   readonly kind = input.required<RegionKind>();
-  readonly request = input.required<RegionDialogRequest | null>();
+  readonly request = input.required<CrudDialogRequest<RegionEntry> | null>();
   /** Shown locked in the area form; left empty on the governorate page. */
   readonly governorateName = input<string>('');
   readonly isBusy = input<boolean>(false);

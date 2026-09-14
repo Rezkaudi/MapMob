@@ -9,7 +9,7 @@
     (cancelled)="closed.emit()"
   />
 } @else if (confirmCopy(); as copy) {
-  <app-region-confirm-dialog
+  <app-confirm-action-dialog
     [copy]="copy"
     [isBusy]="isBusy()"
     (confirmed)="confirmed.emit()"

@@ -1,7 +1,8 @@
 <!-- 40px outlined field: the label sits right, the chevron left, as in the design. -->
 <div class="relative h-10 w-full">
   <select
-    class="h-10 w-full appearance-none rounded-lg border border-text-secondary bg-transparent pr-[13px] pl-9 text-right text-[12px] text-text-primary outline-none"
+    class="h-10 w-full appearance-none rounded-lg border border-text-secondary bg-transparent pr-[13px] pl-9 text-right text-[12px] outline-none"
+    [class]="textColor()"
     [attr.aria-label]="placeholder()"
     [value]="value() ?? ''"
     (change)="onChange($event)"
@@ -14,6 +15,7 @@
   <app-icon
     name="chevron-down"
     [size]="16"
-    class="pointer-events-none absolute end-[13px] top-1/2 -translate-y-1/2 text-text-primary"
+    class="pointer-events-none absolute end-[13px] top-1/2 -translate-y-1/2"
+    [class]="textColor()"
   />
 </div>

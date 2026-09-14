@@ -1,0 +1,90 @@
+<!-- Header text and row values sit a few pixels apart in some columns, as the design draws them. -->
+<div class="overflow-x-auto rounded-xl border border-border bg-surface">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr class="h-[59px] border-b border-border bg-surface-muted">
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[7px] text-[13px] font-bold text-text-primary">التصنيف</th>
+        <th class="text-[13px] font-bold text-text-primary">النوع</th>
+        <th class="text-[13px] font-bold text-text-primary">التصنيف ارئيسي</th>
+        <th class="ps-[24px] text-[13px] font-bold text-text-primary">عدد الأماكن</th>
+        <th class="ps-[13px] text-[13px] font-bold text-text-primary">الحالة</th>
+        <th class="text-[13px] font-bold text-text-primary">
+          <span class="ms-[17.5%] block w-[59px] text-center">الإجراء</span>
+        </th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.category.id) {
+          <tr class="h-[59px] border-b border-border bg-surface last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد ' + row.category.name"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.category.id)"
+                (change)="rowToggle.emit(row.category.id)"
+              />
+            </td>
+            <td>
+              <!-- RTL: the 24px icon leads on the right, 6px before the name. -->
+              <div class="flex items-center gap-1.5 pe-2">
+                <app-icon
+                  data-testid="category-icon"
+                  class="text-black"
+                  [attr.data-icon]="row.iconAssetName"
+                  [name]="row.iconAssetName"
+                  [size]="24"
+                  aria-hidden="true"
+                />
+                <span class="line-clamp-1 text-[14px] font-bold text-text-primary">
+                  {{ row.category.name }}
+                </span>
+              </div>
+            </td>
+            <td class="text-[14px] text-text-primary">{{ row.kindLabel }}</td>
+            <td class="text-center text-[14px] text-text-primary">
+              <span class="line-clamp-1">{{ row.parentLabel }}</span>
+            </td>
+            <td class="ps-[34px] text-[14px] font-bold text-text-primary">
+              {{ row.category.placeCount }}
+            </td>
+            <td class="ps-[2px]">
+              <app-status-pill [status]="row.category.status" [label]="row.statusLabel" />
+            </td>
+            <td>
+              <div class="ms-[17.5%] flex w-[59px] justify-center">
+                <app-row-actions-menu
+                  (edit)="edit.emit(row.category)"
+                  (statusChange)="statusChange.emit(row.category)"
+                  (remove)="remove.emit(row.category)"
+                />
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

@@ -8,16 +8,18 @@ import {
   untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CrudDialogFlow } from '../../../../shared/state/crud-dialog-flow';
+import { AddButton } from '../../../../shared/ui/add-button/add-button';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
+import { PageHeader } from '../../../../shared/ui/page-header/page-header';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
 import { Toast } from '../../../../shared/ui/toast/toast';
+import { RegionDraft } from '../../models/region-draft';
+import { RegionEntry } from '../../models/region-entry';
 import { AreasStore } from '../../state/areas.store';
-import { RegionAddButton } from '../../ui/region-add-button/region-add-button';
-import { RegionDialogFlow } from '../../ui/region-dialog-flow';
 import { RegionDialogs } from '../../ui/region-dialogs/region-dialogs';
 import { RegionEmptyState } from '../../ui/region-empty-state/region-empty-state';
-import { RegionPageHeader } from '../../ui/region-page-header/region-page-header';
 import { RegionTable } from '../../ui/region-table/region-table';
 import { RegionToolbar } from '../../ui/region-toolbar/region-toolbar';
 
@@ -26,10 +28,10 @@ import { RegionToolbar } from '../../ui/region-toolbar/region-toolbar';
   imports: [
     AppIcon,
     ErrorState,
-    RegionAddButton,
+    AddButton,
     RegionDialogs,
     RegionEmptyState,
-    RegionPageHeader,
+    PageHeader,
     RegionTable,
     RegionToolbar,
     RouterLink,
@@ -45,7 +47,7 @@ export class AreaList {
   readonly governorateId = input.required<string>();
 
   protected readonly store = inject(AreasStore);
-  protected readonly dialogFlow = new RegionDialogFlow({
+  protected readonly dialogFlow = new CrudDialogFlow<RegionEntry, RegionDraft>({
     create: (draft) => this.store.createArea(draft),
     update: (id, draft) => this.store.updateArea(id, draft),
     changeStatus: (id, status) => this.store.changeStatus(id, status),

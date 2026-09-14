@@ -1,5 +1,5 @@
 <div class="relative flex flex-1 flex-col">
-  <app-region-page-header
+  <app-page-header
     title="المحافظات والمناطق"
     description="إدارة المحافظات و المناطق المستخدمة في تحديد مواقع الأماكن"
     addLabel="إضافة محافظة"
@@ -17,7 +17,7 @@
         title="لا توجد محافظات مضافة حتى الآن"
         description="أضف أول محافظة إلى المنصة ."
       >
-        <app-region-add-button label="إضافة محافظة" (pressed)="dialogFlow.openCreate()" />
+        <app-add-button label="إضافة محافظة" (pressed)="dialogFlow.openCreate()" />
       </app-region-empty-state>
     </div>
   } @else {

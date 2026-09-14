@@ -1,0 +1,32 @@
+<!-- Both cards stay 50.5px tall: the checked one trades 1px of padding for its 2px border. -->
+<div class="flex items-start gap-3" role="radiogroup" aria-label="نوع التصنيف">
+  @for (option of options; track option.kind) {
+    <label
+      class="flex flex-1 cursor-pointer items-center rounded-xl"
+      [class]="
+        option.kind === value()
+          ? 'gap-[11px] border-2 border-primary bg-[rgba(239,246,255,0.5)] px-[11px] py-3'
+          : 'gap-3 border border-border bg-white px-3 py-[13px]'
+      "
+    >
+      <input
+        type="radio"
+        name="category-kind"
+        class="sr-only"
+        [value]="option.kind"
+        [checked]="option.kind === value()"
+        (change)="valueChange.emit(option.kind)"
+      />
+      @if (option.kind === value()) {
+        <span class="flex size-[18px] shrink-0 items-center justify-center rounded-full bg-primary">
+          <span class="size-1.5 rounded-full bg-white"></span>
+        </span>
+      } @else {
+        <span class="size-4 shrink-0 rounded-full border border-placeholder bg-white"></span>
+      }
+      <span class="pb-[2.5px] font-cairo text-[14px]/[20px] font-bold text-text-primary">
+        {{ option.label }}
+      </span>
+    </label>
+  }
+</div>

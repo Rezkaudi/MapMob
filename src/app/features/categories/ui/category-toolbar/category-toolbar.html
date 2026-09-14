@@ -1,0 +1,53 @@
+<!--
+  RTL: the 390px search sits on the right; sort, status and main category (144px each,
+  16px apart) sit on the left. The kind chips start from the right, 24px below.
+-->
+<div class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-4">
+  <div class="flex items-center justify-between gap-4">
+    <div class="relative h-10 w-full max-w-[390px]">
+      <input
+        type="search"
+        class="h-10 w-full rounded-lg border border-text-secondary py-[11px] pr-10 pl-4 text-right text-[14px] text-text-primary outline-none placeholder:text-text-primary focus-visible:border-primary"
+        placeholder="ابحث برقم البلاغ أو اسم المكان..."
+        aria-label="ابحث عن تصنيف"
+        (input)="onSearchInput($event)"
+      />
+      <app-icon
+        name="search-filled"
+        [size]="15"
+        class="pointer-events-none absolute start-[13px] top-1/2 -translate-y-1/2 text-text-secondary"
+        aria-hidden="true"
+      />
+    </div>
+
+    <div class="flex shrink-0 items-center gap-4">
+      <app-select-field
+        class="w-[144px]"
+        placeholder="ترتيب حسب"
+        [options]="sortOptions"
+        [isMuted]="true"
+        (valueChange)="sortChange.emit($any($event))"
+      />
+      <app-select-field
+        class="w-[144px]"
+        placeholder="الحالة"
+        [options]="statusOptions"
+        [isMuted]="true"
+        (valueChange)="statusChange.emit($any($event))"
+      />
+      <app-select-field
+        class="w-[144px]"
+        placeholder="التصنيف الرئيسي"
+        [options]="parentOptions()"
+        [isMuted]="true"
+        (valueChange)="parentChange.emit($event)"
+      />
+    </div>
+  </div>
+
+  <app-filter-chips
+    [options]="kindChips()"
+    [selected]="selectedKindChip()"
+    (selectedChange)="kindChipChange.emit($any($event))"
+  />
+</div>

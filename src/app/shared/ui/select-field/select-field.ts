@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
 import { SelectOption } from './select-option';
 
@@ -13,7 +13,13 @@ export class SelectField {
   readonly placeholder = input<string>('');
   readonly options = input.required<readonly SelectOption[]>();
   readonly value = input<string | null>(null);
+  /** The category filters draw their label and chevron at 60% strength. */
+  readonly isMuted = input<boolean>(false);
   readonly valueChange = output<string | null>();
+
+  protected readonly textColor = computed(() =>
+    this.isMuted() ? 'text-text-primary/60' : 'text-text-primary',
+  );
 
   protected onChange(event: Event): void {
     const picked = (event.target as HTMLSelectElement).value;

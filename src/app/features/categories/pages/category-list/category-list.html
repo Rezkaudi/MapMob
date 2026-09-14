@@ -1,0 +1,66 @@
+<!-- Header, then the filter card 40px below, the table 24px below that, and paging 8px under it. -->
+<app-page-header
+  title="التصنيفات"
+  description="إدارة  و تنظيم  التصنيفات الرئيسية و الفرعية ."
+  addLabel="إضافة تصنيف جديد"
+  (add)="dialogFlow.openCreate()"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.loadCategories()" />
+} @else {
+  <app-category-toolbar
+    class="mt-10"
+    [parentOptions]="store.mainCategoryOptions()"
+    [kindChips]="store.kindChips()"
+    [selectedKindChip]="store.kindChip()"
+    (searchChange)="store.setSearch($event)"
+    (sortChange)="store.setSort($event)"
+    (statusChange)="store.setStatusFilter($event)"
+    (parentChange)="store.setParentFilter($event)"
+    (kindChipChange)="store.setKindChip($event)"
+  />
+
+  <app-category-table
+    class="mt-6"
+    [entries]="store.entries()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    [emptyMessage]="store.emptyMessage()"
+    [rowCount]="store.pageSize()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (edit)="dialogFlow.openEdit($event)"
+    (statusChange)="dialogFlow.openStatusChange($event)"
+    (remove)="dialogFlow.openDelete($event)"
+  />
+
+  <app-table-pagination
+    class="mt-2"
+    [pageIndex]="store.pageIndex()"
+    [pageSize]="store.pageSize()"
+    [totalCount]="store.totalCount()"
+    itemNoun="تصنيف"
+    (pageIndexChange)="store.changePage($event)"
+  />
+}
+
+<app-category-dialogs
+  [request]="dialogFlow.request()"
+  [parentOptions]="store.mainCategoryOptions()"
+  [isBusy]="store.isSaving()"
+  (draftSubmitted)="dialogFlow.submitDraft($event)"
+  (confirmed)="dialogFlow.confirm()"
+  (closed)="closeDialog()"
+/>
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

@@ -51,7 +51,7 @@ describe('GovernorateList', () => {
     expect(element.textContent).toContain('لا توجد محافظات مضافة حتى الآن');
     expect(element.textContent).toContain('أضف أول محافظة إلى المنصة .');
     expect(element.querySelector('table')).toBeNull();
-    expect(element.querySelectorAll('app-region-add-button')).toHaveLength(1);
+    expect(element.querySelectorAll('app-add-button')).toHaveLength(1);
   });
 
   it('draws placeholder rows while loading', () => {

@@ -2,13 +2,14 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, catchError, of, pipe, switchMap, tap } from 'rxjs';
+import { ListSort } from '../../../shared/models/list-sort';
+import { withListTable } from '../../../shared/state/with-list-table';
 import { AreaRepository } from '../data/area.repository';
 import { GovernorateRepository } from '../data/governorate.repository';
 import { Governorate } from '../models/governorate';
 import { RegionDraft } from '../models/region-draft';
-import { RegionSort } from '../models/region-sort';
+import { RegionEntry } from '../models/region-entry';
 import { RegionStatus } from '../models/region-status';
-import { withRegionTable } from './with-region-table';
 
 interface AreasState {
   readonly governorateId: string;
@@ -23,7 +24,7 @@ const initialState: AreasState = {
 export const AreasStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withRegionTable(),
+  withListTable<RegionEntry>(),
   withComputed(({ governorate }) => ({
     governorateName: computed(() => governorate()?.name ?? ''),
   })),
@@ -80,7 +81,7 @@ export const AreasStore = signalStore(
         store.applyQuery({ search });
         store.loadAreas();
       },
-      setSort(sort: RegionSort | null): void {
+      setSort(sort: ListSort | null): void {
         store.applyQuery({ sort });
         store.loadAreas();
       },

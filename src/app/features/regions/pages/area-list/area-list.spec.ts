@@ -63,7 +63,7 @@ describe('AreaList', () => {
     const { fixture } = render([SAFITA], { createArea });
     const element = fixture.nativeElement as HTMLElement;
 
-    (element.querySelector('app-region-add-button button') as HTMLButtonElement).click();
+    (element.querySelector('app-add-button button') as HTMLButtonElement).click();
     fixture.detectChanges();
     expect(
       (element.querySelector('[data-testid="locked-governorate"]') as HTMLInputElement).value,

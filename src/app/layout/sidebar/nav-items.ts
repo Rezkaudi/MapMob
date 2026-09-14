@@ -13,11 +13,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'الاشتراكات والباقات', route: '/subscriptions', icon: 'subscriptions' },
   { label: 'المدفوعات', route: '/payments', icon: 'payments' },
   { label: 'الإحصائيات و التقارير', route: '/reports', icon: 'reports' },
+  { label: 'إدارة المحتوى', route: '/content', icon: 'content' },
 ];
 
 /** The secondary group below the divider. */
 export const SECONDARY_NAV_ITEMS: readonly NavItem[] = [
   { label: 'الإشعارات', route: '/notifications', icon: 'notifications' },
-  { label: 'الإعدادات', route: '/settings', icon: 'settings' },
   { label: 'البلاغات', route: '/complaints', icon: 'complaints' },
+  { label: 'الإعدادات', route: '/settings', icon: 'settings' },
 ];
