@@ -1,0 +1,159 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="notify-heading"
+  (click)="cancelled.emit()"
+>
+  <div
+    class="w-[580px] overflow-clip rounded-2xl border border-border bg-surface shadow-[0_20px_60px_rgba(15,23,42,0.15)]"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- RTL: the bell badge sits on the right, the close button on the left. -->
+    <header class="flex items-start justify-between gap-4 border-b border-border px-6 pt-6 pb-4">
+      <div class="flex items-start gap-4">
+        <span
+          class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary"
+        >
+          <app-icon name="notifications" [size]="20" />
+        </span>
+        <div class="text-start">
+          <h2 id="notify-heading" class="text-[20px]/[28px] font-bold text-text-primary">
+            إرسال إشعار جماعي
+          </h2>
+          <p class="mt-[3px] text-[13px]/[20px] text-text-secondary">
+            سيتم إرسال هذا التنبيه مباشرة لتطبيقات ولوحات تحكم جميع المتاجر المحددة.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        data-testid="notify-close"
+        class="flex size-8 shrink-0 items-center justify-center rounded-lg text-text-secondary"
+        aria-label="إغلاق"
+        (click)="cancelled.emit()"
+      >
+        <app-icon name="close" [size]="10" />
+      </button>
+    </header>
+
+    <div class="px-6 pt-5 pb-6">
+      <!-- RTL: the store icon and the recipients text sit right, the count pill left. -->
+      <div
+        class="flex h-[66px] items-center justify-between rounded-xl border border-primary bg-[#eff7ff] px-[15px]"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="flex size-9 shrink-0 items-center justify-center rounded-lg border border-primary bg-surface text-primary"
+          >
+            <app-icon name="places" [size]="17" />
+          </span>
+          <div class="text-start">
+            <p class="text-[13px]/[16px] font-bold text-text-primary">المستلمون المستهدفون:</p>
+            <p class="text-[12px]/[17px] text-text-secondary">
+              تم تحديد المتاجر عبر شريط الإجراء الجماعي
+            </p>
+          </div>
+        </div>
+        <span
+          class="flex h-7 items-center rounded-md bg-primary px-3.5 text-[12px]/[16px] font-bold text-white"
+        >
+          {{ recipientsLabel() }}
+        </span>
+      </div>
+
+      <div class="mt-5 flex flex-col gap-4">
+        <div>
+          <label
+            for="notification-title"
+            class="flex items-center gap-1 text-[13px]/[20px] font-medium text-text-primary"
+          >
+            <span>عنوان الإشعار</span>
+            <span class="text-error">*</span>
+          </label>
+          <input
+            id="notification-title"
+            type="text"
+            class="mt-1.5 h-[38px] w-full rounded-lg border border-border px-3 text-right text-[13px] text-text-primary outline-none placeholder:text-placeholder"
+            [value]="title()"
+            (input)="setTitle($event)"
+          />
+        </div>
+
+        <div>
+          <p class="flex items-center gap-1 text-[13px]/[16px] font-medium">
+            <span class="text-text-primary">نوع وأهمية الإشعار</span>
+            <span class="text-text-secondary">(اختياري)</span>
+          </p>
+          <app-priority-picker
+            class="mt-2 block"
+            [selected]="priority()"
+            (selectedChange)="priority.set($event)"
+          />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between">
+            <label
+              for="notification-message"
+              class="flex items-center gap-1 text-[13px]/[20px] font-medium text-text-primary"
+            >
+              <span>نص الإشعار</span>
+              <span class="text-error">*</span>
+            </label>
+            <span class="font-latin text-[12px]/[17px] text-text-secondary">
+              {{ messageCounter() }}
+            </span>
+          </div>
+          <textarea
+            id="notification-message"
+            rows="4"
+            [attr.maxlength]="messageLimit"
+            class="mt-1.5 h-[108px] w-full resize-none rounded-lg border border-border p-3 text-right text-[13px] text-text-primary outline-none placeholder:text-placeholder"
+            [value]="message()"
+            (input)="setMessage($event)"
+          ></textarea>
+          <p class="mt-1.5 text-start text-[12px]/[17px] text-text-secondary">
+            سيتم إرسال تنبيه فوري لتطبيق المتجر ولوحة التحكم
+          </p>
+        </div>
+
+        <!-- RTL: the tick box leads on the right. -->
+        <label class="flex items-center gap-2 text-[12px]/[16px] text-text-primary">
+          <input
+            type="checkbox"
+            class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+            [checked]="shouldSendToDashboard()"
+            (change)="setDashboardDelivery($event)"
+          />
+          <span>إرسال نسخة إلى لوحة تحكم المتجر إضافة إلى التطبيق</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- RTL: the submit button sits on the right, cancel on the left. -->
+    <footer
+      class="flex items-center justify-between border-t border-border px-6 pt-[17px] pb-[23px]"
+    >
+      <button
+        type="button"
+        data-testid="notify-submit"
+        class="flex h-10 items-center gap-2 rounded-lg bg-primary px-6 text-[13px] font-medium text-white disabled:opacity-40"
+        [disabled]="!canSend()"
+        (click)="send()"
+      >
+        <span>إرسال الإشعار</span>
+        <app-icon name="send" [size]="12" />
+      </button>
+      <button
+        type="button"
+        data-testid="notify-cancel"
+        class="h-10 rounded-lg border border-border bg-surface px-[21px] text-[13px] font-medium text-text-secondary"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+    </footer>
+  </div>
+</div>

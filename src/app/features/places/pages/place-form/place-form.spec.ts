@@ -67,4 +67,66 @@ describe('PlaceForm', () => {
     );
     expect(switches.every((toggle) => toggle.getAttribute('aria-checked') === 'true')).toBe(true);
   });
+
+  it('confirms with a toast once the place is saved', () => {
+    const fixture = render();
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('تم حفظ المكان بنجاح');
+    expect(text).toContain('تمت إضافة المكان بنجاح وسيظهر في قائمة الشركات والمتاجر.');
+  });
+
+  it('adds the products section and follows the package limit when the package changes', () => {
+    const fixture = render();
+    expect(fixture.nativeElement.textContent).toContain('المنتجات والخدمات');
+    expect(fixture.nativeElement.textContent).toContain('0 / 3 منتجات وخدمات');
+
+    const packageField: HTMLSelectElement = fixture.nativeElement.querySelector('select#package');
+    packageField.value = 'premium';
+    packageField.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('0 / 50 منتجات وخدمات');
+    expect(fixture.nativeElement.textContent).toContain('مميزة');
+  });
+
+  it('keeps a product added through the dialog', () => {
+    const fixture = render();
+    (fixture.nativeElement.querySelector('[data-testid="add-product"]') as HTMLElement).click();
+    fixture.detectChanges();
+
+    const setValue = (testId: string, value: string) => {
+      const field: HTMLInputElement = fixture.nativeElement.querySelector(
+        `[data-testid="${testId}"]`,
+      );
+      field.value = value;
+      field.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+    setValue('product-name', 'تنظيف بشرة عميق');
+    setValue('product-price', '150');
+    (fixture.nativeElement.querySelector('[data-testid="submit-product"]') as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="product-item"]').textContent,
+    ).toContain('تنظيف بشرة عميق');
+    expect(fixture.nativeElement.textContent).toContain('1 / 3 منتجات وخدمات');
+  });
+
+  it('keeps the save bar above the map', () => {
+    const fixture = render();
+    const mapBox: HTMLElement = fixture.nativeElement.querySelector('[data-testid="map-box"]');
+    const saveBar: HTMLElement = fixture.nativeElement.querySelector(
+      '[data-testid="form-actions"]',
+    );
+
+    // Leaflet paints its panes at z-index 400 and its controls at 1000, so the map
+    // has to be its own stacking context or it covers the bar.
+    expect(mapBox.className).toContain('isolate');
+    expect(saveBar.className).toContain('z-30');
+  });
 });

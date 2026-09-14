@@ -1,0 +1,21 @@
+<app-section-panel
+  heading="العروض الترويجية"
+  [badge]="countLabel()"
+  [subtitle]="subtitle()"
+  actionLabel="إضافة عرض"
+>
+  @if (offers().length) {
+    <!-- Three 200px cards with a 16px gap overrun the 621px grid, so the row scrolls. -->
+    <div class="flex gap-4 overflow-x-auto">
+      @for (offer of offers(); track offer.id) {
+        <app-offer-card [offer]="offer" />
+      }
+    </div>
+  } @else {
+    <p
+      class="flex h-[270px] items-center justify-center rounded-xl border border-dashed border-border text-[13px] text-text-secondary"
+    >
+      لا توجد عروض ترويجية حالياً
+    </p>
+  }
+</app-section-panel>

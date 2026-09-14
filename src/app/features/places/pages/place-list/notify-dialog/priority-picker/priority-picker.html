@@ -1,0 +1,24 @@
+<!-- Three 170px boxes with a 10px gap, as the design lays the row out. -->
+<div class="grid grid-cols-3 gap-2.5">
+  @for (option of priorities; track option) {
+    <label
+      class="flex h-[34px] items-center justify-center gap-1.5 rounded-lg border text-[12px]/[16px]"
+      [class]="
+        option === selected()
+          ? 'border-primary bg-primary-soft font-bold text-primary'
+          : 'border-border bg-surface text-text-primary'
+      "
+    >
+      <input
+        type="radio"
+        name="notification-priority"
+        class="sr-only"
+        [value]="option"
+        [checked]="option === selected()"
+        (change)="selectedChange.emit(option)"
+      />
+      <span class="size-2 rounded-full" [class]="priorityDot[option]"></span>
+      <span>{{ priorityLabel[option] }}</span>
+    </label>
+  }
+</div>

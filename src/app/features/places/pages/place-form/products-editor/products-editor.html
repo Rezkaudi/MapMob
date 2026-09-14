@@ -1,0 +1,102 @@
+<!--
+  RTL: the heading sits on the right, then the quota badge, then the add button
+  on the left. Sizes come from the "المنتجات والخدمات" section of the add-place frame.
+-->
+<app-form-section heading="المنتجات والخدمات" icon="bag">
+  <div headerAction class="flex items-center gap-4">
+    <div
+      class="flex w-[291px] flex-col gap-2 rounded border border-[rgba(192,199,213,0.6)] bg-[#f2f4f6] px-3 py-[13px]"
+    >
+      <div class="flex items-center justify-between gap-3">
+        <span class="text-[12px]/[14px] text-text-secondary">
+          الباقة الحالية:
+          <strong class="font-medium text-text-primary">{{ packageLabel() }}</strong>
+        </span>
+        <span class="font-latin text-[11px]/[14px] text-primary">{{ quotaLabel() }}</span>
+      </div>
+      <div class="h-1.5 overflow-hidden rounded-xl bg-[#e0e3e5]">
+        <div
+          data-testid="quota-fill"
+          class="h-full rounded-xl bg-primary"
+          [style.width]="fillWidth()"
+        ></div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      data-testid="add-product"
+      class="flex h-11 shrink-0 items-center gap-2.5 rounded-lg bg-primary px-5 text-[14px] font-bold text-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-50"
+      [disabled]="isFull()"
+      (click)="addProduct.emit()"
+    >
+      <span>إضافة منتج أو خدمة</span>
+      <app-icon name="plus" [size]="20" />
+    </button>
+  </div>
+
+  @if (products().length) {
+    <ul class="flex flex-col gap-3">
+      @for (product of products(); track product.id) {
+        <li
+          data-testid="product-item"
+          class="flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-4"
+        >
+          <!-- RTL: picture, then name and price. -->
+          <div class="flex min-w-0 items-center gap-4">
+            @if (product.imageUrl) {
+              <img
+                [src]="product.imageUrl"
+                [alt]="product.name"
+                class="size-16 shrink-0 rounded-lg object-cover"
+              />
+            } @else {
+              <span
+                class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-text-secondary"
+              >
+                <app-icon name="image" [size]="20" />
+              </span>
+            }
+            <div class="flex min-w-0 items-center gap-2">
+              <h4 class="truncate text-[14px]/[20px] font-medium text-text-primary">
+                {{ product.name }}
+              </h4>
+              <span
+                class="shrink-0 rounded-md bg-primary-tint px-2 py-0.5 font-latin text-[13px]/[20px] font-medium text-primary"
+              >
+                {{ product.price | number: '1.0-2' }} {{ product.currency }}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              data-testid="edit-product"
+              class="flex h-[30px] items-center gap-1 rounded px-2 text-[14px]/[18px] text-text-primary hover:bg-surface-muted"
+              (click)="editProduct.emit(product)"
+            >
+              <span>تعديل</span>
+              <app-icon name="edit" [size]="16" />
+            </button>
+            <button
+              type="button"
+              data-testid="remove-product"
+              class="flex h-[30px] items-center gap-1 rounded px-2 text-[14px]/[18px] text-status-error hover:bg-error-soft"
+              (click)="removeProduct.emit(product)"
+            >
+              <span>حذف</span>
+              <app-icon name="trash" [size]="12" />
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p
+      class="flex h-[98px] items-center justify-center rounded-lg border border-dashed border-border text-[13px] text-text-secondary"
+    >
+      لم تتم إضافة أي منتج أو خدمة بعد
+    </p>
+  }
+</app-form-section>

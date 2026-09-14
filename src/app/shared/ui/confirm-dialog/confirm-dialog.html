@@ -1,38 +1,45 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] backdrop-blur-[2px]"
   role="dialog"
   aria-modal="true"
   (click)="cancelled.emit()"
 >
   <div
-    class="w-[448px] rounded-2xl bg-surface p-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.15)]"
+    class="w-[448px] rounded-2xl bg-surface px-8 py-6 text-center shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
     (click)="$event.stopPropagation()"
   >
     <div
       class="mx-auto flex size-16 items-center justify-center rounded-full"
-      [class]="tone() === 'danger' ? 'bg-error-soft text-error' : 'bg-success-soft text-success'"
+      [class]="skin().halo"
     >
-      <app-icon [name]="tone() === 'danger' ? 'trash' : 'check'" [size]="25" />
+      <app-icon [name]="skin().icon" [size]="25" />
     </div>
 
-    <h2 class="mt-4 text-[22px]/[32px] font-bold text-text-primary">{{ title() }}</h2>
+    <h2 class="mt-4 text-[22px]/[32px] font-bold text-[#191c1d]">{{ title() }}</h2>
     <p class="mt-1 text-[14px]/[24px] text-text-secondary">{{ message() }}</p>
     @if (note()) {
-      <p class="mt-1 text-[14px]/[21px] text-accent">{{ note() }}</p>
+      <p class="mt-1 text-[14px]/[21px]" [class]="skin().accentText">{{ note() }}</p>
+    }
+    @if (warning()) {
+      <p
+        class="mt-4 rounded-lg bg-[rgba(254,242,242,0.7)] px-4 py-[14px] text-[14px]/[18px] font-bold text-status-error"
+      >
+        {{ warning() }}
+      </p>
     }
 
     <div class="mt-6 flex items-center gap-4">
       <button
         type="button"
         class="h-10 flex-1 rounded-lg text-[14px] font-medium text-white"
-        [class]="tone() === 'danger' ? 'bg-error' : 'bg-primary'"
+        [class]="skin().confirm"
         (click)="confirmed.emit()"
       >
         {{ confirmLabel() }}
       </button>
       <button
         type="button"
-        class="h-10 flex-1 rounded-lg border border-border bg-surface-muted text-[14px] font-medium text-text-secondary"
+        class="h-10 flex-1 rounded-lg border border-border bg-[#f8f9fa] text-[14px] font-medium text-text-primary"
         (click)="cancelled.emit()"
       >
         إلغاء

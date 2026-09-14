@@ -10,4 +10,6 @@ export class FieldLabel {
   readonly text = input.required<string>();
   readonly forId = input<string>('');
   readonly isRequired = input<boolean>(false);
+  /** Adds the design's "(اختياري)" note for fields that may be left empty. */
+  readonly isOptional = input<boolean>(false);
 }

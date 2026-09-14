@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
@@ -9,9 +10,15 @@ import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
 import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
 import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
+import { Toast } from '../../../../shared/ui/toast/toast';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
+import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
+import { PlaceProduct } from '../../models/place-product';
+import { ProductDraft } from '../../models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
+import { ProductDialog } from '../../ui/product-dialog/product-dialog';
+import { ProductsEditor } from './products-editor/products-editor';
 import { ServicesEditor } from './services-editor/services-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
 
@@ -19,6 +26,8 @@ const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
 const DEFAULT_SERVICES = ['توصيل', 'خدمة 24 ساعة', 'مواقف سيارات'];
 const MEGABYTE = 1024 * 1024;
+/** Syrian pound, the only currency the design offers. */
+const CURRENCY = 'ل.س';
 
 const IMAGE_RULES: FileRules = {
   maxBytes: 5 * MEGABYTE,
@@ -49,7 +58,10 @@ const ALL_DAY_CLOSES_AT = '23:59';
     MapPicker,
     MediaPicker,
     FormSection,
+    ProductDialog,
+    ProductsEditor,
     ServicesEditor,
+    Toast,
     WorkingHoursEditor,
     ReactiveFormsModule,
     RouterLink,
@@ -73,6 +85,7 @@ export class PlaceForm {
     label: PLACE_STATUS_LABEL[value],
   }));
 
+  protected readonly hasSaved = signal(false);
   protected readonly isEditing = computed(() => Boolean(this.id()));
   protected readonly heading = computed(() =>
     this.isEditing() ? 'تعديل المكان' : 'إضافة مكان جديد',
@@ -85,6 +98,8 @@ export class PlaceForm {
   protected readonly isPickingOnMap = signal(false);
   protected readonly locationError = signal('');
   protected readonly images = signal<readonly MediaFile[]>([]);
+  protected readonly products = signal<readonly PlaceProduct[]>([]);
+  protected readonly isAddingProduct = signal(false);
   protected readonly videos = signal<readonly MediaFile[]>([]);
 
   protected readonly form = this.formBuilder.nonNullable.group({
@@ -111,6 +126,34 @@ export class PlaceForm {
     package: ['free', Validators.required],
     status: ['pending', Validators.required],
   });
+
+  /** The control's value only reaches a computed through its value stream. */
+  private readonly selectedPackage = toSignal(this.form.controls.package.valueChanges, {
+    initialValue: this.form.controls.package.value,
+  });
+  protected readonly currentPackage = computed(() => this.selectedPackage() as PlacePackage);
+  protected readonly productLimit = computed(() => PACKAGE_PRODUCT_LIMIT[this.currentPackage()]);
+  protected readonly packageLabel = computed(() => PLACE_PACKAGE_LABEL[this.currentPackage()]);
+
+  protected composeProduct(): void {
+    this.isAddingProduct.set(true);
+  }
+
+  protected closeProductDialog(): void {
+    this.isAddingProduct.set(false);
+  }
+
+  protected addProduct(draft: ProductDraft): void {
+    this.products.update((products) => [
+      ...products,
+      { ...draft, id: crypto.randomUUID(), currency: CURRENCY, isAvailable: true },
+    ]);
+    this.closeProductDialog();
+  }
+
+  protected removeProduct(product: PlaceProduct): void {
+    this.products.update((products) => products.filter((one) => one.id !== product.id));
+  }
 
   protected startPickingOnMap(): void {
     this.locationError.set('');
@@ -149,8 +192,13 @@ export class PlaceForm {
     );
   }
 
-  /** The write endpoint is not built yet, so saving only validates for now. */
+  /** The write endpoint is not built yet, so saving only validates and confirms. */
   protected save(): void {
     this.form.markAllAsTouched();
+    this.hasSaved.set(true);
+  }
+
+  protected dismissSavedToast(): void {
+    this.hasSaved.set(false);
   }
 }

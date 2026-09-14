@@ -74,4 +74,31 @@ describe('PlaceDetail', () => {
       'تعذر تحميل المكان',
     );
   });
+
+  it('shows the promotional offers section with a card per offer', () => {
+    const fixture = render();
+    const text = fixture.nativeElement.textContent;
+
+    expect(text).toContain('العروض الترويجية');
+    expect(text).toContain('العروض الترويجية الحالية الخاصة بصيدلية الحياة');
+    expect(text).toContain('خصم 20 % على جميع المنتجات');
+    expect(fixture.nativeElement.querySelectorAll('app-offer-card').length).toBe(3);
+  });
+
+  it('shows the video gallery section', () => {
+    const text = render().nativeElement.textContent;
+
+    expect(text).toContain('معرض الفيديوهات');
+    expect(text).toContain('الفيديوهات التعريفية للمكان');
+    expect(text).toContain('إضافة فيديو');
+  });
+
+  it('shows the products and services table', () => {
+    const text = render().nativeElement.textContent;
+
+    expect(text).toContain('المنتجات و الخدمات');
+    expect(text).toContain('بعض من المنتجات والخدمات التي يقدمها المكان.');
+    expect(text).toContain('سيروم تحت العين');
+    expect(text).toContain('200 ل.س');
+  });
 });

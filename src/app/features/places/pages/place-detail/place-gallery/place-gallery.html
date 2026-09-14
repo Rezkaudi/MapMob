@@ -1,3 +1,7 @@
+<!--
+  671×371 hero at 16px radius with the design's 20% black wash, and a 120px tile row
+  pinned 16px in from the bottom-left corner.
+-->
 <div class="relative h-[371px] overflow-clip rounded-2xl bg-surface-muted">
   @if (coverImage(); as cover) {
     <app-lazy-image
@@ -6,22 +10,34 @@
       imageClass="size-full object-cover"
       class="size-full"
     />
+    <span class="absolute inset-0 bg-black/20"></span>
   } @else {
     <div class="flex size-full items-center justify-center text-placeholder">
       <app-icon name="places" [size]="48" />
     </div>
   }
 
-  @if (thumbnails().length) {
-    <div class="absolute bottom-4 left-4 flex items-end gap-3">
-      @for (thumbnail of thumbnails(); track thumbnail) {
-        <app-lazy-image
-          [src]="thumbnail"
-          [alt]="name()"
-          imageClass="h-[92px] w-[118px] rounded-lg border-2 border-white object-cover"
-          class="h-[92px] w-[118px] rounded-lg"
-        />
-      }
-    </div>
-  }
+  <div
+    data-testid="image-strip"
+    class="absolute bottom-4 left-4 flex flex-row-reverse items-end gap-4"
+  >
+    @for (thumbnail of thumbnails(); track thumbnail) {
+      <app-lazy-image
+        [src]="thumbnail"
+        [alt]="name()"
+        imageClass="size-[120px] rounded-xl border border-border object-cover"
+        class="size-[120px] rounded-xl"
+      />
+    }
+
+    <button
+      type="button"
+      data-testid="add-image"
+      class="flex size-[120px] flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-text-secondary bg-surface text-text-primary"
+      (click)="addImage.emit()"
+    >
+      <app-icon name="camera" [size]="24" />
+      <span class="text-[14px]/[20px]">أضف صورة</span>
+    </button>
+  </div>
 </div>

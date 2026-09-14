@@ -60,6 +60,15 @@ body {
   font-family: var(--font-sans);
 }
 
+/*
+ * Leaflet numbers its panes from 400 and its controls at 1000, high enough to paint
+ * over page chrome like the place form's sticky save bar. Isolating the container
+ * keeps those numbers inside the map.
+ */
+.leaflet-container {
+  isolation: isolate;
+}
+
 /* Latin runs (emails, numbers, placeholders) render in DM Sans as in the design. */
 .font-latin {
   font-family: var(--font-latin);

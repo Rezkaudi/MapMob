@@ -117,7 +117,14 @@
       </div>
     </div>
 
-    <div class="relative mt-6 h-64 overflow-clip rounded-xl border border-border">
+    <!--
+      `isolate` keeps Leaflet's panes (z-index 400) and controls (1000), and the
+      overlays below, inside this box so they cannot paint over the sticky save bar.
+    -->
+    <div
+      data-testid="map-box"
+      class="relative isolate mt-6 h-64 overflow-clip rounded-xl border border-border"
+    >
       <app-map-picker
         class="size-full"
         [latitude]="form.controls.latitude.value"
@@ -326,6 +333,14 @@
     </div>
   </app-form-section>
 
+  <app-products-editor
+    [products]="products()"
+    [limit]="productLimit()"
+    [packageLabel]="packageLabel()"
+    (addProduct)="composeProduct()"
+    (removeProduct)="removeProduct($event)"
+  />
+
   <!--
     The action bar stays on screen while the long form scrolls. The negative margins and
     `-bottom-8` pull it through main's 32px padding on all sides, so it sits flush against
@@ -333,7 +348,8 @@
     edge, and the DOM order runs right to left, so "حفظ المكان" lands leftmost.
   -->
   <div
-    class="sticky -bottom-8 z-20 -mx-8 -mb-8 flex items-center justify-end gap-3 border-t border-border bg-surface px-8 py-4 shadow-[0_-4px_16px_rgba(15,23,42,0.06)]"
+    data-testid="form-actions"
+    class="sticky -bottom-8 z-30 -mx-8 -mb-8 flex items-center justify-end gap-3 border-t border-border bg-surface px-8 py-4 shadow-[0_-4px_16px_rgba(15,23,42,0.06)]"
   >
     <a routerLink="/places" class="px-4 text-[14px] font-medium text-error">إلغاء</a>
     <button
@@ -350,3 +366,15 @@
     </button>
   </div>
 </form>
+
+@if (hasSaved()) {
+  <app-toast
+    title="تم حفظ المكان بنجاح"
+    message="تمت إضافة المكان بنجاح وسيظهر في قائمة الشركات والمتاجر."
+    (dismissed)="dismissSavedToast()"
+  />
+}
+
+@if (isAddingProduct()) {
+  <app-product-dialog (submitted)="addProduct($event)" (cancelled)="closeProductDialog()" />
+}

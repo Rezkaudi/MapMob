@@ -14,13 +14,14 @@
     <div class="flex items-start justify-between gap-4">
       <div class="text-start">
         <h1 class="text-[28px]/[29px] font-bold text-text-primary">{{ place.name }}</h1>
+        <!-- RTL, per the design: address first (right), then the dot, then the status pill. -->
         <div class="mt-2 flex items-center gap-3">
-          <app-badge [tone]="statusTone[place.status]">{{ statusLabel[place.status] }}</app-badge>
-          <span class="text-border">•</span>
           <span class="flex items-center gap-1 text-[13px] text-text-secondary">
-            <app-icon name="map-pin" [size]="13" />
+            <app-icon name="map-pin" [size]="16" />
             <span>{{ place.location.address }}</span>
           </span>
+          <span class="text-border">•</span>
+          <app-badge [tone]="statusTone[place.status]">{{ statusLabel[place.status] }}</app-badge>
         </div>
       </div>
 
@@ -49,7 +50,7 @@
 
     <!-- RTL: the wide media column comes first (right), the summary cards sit left. -->
     <div class="flex items-start gap-6">
-      <div class="flex min-w-0 flex-1 flex-col gap-6">
+      <div class="flex min-w-0 flex-1 flex-col gap-4">
         <app-place-gallery [images]="place.images" [name]="place.name" />
 
         <app-info-card heading="المعلومات الأساسية" [canEdit]="true">
@@ -66,15 +67,21 @@
           </div>
         </app-info-card>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-4">
           <app-place-hours-card [rows]="place.workingHours" [isOpenNow]="place.isOpenNow" />
           <app-place-contact-card [contact]="place.contact" />
         </div>
+
+        <app-place-products-card [products]="place.products" (addProduct)="composeProduct()" />
+
+        <app-place-offers-card [offers]="place.offers" [placeName]="place.name" />
+
+        <app-place-videos-card [videos]="place.videos" />
       </div>
 
       <div class="flex w-[353px] shrink-0 flex-col gap-4">
-        <app-info-card heading="معلومات المالك" [canEdit]="true">
-          <dl class="flex flex-col gap-3">
+        <app-info-card heading="معلومات المالك" [canEdit]="true" padding="compact">
+          <dl class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <dt class="text-[13px] text-text-primary">اسم المالك/المسؤول</dt>
               <dd class="text-[13px] text-text-secondary">{{ place.owner.name }}</dd>
@@ -88,15 +95,15 @@
           </dl>
           <a
             [href]="'tel:' + place.owner.phone"
-            class="mt-4 flex h-10 items-center justify-center gap-2 rounded-lg border border-primary text-[13px] font-medium text-primary"
+            class="mt-6 flex h-8 items-center justify-center gap-2 rounded-lg border border-primary text-[13px] font-medium text-primary"
           >
             <app-icon name="phone" [size]="14" />
             <span>الاتصال بالمالك</span>
           </a>
         </app-info-card>
 
-        <app-info-card heading="الاشتراك" [canEdit]="true">
-          <dl class="flex flex-col gap-3">
+        <app-info-card heading="الاشتراك" [canEdit]="true" padding="compact">
+          <dl class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <dt class="text-[13px] text-text-primary">خطة الاشتراك</dt>
               <dd class="text-[13px] font-medium text-accent">
@@ -121,8 +128,8 @@
           </dl>
         </app-info-card>
 
-        <app-info-card heading="سجل النشاط">
-          <dl class="flex flex-col gap-3">
+        <app-info-card heading="سجل النشاط" padding="compact">
+          <dl class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <dt class="text-[13px] text-text-primary">تاريخ الإضافة</dt>
               <dd class="font-latin text-[13px] text-text-secondary">
@@ -140,4 +147,8 @@
       </div>
     </div>
   </div>
+}
+
+@if (isAddingProduct()) {
+  <app-product-dialog (submitted)="closeProductDialog()" (cancelled)="closeProductDialog()" />
 }
