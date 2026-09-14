@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
@@ -14,6 +14,8 @@ import { PlaceContactCard } from './place-contact-card/place-contact-card';
 import { PlaceHoursCard } from './place-hours-card/place-hours-card';
 import { PlaceLocationCard } from './place-location-card/place-location-card';
 import { PlaceOffersCard } from './place-offers-card/place-offers-card';
+import { PlaceProductsCard } from './place-products-card/place-products-card';
+import { ProductDialog } from '../../ui/product-dialog/product-dialog';
 import { PlaceVideosCard } from './place-videos-card/place-videos-card';
 
 const STATUS_TEXT_CLASS: Record<PlaceStatus, string> = {
@@ -41,7 +43,9 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
     PlaceHoursCard,
     PlaceLocationCard,
     PlaceOffersCard,
+    PlaceProductsCard,
     PlaceVideosCard,
+    ProductDialog,
     ArabicDatePipe,
     RouterLink,
   ],
@@ -59,6 +63,7 @@ export class PlaceDetail {
   protected readonly packageLabel = PLACE_PACKAGE_LABEL;
 
   protected readonly place = this.store.place;
+  protected readonly isAddingProduct = signal(false);
   protected readonly isSuspended = computed(() => this.place()?.status === 'suspended');
 
   constructor() {
@@ -67,5 +72,14 @@ export class PlaceDetail {
 
   protected reload(): void {
     this.store.loadPlace(this.id());
+  }
+
+  protected composeProduct(): void {
+    this.isAddingProduct.set(true);
+  }
+
+  /** The product endpoints are not built yet, so saving only closes the dialog. */
+  protected closeProductDialog(): void {
+    this.isAddingProduct.set(false);
   }
 }

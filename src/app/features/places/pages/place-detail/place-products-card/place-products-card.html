@@ -1,0 +1,97 @@
+<app-section-panel
+  heading="المنتجات و الخدمات"
+  subtitle="بعض من المنتجات والخدمات التي يقدمها المكان."
+  actionLabel="إضافة منتج أو خدمة"
+  (action)="addProduct.emit()"
+>
+  @if (products().length) {
+    <div class="overflow-hidden rounded-xl border border-border">
+      <table class="w-full text-right">
+        <thead>
+          <tr class="bg-surface-muted">
+            <th class="w-14 px-4 py-[14px]">
+              <span class="sr-only">تحديد</span>
+            </th>
+            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الصورة</th>
+            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">المنتج/الخدمة</th>
+            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">السعر</th>
+            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الحالة</th>
+            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الإجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products(); track product.id) {
+            <tr class="border-t border-border bg-surface">
+              <td class="px-4 py-[14px]">
+                <input
+                  type="checkbox"
+                  class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+                  [attr.aria-label]="'تحديد ' + product.name"
+                />
+              </td>
+              <td class="px-4 py-[14px]">
+                @if (product.imageUrl) {
+                  <img
+                    [src]="product.imageUrl"
+                    [alt]="product.name"
+                    class="size-8 rounded-lg object-cover"
+                  />
+                } @else {
+                  <span
+                    class="flex size-8 items-center justify-center rounded-lg bg-surface-muted text-text-secondary"
+                  >
+                    <app-icon name="image" [size]="16" />
+                  </span>
+                }
+              </td>
+              <td class="px-4 py-[14px] text-[14px] text-text-secondary">{{ product.name }}</td>
+              <td class="px-4 py-[14px] font-latin text-[14px] text-text-secondary">
+                {{ product.price | number: '1.0-2' }} {{ product.currency }}
+              </td>
+              <td class="px-4 py-[14px]">
+                <app-badge [tone]="product.isAvailable ? 'success' : 'neutral'">
+                  {{ product.isAvailable ? 'متاح' : 'غير متاح' }}
+                </app-badge>
+              </td>
+              <td class="px-4 py-[14px]">
+                <app-action-menu>
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                    (click)="editProduct.emit(product)"
+                  >
+                    <span>تعديل</span>
+                    <app-icon name="edit" [size]="14" class="text-text-secondary" />
+                  </button>
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                    (click)="changeStatus.emit(product)"
+                  >
+                    <span>تغيير الحالة</span>
+                    <app-icon name="refresh" [size]="12" class="text-text-secondary" />
+                  </button>
+                  <span data-testid="menu-divider" class="my-1 block h-px bg-border"></span>
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
+                    (click)="removeProduct.emit(product)"
+                  >
+                    <span>حذف</span>
+                    <app-icon name="trash" [size]="14" />
+                  </button>
+                </app-action-menu>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p
+      class="flex h-[140px] items-center justify-center rounded-xl border border-dashed border-border text-[13px] text-text-secondary"
+    >
+      لا توجد منتجات أو خدمات مضافة
+    </p>
+  }
+</app-section-panel>

@@ -16,19 +16,19 @@ export const BULK_ACTION_DIALOG: Record<BulkAction, BulkActionDialog> = {
     title: 'تفعيل الشركات',
     message: 'هل أنت متأكد من تفعيل الشركات المحددة؟',
     confirmLabel: 'تفعيل الشركات',
-    tone: 'primary',
+    tone: 'success',
   },
   suspend: {
     title: 'إيقاف الشركات',
     message: 'هل أنت متأكد من إيقاف الشركات المحددة؟',
     confirmLabel: 'إيقاف الشركات',
-    tone: 'primary',
+    tone: 'warning',
   },
   export: {
     title: 'تصدير الشركات',
     message: 'هل أنت متأكد من تصدير الشركات المحددة؟',
     confirmLabel: 'تصدير',
-    tone: 'primary',
+    tone: 'success',
   },
   delete: {
     title: 'حذف الشركات',

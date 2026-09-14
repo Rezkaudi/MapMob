@@ -45,4 +45,27 @@ describe('ConfirmDialog', () => {
 
     expect(fixture.nativeElement.textContent).toContain('تنبيه: إجراء نهائي لا يمكن التراجع عنه');
   });
+
+  it('paints each tone with its own icon and colours', () => {
+    const tones = [
+      { tone: 'success', icon: 'check-circle', accent: 'bg-status-success' },
+      { tone: 'warning', icon: 'pause-circle', accent: 'bg-accent' },
+      { tone: 'danger', icon: 'close', accent: 'bg-status-error' },
+    ] as const;
+
+    for (const { tone, icon, accent } of tones) {
+      const fixture = TestBed.createComponent(ConfirmDialog);
+      fixture.componentRef.setInput('title', 'عنوان');
+      fixture.componentRef.setInput('message', 'رسالة');
+      fixture.componentRef.setInput('confirmLabel', 'تأكيد');
+      fixture.componentRef.setInput('tone', tone);
+      fixture.detectChanges();
+
+      const glyph: HTMLElement = fixture.nativeElement.querySelector('app-icon span');
+      expect(glyph.style.maskImage).toContain(`${icon}.svg`);
+
+      const confirm: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+      expect(confirm.className).toContain(accent);
+    }
+  });
 });

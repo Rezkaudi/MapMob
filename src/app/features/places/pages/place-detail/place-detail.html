@@ -72,6 +72,8 @@
           <app-place-contact-card [contact]="place.contact" />
         </div>
 
+        <app-place-products-card [products]="place.products" (addProduct)="composeProduct()" />
+
         <app-place-offers-card [offers]="place.offers" [placeName]="place.name" />
 
         <app-place-videos-card [videos]="place.videos" />
@@ -145,4 +147,8 @@
       </div>
     </div>
   </div>
+}
+
+@if (isAddingProduct()) {
+  <app-product-dialog (submitted)="closeProductDialog()" (cancelled)="closeProductDialog()" />
 }

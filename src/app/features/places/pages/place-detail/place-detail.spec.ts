@@ -92,4 +92,13 @@ describe('PlaceDetail', () => {
     expect(text).toContain('الفيديوهات التعريفية للمكان');
     expect(text).toContain('إضافة فيديو');
   });
+
+  it('shows the products and services table', () => {
+    const text = render().nativeElement.textContent;
+
+    expect(text).toContain('المنتجات و الخدمات');
+    expect(text).toContain('بعض من المنتجات والخدمات التي يقدمها المكان.');
+    expect(text).toContain('سيروم تحت العين');
+    expect(text).toContain('200 ل.س');
+  });
 });

@@ -2,17 +2,61 @@
   heading="معرض الفيديوهات"
   subtitle="الفيديوهات التعريفية للمكان"
   actionLabel="إضافة فيديو"
+  (action)="addVideo.emit()"
 >
   @if (videos().length) {
     <!-- A single video fills the 621×168 area of the design; more share the row. -->
     <div class="flex gap-4">
-      @for (video of videos(); track video) {
-        <video
-          [src]="video"
-          class="h-[168px] min-w-0 flex-1 rounded-xl bg-black object-cover"
-          controls
-          preload="metadata"
-        ></video>
+      @for (video of videos(); track video.id) {
+        <div class="relative h-[168px] min-w-0 flex-1 overflow-clip rounded-xl bg-black">
+          @if (playingId() === video.id) {
+            <video
+              [src]="video.url"
+              class="size-full object-cover"
+              controls
+              autoplay
+              preload="metadata"
+            ></video>
+          } @else {
+            <app-lazy-image
+              [src]="video.posterUrl"
+              alt=""
+              imageClass="size-full object-cover"
+              class="size-full"
+            />
+            <span class="absolute inset-0 bg-black/20"></span>
+
+            <button
+              type="button"
+              data-testid="play-video"
+              class="absolute inset-0 flex items-center justify-center"
+              aria-label="تشغيل الفيديو"
+              (click)="play(video)"
+            >
+              <span
+                class="flex size-9 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/20 backdrop-blur-[10px]"
+              >
+                <app-icon name="play" [size]="20" />
+              </span>
+            </button>
+
+            <!--
+              The scrubber the design draws along the bottom. Playback runs left to
+              right whatever the page direction, so the track is explicitly LTR.
+            -->
+            <span
+              dir="ltr"
+              class="pointer-events-none absolute inset-x-6 bottom-4 block h-px bg-[#d9d9d9]"
+            >
+              <span class="block h-px w-1/5 bg-white"></span>
+            </span>
+            <span
+              class="pointer-events-none absolute bottom-6 left-6 rounded bg-black/70 px-1.5 py-0.5 font-latin text-[11px]/[15px] text-white"
+            >
+              {{ video.duration }}
+            </span>
+          }
+        </div>
       }
     </div>
   } @else {

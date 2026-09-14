@@ -1,35 +1,52 @@
 import { TestBed } from '@angular/core/testing';
 import { OfferCard } from './offer-card';
+import { PlaceOffer } from '../../../models/place-offer';
 
-const OFFER = {
+const OFFER: PlaceOffer = {
   id: 'offer-1',
   title: 'خصم 20 % على جميع المنتجات',
-  category: 'الفيتامينات والمكملات',
   description: 'خصم خاص لفترة محدودة على كافة أصناف المكملات الغذائية',
-  discountLabel: '20%',
   dateRange: '01 - 15 سبتمبر 2026',
-  imageUrl: '',
+  imageUrl: 'assets/images/offer-cosmetics.jpg',
+  isActive: true,
 };
 
-describe('OfferCard', () => {
-  it('shows the title, category, description, discount and date range', () => {
-    const fixture = TestBed.createComponent(OfferCard);
-    fixture.componentRef.setInput('offer', OFFER);
-    fixture.detectChanges();
+function build(offer: PlaceOffer) {
+  const fixture = TestBed.createComponent(OfferCard);
+  fixture.componentRef.setInput('offer', offer);
+  fixture.detectChanges();
+  return fixture;
+}
 
-    const text = fixture.nativeElement.textContent;
+describe('OfferCard', () => {
+  it('shows the title, description and date range', () => {
+    const text = build(OFFER).nativeElement.textContent;
+
     expect(text).toContain('خصم 20 % على جميع المنتجات');
-    expect(text).toContain('الفيتامينات والمكملات');
     expect(text).toContain('خصم خاص لفترة محدودة');
-    expect(text).toContain('20%');
     expect(text).toContain('01 - 15 سبتمبر 2026');
   });
 
-  it('hides the discount badge when the offer has none', () => {
-    const fixture = TestBed.createComponent(OfferCard);
-    fixture.componentRef.setInput('offer', { ...OFFER, discountLabel: '' });
-    fixture.detectChanges();
+  it('tags a running offer "نشط" over the picture', () => {
+    const tag: HTMLElement = build(OFFER).nativeElement.querySelector(
+      '[data-testid="offer-status"]',
+    );
 
-    expect(fixture.nativeElement.querySelector('[data-testid="offer-discount"]')).toBeNull();
+    expect(tag.textContent?.trim()).toBe('نشط');
+    expect(tag.className).toContain('bg-status-success');
+  });
+
+  it('tags a finished offer "منتهي"', () => {
+    const tag: HTMLElement = build({ ...OFFER, isActive: false }).nativeElement.querySelector(
+      '[data-testid="offer-status"]',
+    );
+
+    expect(tag.textContent?.trim()).toBe('منتهي');
+  });
+
+  it('shows the offer picture', () => {
+    const image: HTMLImageElement = build(OFFER).nativeElement.querySelector('img');
+
+    expect(image.getAttribute('src')).toBe('assets/images/offer-cosmetics.jpg');
   });
 });

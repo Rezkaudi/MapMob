@@ -3,8 +3,10 @@ import { PlaceContact } from './place-contact';
 import { PlaceLocation } from './place-location';
 import { PlaceOffer } from './place-offer';
 import { PlaceOwner } from './place-owner';
+import { PlaceProduct } from './place-product';
 import { PlaceStatus } from './place-status';
 import { PlaceSubscription } from './place-subscription';
+import { PlaceVideo } from './place-video';
 import { WorkingHoursRow } from './working-hours-row';
 
 export interface PlaceDetail {
@@ -22,7 +24,8 @@ export interface PlaceDetail {
   readonly contact: PlaceContact;
   readonly location: PlaceLocation;
   readonly workingHours: readonly WorkingHoursRow[];
+  readonly products: readonly PlaceProduct[];
   readonly offers: readonly PlaceOffer[];
-  readonly videos: readonly string[];
+  readonly videos: readonly PlaceVideo[];
   readonly isOpenNow: boolean;
 }

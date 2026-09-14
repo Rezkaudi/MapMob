@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { PlaceOffersCard } from './place-offers-card';
+import { PlaceOffer } from '../../../models/place-offer';
 
-const OFFER = {
+const OFFER: PlaceOffer = {
   id: 'offer-1',
   title: 'خصم 20 % على جميع المنتجات',
-  category: 'الفيتامينات والمكملات',
   description: 'خصم خاص لفترة محدودة',
-  discountLabel: '20%',
   dateRange: '01 - 15 سبتمبر 2026',
   imageUrl: '',
+  isActive: true,
 };
 
 describe('PlaceOffersCard', () => {

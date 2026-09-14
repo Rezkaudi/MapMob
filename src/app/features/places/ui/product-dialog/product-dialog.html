@@ -1,0 +1,149 @@
+<!--
+  560px modal from the ADD PRODUCT frame: 90px header, 24px-padded body with a
+  20px gap between fields, and a tinted footer. RTL puts the heading on the right
+  and the close button on the left.
+-->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] p-4 backdrop-blur-[2px]"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="product-dialog-title"
+  (click)="cancelled.emit()"
+>
+  <div
+    class="flex max-h-full w-[560px] flex-col overflow-hidden rounded-2xl bg-surface shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="flex items-start justify-between gap-4 px-6 py-5">
+      <div class="text-start">
+        <h2 id="product-dialog-title" class="text-[18px]/[28px] font-medium text-text-primary">
+          إضافة منتج أو خدمة
+        </h2>
+        <p class="mt-1 text-[13px]/[18px] text-text-secondary">
+          أضف بيانات المنتج أو الخدمة ليظهر ضمن صفحة المكان.
+        </p>
+      </div>
+      <button
+        type="button"
+        data-testid="close-product-dialog"
+        class="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-primary hover:bg-surface-muted"
+        aria-label="إغلاق النافذة"
+        (click)="cancelled.emit()"
+      >
+        <app-icon name="close" [size]="18" />
+      </button>
+    </header>
+
+    <div class="flex flex-col gap-5 overflow-y-auto px-6 py-4">
+      <div class="flex flex-col gap-2">
+        <app-field-label text="الصورة" [isOptional]="true" />
+        @if (imageUrl()) {
+          <div class="flex items-center gap-3 rounded-lg bg-[#f2f4f6] p-3">
+            <img [src]="imageUrl()" [alt]="imageName()" class="size-16 rounded-lg object-cover" />
+            <span class="flex-1 truncate text-start text-[13px] text-text-primary">
+              {{ imageName() }}
+            </span>
+            <button
+              type="button"
+              class="text-[13px] font-medium text-error"
+              (click)="removeImage()"
+            >
+              حذف
+            </button>
+          </div>
+        } @else {
+          <app-file-dropzone
+            class="[&_label]:border-2 [&_label]:border-[#c0c7d5] [&_label]:py-8"
+            prompt="اسحب وأفلت الصور هنا"
+            hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+            accept="image/jpeg,image/png"
+            (filesPicked)="onImagePicked($event)"
+          />
+        }
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <app-field-label text="اسم المنتج أو الخدمة" forId="product-name" [isRequired]="true" />
+        <input
+          id="product-name"
+          data-testid="product-name"
+          type="text"
+          class="h-11 rounded-lg bg-[#f2f4f6] px-3.5 text-right text-[14px] text-text-primary outline-none placeholder:text-text-secondary"
+          placeholder="مثال: تنظيف بشرة عميق"
+          [value]="name()"
+          (input)="onNameInput($event)"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <app-field-label text="السعر" forId="product-price" [isRequired]="true" />
+        <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
+        <div class="relative">
+          <input
+            id="product-price"
+            data-testid="product-price"
+            type="number"
+            min="0"
+            step="0.01"
+            class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-3.5 pl-[92px] text-right font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+            placeholder="0"
+            [value]="price()"
+            (input)="onPriceInput($event)"
+          />
+          <span
+            class="pointer-events-none absolute end-3.5 top-1/2 flex h-7 -translate-y-1/2 items-center gap-1 rounded bg-[#eceef0] px-2.5 text-[12px] font-bold text-text-primary"
+          >
+            <app-icon name="chevron-down" [size]="14" />
+            <span>{{ currency }}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <app-field-label text="رابط الطلب" forId="product-order-url" [isOptional]="true" />
+        <div class="relative">
+          <input
+            id="product-order-url"
+            data-testid="product-order-url"
+            type="url"
+            dir="ltr"
+            class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-10 pl-3.5 text-left font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+            placeholder="https://..."
+            [value]="orderUrl()"
+            (input)="onOrderUrlInput($event)"
+          />
+          <app-icon
+            name="link"
+            [size]="15"
+            class="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-placeholder"
+          />
+        </div>
+        <p class="text-start text-[11px]/[14px] font-medium text-text-secondary">
+          يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.
+        </p>
+      </div>
+    </div>
+
+    <!-- RTL: `justify-end` packs the pair against the left edge, so the blue action lands leftmost. -->
+    <footer class="flex items-center justify-end gap-3 bg-[rgba(242,244,246,0.5)] px-6 py-4">
+      <button
+        type="button"
+        data-testid="cancel-product"
+        class="h-9 rounded-lg border border-border bg-surface px-5 text-[12px] text-text-primary"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+      <button
+        type="button"
+        data-testid="submit-product"
+        class="flex h-11 items-center gap-2.5 rounded-lg bg-primary px-5 text-[14px] font-bold text-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-50"
+        [disabled]="!isComplete()"
+        (click)="submit()"
+      >
+        <span>إضافة منتج او خدمة</span>
+        <app-icon name="plus" [size]="20" />
+      </button>
+    </footer>
+  </div>
+</div>
