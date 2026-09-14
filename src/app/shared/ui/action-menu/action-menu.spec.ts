@@ -84,4 +84,28 @@ describe('ActionMenu', () => {
 
     expect(panelOf(fixture)).toBeFalsy();
   });
+
+  it('closes once an item is picked, so the menu does not linger behind a dialog', () => {
+    const fixture = open();
+
+    (fixture.nativeElement.querySelector('.item') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(panelOf(fixture)).toBeFalsy();
+  });
+
+  it('draws the soft style unless the sharp one is asked for', () => {
+    expect(panelOf(open()).className).toContain('rounded-xl');
+
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('menuStyle', 'sharp');
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('button[aria-haspopup]').click();
+    fixture.detectChanges();
+
+    expect(panelOf(fixture).className).toContain('rounded-[2px]');
+    expect(fixture.nativeElement.querySelector('button[aria-haspopup]').className).toContain(
+      'text-text-primary',
+    );
+  });
 });

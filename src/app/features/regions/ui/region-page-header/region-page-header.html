@@ -1,0 +1,11 @@
+<!-- RTL: the title block sits on the right, the add button on the left. -->
+<div class="flex items-center justify-between gap-4">
+  <div class="flex flex-col gap-1 text-start">
+    <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
+    <p class="text-[16px]/[19px] text-text-secondary">{{ description() }}</p>
+  </div>
+
+  @if (isAddVisible()) {
+    <app-region-add-button [label]="addLabel()" (pressed)="add.emit()" />
+  }
+</div>

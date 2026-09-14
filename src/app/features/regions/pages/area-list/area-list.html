@@ -1,0 +1,86 @@
+<div class="relative flex flex-1 flex-col">
+  <!-- RTL: the parent page on the right, then the chevron, then the current page. -->
+  <nav
+    aria-label="مسار التنقل"
+    class="flex items-center gap-1 text-[14px]/[14px] font-medium tracking-[0.14px]"
+  >
+    <a routerLink="/regions" class="text-text-secondary hover:text-primary">المحافظات و المناطق</a>
+    <app-icon name="chevron-left-small" [size]="8" class="text-text-secondary" aria-hidden="true" />
+    <span class="text-text-primary" aria-current="page">المناطق</span>
+  </nav>
+
+  <app-region-page-header
+    class="mt-[17px]"
+    [title]="title()"
+    [description]="description()"
+    addLabel="إضافة منطقة"
+    [isAddVisible]="!store.hasNoEntries() && !store.error()"
+    (add)="dialogFlow.openCreate()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="reload()" />
+  } @else if (store.hasNoEntries()) {
+    <!-- The design centres the empty message in the whole content area, not below the header. -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <app-region-empty-state
+        class="pointer-events-auto"
+        [title]="emptyTitle()"
+        description="أضف أول منطقة إلى المنصة ."
+      >
+        <app-region-add-button label="إضافة منطقة" (pressed)="dialogFlow.openCreate()" />
+      </app-region-empty-state>
+    </div>
+  } @else {
+    <app-region-toolbar
+      class="mt-10"
+      searchPlaceholder="ابحث عن منطقة..."
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+    />
+
+    <app-region-table
+      class="mt-8"
+      nameHeader="المنطقة"
+      [entries]="store.entries()"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (edit)="dialogFlow.openEdit($event)"
+      (statusChange)="dialogFlow.openStatusChange($event)"
+      (remove)="dialogFlow.openDelete($event)"
+    />
+
+    <app-table-pagination
+      class="mt-2"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="منطقة"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+</div>
+
+<app-region-dialogs
+  kind="area"
+  [request]="dialogFlow.request()"
+  [governorateName]="store.governorateName()"
+  [isBusy]="store.isSaving()"
+  (draftSubmitted)="dialogFlow.submitDraft($event)"
+  (confirmed)="dialogFlow.confirm()"
+  (closed)="closeDialog()"
+/>
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

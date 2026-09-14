@@ -1,0 +1,75 @@
+<div class="relative flex flex-1 flex-col">
+  <app-region-page-header
+    title="المحافظات والمناطق"
+    description="إدارة المحافظات و المناطق المستخدمة في تحديد مواقع الأماكن"
+    addLabel="إضافة محافظة"
+    [isAddVisible]="!store.hasNoEntries() && !store.error()"
+    (add)="dialogFlow.openCreate()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadGovernorates()" />
+  } @else if (store.hasNoEntries()) {
+    <!-- The design centres the empty message in the whole content area, not below the header. -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <app-region-empty-state
+        class="pointer-events-auto"
+        title="لا توجد محافظات مضافة حتى الآن"
+        description="أضف أول محافظة إلى المنصة ."
+      >
+        <app-region-add-button label="إضافة محافظة" (pressed)="dialogFlow.openCreate()" />
+      </app-region-empty-state>
+    </div>
+  } @else {
+    <app-region-toolbar
+      class="mt-10"
+      searchPlaceholder="ابحث عن محافظة..."
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+    />
+
+    <app-region-table
+      class="mt-8"
+      nameHeader="المحافظة"
+      [entries]="store.entries()"
+      [entryLink]="areasLink"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (edit)="dialogFlow.openEdit($event)"
+      (statusChange)="dialogFlow.openStatusChange($event)"
+      (remove)="dialogFlow.openDelete($event)"
+    />
+
+    <app-table-pagination
+      class="mt-2"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="محافظة"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+</div>
+
+<app-region-dialogs
+  kind="governorate"
+  [request]="dialogFlow.request()"
+  [isBusy]="store.isSaving()"
+  (draftSubmitted)="dialogFlow.submitDraft($event)"
+  (confirmed)="dialogFlow.confirm()"
+  (closed)="closeDialog()"
+/>
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}
