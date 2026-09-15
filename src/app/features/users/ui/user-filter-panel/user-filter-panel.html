@@ -1,0 +1,87 @@
+<section
+  id="user-filter-panel"
+  role="dialog"
+  aria-labelledby="user-filter-panel-title"
+  class="w-[420px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_40px_-15px_rgba(15,23,42,0.12),0_0_0_1px_rgba(226,232,240,0.8)]"
+>
+  <!-- RTL: the badge and heading on the right, the cross on the left. -->
+  <header class="flex h-[69px] items-center justify-between bg-surface-muted/70 px-5">
+    <div class="flex items-center gap-2">
+      <span class="flex size-7 items-center justify-center rounded-lg bg-[#ddf0fd] text-[#0369cd]">
+        <app-icon name="sliders" [size]="16" aria-hidden="true" />
+      </span>
+      <div class="flex flex-col text-start">
+        <h2 id="user-filter-panel-title" class="text-[14px]/[20px] font-bold text-text-primary">
+          تصفية المستخدمين
+        </h2>
+        <p class="-mt-px text-[11px]/[16.5px] text-text-secondary">
+          تطبيق معايير متعددة لتخصيص نتائج البحث
+        </p>
+      </div>
+    </div>
+    <button
+      type="button"
+      aria-label="إغلاق"
+      class="flex size-6 items-center justify-center rounded-md text-text-secondary hover:bg-surface-muted"
+      (click)="closed.emit()"
+    >
+      <app-icon name="close-thin" [size]="24" aria-hidden="true" />
+    </button>
+  </header>
+
+  <div class="flex flex-col gap-5 p-5">
+    <div class="flex flex-col gap-2.5">
+      <div class="flex items-center gap-1.5">
+        <app-icon name="user-outline" [size]="14" class="text-text-primary" aria-hidden="true" />
+        <span class="text-[12px]/[16px] font-bold text-text-primary">نوع الحساب</span>
+      </div>
+      <app-filter-segmented-control
+        label="نوع الحساب"
+        [options]="accountTypeOptions"
+        [selected]="draft().accountType"
+        (selectedChange)="pickAccountType($event)"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2.5">
+      <div class="flex items-center gap-1.5">
+        <span class="size-2 rounded-full bg-status-success" aria-hidden="true"></span>
+        <span class="text-[12px]/[16px] font-bold text-[#334155]">حالة الحساب</span>
+      </div>
+      <app-filter-segmented-control
+        label="حالة الحساب"
+        [options]="statusOptions"
+        [selected]="draft().status"
+        (selectedChange)="pickStatus($event)"
+      />
+    </div>
+
+    <app-date-period-filter
+      heading="تاريخ التسجيل"
+      headingIcon="calendar-outline"
+      [period]="draft().registrationPeriod"
+      [customRange]="draft().customRange"
+      (periodChange)="pickPeriod($event)"
+      (customRangeChange)="changeCustomRange($event)"
+    />
+  </div>
+
+  <!-- RTL: reset on the right, apply on the left. -->
+  <footer class="flex h-[65px] items-center justify-between bg-surface-muted px-4">
+    <button
+      type="button"
+      class="rounded-md px-2 py-1.5 text-[12px]/[16px] font-bold text-text-secondary hover:text-text-primary"
+      (click)="reset()"
+    >
+      إعادة ضبط
+    </button>
+    <button
+      type="button"
+      class="rounded-lg bg-primary px-5 py-2 text-[12px]/[16px] font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+      [disabled]="!canApply()"
+      (click)="apply()"
+    >
+      تطبيق الفلاتر
+    </button>
+  </footer>
+</section>

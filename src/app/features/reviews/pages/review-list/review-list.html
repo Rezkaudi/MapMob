@@ -1,144 +1,107 @@
-<div class="flex flex-col gap-6">
-  <div class="flex items-start justify-between gap-4">
-    <div class="text-start">
-      <h1 class="text-[28px] font-bold text-black">التقييمات والمراجعات</h1>
-      <p class="mt-1 text-[14px]/[20px] text-text-secondary">
-        إدارة ومتابعة آراء وملاحظات المستخدمين والتحقق من جودة ومصداقية المحتوى المنشور
-      </p>
-    </div>
-    <button
-      type="button"
-      class="flex h-[45px] items-center gap-2 rounded-lg border border-border bg-surface px-[17px] py-[11px] text-sm text-text-primary"
-    >
-      <span>تصدير</span>
-      <app-icon name="export" [size]="16" />
-    </button>
-  </div>
-
-  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="reviews"
-      label="مبلغ عنها"
-      [value]="store.summary()?.reportedCount ?? 0"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="reviews"
-      label="التقييمات الجديدة"
-      [value]="store.summary()?.newCount ?? 0"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="reviews"
-      label="متوسط التقييم العام"
-      [value]="(store.summary()?.averageRating ?? 0 | number: '1.1-1') ?? '0'"
-    />
-    <app-stat-card
-      [isLoading]="store.isLoading()"
-      icon="reviews"
-      label="إجمالي التقييمات"
-      [value]="(store.summary()?.totalCount ?? 0 | number) ?? '0'"
-    />
-  </div>
+<!-- Header, the stat cards 19px below, the toolbar 40px below them, the table 30px below that, paging 8px under it. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="التقييمات والمراجعات"
+    description="إدارة ومتابعة آراء وملاحظات المستخدمين والتحقق من جودة ومصداقية المحتوى المنشور"
+    descriptionSize="small"
+    [isAddVisible]="false"
+  >
+    @if (!store.hasNoReviews()) {
+      <app-export-button
+        pageHeaderAction
+        [isBusy]="store.isExporting()"
+        (pressed)="exportReviews()"
+      />
+    }
+  </app-page-header>
 
   @if (store.error(); as error) {
-    <app-error-state [message]="error" (retry)="store.loadReviews()" />
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadReviews()" />
+  } @else if (store.hasNoReviews()) {
+    <!-- The design centres the message on the whole screen, so it lifts by half the 64px top bar. -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center pb-16">
+      <h2 class="text-center text-[24px]/[29px] font-bold text-black">
+        لا توجد تقييمات مضافة حتى الآن
+      </h2>
+    </div>
   } @else {
-    <app-table-toolbar searchPlaceholder="ابحث عن مستخدم..." (queryChange)="onSearch($event)" />
-
-    <div class="overflow-hidden rounded-xl border border-border">
-      <table class="w-full text-right">
-        <thead>
-          <tr class="border-b border-border bg-surface-muted">
-            <th class="w-[67px] px-4 py-[14px]">
-              <input
-                type="checkbox"
-                aria-label="تحديد الكل"
-                class="size-[18px] rounded border border-placeholder bg-white"
-              />
-            </th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">اسم المستخدم</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">المكان</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التقيييم</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">
-              نص المراجعة والتعليق
-            </th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">التاريخ</th>
-            <th class="px-4 py-[14px] text-[13px] font-bold text-text-primary">الحالة</th>
-            <th class="px-4 py-[14px] text-center text-[13px] font-bold text-text-primary">
-              الإجراء
-            </th>
-          </tr>
-        </thead>
-        @if (store.isLoading()) {
-          <tbody
-            app-table-skeleton
-            [columnCount]="tableColumnCount"
-            [rowCount]="store.pageSize()"
-          ></tbody>
-        } @else {
-          <tbody>
-            @for (review of store.reviews(); track review.id) {
-              <tr class="border-b border-border bg-surface last:border-0">
-                <td class="px-4 py-[14px]">
-                  <input
-                    type="checkbox"
-                    [attr.aria-label]="'تحديد ' + review.userName"
-                    class="size-[18px] rounded border border-placeholder bg-white"
-                  />
-                </td>
-                <td class="px-4 py-[14px] text-sm font-bold text-text-primary">
-                  {{ review.userName }}
-                </td>
-                <td class="px-4 py-[14px] text-sm text-text-primary">{{ review.placeName }}</td>
-                <td class="px-4 py-[14px] text-sm text-text-secondary">
-                  {{ review.rating | number: '1.1-1' }}
-                </td>
-                <td class="max-w-[142px] px-4 py-[14px] text-xs/[19.5px] text-text-secondary">
-                  {{ review.comment }}
-                </td>
-                <td class="px-4 py-[14px] text-sm whitespace-nowrap text-text-secondary">
-                  {{ review.createdAt | arabicDate }}
-                </td>
-                <td class="px-4 py-[14px]">
-                  <app-badge [tone]="statusTone[review.status]">
-                    {{ statusLabel[review.status] }}
-                  </app-badge>
-                </td>
-                <td class="px-4 py-[14px] text-center">
-                  <app-action-menu>
-                    <button
-                      type="button"
-                      class="block w-full px-4 py-2 text-start text-sm hover:bg-surface-muted"
-                    >
-                      عرض التفاصيل
-                    </button>
-                    <button
-                      type="button"
-                      class="block w-full px-4 py-2 text-start text-sm text-error hover:bg-error-soft"
-                    >
-                      حذف المراجعة
-                    </button>
-                  </app-action-menu>
-                </td>
-              </tr>
-            }
-          </tbody>
-        }
-      </table>
-
-      @if (store.hasNoResults()) {
-        <app-table-empty message="لا توجد مراجعات لعرضها" />
+    <div class="mt-[19px] grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card
+          [isLoading]="store.isSummaryLoading()"
+          [icon]="card.icon"
+          [label]="card.label"
+          [value]="card.value"
+          [alert]="card.alert"
+        />
       }
     </div>
 
+    <app-review-toolbar
+      class="mt-10"
+      [filters]="store.filters()"
+      [activeFilterCount]="store.activeFilterCount()"
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+      (filtersApply)="store.applyFilters($event)"
+    />
+
+    <app-review-table
+      class="mt-[30px]"
+      [entries]="store.entries()"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [emptyMessage]="store.emptyMessage()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (view)="detailStore.open($event.id)"
+      (remove)="pendingDeletion.set($event)"
+    />
+
     <app-table-pagination
+      class="mt-2"
       [pageIndex]="store.pageIndex()"
       [pageSize]="store.pageSize()"
       [totalCount]="store.totalCount()"
-      itemNoun="مراجعة"
-      (pageIndexChange)="onPageChange($event)"
+      itemNoun="تقييم"
+      (pageIndexChange)="store.changePage($event)"
     />
   }
 </div>
+
+@if (detailStore.isOpen()) {
+  <app-review-detail-drawer
+    [detail]="detailStore.detail()"
+    [view]="detailStore.view()"
+    [isLoading]="detailStore.isLoading()"
+    [error]="detailStore.error()"
+    [isBusy]="store.isSaving()"
+    (closed)="detailStore.close()"
+    (retry)="detailStore.reload()"
+    (acceptReport)="acceptReport($event)"
+    (rejectReport)="rejectReport($event)"
+    (statusChange)="changeStatus($event)"
+    (remove)="pendingDeletion.set($event)"
+  />
+}
+
+@if (deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="confirmDeletion()"
+    (cancelled)="cancelDeletion()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

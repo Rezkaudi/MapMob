@@ -20,6 +20,12 @@ describe('withListTable', () => {
     expect(createStore().pageSize()).toBe(LIST_PAGE_SIZE);
   });
 
+  it('draws a different number of rows when a feature asks for it', () => {
+    const Store = signalStore({ providedIn: 'root' }, withListTable<NamedEntry>({ pageSize: 6 }));
+
+    expect(new Store().pageSize()).toBe(6);
+  });
+
   it('builds the query from the page, search and sort', () => {
     const store = createStore();
     store.applyQuery({ search: 'حمص', sort: 'name' });

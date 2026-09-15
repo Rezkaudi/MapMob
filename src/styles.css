@@ -45,6 +45,14 @@
   --color-info-soft: #eaf5fe;
 
   --shadow-panel: 0 8px 50px 0 rgb(0 0 0 / 0.04);
+
+  --animate-drawer-in: drawer-in 200ms ease-out;
+
+  @keyframes drawer-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
 }
 
 /*

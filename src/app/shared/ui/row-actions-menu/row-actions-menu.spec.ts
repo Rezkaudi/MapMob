@@ -29,6 +29,18 @@ describe('RowActionsMenu', () => {
     expect(labels).toEqual(['تعديل', 'تغيير الحالة', 'حذف']);
   });
 
+  it('can leave out "تغيير الحالة" for rows whose status changes elsewhere', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.componentRef.setInput('isStatusChangeVisible', false);
+    fixture.detectChanges();
+
+    const labels = Array.from(openPanel(fixture).querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    expect(labels).toEqual(['عرض التفاصيل', 'حذف']);
+  });
+
   it('reports each pick', () => {
     const fixture = render();
     const edit = vi.fn();
@@ -45,5 +57,25 @@ describe('RowActionsMenu', () => {
     expect(edit).toHaveBeenCalledOnce();
     expect(statusChange).toHaveBeenCalledOnce();
     expect(remove).toHaveBeenCalledOnce();
+  });
+
+  it('leads with "عرض التفاصيل" and reports a view pick when it opens details', () => {
+    const fixture = TestBed.createComponent(RowActionsMenu);
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.detectChanges();
+    const view = vi.fn();
+    const edit = vi.fn();
+    fixture.componentInstance.view.subscribe(view);
+    fixture.componentInstance.edit.subscribe(edit);
+
+    const panel = openPanel(fixture);
+    const labels = Array.from(panel.querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    itemNamed(panel, 'عرض التفاصيل').click();
+
+    expect(labels).toEqual(['عرض التفاصيل', 'تغيير الحالة', 'حذف']);
+    expect(view).toHaveBeenCalledOnce();
+    expect(edit).not.toHaveBeenCalled();
   });
 });

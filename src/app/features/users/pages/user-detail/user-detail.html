@@ -1,0 +1,68 @@
+<!-- RTL: the parent page on the right, then the chevron, then the current page. -->
+<nav aria-label="مسار التنقل" class="flex items-center gap-1 text-[14px]/[14px] font-medium">
+  <a routerLink="/users" class="text-text-secondary hover:text-primary">المستخدمون</a>
+  <app-icon name="chevron-left-small" [size]="8" class="text-text-secondary" aria-hidden="true" />
+  <span class="text-text-primary" aria-current="page">تفاصيل المستخدم</span>
+</nav>
+
+<app-page-header
+  class="mt-[17px]"
+  title="تفاصيل المستخدم"
+  description="عرض وتحليل ملف المستخدم وسجل النشاط على المنصة."
+  [isAddVisible]="false"
+/>
+
+<!-- The profile card 40px under the header; stats and the two columns 32px apart after it. -->
+<div class="mt-10">
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="reload()" />
+  } @else if (store.isLoading()) {
+    <app-user-detail-skeleton />
+  } @else if (store.user(); as user) {
+    @if (store.profile(); as profile) {
+      <app-user-profile-card [user]="user" [profile]="profile" />
+    }
+
+    <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card [icon]="card.icon" [label]="card.label" [value]="card.value" />
+      }
+    </div>
+
+    <!-- RTL: the wide activity and reviews column on the right, favourites on the left, 54px apart. -->
+    <div class="mt-8 grid grid-cols-1 items-start gap-[54px] xl:grid-cols-[608fr_383fr]">
+      <div class="flex min-w-0 flex-col gap-6">
+        <app-detail-section-card
+          heading="النشاط الأخير على المنصة"
+          icon="history"
+          [iconSize]="16.5"
+        >
+          <app-user-activity-timeline [rows]="store.activityRows()" />
+        </app-detail-section-card>
+
+        <app-detail-section-card
+          heading="التقييمات والمراجعات المضافة"
+          icon="rate-review"
+          iconClass="text-accent"
+          [iconSize]="18.33"
+          [actionLabel]="store.reviewsToggleLabel()"
+          (action)="store.toggleAllReviews()"
+        >
+          <app-user-review-list [rows]="store.visibleReviewRows()" />
+        </app-detail-section-card>
+      </div>
+
+      <app-detail-section-card
+        class="min-w-0"
+        heading="الأماكن المفضلة"
+        icon="bookmarks"
+        iconClass="text-status-error"
+        [iconSize]="18.33"
+        [actionLabel]="store.favoritesToggleLabel()"
+        (action)="store.toggleAllFavorites()"
+      >
+        <app-favorite-place-list [rows]="store.visibleFavoriteRows()" />
+      </app-detail-section-card>
+    </div>
+  }
+</div>

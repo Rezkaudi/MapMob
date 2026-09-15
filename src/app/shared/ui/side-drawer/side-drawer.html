@@ -1,0 +1,47 @@
+<div
+  data-role="backdrop"
+  class="fixed inset-0 z-50 flex justify-start bg-[rgba(25,28,29,0.3)]"
+  (click)="close()"
+>
+  <!-- RTL: justify-start pins the panel to the right edge. -->
+  <aside
+    role="dialog"
+    aria-modal="true"
+    class="flex h-full w-[420px] max-w-full flex-col border-r border-border bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] motion-safe:animate-drawer-in"
+    [attr.aria-labelledby]="titleId"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- RTL: the dot and title on the right, the cross on the left. -->
+    <header
+      class="flex items-center justify-between border-b border-border bg-surface-muted/70 p-5"
+    >
+      <div class="flex items-center gap-2">
+        @if (hasAlertDot()) {
+          <span
+            data-role="alert-dot"
+            class="size-2.5 rounded-full bg-[#f43f5e]"
+            aria-hidden="true"
+          ></span>
+        }
+        <h2 class="text-[16px]/[24px] font-bold text-[#1e293b]" [id]="titleId">{{ title() }}</h2>
+      </div>
+      <button
+        #closeButton
+        type="button"
+        aria-label="إغلاق"
+        class="flex size-8 items-center justify-center rounded-lg text-[14px]/[20px] text-[#94a3b8] hover:bg-surface-muted hover:text-text-secondary"
+        (click)="close()"
+      >
+        <span aria-hidden="true">✕</span>
+      </button>
+    </header>
+
+    <div class="min-h-0 flex-1 overflow-y-auto">
+      <ng-content />
+    </div>
+
+    <footer class="border-t border-border bg-white p-4">
+      <ng-content select="[drawerFooter]" />
+    </footer>
+  </aside>
+</div>

@@ -1,52 +1,45 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { mockRequest } from '../../../../mock/mock-delay';
 import { PagedResult } from '../../../core/models/paged-result';
-import { mockResponse } from '../../../../mock/mock-delay';
-import { paginate } from '../../../../mock/paginate';
-import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
+import { CLOCK } from '../../../core/config/clock';
+import { ActivationStatus } from '../../../shared/models/activation-status';
 import { AppUser } from '../models/user';
+import { UserDetail } from '../models/user-detail';
 import { UserQuery } from '../models/user-query';
-import { UserStatus } from '../models/user-status';
 import { UserSummary } from '../models/user-summary';
+import { UserMockDatabase } from './user-mock-database';
+import { buildMockUserDetail } from './user-mock-detail';
+import { filterUsers, queryUsers, summarizeUsers } from './user-mock-query';
 import { UserRepository } from './user.repository';
-
-const TOTAL_USER_COUNT = 3000;
-const NAMES = ['أحمد جمال', 'سارة محمود', 'خالد إبراهيم', 'منى عبد الله', 'يوسف علي', 'هدى سالم'];
-const ACCOUNT_TYPES = ['مسجل', 'ضيف', 'شريك'];
-const STATUSES: readonly UserStatus[] = ['active', 'active', 'active', 'inactive'];
-const LAST_ACTIVE_LABELS = ['منذ يومين', 'منذ ساعة', 'منذ أسبوع', 'الآن'];
-
-function buildUser(index: number): AppUser {
-  const next = createSeededRandom(index + 1);
-  const name = pickOne(next, NAMES);
-  return {
-    id: `user-${index + 1}`,
-    name,
-    email: 'ahmad@email.com',
-    accountType: pickOne(next, ACCOUNT_TYPES),
-    registeredAt: new Date(2024, 0, randomInt(next, 1, 28)).toISOString(),
-    lastActiveLabel: pickOne(next, LAST_ACTIVE_LABELS),
-    status: pickOne(next, STATUSES),
-  };
-}
-
-const ALL_USERS: readonly AppUser[] = Array.from({ length: TOTAL_USER_COUNT }, (_, i) =>
-  buildUser(i),
-);
+import { buildUsersCsvFile } from './users-csv';
 
 @Injectable()
 export class UserMockRepository implements UserRepository {
+  private readonly database = inject(UserMockDatabase);
+  private readonly clock = inject(CLOCK);
+
   getUsers(query: UserQuery): Observable<PagedResult<AppUser>> {
-    const filtered = ALL_USERS.filter((user) => !query.search || user.name.includes(query.search));
-    return mockResponse(paginate(filtered, query.pageIndex, query.pageSize));
+    return mockRequest(() => queryUsers(this.database.list(), query));
   }
 
   getSummary(): Observable<UserSummary> {
-    return mockResponse({
-      newUserCount: 340,
-      verifiedUserCount: 427,
-      activeUserCount: 2673,
-      totalUserCount: TOTAL_USER_COUNT,
-    });
+    return mockRequest(() => summarizeUsers(this.database.list(), this.clock()));
+  }
+
+  getUserDetail(id: string): Observable<UserDetail> {
+    return mockRequest(() => buildMockUserDetail(this.database.find(id), this.clock()));
+  }
+
+  setUserStatus(id: string, status: ActivationStatus): Observable<AppUser> {
+    return mockRequest(() => this.database.setStatus(id, status));
+  }
+
+  deleteUser(id: string): Observable<void> {
+    return mockRequest(() => this.database.remove(id));
+  }
+
+  exportUsers(query: UserQuery): Observable<Blob> {
+    return mockRequest(() => buildUsersCsvFile(filterUsers(this.database.list(), query)));
   }
 }

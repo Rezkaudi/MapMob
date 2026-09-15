@@ -1,0 +1,18 @@
+<!-- RTL grid: "الكل" takes the top-right cell and the choices read right to left, then down. -->
+<div role="radiogroup" aria-label="التقييم" class="grid grid-cols-3 gap-1.5">
+  @for (choice of choices(); track choice.label) {
+    <button
+      type="button"
+      role="radio"
+      class="flex h-[30px] items-center justify-center gap-1 border text-[12px]/[16px] font-medium transition-colors"
+      [class]="choice.classes"
+      [attr.aria-checked]="choice.isPicked"
+      (click)="selectedChange.emit(choice.value)"
+    >
+      @if (choice.hasStar) {
+        <app-icon name="star-solid" [size]="12" class="text-accent" aria-hidden="true" />
+      }
+      <span>{{ choice.label }}</span>
+    </button>
+  }
+</div>

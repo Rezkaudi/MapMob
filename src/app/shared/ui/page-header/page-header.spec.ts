@@ -1,5 +1,18 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { PageHeader } from './page-header';
+
+@Component({
+  imports: [PageHeader],
+  template: `<app-page-header
+    title="المستخدمين"
+    description="إدارة المستخدمين"
+    [isAddVisible]="false"
+  >
+    <button pageHeaderAction type="button">تصدير</button>
+  </app-page-header>`,
+})
+class HostWithActionComponent {}
 
 describe('PageHeader', () => {
   function render(isAddVisible: boolean) {
@@ -37,5 +50,28 @@ describe('PageHeader', () => {
     const paragraph = render(true).nativeElement.querySelector('p') as HTMLElement;
 
     expect(paragraph.className).toContain('whitespace-pre-wrap');
+  });
+
+  it('draws the description at 16px, or at 14px for the pages whose design uses the small size', () => {
+    const regular = render(true).nativeElement.querySelector('p') as HTMLElement;
+    const fixture = render(true);
+    fixture.componentRef.setInput('descriptionSize', 'small');
+    fixture.detectChanges();
+    const small = fixture.nativeElement.querySelector('p') as HTMLElement;
+
+    expect(regular.className).toContain('text-[16px]/[19px]');
+    expect(small.className).toContain('text-[14px]/[20px]');
+    expect(small.className).not.toContain('text-[16px]');
+  });
+
+  it('shows a page-specific action in place of the add button', () => {
+    const fixture = TestBed.createComponent(HostWithActionComponent);
+    fixture.detectChanges();
+
+    const buttons = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('button'),
+      (button) => button.textContent?.trim(),
+    );
+    expect(buttons).toEqual(['تصدير']);
   });
 });

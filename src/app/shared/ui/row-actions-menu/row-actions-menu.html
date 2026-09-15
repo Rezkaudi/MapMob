@@ -3,19 +3,21 @@
   <button
     type="button"
     class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-    (click)="edit.emit()"
+    (click)="pickPrimary()"
   >
-    <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
-    <span>تعديل</span>
+    <app-icon [name]="primaryItem().icon" [size]="primaryItem().iconSize" aria-hidden="true" />
+    <span>{{ primaryItem().label }}</span>
   </button>
-  <button
-    type="button"
-    class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-    (click)="statusChange.emit()"
-  >
-    <app-icon name="change-status" [size]="12" aria-hidden="true" />
-    <span>تغيير الحالة</span>
-  </button>
+  @if (isStatusChangeVisible()) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="statusChange.emit()"
+    >
+      <app-icon name="change-status" [size]="12" aria-hidden="true" />
+      <span>تغيير الحالة</span>
+    </button>
+  }
   <span class="block h-px bg-border"></span>
   <button
     type="button"

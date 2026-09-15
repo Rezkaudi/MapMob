@@ -1,0 +1,15 @@
+<div class="relative h-10 w-full">
+  <input
+    type="search"
+    class="h-10 w-full rounded-lg border border-text-secondary py-[11px] pr-10 pl-4 text-right text-[14px] text-text-primary outline-none placeholder:text-text-primary focus-visible:border-primary"
+    [placeholder]="placeholder()"
+    [attr.aria-label]="placeholder()"
+    (input)="onSearchInput($event)"
+  />
+  <app-icon
+    name="search-filled"
+    [size]="15"
+    class="pointer-events-none absolute start-[13px] top-1/2 -translate-y-1/2 text-text-secondary"
+    aria-hidden="true"
+  />
+</div>

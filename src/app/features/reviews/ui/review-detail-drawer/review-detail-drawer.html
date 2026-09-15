@@ -1,0 +1,52 @@
+<app-side-drawer
+  [title]="view()?.title ?? loadingTitle"
+  [hasAlertDot]="view()?.hasReport ?? false"
+  (closed)="closed.emit()"
+>
+  @if (error(); as message) {
+    <app-error-state [message]="message" (retry)="retry.emit()" />
+  } @else if (detail(); as openDetail) {
+    @if (view(); as openView) {
+      <!-- 24px in from the edges; the report card sits 12px further down than the rest. -->
+      <div class="flex flex-col gap-4 p-6">
+        <app-review-place-card
+          [place]="openDetail.place"
+          [referenceLabel]="openView.placeReferenceLabel"
+          [metaLabel]="openView.placeMetaLabel"
+        />
+        <app-reviewer-profile
+          [reviewer]="openDetail.reviewer"
+          [initials]="openView.reviewerInitials"
+          [metaLabel]="openView.reviewerMetaLabel"
+        />
+        <app-review-content
+          [review]="openDetail.review"
+          [ratingLabel]="openView.ratingLabel"
+          [submittedLabel]="openView.submittedLabel"
+        />
+        @if (openDetail.report; as report) {
+          <app-review-report-card class="mt-3" [report]="report" />
+        }
+      </div>
+    }
+  } @else if (isLoading()) {
+    <div class="flex flex-col gap-4 p-6" aria-busy="true">
+      <app-skeleton height="102px" />
+      <app-skeleton height="92px" />
+      <app-skeleton height="138px" />
+    </div>
+  }
+
+  <!-- One @if around the element: projection only matches a direct child of the control flow block. -->
+  @if (view(); as openView) {
+    <app-review-moderation-actions
+      drawerFooter
+      [moderation]="openView.moderation"
+      [isBusy]="isBusy()"
+      (acceptReport)="emitForOpenReview(acceptReport)"
+      (rejectReport)="emitForOpenReview(rejectReport)"
+      (statusChange)="emitStatusChange($event)"
+      (remove)="emitForOpenReview(remove)"
+    />
+  }
+</app-side-drawer>

@@ -1,0 +1,17 @@
+<app-filter-toolbar
+  searchPlaceholder="ابحث عن مستخدم..."
+  panelId="user-filter-panel"
+  [activeFilterCount]="activeFilterCount()"
+  (searchChange)="searchChange.emit($event)"
+  (sortChange)="sortChange.emit($event)"
+>
+  <ng-template let-close="close">
+    <!-- Hangs 5px under the button. -->
+    <app-user-filter-panel
+      class="mt-[5px]"
+      [filters]="filters()"
+      (applied)="filtersApply.emit($event); close()"
+      (closed)="close()"
+    />
+  </ng-template>
+</app-filter-toolbar>

@@ -4,16 +4,18 @@
   [attr.aria-busy]="isLoading() ? 'true' : null"
 >
   @if (isLoading()) {
-    <div class="flex flex-col items-end justify-center gap-2">
+    <div class="flex flex-col items-start justify-center gap-2">
       <app-skeleton width="96px" height="12px" shape="text" />
       <app-skeleton width="64px" height="20px" shape="text" />
     </div>
     <app-skeleton width="44px" height="44px" />
   } @else {
-    <div class="flex flex-col items-end justify-center gap-1.5 text-right">
+    <div class="flex flex-col items-start justify-center gap-1.5 text-right">
       <span class="text-[12px]/[1.5] text-text-secondary">{{ label() }}</span>
       <span class="flex items-center gap-1">
-        <span class="text-[18px]/[28px] font-bold text-text-primary">{{ value() }}</span>
+        <span data-role="value" dir="ltr" class="text-[18px]/[28px] font-bold text-text-primary">{{
+          value()
+        }}</span>
         @if (delta(); as deltaLabel) {
           <span
             data-role="delta"
@@ -21,6 +23,16 @@
           >
             <app-icon name="arrow-up" [size]="14" />
             {{ deltaLabel }}
+          </span>
+        }
+        @if (alert(); as alertLabel) {
+          <!-- Sits 10px from the value; RTL puts the flag on the right of the words. -->
+          <span
+            data-role="alert"
+            class="ms-1.5 flex items-center gap-0.5 rounded-2xl bg-status-error/16 px-1 py-0.5 text-[12px]/[16px] font-medium text-status-error"
+          >
+            <app-icon name="flag-outline" [size]="12" aria-hidden="true" />
+            {{ alertLabel }}
           </span>
         }
       </span>
