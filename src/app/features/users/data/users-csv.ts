@@ -1,8 +1,9 @@
+import { CsvRow, buildCsvFile } from '../../../shared/files/csv-file';
 import { USER_ACCOUNT_TYPE_LABEL } from '../models/user-account-type';
 import { USER_STATUS_LABEL } from '../models/user-status-label';
 import { AppUser } from '../models/user';
 
-const HEADER = [
+const HEADER: CsvRow = [
   'اسم المستخدم',
   'البريد/الهاتف',
   'نوع الحساب',
@@ -10,15 +11,9 @@ const HEADER = [
   'آخر نشاط',
   'الحالة',
 ];
-const LINE_BREAK = '\r\n';
 const ISO_DAY_LENGTH = 10;
-const NEEDS_QUOTES = /[",\r\n]/;
 
-function escapeCell(value: string): string {
-  return NEEDS_QUOTES.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
-}
-
-function toRow(user: AppUser): readonly string[] {
+function toRow(user: AppUser): CsvRow {
   return [
     user.name,
     user.email ?? user.phone ?? '',
@@ -30,6 +25,6 @@ function toRow(user: AppUser): readonly string[] {
 }
 
 /** The export file has the same columns as the users table. */
-export function buildUsersCsv(users: readonly AppUser[]): string {
-  return [HEADER, ...users.map(toRow)].map((row) => row.map(escapeCell).join(',')).join(LINE_BREAK);
+export function buildUsersCsvFile(users: readonly AppUser[]): Blob {
+  return buildCsvFile([HEADER, ...users.map(toRow)]);
 }

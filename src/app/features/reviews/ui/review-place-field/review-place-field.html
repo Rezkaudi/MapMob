@@ -1,0 +1,24 @@
+<label class="flex flex-col gap-[8.5px] pt-[5.5px]">
+  <span class="text-[12px]/[16px] font-medium text-text-primary">المتجر / المكان</span>
+  <!-- RTL: the name reads from the right; the clear cross sits 10px in from the left edge. -->
+  <span class="relative block">
+    <input
+      type="text"
+      aria-label="المتجر / المكان"
+      placeholder="اسم المتجر أو المكان"
+      class="h-9 w-full rounded border border-text-secondary bg-white pr-3 pl-8 text-right text-[12px]/[16px] font-medium text-[#1e293b] outline-none placeholder:font-normal placeholder:text-[#94a3b8] focus-visible:border-primary"
+      [value]="value()"
+      (input)="onInput($event)"
+    />
+    @if (value()) {
+      <button
+        type="button"
+        aria-label="مسح المكان"
+        class="absolute top-1/2 left-2.5 flex -translate-y-1/2 items-center justify-center text-[#94a3b8] hover:text-text-secondary"
+        (click)="valueChange.emit('')"
+      >
+        <app-icon name="close-small" [size]="14" aria-hidden="true" />
+      </button>
+    }
+  </span>
+</label>

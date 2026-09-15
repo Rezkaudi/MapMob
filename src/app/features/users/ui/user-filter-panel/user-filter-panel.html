@@ -56,7 +56,9 @@
       />
     </div>
 
-    <app-registration-date-filter
+    <app-date-period-filter
+      heading="تاريخ التسجيل"
+      headingIcon="calendar-outline"
       [period]="draft().registrationPeriod"
       [customRange]="draft().customRange"
       (periodChange)="pickPeriod($event)"

@@ -25,6 +25,16 @@
             {{ deltaLabel }}
           </span>
         }
+        @if (alert(); as alertLabel) {
+          <!-- Sits 10px from the value; RTL puts the flag on the right of the words. -->
+          <span
+            data-role="alert"
+            class="ms-1.5 flex items-center gap-0.5 rounded-2xl bg-status-error/16 px-1 py-0.5 text-[12px]/[16px] font-medium text-status-error"
+          >
+            <app-icon name="flag-outline" [size]="12" aria-hidden="true" />
+            {{ alertLabel }}
+          </span>
+        }
       </span>
     </div>
 

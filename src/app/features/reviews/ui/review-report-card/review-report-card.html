@@ -1,0 +1,35 @@
+<section
+  class="flex flex-col gap-3 rounded-xl border border-[#fecdd3] bg-[rgba(255,241,242,0.6)] p-4"
+>
+  <!-- RTL: the flag and heading on the right, the pending badge on the left. -->
+  <div class="flex items-center justify-between gap-4 border-b border-[rgba(254,205,211,0.6)] pb-2">
+    <h3 class="flex items-center gap-1.5 text-[12px]/[16px] font-bold text-[#b42318]">
+      <app-icon name="flag-filled" [size]="16" class="text-[#e11d48]" aria-hidden="true" />
+      <span>بيانات البلاغ الوارد</span>
+    </h3>
+    <span class="rounded bg-[#fecdd3] px-2 py-0.5 text-[11px]/[20px] font-bold text-[#b42318]">
+      قيد المراجعة
+    </span>
+  </div>
+
+  <!-- RTL: the reporter on the right, the reason on the left. -->
+  <dl class="flex gap-2">
+    <div class="min-w-0 flex-1">
+      <dt class="text-[11px]/[16px] text-text-secondary">مقدم البلاغ:</dt>
+      <dd class="text-[12px]/[16px] font-bold text-text-primary">{{ report().reporterName }}</dd>
+    </div>
+    <div class="min-w-0 flex-1">
+      <dt class="text-[11px]/[16px] text-text-secondary">سبب البلاغ:</dt>
+      <dd class="text-[12px]/[16px] font-bold text-text-primary">{{ report().reason }}</dd>
+    </div>
+  </dl>
+
+  <div class="flex flex-col gap-0.5">
+    <p class="text-[11px]/[20px] text-text-secondary">ملاحظات مقدم البلاغ:</p>
+    <p
+      class="rounded-lg border border-[#ffe4e6] bg-white/80 p-2.5 text-[12px]/[16px] text-text-primary"
+    >
+      "{{ report().notes }}"
+    </p>
+  </div>
+</section>

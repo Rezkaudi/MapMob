@@ -24,6 +24,8 @@ const PRIMARY_ITEMS: Record<RowPrimaryAction, PrimaryItem> = {
 })
 export class RowActionsMenu {
   readonly primaryAction = input<RowPrimaryAction>('edit');
+  /** Reviews change their status from the detail drawer, so their menu leaves this out. */
+  readonly isStatusChangeVisible = input<boolean>(true);
   readonly edit = output<void>();
   readonly view = output<void>();
   readonly statusChange = output<void>();

@@ -29,6 +29,18 @@ describe('RowActionsMenu', () => {
     expect(labels).toEqual(['تعديل', 'تغيير الحالة', 'حذف']);
   });
 
+  it('can leave out "تغيير الحالة" for rows whose status changes elsewhere', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.componentRef.setInput('isStatusChangeVisible', false);
+    fixture.detectChanges();
+
+    const labels = Array.from(openPanel(fixture).querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    expect(labels).toEqual(['عرض التفاصيل', 'حذف']);
+  });
+
   it('reports each pick', () => {
     const fixture = render();
     const edit = vi.fn();

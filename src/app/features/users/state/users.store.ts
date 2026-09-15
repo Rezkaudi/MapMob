@@ -12,7 +12,7 @@ import { NO_USER_FILTERS, UserFilters } from '../models/user-filters';
 import { UserQuery } from '../models/user-query';
 import { UserSummary } from '../models/user-summary';
 import { countActiveFilters } from './count-active-filters';
-import { resolveRegistrationRange } from './registration-range';
+import { resolveDatePeriodRange } from '../../../shared/state/date-period-range';
 import { buildUserStatCards } from './user-stat-cards';
 
 /** The users design draws six rows per page. */
@@ -52,8 +52,8 @@ export const UsersStore = signalStore(
   }),
   withMethods((store, repository = inject(UserRepository), clock = inject(CLOCK)) => {
     const currentUserQuery = (): UserQuery => {
-      const { accountType, status } = store.filters();
-      const { from, to } = resolveRegistrationRange(store.filters(), clock());
+      const { accountType, status, registrationPeriod, customRange } = store.filters();
+      const { from, to } = resolveDatePeriodRange(registrationPeriod, customRange, clock());
       return {
         ...store.currentQuery(),
         ...(accountType ? { accountType } : {}),

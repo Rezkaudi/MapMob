@@ -12,11 +12,7 @@ import { UserMockDatabase } from './user-mock-database';
 import { buildMockUserDetail } from './user-mock-detail';
 import { filterUsers, queryUsers, summarizeUsers } from './user-mock-query';
 import { UserRepository } from './user.repository';
-import { buildUsersCsv } from './users-csv';
-
-/** The byte-order mark lets spreadsheet apps read the Arabic text as UTF-8. */
-const CSV_BYTE_ORDER_MARK = '\uFEFF';
-const CSV_TYPE = 'text/csv;charset=utf-8';
+import { buildUsersCsvFile } from './users-csv';
 
 @Injectable()
 export class UserMockRepository implements UserRepository {
@@ -44,9 +40,6 @@ export class UserMockRepository implements UserRepository {
   }
 
   exportUsers(query: UserQuery): Observable<Blob> {
-    return mockRequest(() => {
-      const csv = buildUsersCsv(filterUsers(this.database.list(), query));
-      return new Blob([CSV_BYTE_ORDER_MARK, csv], { type: CSV_TYPE });
-    });
+    return mockRequest(() => buildUsersCsvFile(filterUsers(this.database.list(), query)));
   }
 }

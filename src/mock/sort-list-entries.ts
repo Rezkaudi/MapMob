@@ -9,10 +9,12 @@ interface SortableEntry extends NamedEntry {
 }
 
 type DateOf<T> = (entry: T) => string;
+type NameOf<T> = (entry: T) => string;
 
-function compareBy<T extends NamedEntry>(
+function compareBy<T>(
   sort: ListSort,
   dateOf: DateOf<T>,
+  nameOf: NameOf<T>,
 ): (left: T, right: T) => number {
   switch (sort) {
     case 'newest':
@@ -20,7 +22,7 @@ function compareBy<T extends NamedEntry>(
     case 'oldest':
       return (left, right) => dateOf(left).localeCompare(dateOf(right));
     case 'name':
-      return (left, right) => left.name.localeCompare(right.name, 'ar');
+      return (left, right) => nameOf(left).localeCompare(nameOf(right), 'ar');
   }
 }
 
@@ -33,10 +35,17 @@ export function sortListEntries<T extends NamedEntry>(
   sort: ListSort | undefined,
   dateOf: DateOf<T>,
 ): readonly T[];
-export function sortListEntries<T extends NamedEntry>(
+export function sortListEntries<T>(
+  entries: readonly T[],
+  sort: ListSort | undefined,
+  dateOf: DateOf<T>,
+  nameOf: NameOf<T>,
+): readonly T[];
+export function sortListEntries<T>(
   entries: readonly T[],
   sort: ListSort | undefined,
   dateOf: DateOf<T> = (entry) => (entry as unknown as SortableEntry).updatedAt,
+  nameOf: NameOf<T> = (entry) => (entry as unknown as NamedEntry).name,
 ): readonly T[] {
-  return sort ? [...entries].sort(compareBy(sort, dateOf)) : entries;
+  return sort ? [...entries].sort(compareBy(sort, dateOf, nameOf)) : entries;
 }

@@ -1,0 +1,18 @@
+<section class="flex flex-col gap-2 border-t border-[#f1f5f9] pt-4">
+  <!-- RTL: the heading on the right; the stars, then "(2.0)", on the left. -->
+  <div class="flex items-center justify-between gap-4">
+    <h3 class="text-[12px]/[16px] font-bold text-text-primary">نص التقييم المقدم</h3>
+    @if (review().rating; as rating) {
+      <div class="flex items-center gap-1">
+        <app-star-rating starStyle="rounded" [rating]="rating" />
+        <span class="text-[12px]/[16px] font-bold text-text-primary">{{ ratingLabel() }}</span>
+      </div>
+    }
+  </div>
+  <p
+    class="rounded-xl border border-border bg-surface-muted p-3.5 text-[12px]/[19.5px] text-text-primary"
+  >
+    "{{ review().comment }}"
+  </p>
+  <p class="text-[11px]/[20px] text-text-secondary">{{ submittedLabel() }}</p>
+</section>

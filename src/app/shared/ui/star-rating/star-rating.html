@@ -1,0 +1,6 @@
+<!-- LTR so the filled stars start from the left, as the design draws them. -->
+<span role="img" dir="ltr" class="flex items-center gap-1" [attr.aria-label]="spokenRating()">
+  @for (starClass of stars(); track $index) {
+    <app-icon [name]="look().icon" [size]="look().size" [class]="starClass" aria-hidden="true" />
+  }
+</span>

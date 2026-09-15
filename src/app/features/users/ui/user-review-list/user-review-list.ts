@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ReviewRow } from '../../state/user-detail-view';
-import { StarRating } from '../star-rating/star-rating';
+import { StarRating } from '../../../../shared/ui/star-rating/star-rating';
 
 @Component({
   selector: 'app-user-review-list',

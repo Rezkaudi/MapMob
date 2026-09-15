@@ -15,5 +15,7 @@ export class StatCard {
   readonly value = input.required<string | number>();
   /** Optional "+320 جديد" style chip shown next to the value. */
   readonly delta = input<string | null>(null);
+  /** Optional red "تتطلب إجراء" style chip with a flag, for counts that need the admin. */
+  readonly alert = input<string | null>(null);
   readonly isLoading = input<boolean>(false);
 }

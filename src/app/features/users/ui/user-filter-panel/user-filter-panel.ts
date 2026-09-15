@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import { ActivationStatus } from '../../../../shared/models/activation-status';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { DateRange } from '../../models/date-range';
-import { RegistrationPeriod } from '../../models/registration-period';
+import { isDateRangeValid } from '../../../../shared/formatting/date-range-summary';
+import { DatePeriod } from '../../../../shared/models/date-period';
+import { DateRange } from '../../../../shared/models/date-range';
+import { DatePeriodFilter } from '../../../../shared/ui/date-period-filter/date-period-filter';
 import { UserAccountType } from '../../models/user-account-type';
 import { NO_USER_FILTERS, UserFilters } from '../../models/user-filters';
 import { FilterSegmentedControl } from '../filter-segmented-control/filter-segmented-control';
 import { SegmentOption } from '../filter-segmented-control/segment-option';
-import { RegistrationDateFilter } from '../registration-date-filter/registration-date-filter';
-import { isDateRangeValid } from './date-range-summary';
 
 const ACCOUNT_TYPE_OPTIONS: readonly SegmentOption[] = [
   { value: null, label: 'الكل', tone: 'primary' },
@@ -32,7 +32,7 @@ const STATUS_OPTIONS: readonly SegmentOption[] = [
 /** The 420px popover under "الفلاتر". Picks stay a draft until "تطبيق الفلاتر". */
 @Component({
   selector: 'app-user-filter-panel',
-  imports: [AppIcon, FilterSegmentedControl, RegistrationDateFilter],
+  imports: [AppIcon, FilterSegmentedControl, DatePeriodFilter],
   templateUrl: './user-filter-panel.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +58,7 @@ export class UserFilterPanel {
     this.patchDraft({ status: status as ActivationStatus | null });
   }
 
-  protected pickPeriod(registrationPeriod: RegistrationPeriod): void {
+  protected pickPeriod(registrationPeriod: DatePeriod): void {
     this.patchDraft({ registrationPeriod });
   }
 

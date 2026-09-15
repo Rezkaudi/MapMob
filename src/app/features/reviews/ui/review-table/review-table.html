@@ -1,0 +1,91 @@
+<!-- Each cell nudges its content so the values sit under their header's centre, as the design draws them. -->
+<div class="overflow-x-auto rounded-xl border border-border bg-surface">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[60px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[7px]">اسم المستخدم</th>
+        <th class="ps-1 text-center">المكان</th>
+        <th class="text-center">التقيييم</th>
+        <th class="pe-[17px] text-center">
+          <span class="inline-block max-w-[89px] text-right">نص المراجعة والتعليق</span>
+        </th>
+        <th class="ps-4 text-center">التاريخ</th>
+        <th class="text-center">الحالة</th>
+        <th class="ps-[34px] text-center">الإجراء</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.review.id) {
+          <tr class="h-[67px] border-b border-border bg-surface text-[14px] last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد تقييم ' + row.review.userName"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.review.id)"
+                (change)="rowToggle.emit(row.review.id)"
+              />
+            </td>
+            <td>
+              <button
+                type="button"
+                data-role="open-review"
+                class="line-clamp-1 max-w-full text-right font-bold text-text-primary hover:text-primary"
+                (click)="view.emit(row.review)"
+              >
+                {{ row.review.userName }}
+              </button>
+            </td>
+            <td class="pe-1 text-center text-text-primary">
+              <span class="line-clamp-1">{{ row.review.placeName }}</span>
+            </td>
+            <td class="ps-[3px] text-center text-text-secondary">{{ row.ratingLabel }}</td>
+            <td class="ps-[17px]">
+              <p class="mx-auto line-clamp-2 w-[142px] text-[12px]/[19.5px] text-text-secondary">
+                {{ row.review.comment }}
+              </p>
+            </td>
+            <td class="pe-[15px] text-center whitespace-nowrap text-text-secondary">
+              {{ row.review.createdAt | arabicDate }}
+            </td>
+            <td class="text-center">
+              <app-review-status-pill [status]="row.review.status" />
+            </td>
+            <td class="ps-[34px] text-center">
+              <app-row-actions-menu
+                primaryAction="view"
+                [isStatusChangeVisible]="false"
+                (view)="view.emit(row.review)"
+                (remove)="remove.emit(row.review)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

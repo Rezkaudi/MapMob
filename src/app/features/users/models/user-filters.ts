@@ -1,13 +1,13 @@
 import { ActivationStatus } from '../../../shared/models/activation-status';
-import { DateRange } from './date-range';
-import { RegistrationPeriod } from './registration-period';
+import { DatePeriod } from '../../../shared/models/date-period';
+import { DateRange } from '../../../shared/models/date-range';
 import { UserAccountType } from './user-account-type';
 
 /** What the filter panel applies. `null` means "الكل". */
 export interface UserFilters {
   readonly accountType: UserAccountType | null;
   readonly status: ActivationStatus | null;
-  readonly registrationPeriod: RegistrationPeriod;
+  readonly registrationPeriod: DatePeriod;
   /** Only read when the period is `custom`. */
   readonly customRange: DateRange;
 }

@@ -1,0 +1,57 @@
+<div class="flex flex-col gap-2" [attr.aria-busy]="isBusy()">
+  <p class="text-[12px]/[16px] font-bold text-text-secondary">اتخاذ إجراء كمشرف:</p>
+
+  <!-- RTL: keeping the review sits on the right, hiding it on the left. -->
+  <div class="flex gap-2">
+    @switch (moderation()) {
+      @case ('settleReport') {
+        <button
+          type="button"
+          class="h-9 flex-1 rounded border border-border text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isBusy()"
+          (click)="rejectReport.emit()"
+        >
+          رفض البلاغ (إبقاء التقييم)
+        </button>
+        <button
+          type="button"
+          class="h-9 flex-1 rounded bg-accent text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isBusy()"
+          (click)="acceptReport.emit()"
+        >
+          قبول وإخفاء التقييم
+        </button>
+      }
+      @case ('hide') {
+        <button
+          type="button"
+          class="h-9 flex-1 rounded bg-accent text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isBusy()"
+          (click)="statusChange.emit('hidden')"
+        >
+          إخفاء التقييم
+        </button>
+      }
+      @case ('show') {
+        <button
+          type="button"
+          class="h-9 flex-1 rounded border border-border text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isBusy()"
+          (click)="statusChange.emit('published')"
+        >
+          إظهار التقييم
+        </button>
+      }
+    }
+  </div>
+
+  <button
+    type="button"
+    class="flex h-9 w-full items-center justify-center gap-1 rounded bg-closed text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+    [disabled]="isBusy()"
+    (click)="remove.emit()"
+  >
+    <app-icon name="trash-outline" [size]="16" aria-hidden="true" />
+    <span>حذف التقييم نهائياً من المنصة</span>
+  </button>
+</div>

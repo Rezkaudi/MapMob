@@ -1,0 +1,15 @@
+<!-- RTL: "الكل" on the right, "مخفي" on the left; four 76px buttons 6px apart. -->
+<div role="radiogroup" aria-label="الحالة" class="flex gap-1.5">
+  @for (choice of choices(); track choice.label) {
+    <button
+      type="button"
+      role="radio"
+      class="flex h-[30px] w-[76px] items-center justify-center rounded border text-[12px]/[16px] transition-colors"
+      [class]="choice.classes"
+      [attr.aria-checked]="choice.isPicked"
+      (click)="selectedChange.emit(choice.value)"
+    >
+      {{ choice.label }}
+    </button>
+  }
+</div>

@@ -1,0 +1,54 @@
+<div class="flex flex-col gap-2.5 border-t border-[#f1f5f9] pt-3">
+  <div class="flex items-center gap-1.5">
+    @if (headingIcon(); as icon) {
+      <app-icon [name]="icon" [size]="14" class="text-text-primary" aria-hidden="true" />
+    }
+    <span class="text-[12px]/[16px] font-bold text-text-primary">{{ heading() }}</span>
+  </div>
+
+  <!-- RTL: "الكل" leads on the right, "نطاق مخصص" ends the row on the left. -->
+  <div class="flex flex-wrap gap-1.5" role="group" [attr.aria-label]="heading()">
+    @for (preset of presets(); track preset.period) {
+      <button
+        type="button"
+        class="rounded-lg px-2.5 py-1 text-[11px]/[16.5px] transition-colors"
+        [class]="preset.classes"
+        [attr.aria-pressed]="preset.isPicked"
+        (click)="periodChange.emit(preset.period)"
+      >
+        {{ preset.label }}
+      </button>
+    }
+  </div>
+
+  @if (isCustom()) {
+    <div
+      data-testid="custom-range"
+      class="flex flex-col gap-2.5 rounded-xl border border-border bg-surface-muted p-3"
+    >
+      <!-- RTL: "من تاريخ" on the right, "إلى تاريخ" on the left. -->
+      <div class="flex justify-between gap-3">
+        <app-date-field
+          [class]="fieldClasses()"
+          label="من تاريخ"
+          [value]="customRange().from"
+          [max]="customRange().to"
+          (valueChange)="changeFrom($event)"
+        />
+        <app-date-field
+          [class]="fieldClasses()"
+          label="إلى تاريخ"
+          [value]="customRange().to"
+          [min]="customRange().from"
+          (valueChange)="changeTo($event)"
+        />
+      </div>
+      <p
+        class="min-h-[17px] pt-0.5 text-center text-[10px]/[15px] text-[#94a3b8]"
+        aria-live="polite"
+      >
+        {{ rangeSummary() ?? 'اختر بداية الفترة ونهايتها' }}
+      </p>
+    </div>
+  }
+</div>

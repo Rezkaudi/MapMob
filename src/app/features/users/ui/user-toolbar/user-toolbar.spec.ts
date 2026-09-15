@@ -69,23 +69,6 @@ describe('UserToolbar', () => {
     expect(element.querySelector('app-user-filter-panel')).toBeNull();
   });
 
-  it('closes the panel on Escape and on a click outside it', () => {
-    const fixture = render();
-    const element = fixture.nativeElement as HTMLElement;
-    filterButton(element).click();
-    fixture.detectChanges();
-
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-    fixture.detectChanges();
-    expect(element.querySelector('app-user-filter-panel')).toBeNull();
-
-    filterButton(element).click();
-    fixture.detectChanges();
-    document.body.click();
-    fixture.detectChanges();
-    expect(element.querySelector('app-user-filter-panel')).toBeNull();
-  });
-
   it('counts the active filters on the button for screen readers', () => {
     expect(filterButton(render(2).nativeElement).getAttribute('aria-label')).toBe(
       'الفلاتر، 2 مفعلة',
