@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
+
+/** `compact` is the 30px filter field; `regular` is the 40px box of the offer form. */
+export type DateFieldSize = 'compact' | 'regular';
+
+const BOX_CLASSES: Record<DateFieldSize, string> = {
+  compact: 'h-[30px] border-border',
+  regular: 'h-10 border-text-secondary',
+};
 
 /**
  * Shows the day as the design writes it ("2026-08-01") whatever the browser locale, with the
@@ -18,7 +26,12 @@ export class DateField {
   readonly value = input<string | null>(null);
   readonly min = input<string | null>(null);
   readonly max = input<string | null>(null);
+  readonly size = input<DateFieldSize>('compact');
+  /** The offer form writes "من" and "إلى" beside the box, so the label only names the input. */
+  readonly isLabelShown = input<boolean>(true);
   readonly valueChange = output<string | null>();
+
+  protected readonly boxClasses = computed(() => BOX_CLASSES[this.size()]);
 
   protected onChange(event: Event): void {
     const picked = (event.target as HTMLInputElement).value;

@@ -1,8 +1,12 @@
 <label class="flex flex-col gap-1">
-  <span class="text-[11px]/[16.5px] font-bold text-text-secondary">{{ label() }}</span>
+  @if (isLabelShown()) {
+    <span class="text-[11px]/[16.5px] font-bold text-text-secondary">{{ label() }}</span>
+  }
   <!-- RTL: the calendar sits at the right end; the day reads left-to-right from the left end. -->
   <span
-    class="relative flex h-[30px] items-center rounded-lg border border-border bg-white pr-8 pl-2 focus-within:border-primary"
+    data-role="date-box"
+    class="relative flex items-center rounded-lg border bg-white pr-8 pl-2 focus-within:border-primary"
+    [class]="boxClasses()"
   >
     @if (value(); as day) {
       <span

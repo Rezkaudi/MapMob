@@ -1,0 +1,43 @@
+<app-form-page-heading
+  parentLabel="الإعلانات"
+  [parentLink]="adsUrl"
+  [title]="copy().title"
+  [description]="copy().description"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.retry()" />
+} @else if (!store.isReady()) {
+  <app-skeleton class="mt-6 block" height="640px" />
+} @else {
+  <!-- The cards start 24px under the heading and stand 24px apart, filling the page as the design does. -->
+  <form class="mt-6 flex flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <div class="flex flex-col gap-6">
+      <app-ad-basic-info-card
+        [form]="form"
+        [places]="store.options()?.places ?? []"
+        [errors]="errors"
+      />
+      <app-ad-media-card [form]="form" [media]="media()" (mediaChange)="media.set($event)" />
+      <app-ad-placement-card [form]="form" />
+      <app-ad-schedule-card [form]="form" [errors]="errors" />
+    </div>
+
+    <app-form-action-bar
+      class="mt-12"
+      saveLabel="حفظ الإعلان ونشره"
+      [cancelLink]="adsUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ الإعلان"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

@@ -1,0 +1,34 @@
+<div
+  role="radiogroup"
+  aria-label="نطاق العرض"
+  class="grid grid-cols-1 items-center gap-6 md:grid-cols-2"
+>
+  @for (choice of choices; track choice.scope) {
+    <app-option-card
+      [title]="choice.title"
+      [description]="choice.description"
+      size="roomy"
+      [isSelected]="scope() === choice.scope"
+      (picked)="scopeChange.emit(choice.scope)"
+    />
+  }
+</div>
+
+@if (scope() === 'selectedItems') {
+  <!-- 12px under the cards, then 16px of padding on the top and the right edge, 8px under the box. -->
+  <div class="mt-3 flex flex-col gap-4 ps-4 pt-4 pb-2">
+    <p class="text-start text-[12px]/[16px] text-[#191c1e]">
+      المنتجات والخدمات المشمولة بالعرض
+      <span class="font-semibold text-[#ba1a1a]" aria-hidden="true">*</span>
+    </p>
+    <app-offer-item-picker
+      [items]="items()"
+      [selectedIds]="selectedItemIds()"
+      [isLoading]="isItemsLoading()"
+      (selectedIdsChange)="selectedItemIdsChange.emit($event)"
+    />
+    @if (itemsError(); as message) {
+      <p role="alert" class="-mt-2 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+    }
+  </div>
+}

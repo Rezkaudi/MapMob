@@ -18,6 +18,11 @@ const PANEL_HEIGHT_PX = 163;
 
 export type ActionMenuStyle = 'soft' | 'sharp';
 
+/** The featured package card is dark blue, so its dots are drawn in white instead. */
+export type ActionMenuTriggerTone = 'default' | 'inverse';
+
+const INVERSE_TRIGGER_CLASSES = 'text-white/80 hover:bg-white/10';
+
 interface MenuSkin {
   readonly trigger: string;
   readonly panel: string;
@@ -26,11 +31,11 @@ interface MenuSkin {
 /** The places tables use the soft style; the regions design draws square corners, a deeper shadow and dark dots. */
 const MENU_SKINS: Record<ActionMenuStyle, MenuSkin> = {
   soft: {
-    trigger: 'text-text-secondary',
+    trigger: 'text-text-secondary hover:bg-surface-muted',
     panel: 'rounded-xl p-[5px] shadow-[0_8px_24px_rgba(15,23,42,0.12)]',
   },
   sharp: {
-    trigger: 'text-text-primary',
+    trigger: 'text-text-primary hover:bg-surface-muted',
     panel: 'rounded-[2px] p-1 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]',
   },
 };
@@ -55,6 +60,7 @@ interface PanelPosition {
 })
 export class ActionMenu {
   readonly menuStyle = input<ActionMenuStyle>('soft');
+  readonly triggerTone = input<ActionMenuTriggerTone>('default');
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly trigger = viewChild.required<ElementRef<HTMLElement>>('trigger');
@@ -62,6 +68,9 @@ export class ActionMenu {
   protected readonly isOpen = signal(false);
   protected readonly position = signal<PanelPosition>({ left: 0, top: 0 });
   protected readonly skin = computed(() => MENU_SKINS[this.menuStyle()]);
+  protected readonly triggerClasses = computed(() =>
+    this.triggerTone() === 'inverse' ? INVERSE_TRIGGER_CLASSES : this.skin().trigger,
+  );
 
   protected toggle(): void {
     if (this.isOpen()) {

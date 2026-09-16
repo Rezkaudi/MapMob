@@ -1,0 +1,37 @@
+<!-- RTL: the first day on the right, the last day 16px to its left; each word leads its box by 4px. -->
+<div class="flex flex-wrap items-center gap-4 py-1">
+  <div class="flex items-center gap-1">
+    <span
+      data-role="period-word"
+      class="w-6 text-start text-[12px]/[16.5px] font-bold text-text-secondary"
+    >
+      من
+    </span>
+    <app-date-field
+      class="w-[200px]"
+      label="تاريخ بداية العرض"
+      size="regular"
+      [isLabelShown]="false"
+      [value]="range().from"
+      [max]="range().to"
+      (valueChange)="changeFrom($event)"
+    />
+  </div>
+  <div class="flex items-center gap-1">
+    <span
+      data-role="period-word"
+      class="w-6 text-start text-[12px]/[16.5px] font-bold text-text-secondary"
+    >
+      إلى
+    </span>
+    <app-date-field
+      class="w-[200px]"
+      label="تاريخ انتهاء العرض"
+      size="regular"
+      [isLabelShown]="false"
+      [value]="range().to"
+      [min]="range().from"
+      (valueChange)="changeTo($event)"
+    />
+  </div>
+</div>

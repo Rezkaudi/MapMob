@@ -1,0 +1,47 @@
+<!-- RTL: "تعديل العرض" fills the right, then the 101px pause toggle, then the 69px "حذف"; each icon leads its label. -->
+<div class="flex items-center gap-3" [attr.aria-busy]="isBusy()">
+  <button
+    type="button"
+    class="flex h-10 flex-1 items-center justify-center gap-1 rounded-lg bg-primary text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+    [disabled]="isBusy()"
+    (click)="edit.emit()"
+  >
+    <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
+    <span>تعديل العرض</span>
+  </button>
+
+  @switch (pauseAction()) {
+    @case ('pause') {
+      <button
+        type="button"
+        class="flex h-[42px] w-[101px] items-center justify-center gap-1 rounded-lg border border-border bg-white text-[12px]/[16px] font-semibold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="isBusy()"
+        (click)="pause.emit()"
+      >
+        <app-icon name="pause-bars" [size]="11" aria-hidden="true" />
+        <span>إيقاف العرض</span>
+      </button>
+    }
+    @case ('resume') {
+      <button
+        type="button"
+        class="flex h-[42px] w-[101px] items-center justify-center gap-1 rounded-lg border border-border bg-white text-[12px]/[16px] font-semibold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="isBusy()"
+        (click)="resume.emit()"
+      >
+        <app-icon name="play" [size]="11" aria-hidden="true" />
+        <span>تفعيل العرض</span>
+      </button>
+    }
+  }
+
+  <button
+    type="button"
+    class="flex h-10 w-[69px] items-center justify-center gap-1 rounded-lg border border-closed text-[12px]/[16px] font-semibold text-closed hover:bg-closed/5 disabled:cursor-not-allowed disabled:opacity-60"
+    [disabled]="isBusy()"
+    (click)="remove.emit()"
+  >
+    <app-icon name="trash-filled" [size]="12" aria-hidden="true" />
+    <span>حذف</span>
+  </button>
+</div>

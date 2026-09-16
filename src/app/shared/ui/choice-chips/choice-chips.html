@@ -1,0 +1,15 @@
+<!-- RTL: "الكل" leads on the right. -->
+<div role="radiogroup" class="flex gap-1.5" [class]="groupClasses()" [attr.aria-label]="label()">
+  @for (chip of chips(); track chip.option.label) {
+    <button
+      type="button"
+      role="radio"
+      class="flex h-[30px] items-center justify-center rounded-[4px] border text-[12px]/[16px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
+      [class]="chip.classes"
+      [attr.aria-checked]="chip.isPicked"
+      (click)="selectedChange.emit(chip.option.value)"
+    >
+      {{ chip.option.label }}
+    </button>
+  }
+</div>

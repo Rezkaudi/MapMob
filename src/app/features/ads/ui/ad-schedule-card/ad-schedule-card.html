@@ -1,0 +1,108 @@
+<app-form-card heading="مدة العرض، الأولوية والحالة" icon="calendar-outline">
+  <!-- The design gives this body 204px, a little more than its fields take. -->
+  <div class="flex min-h-[204px] flex-col gap-6" [formGroup]="form()">
+    <!-- RTL: the first day on the right, the last day 24px to its left. -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <app-form-field
+        class="pb-2.5"
+        label="تاريخ البدء"
+        forId="ad-starts-on"
+        [isRequired]="true"
+        [isLabelBold]="true"
+        [error]="errors().startsOn"
+      >
+        <input
+          id="ad-starts-on"
+          type="date"
+          dir="ltr"
+          formControlName="startsOn"
+          class="text-left font-medium text-[#1e293b]"
+          [class]="controlClasses.text"
+          [attr.aria-invalid]="errors().startsOn !== null"
+        />
+      </app-form-field>
+
+      <div class="flex flex-col gap-2">
+        <label for="ad-ends-on" class="text-start text-[12px]/[16px] font-bold text-text-primary">
+          تاريخ الانتهاء
+        </label>
+        <input
+          id="ad-ends-on"
+          type="date"
+          dir="ltr"
+          formControlName="endsOn"
+          class="text-left font-medium text-[#1e293b] disabled:cursor-not-allowed disabled:opacity-50"
+          [class]="controlClasses.text"
+          [attr.aria-invalid]="errors().endsOn !== null"
+        />
+        <!-- RTL: the tick box on the right, 8px before its words. -->
+        <label class="flex items-center gap-2 pt-0.5 text-[12px]/[16px] font-medium text-[#475569]">
+          <input
+            id="ad-is-ongoing"
+            type="checkbox"
+            formControlName="isOngoing"
+            class="size-4 rounded border border-[#cbd5e1] accent-primary"
+            (change)="toggleOngoing($event)"
+          />
+          <span>بدون تاريخ انتهاء (إعلان دائم / مستمر)</span>
+        </label>
+        @if (errors().endsOn; as message) {
+          <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- RTL: the priority on the right, the status 24px to its left. -->
+    <div class="grid grid-cols-1 gap-6 pt-2 md:grid-cols-2">
+      <app-form-field
+        label="أولوية الإعلان"
+        forId="ad-priority"
+        [isRequired]="true"
+        [isLabelBold]="true"
+      >
+        <div class="relative pt-[3px]">
+          <select
+            id="ad-priority"
+            formControlName="priority"
+            class="font-medium"
+            [class]="controlClasses.select"
+          >
+            @for (option of priorityOptions; track option.value) {
+              <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          <app-icon
+            name="chevron-down-thin"
+            [size]="16"
+            class="pointer-events-none absolute top-[calc(50%+1.5px)] left-3 -translate-y-1/2 text-[#94a3b8]"
+          />
+        </div>
+      </app-form-field>
+
+      <app-form-field
+        label="حالة الإعلان الأولية"
+        forId="ad-status"
+        [isRequired]="true"
+        [isLabelBold]="true"
+      >
+        <div class="relative pt-[3px]">
+          <select
+            id="ad-status"
+            formControlName="status"
+            class="font-medium"
+            [class]="controlClasses.select"
+          >
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          <app-icon
+            name="chevron-down-thin"
+            [size]="16"
+            class="pointer-events-none absolute top-[calc(50%+1.5px)] left-3 -translate-y-1/2 text-[#94a3b8]"
+          />
+        </div>
+      </app-form-field>
+    </div>
+  </div>
+</app-form-card>

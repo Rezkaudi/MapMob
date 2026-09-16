@@ -1,0 +1,70 @@
+<app-form-card heading="المعلومات الأساسية للإعلان" icon="info" [iconSize]="24">
+  <div class="flex flex-col gap-6" [formGroup]="form()">
+    <app-form-field
+      label="عنوان الإعلان"
+      forId="ad-title"
+      [isRequired]="true"
+      [isLabelBold]="true"
+      hint="سيتم استخدام هذا العنوان للتعريف بالإعلان داخل النظام وفي الإحصائيات."
+      [error]="errors().title"
+    >
+      <input
+        id="ad-title"
+        type="text"
+        formControlName="title"
+        placeholder="حملة الصيف لصيدلية الحياة"
+        class="font-medium"
+        [class]="controlClasses.text"
+        [attr.aria-invalid]="errors().title !== null"
+      />
+    </app-form-field>
+
+    <app-form-field label="نوع المعلن" [isRequired]="true" [isLabelBold]="true">
+      <!-- Two 218px cards, 12px apart, 5px further down than the label gap. -->
+      <div
+        role="radiogroup"
+        aria-label="نوع المعلن"
+        class="grid max-w-[448px] grid-cols-2 gap-3 pt-[5px]"
+      >
+        @for (card of advertiserTypeCards; track card.value) {
+          <app-option-card
+            [title]="card.title"
+            [description]="card.description"
+            [isSelected]="form().controls.advertiserType.value === card.value"
+            (picked)="pickAdvertiserType(card.value)"
+          />
+        }
+      </div>
+    </app-form-field>
+
+    @if (form().controls.advertiserType.value === 'place') {
+      <app-form-field
+        label="الشركة / المتجر التابع للإعلان"
+        forId="ad-place"
+        [isRequired]="true"
+        [isLabelBold]="true"
+        [error]="errors().placeId"
+      >
+        <div class="relative pt-[3px]">
+          <select
+            id="ad-place"
+            formControlName="placeId"
+            class="font-medium"
+            [class]="controlClasses.select"
+            [attr.aria-invalid]="errors().placeId !== null"
+          >
+            <option value="">اختر الشركة أو المتجر</option>
+            @for (place of places(); track place.id) {
+              <option [value]="place.id">{{ place.name }}</option>
+            }
+          </select>
+          <app-icon
+            name="chevron-down-thin"
+            [size]="16"
+            class="pointer-events-none absolute top-[calc(50%+1.5px)] left-3 -translate-y-1/2 text-[#94a3b8]"
+          />
+        </div>
+      </app-form-field>
+    }
+  </div>
+</app-form-card>

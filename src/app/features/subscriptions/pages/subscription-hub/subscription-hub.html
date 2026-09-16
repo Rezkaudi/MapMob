@@ -1,0 +1,116 @@
+<!-- Header, the stat cards 16px below, the tabs 40px under them, the panel 36px below that. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="الاشتراكات والباقات"
+    description="إدارة باقات الاشتراكات المتاحة ومتابعة اشتراكات الشركات والمتاجر."
+    descriptionSize="small"
+    addLabel="إضافة باقة جديد"
+    [isExportVisible]="selectedTab() === 'records'"
+    [isExporting]="records.isExporting()"
+    (exportRequested)="exportSubscriptions()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+  } @else {
+    <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card
+          [isLoading]="store.isSummaryLoading()"
+          [icon]="card.icon"
+          [label]="card.label"
+          [value]="card.value"
+          [badge]="card.badge"
+          [badgeTone]="card.badgeTone"
+        />
+      }
+    </div>
+
+    <app-subscription-tabs
+      class="mt-10"
+      [selected]="selectedTab()"
+      [packageCount]="store.planCount()"
+      [recordCount]="records.totalCount()"
+      (selectedChange)="selectedTab.set($event)"
+    />
+
+    @if (selectedTab() === 'packages') {
+      <div class="mt-9 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
+        @for (plan of store.plans(); track plan.id) {
+          <app-plan-card
+            [plan]="plan"
+            (edit)="editPlan($event)"
+            (statusChange)="askToChangeStatus($event)"
+            (remove)="askToDelete($event)"
+          />
+        }
+      </div>
+    } @else if (records.error(); as recordsError) {
+      <app-error-state
+        class="mt-10"
+        [message]="recordsError"
+        (retry)="records.loadSubscriptions()"
+      />
+    } @else if (records.hasNoSubscriptions()) {
+      <app-empty-page-message title="لا توجد اشتراكات حتى الآن" />
+    } @else {
+      <app-subscription-toolbar
+        class="mt-6"
+        [filters]="records.filters()"
+        [activeFilterCount]="records.activeFilterCount()"
+        (searchChange)="records.setSearch($event)"
+        (sortChange)="records.setSort($event)"
+        (filtersApply)="records.applyFilters($event)"
+      />
+
+      <app-subscription-table
+        class="mt-[30px]"
+        [entries]="records.entries()"
+        [selectedIdSet]="records.selectedIdSet()"
+        [areAllSelected]="records.areAllVisibleSelected()"
+        [isLoading]="records.isLoading()"
+        [hasNoResults]="records.hasNoResults()"
+        [emptyMessage]="records.emptyMessage()"
+        [rowCount]="records.pageSize()"
+        (rowToggle)="records.toggleSelected($event)"
+        (allToggle)="records.toggleAllVisible()"
+      />
+
+      <app-table-pagination
+        class="mt-2"
+        [pageIndex]="records.pageIndex()"
+        [pageSize]="records.pageSize()"
+        [totalCount]="records.totalCount()"
+        itemNoun="شركة"
+        (pageIndexChange)="records.changePage($event)"
+      />
+    }
+  }
+</div>
+
+@if (editedPlan(); as plan) {
+  <app-plan-form-dialog
+    [plan]="plan"
+    [isBusy]="store.isSaving()"
+    (saved)="savePlan($event)"
+    (cancelled)="cancelEdit()"
+  />
+}
+
+@if (confirmCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="confirmPendingAction()"
+    (cancelled)="cancelPendingAction()"
+  />
+}
+
+@if (store.saveError() || records.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError(); records.clearSaveError()"
+  />
+}

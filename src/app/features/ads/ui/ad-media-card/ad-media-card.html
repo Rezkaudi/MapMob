@@ -1,0 +1,41 @@
+<app-form-card heading="محتوى ووسائط الإعلان" icon="image-outline">
+  <div class="flex flex-col gap-6" [formGroup]="form()">
+    <app-form-field
+      class="[&_label]:text-[#334155]"
+      label="نوع المحتوى"
+      [isRequired]="true"
+      [isLabelBold]="true"
+    >
+      <!-- The picture pill on the right, the video pill 12px to its left. -->
+      <div role="radiogroup" aria-label="نوع المحتوى" class="flex gap-3 pt-[5px]">
+        @for (card of contentTypeCards; track card.value) {
+          <app-option-card
+            [title]="card.title"
+            [isSelected]="form().controls.contentType.value === card.value"
+            (picked)="pickContentType(card.value)"
+          />
+        }
+      </div>
+    </app-form-field>
+
+    <app-image-upload-field
+      [kind]="form().controls.contentType.value"
+      [rules]="uploadRules"
+      [image]="media()"
+      (imageChange)="mediaChange.emit($event)"
+    />
+
+    <div class="flex flex-col gap-2 pb-2.5">
+      <label for="ad-text" class="text-start text-[14px]/[16px] font-bold text-text-primary">
+        نص الإعلان الترويجي (اختياري)
+      </label>
+      <textarea
+        id="ad-text"
+        formControlName="text"
+        placeholder="خصم 25% على جميع منتجات العناية بالبشرة والمستلزمات الصيفية طوال الشهر الحالي في جميع الفروع."
+        class="h-[82px] py-2.5 font-medium placeholder:text-[#94a3b8]"
+        [class]="controlClasses.textarea"
+      ></textarea>
+    </div>
+  </div>
+</app-form-card>

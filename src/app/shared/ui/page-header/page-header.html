@@ -7,8 +7,15 @@
     </p>
   </div>
 
-  @if (isAddVisible()) {
-    <app-add-button [label]="addLabel()" (pressed)="add.emit()" />
+  @if (isAddVisible() || isExportVisible()) {
+    <div data-role="page-actions" class="flex items-center gap-2">
+      @if (isAddVisible()) {
+        <app-add-button [label]="addLabel()" (pressed)="add.emit()" />
+      }
+      @if (isExportVisible()) {
+        <app-export-button [isBusy]="isExporting()" (pressed)="exportRequested.emit()" />
+      }
+    </div>
   }
   <ng-content select="[pageHeaderAction]" />
 </div>

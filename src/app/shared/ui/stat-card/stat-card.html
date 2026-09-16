@@ -25,6 +25,14 @@
             {{ deltaLabel }}
           </span>
         }
+        @if (badge(); as badgeLabel) {
+          <span
+            data-role="badge"
+            class="rounded-2xl px-1 py-0.5 text-[12px]/[16px] font-medium"
+            [class]="badgeClasses()"
+            >{{ badgeLabel }}</span
+          >
+        }
         @if (alert(); as alertLabel) {
           <!-- Sits 10px from the value; RTL puts the flag on the right of the words. -->
           <span

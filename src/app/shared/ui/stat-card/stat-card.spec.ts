@@ -79,6 +79,39 @@ describe('StatCard', () => {
   });
 });
 
+describe('StatCard badge', () => {
+  function renderBadge(tone: 'success' | 'warning' | 'error') {
+    const fixture = TestBed.createComponent(StatCard);
+    fixture.componentRef.setInput('icon', 'package');
+    fixture.componentRef.setInput('label', 'المشتركون النشطون');
+    fixture.componentRef.setInput('value', '1200');
+    fixture.componentRef.setInput('badge', '90% من الإجمالي');
+    fixture.componentRef.setInput('badgeTone', tone);
+    fixture.detectChanges();
+    return fixture.nativeElement.querySelector('[data-role="badge"]') as HTMLElement;
+  }
+
+  it('shows the badge as a plain chip, with no icon beside the words', () => {
+    const chip = renderBadge('success');
+
+    expect(chip.textContent?.trim()).toBe('90% من الإجمالي');
+    expect(chip.querySelector('app-icon')).toBeNull();
+  });
+
+  it('tints the chip by tone', () => {
+    expect(renderBadge('success').className).toContain('text-status-success');
+    expect(renderBadge('warning').className).toContain('text-accent');
+    expect(renderBadge('error').className).toContain('text-closed');
+  });
+
+  it('leaves the chip out when there is no badge', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-role="badge"]')).toBeNull();
+  });
+});
+
 describe('StatCard while loading', () => {
   it('draws placeholders instead of the label and value', () => {
     const fixture = TestBed.createComponent(HostLoadingComponent);

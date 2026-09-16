@@ -1,0 +1,59 @@
+<section
+  role="dialog"
+  class="flex w-[384px] max-w-[calc(100vw-32px)] flex-col gap-4 rounded-2xl border border-border bg-white pt-3 shadow-[0_4px_12px_0_rgba(15,23,42,0.06),0_12px_36px_0_rgba(15,23,42,0.12)]"
+  [id]="panelId()"
+  [attr.aria-labelledby]="headingId()"
+>
+  <!-- RTL: the badge and heading on the right, the cross on the left. -->
+  <header
+    class="flex items-center justify-between border-b border-[#f1f5f9] bg-surface-muted/70 px-5 py-4"
+  >
+    <div class="flex items-center gap-2">
+      <span class="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <app-icon name="sliders" [size]="16" aria-hidden="true" />
+      </span>
+      <div class="flex flex-col text-start">
+        <h2 class="text-[14px]/[20px] font-bold text-text-primary" [id]="headingId()">
+          {{ heading() }}
+        </h2>
+        <p class="-mt-px text-[11px]/[16.5px] text-text-secondary">
+          تطبيق معايير متعددة لتخصيص نتائج البحث
+        </p>
+      </div>
+    </div>
+    <button
+      type="button"
+      aria-label="إغلاق"
+      class="flex size-6 items-center justify-center rounded-md text-[#94a3b8] hover:bg-surface-muted"
+      (click)="closed.emit()"
+    >
+      <app-icon name="close-thin" [size]="24" aria-hidden="true" />
+    </button>
+  </header>
+
+  <!-- The groups are 322px wide: 11px of card margin plus 20px of padding on each side, 16px apart. -->
+  <div class="flex flex-col gap-4 px-[31px]">
+    <ng-content />
+  </div>
+
+  <!-- RTL: reset on the right, apply on the left. -->
+  <footer
+    class="flex h-[65px] items-center justify-between rounded-2xl border-t border-[#f1f5f9] bg-surface-muted px-4"
+  >
+    <button
+      type="button"
+      class="rounded-md px-2 py-1.5 text-[12px]/[16px] font-bold text-text-secondary hover:text-text-primary"
+      (click)="reset.emit()"
+    >
+      إعادة ضبط
+    </button>
+    <button
+      type="button"
+      class="rounded-lg bg-primary px-5 py-2 text-[12px]/[16px] font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+      [disabled]="!canApply()"
+      (click)="applied.emit()"
+    >
+      تطبيق الفلاتر
+    </button>
+  </footer>
+</section>

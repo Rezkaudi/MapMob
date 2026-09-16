@@ -42,6 +42,19 @@ export const routes: Routes = [
           import('./features/reviews/reviews.routes').then((m) => m.REVIEWS_ROUTES),
       },
       {
+        path: 'offers',
+        loadChildren: () => import('./features/offers/offers.routes').then((m) => m.OFFERS_ROUTES),
+      },
+      {
+        path: 'ads',
+        loadChildren: () => import('./features/ads/ads.routes').then((m) => m.ADS_ROUTES),
+      },
+      {
+        path: 'subscriptions',
+        loadChildren: () =>
+          import('./features/subscriptions/subscriptions.routes').then((m) => m.SUBSCRIPTIONS_ROUTES),
+      },
+      {
         path: 'not-found',
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
       },
