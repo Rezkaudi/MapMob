@@ -22,33 +22,10 @@
   </div>
 
   @if (isCustom()) {
-    <div
-      data-testid="custom-range"
-      class="flex flex-col gap-2.5 rounded-xl border border-border bg-surface-muted p-3"
-    >
-      <!-- RTL: "من تاريخ" on the right, "إلى تاريخ" on the left. -->
-      <div class="flex justify-between gap-3">
-        <app-date-field
-          [class]="fieldClasses()"
-          label="من تاريخ"
-          [value]="customRange().from"
-          [max]="customRange().to"
-          (valueChange)="changeFrom($event)"
-        />
-        <app-date-field
-          [class]="fieldClasses()"
-          label="إلى تاريخ"
-          [value]="customRange().to"
-          [min]="customRange().from"
-          (valueChange)="changeTo($event)"
-        />
-      </div>
-      <p
-        class="min-h-[17px] pt-0.5 text-center text-[10px]/[15px] text-[#94a3b8]"
-        aria-live="polite"
-      >
-        {{ rangeSummary() ?? 'اختر بداية الفترة ونهايتها' }}
-      </p>
-    </div>
+    <app-date-range-fields
+      [range]="customRange()"
+      [hasFixedWidthFields]="hasFixedWidthFields()"
+      (rangeChange)="customRangeChange.emit($event)"
+    />
   }
 </div>

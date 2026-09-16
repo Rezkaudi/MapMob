@@ -1,0 +1,186 @@
+<app-form-page-heading
+  parentLabel="العروض"
+  [parentLink]="offersUrl"
+  [title]="copy().title"
+  [description]="copy().description"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-12" [message]="error" (retry)="store.retry()" />
+} @else if (!store.isReady()) {
+  <app-skeleton class="mt-12 block" height="640px" />
+} @else {
+  <!-- The card starts 48px under the heading; the action bar sits 83px under its last field. -->
+  <form class="mt-12 flex flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-form-section heading="المعلومات الأساسية للعرض" icon="info" appearance="compact">
+      <!-- RTL: the first field of each pair lands in the right column, 24px apart, rows 32px apart. -->
+      <div class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
+        <app-form-field
+          label="اسم العرض"
+          forId="offer-title"
+          [isRequired]="true"
+          [error]="errors.title"
+        >
+          <input
+            id="offer-title"
+            type="text"
+            formControlName="title"
+            placeholder="خصم 30% على جميع المنتجات"
+            [class]="controlClasses.text"
+            [attr.aria-invalid]="errors.title !== null"
+          />
+        </app-form-field>
+
+        <app-form-field
+          label="قيمة الخصم"
+          forId="offer-discount"
+          [isRequired]="true"
+          [error]="errors.discountPercent"
+        >
+          <input
+            id="offer-discount"
+            type="number"
+            min="1"
+            max="100"
+            inputmode="numeric"
+            formControlName="discountPercent"
+            placeholder="30%"
+            [class]="controlClasses.text"
+            [attr.aria-invalid]="errors.discountPercent !== null"
+          />
+        </app-form-field>
+
+        <app-form-field
+          label="المتجر/الشركة المقدمة للعرض"
+          forId="offer-place"
+          [isRequired]="true"
+          [error]="errors.placeId"
+        >
+          <div class="relative">
+            <select
+              id="offer-place"
+              [class]="controlClasses.select"
+              [attr.aria-invalid]="errors.placeId !== null"
+              (change)="pickPlace($event)"
+            >
+              <option value="" [selected]="!form.controls.placeId.value">
+                اختر المتجر أو الشركة
+              </option>
+              @for (place of store.options()?.places; track place.id) {
+                <option [value]="place.id" [selected]="place.id === form.controls.placeId.value">
+                  {{ place.name }}
+                </option>
+              }
+            </select>
+            <app-icon
+              name="chevron-down-filled"
+              [size]="12"
+              class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#717784]"
+            />
+          </div>
+        </app-form-field>
+
+        <app-form-field
+          label="الصنيف الرئيسي لهذه الشركة/المتجر"
+          forId="offer-category"
+          [isRequired]="true"
+          [error]="errors.categoryName"
+        >
+          <div class="relative">
+            <select
+              id="offer-category"
+              formControlName="categoryName"
+              [class]="controlClasses.select"
+              [attr.aria-invalid]="errors.categoryName !== null"
+            >
+              <option value="">اختر الصنف</option>
+              @for (categoryName of store.options()?.categoryNames; track categoryName) {
+                <option [value]="categoryName">{{ categoryName }}</option>
+              }
+            </select>
+            <app-icon
+              name="chevron-down-filled"
+              [size]="12"
+              class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#717784]"
+            />
+          </div>
+        </app-form-field>
+
+        <!-- The design gives this row 80px, against 64px for the rows above. -->
+        <app-form-field
+          class="min-h-20"
+          label="مدة العرض"
+          [isRequired]="true"
+          [error]="errors.period"
+        >
+          <app-offer-period-fields [range]="period" (rangeChange)="changePeriod($event)" />
+        </app-form-field>
+
+        <app-form-field label="حالة العرض" forId="offer-status" [isRequired]="true">
+          <div class="relative">
+            <select id="offer-status" formControlName="status" [class]="controlClasses.select">
+              <option value="active">نشط</option>
+              <option value="paused">متوقف</option>
+            </select>
+            <app-icon
+              name="chevron-down-filled"
+              [size]="12"
+              class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#717784]"
+            />
+          </div>
+        </app-form-field>
+
+        <app-form-field class="md:col-span-2" label="وصف العرض" forId="offer-description">
+          <textarea
+            id="offer-description"
+            formControlName="description"
+            placeholder="اكتب وصفاً موجزاً عن العرض ..."
+            class="h-[100px] py-3"
+            [class]="controlClasses.textarea"
+          ></textarea>
+        </app-form-field>
+
+        <app-form-field
+          class="py-2 md:col-span-2 [&>div]:gap-3"
+          label="نطاق العرض"
+          [isRequired]="true"
+        >
+          <app-offer-scope-picker
+            [scope]="form.controls.scope.value"
+            [items]="store.items()"
+            [selectedItemIds]="form.controls.itemIds.value"
+            [isItemsLoading]="store.isItemsLoading()"
+            [itemsError]="errors.itemIds"
+            (scopeChange)="changeScope($event)"
+            (selectedItemIdsChange)="changeItems($event)"
+          />
+        </app-form-field>
+
+        <app-form-field class="pt-4 md:col-span-2" label="صورة العرض">
+          <app-image-upload-field
+            [rules]="pictureRules"
+            [image]="image()"
+            (imageChange)="image.set($event)"
+          />
+        </app-form-field>
+      </div>
+    </app-form-section>
+
+    <app-form-action-bar
+      class="mt-[83px]"
+      saveLabel="حفظ العرض"
+      [cancelLink]="offersUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ العرض"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

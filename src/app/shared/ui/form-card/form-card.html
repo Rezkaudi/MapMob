@@ -1,0 +1,15 @@
+<section
+  class="flex flex-col gap-6 rounded-2xl border border-[rgba(226,232,240,0.8)] bg-white p-7 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  [attr.aria-labelledby]="headingId"
+>
+  <!-- RTL: the icon leads on the right, 10px before the title. -->
+  <header class="flex items-center gap-2.5 border-b border-[#f1f5f9] pb-4">
+    <span class="flex size-6 items-center justify-center text-text-primary">
+      <app-icon [name]="icon()" [size]="iconSize()" aria-hidden="true" />
+    </span>
+    <h2 class="text-[18px]/[24px] font-medium text-text-primary" [id]="headingId">
+      {{ heading() }}
+    </h2>
+  </header>
+  <ng-content />
+</section>

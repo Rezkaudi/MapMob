@@ -7,9 +7,11 @@ import localeAr from '@angular/common/locales/ar';
 import { routes } from './app.routes';
 import { provideApiBaseUrl } from './core/config/api-base-url';
 import { provideUseMockApi } from './core/config/use-mock-api';
+import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
 import { provideCategoriesFeature } from './features/categories/categories.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
+import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePlacesFeature } from './features/places/places.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
@@ -25,6 +27,8 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'ar' },
     provideApiBaseUrl(),
     provideUseMockApi(),
+    provideAdsFeature(),
+    provideOffersFeature(),
     provideReviewsFeature(),
     provideDashboardFeature(),
     provideUsersFeature(),

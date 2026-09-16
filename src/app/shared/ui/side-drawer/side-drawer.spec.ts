@@ -8,6 +8,7 @@ import { SideDrawer } from './side-drawer';
     <app-side-drawer
       title="تفاصيل المراجعة والبلاغ"
       [hasAlertDot]="hasAlertDot()"
+      [footerTone]="footerTone()"
       (closed)="closeCount = closeCount + 1"
     >
       <p data-testid="body">المحتوى</p>
@@ -17,6 +18,7 @@ import { SideDrawer } from './side-drawer';
 })
 class HostComponent {
   readonly hasAlertDot = signal(false);
+  readonly footerTone = signal<'plain' | 'muted'>('plain');
   closeCount = 0;
 }
 
@@ -68,5 +70,18 @@ describe('SideDrawer', () => {
 
     expect(document.activeElement?.getAttribute('aria-label')).toBe('إغلاق');
     element.remove();
+  });
+
+  it('paints the footer white by default, or grey with roomier padding for the offers drawer', () => {
+    const fixture = render();
+    const footer = () =>
+      (fixture.nativeElement as HTMLElement).querySelector('footer') as HTMLElement;
+    expect(footer().className).toContain('bg-white');
+
+    fixture.componentInstance.footerTone.set('muted');
+    fixture.detectChanges();
+
+    expect(footer().className).toContain('bg-[#f2f4f6]');
+    expect(footer().className).toContain('p-6');
   });
 });

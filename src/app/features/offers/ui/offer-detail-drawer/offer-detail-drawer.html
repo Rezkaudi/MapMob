@@ -1,0 +1,50 @@
+<!-- The design keeps the rose dot beside the title on every offer. -->
+<app-side-drawer
+  title="تفاصيل العرض"
+  [hasAlertDot]="true"
+  footerTone="muted"
+  (closed)="closed.emit()"
+>
+  @if (error(); as message) {
+    <app-error-state [message]="message" (retry)="retry.emit()" />
+  } @else if (detail(); as openDetail) {
+    @if (view(); as openView) {
+      <!-- 24px from the top and 16px from the sides; the first two blocks sit 8px further in. -->
+      <div class="flex flex-col gap-6 px-4 pt-6 pb-6">
+        <app-offer-summary-card
+          class="mx-2"
+          [title]="openDetail.offer.title"
+          [description]="openDetail.description"
+        />
+        <app-offer-publisher
+          class="mx-2"
+          [place]="openDetail.place"
+          [initial]="openView.placeInitial"
+        />
+        <app-offer-validity-card
+          [startsOn]="openDetail.offer.startsOn"
+          [endsOn]="openDetail.offer.endsOn"
+        />
+      </div>
+    }
+  } @else if (isLoading()) {
+    <div class="flex flex-col gap-6 px-6 pt-6" aria-busy="true">
+      <app-skeleton height="94px" />
+      <app-skeleton height="92px" />
+      <app-skeleton height="124px" />
+    </div>
+  }
+
+  <!-- One @if around the element: projection only matches a direct child of the control flow block. -->
+  @if (view(); as openView) {
+    <app-offer-detail-actions
+      drawerFooter
+      [pauseAction]="openView.pauseAction"
+      [isBusy]="isBusy()"
+      (edit)="emitForOpenOffer(edit)"
+      (pause)="emitForOpenOffer(pause)"
+      (resume)="emitForOpenOffer(resume)"
+      (remove)="emitForOpenOffer(remove)"
+    />
+  }
+</app-side-drawer>

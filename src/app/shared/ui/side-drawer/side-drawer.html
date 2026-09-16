@@ -40,7 +40,7 @@
       <ng-content />
     </div>
 
-    <footer class="border-t border-border bg-white p-4">
+    <footer class="border-t" [class]="footerClasses()">
       <ng-content select="[drawerFooter]" />
     </footer>
   </aside>

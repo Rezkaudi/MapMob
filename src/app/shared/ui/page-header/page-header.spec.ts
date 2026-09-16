@@ -74,4 +74,29 @@ describe('PageHeader', () => {
     );
     expect(buttons).toEqual(['تصدير']);
   });
+
+  it('sets "تصدير" 8px to the left of the add button when asked, and reports its press', () => {
+    const fixture = render(true);
+    fixture.componentRef.setInput('isExportVisible', true);
+    fixture.componentRef.setInput('isExporting', true);
+    fixture.detectChanges();
+    const exportRequested = vi.fn();
+    fixture.componentInstance.exportRequested.subscribe(exportRequested);
+    const actions = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-role="page-actions"]',
+    ) as HTMLElement;
+
+    expect(Array.from(actions.children, (child) => child.tagName.toLowerCase())).toEqual([
+      'app-add-button',
+      'app-export-button',
+    ]);
+    expect(actions.className).toContain('gap-2');
+    const exportButton = actions.querySelector('app-export-button button') as HTMLButtonElement;
+    expect(exportButton.disabled).toBe(true);
+
+    fixture.componentRef.setInput('isExporting', false);
+    fixture.detectChanges();
+    exportButton.click();
+    expect(exportRequested).toHaveBeenCalled();
+  });
 });

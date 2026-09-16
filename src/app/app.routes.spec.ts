@@ -58,7 +58,7 @@ describe('app routes', () => {
   it('renders the not-found page inside the admin shell', async () => {
     signIn();
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/offers');
+    await harness.navigateByUrl('/payments');
 
     const el = harness.fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-sidebar')).toBeTruthy();

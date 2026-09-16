@@ -1,0 +1,54 @@
+<app-form-card heading="مكان وموضع الظهور" icon="map-pin-outline">
+  <!-- RTL: the page on the right, the spot on that page 24px to its left. -->
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2" [formGroup]="form()">
+    <app-form-field
+      label="مكان ظهور الإعلان"
+      forId="ad-placement"
+      [isRequired]="true"
+      [isLabelBold]="true"
+    >
+      <div class="relative pt-[3px]">
+        <select
+          id="ad-placement"
+          formControlName="placement"
+          class="font-medium"
+          [class]="controlClasses.select"
+        >
+          @for (option of placementOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down-thin"
+          [size]="16"
+          class="pointer-events-none absolute top-[calc(50%+1.5px)] left-3 -translate-y-1/2 text-[#94a3b8]"
+        />
+      </div>
+    </app-form-field>
+
+    <app-form-field
+      label="موضع الإعلان داخل الصفحة"
+      forId="ad-position"
+      [isRequired]="true"
+      [isLabelBold]="true"
+    >
+      <div class="relative pt-[3px]">
+        <select
+          id="ad-position"
+          formControlName="position"
+          class="font-medium"
+          [class]="controlClasses.select"
+        >
+          @for (option of positionOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down-thin"
+          [size]="16"
+          class="pointer-events-none absolute top-[calc(50%+1.5px)] left-3 -translate-y-1/2 text-[#94a3b8]"
+        />
+      </div>
+    </app-form-field>
+  </div>
+</app-form-card>

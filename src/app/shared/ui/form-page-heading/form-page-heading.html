@@ -1,0 +1,15 @@
+<!-- RTL: the list page leads on the right, then the chevron, then this page. The title sits 16px below. -->
+<nav
+  aria-label="مسار الصفحة"
+  class="flex items-center gap-1 text-[14px]/[14px] font-medium tracking-[0.14px]"
+>
+  <a class="text-text-secondary hover:text-primary" [routerLink]="parentLink()">{{
+    parentLabel()
+  }}</a>
+  <app-icon name="chevron-left-small" [size]="8" class="text-text-secondary" aria-hidden="true" />
+  <span class="text-text-primary" aria-current="page">{{ title() }}</span>
+</nav>
+<div class="mt-4 flex flex-col gap-1 text-start">
+  <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
+  <p class="text-[16px]/[19px] text-text-secondary">{{ description() }}</p>
+</div>

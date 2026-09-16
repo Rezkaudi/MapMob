@@ -1,0 +1,23 @@
+<section class="flex flex-col gap-3 rounded-lg border border-[#eceef0] bg-[#f2f4f6] p-4">
+  <!-- RTL: the heading on the right, the calendar on the left. -->
+  <div class="flex items-center justify-between">
+    <h3 class="text-[12px]/[16px] text-text-secondary">مدة وصلاحية العرض</h3>
+    <app-icon name="calendar-dots" [size]="15" class="text-text-secondary" aria-hidden="true" />
+  </div>
+
+  <!-- RTL: the start day on the right, the end day on the left. -->
+  <dl class="flex gap-3">
+    <div class="flex flex-1 flex-col gap-1 rounded bg-white p-3 text-start">
+      <dt class="text-[11px]/[14px] text-text-secondary">تاريخ البداية</dt>
+      <dd class="text-[14px]/[20px] font-bold text-text-primary">
+        {{ startsOn() | latinDigitDate }}
+      </dd>
+    </div>
+    <div class="flex flex-1 flex-col gap-1 rounded bg-white p-3 text-start">
+      <dt class="text-[11px]/[14px] text-text-secondary">تاريخ الانتهاء</dt>
+      <dd class="text-[14px]/[20px] font-bold text-text-primary">
+        {{ endsOn() | latinDigitDate }}
+      </dd>
+    </div>
+  </dl>
+</section>

@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { PICTURE_RULES } from '../../../../shared/files/picture-rules';
+import { VIDEO_RULES } from '../../../../shared/files/video-rules';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
-import { FileRules } from '../../../../shared/ui/media-picker/file-rules';
 import { MediaFile } from '../../../../shared/ui/media-picker/media-file';
 import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
@@ -25,23 +26,8 @@ import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor'
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
 const DEFAULT_SERVICES = ['توصيل', 'خدمة 24 ساعة', 'مواقف سيارات'];
-const MEGABYTE = 1024 * 1024;
 /** Syrian pound, the only currency the design offers. */
 const CURRENCY = 'ل.س';
-
-const IMAGE_RULES: FileRules = {
-  maxBytes: 5 * MEGABYTE,
-  accepted: ['image/jpeg', 'image/png'],
-  typeMessage: 'يُسمح بصيغ JPG و PNG فقط',
-  sizeMessage: 'الحد الأقصى لحجم الصورة 5 ميجابايت',
-};
-
-const VIDEO_RULES: FileRules = {
-  maxBytes: 50 * MEGABYTE,
-  accepted: ['video/*'],
-  typeMessage: 'يُسمح بملفات الفيديو فقط',
-  sizeMessage: 'الحد الأقصى لحجم الفيديو 50 ميجابايت',
-};
 
 /** Tartus, the city the design centres its map on. */
 const DEFAULT_LATITUDE = 34.8959;
@@ -93,7 +79,7 @@ export class PlaceForm {
 
   protected readonly week = signal<readonly WorkingDay[]>(createDefaultWeek());
   protected readonly services = signal<readonly string[]>(DEFAULT_SERVICES);
-  protected readonly imageRules = IMAGE_RULES;
+  protected readonly imageRules = PICTURE_RULES;
   protected readonly videoRules = VIDEO_RULES;
   protected readonly isPickingOnMap = signal(false);
   protected readonly locationError = signal('');

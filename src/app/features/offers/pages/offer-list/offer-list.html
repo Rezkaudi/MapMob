@@ -1,0 +1,103 @@
+<!-- Header, the stat cards 16px below, the toolbar 40px below them, the table 30px below that, paging 17px under it. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="العروض الترويجية"
+    description="إدارة ومتابعة العروض التابعة للشركات و المتاجر."
+    descriptionSize="small"
+    addLabel="إضافة عرض جديد"
+    [isAddVisible]="!store.hasNoOffers()"
+    [isExportVisible]="!store.hasNoOffers()"
+    [isExporting]="store.isExporting()"
+    (add)="addOffer()"
+    (exportRequested)="exportOffers()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadOffers()" />
+  } @else if (store.hasNoOffers()) {
+    <app-empty-page-message
+      title="لا توجد عروض مضافة حتى الآن"
+      description="أضف أول عرض إلى المنصة."
+      addLabel="إضافة عرض جديد"
+      (add)="addOffer()"
+    />
+  } @else {
+    <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card
+          [isLoading]="store.isSummaryLoading()"
+          [icon]="card.icon"
+          [label]="card.label"
+          [value]="card.value"
+        />
+      }
+    </div>
+
+    <app-offer-toolbar
+      class="mt-10"
+      [filters]="store.filters()"
+      [activeFilterCount]="store.activeFilterCount()"
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+      (filtersApply)="store.applyFilters($event)"
+    />
+
+    <app-offer-table
+      class="mt-[30px]"
+      [entries]="store.entries()"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [emptyMessage]="store.emptyMessage()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (view)="detailStore.open($event.id)"
+      (remove)="pendingDeletion.set($event)"
+    />
+
+    <app-table-pagination
+      class="mt-[17px]"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="عرض"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+</div>
+
+@if (detailStore.isOpen()) {
+  <app-offer-detail-drawer
+    [detail]="detailStore.detail()"
+    [view]="detailStore.view()"
+    [isLoading]="detailStore.isLoading()"
+    [error]="detailStore.error()"
+    [isBusy]="store.isSaving()"
+    (closed)="detailStore.close()"
+    (retry)="detailStore.reload()"
+    (edit)="editOffer($event)"
+    (pause)="pauseOffer($event)"
+    (resume)="resumeOffer($event)"
+    (remove)="pendingDeletion.set($event)"
+  />
+}
+
+@if (deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="confirmDeletion()"
+    (cancelled)="cancelDeletion()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

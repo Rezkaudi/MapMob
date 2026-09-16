@@ -1,0 +1,53 @@
+<!-- 247px tall, so the list scrolls inside; the design cuts the fourth row in half to show it. -->
+<div class="flex h-[247px] flex-col gap-4 rounded-xl bg-[#f2f4f6] p-4">
+  <!-- RTL: the 608px search sits on the right; the glyph leads inside it. -->
+  <label
+    class="flex h-10 w-[608px] max-w-full items-center rounded-lg bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] focus-within:outline-2 focus-within:outline-primary"
+  >
+    <app-icon name="search-thin" [size]="14" class="ms-2 me-2 text-[#717784]" aria-hidden="true" />
+    <input
+      type="search"
+      aria-label="ابحث باسم خدمة أو منتج"
+      placeholder="ابحث باسم خدمة أو منتج..."
+      class="h-full min-w-0 flex-1 rounded-lg bg-transparent pe-3 text-[14px] text-text-primary outline-none placeholder:text-text-secondary"
+      [value]="search()"
+      (input)="updateSearch($event)"
+    />
+  </label>
+
+  @if (isLoading()) {
+    <div class="flex flex-col gap-1" aria-busy="true">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <span class="h-11 animate-pulse rounded-lg bg-white/70"></span>
+      }
+    </div>
+  } @else if (rows().length === 0) {
+    <p class="py-6 text-center text-[12px]/[16px] text-text-secondary">
+      لا توجد منتجات أو خدمات لعرضها
+    </p>
+  } @else {
+    <ul class="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto ps-1 pb-9">
+      @for (row of rows(); track row.item.id) {
+        <li>
+          <!-- RTL: the tick box on the right, the name next to it, the price at the far left. -->
+          <label
+            class="flex h-11 cursor-pointer items-center gap-3 rounded-lg bg-white p-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+          >
+            <input
+              type="checkbox"
+              class="size-[18px] shrink-0 rounded border border-[#94a3b8] accent-primary"
+              [checked]="row.isSelected"
+              (change)="toggle(row)"
+            />
+            <span class="min-w-0 flex-1 truncate text-start text-[14px]/[20px] text-text-primary">
+              {{ row.item.name }}
+            </span>
+            <span class="shrink-0 text-[12px]/[20px] font-bold text-text-primary">
+              {{ row.priceLabel }}
+            </span>
+          </label>
+        </li>
+      }
+    </ul>
+  }
+</div>

@@ -33,4 +33,16 @@ describe('DateField', () => {
 
     expect(valueChange.mock.calls).toEqual([['2026-09-02'], [null]]);
   });
+
+  it('grows to the 40px form box and can leave its label to the input only', () => {
+    const fixture = render('2026-08-01');
+    fixture.componentRef.setInput('size', 'regular');
+    fixture.componentRef.setInput('isLabelShown', false);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('[data-role="date-box"]')?.className).toContain('h-10');
+    expect(element.textContent).not.toContain('من تاريخ');
+    expect(element.querySelector('input')?.getAttribute('aria-label')).toBe('من تاريخ');
+  });
 });

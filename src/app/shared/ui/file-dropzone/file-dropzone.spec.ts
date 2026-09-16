@@ -57,4 +57,18 @@ describe('FileDropzone', () => {
 
     expect(picked.map((f) => f.name)).toEqual(['shop.png']);
   });
+
+  it('draws the dashed white card of the offer and ad forms, with the prompt before the link', () => {
+    const fixture = TestBed.createComponent(FileDropzone);
+    fixture.componentRef.setInput('prompt', 'اسحب وأفلت الصور هنا');
+    fixture.componentRef.setInput('appearance', 'dashed');
+    fixture.detectChanges();
+    const zone: HTMLElement = fixture.nativeElement.querySelector('label');
+
+    expect(zone.className).toContain('border-dashed');
+    expect(zone.className).toContain('border-2');
+    expect(zone.querySelector('[data-role="prompt"]')?.textContent?.trim()).toBe(
+      'اسحب وأفلت الصور هنا أو استعرض الملفات',
+    );
+  });
 });
