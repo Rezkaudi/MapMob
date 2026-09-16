@@ -10,6 +10,8 @@
   --font-cairo: 'Cairo', 'Tajawal', sans-serif;
   --font-latin:
     'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* The payment detail modal sets its tag and amount in Inter, per the design. */
+  --font-inter: 'Inter', 'DM Sans', sans-serif;
 
   --color-primary: #0583ec;
   --color-primary-hover: #0470cc;

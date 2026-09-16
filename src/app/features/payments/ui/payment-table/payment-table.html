@@ -1,0 +1,81 @@
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="text-center">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (click)="$event.stopPropagation()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="text-center">رقم العملية</th>
+        <th class="text-center">اسم الشركة /المتجر</th>
+        <th class="text-center">المبلغ والعملة</th>
+        <th class="text-center">تاريخ الدفع</th>
+        <th class="text-center">طريقة الدفع</th>
+        <th class="text-center">رقم الايصال</th>
+        <th class="ps-[7px]">ملاحظات</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (payment of entries(); track payment.id) {
+          <tr
+            role="button"
+            tabindex="0"
+            class="h-[62px] cursor-pointer border-b border-border bg-surface text-[14px]/[17px] last:border-0 hover:bg-surface-muted"
+            (click)="view.emit(payment)"
+            (keydown.enter)="view.emit(payment)"
+          >
+            <td class="text-center">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد الدفعة ' + payment.transactionNumber"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(payment.id)"
+                (click)="$event.stopPropagation()"
+                (change)="rowToggle.emit(payment.id)"
+              />
+            </td>
+            <td class="text-center font-bold text-text-primary" dir="ltr">
+              {{ payment.transactionNumber }}
+            </td>
+            <td class="text-center font-bold text-text-primary">
+              <span class="line-clamp-1">{{ payment.companyName }}</span>
+            </td>
+            <td class="text-center text-text-secondary">
+              <div>{{ payment.amount.toFixed(2) }}</div>
+              <div>{{ payment.currency }}</div>
+            </td>
+            <td class="text-center whitespace-nowrap text-text-secondary">
+              {{ payment.paidAt | arabicDate }}
+            </td>
+            <td class="text-center text-text-secondary">{{ methodLabels[payment.paymentMethod] }}</td>
+            <td class="text-center text-text-secondary" dir="ltr">{{ payment.receiptNumber }}</td>
+            <td class="ps-[7px] text-text-secondary">
+              <span class="line-clamp-2">{{ payment.notes }}</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

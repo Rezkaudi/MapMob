@@ -55,6 +55,11 @@ export const routes: Routes = [
           import('./features/subscriptions/subscriptions.routes').then((m) => m.SUBSCRIPTIONS_ROUTES),
       },
       {
+        path: 'payments',
+        loadChildren: () =>
+          import('./features/payments/payments.routes').then((m) => m.PAYMENTS_ROUTES),
+      },
+      {
         path: 'not-found',
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
       },

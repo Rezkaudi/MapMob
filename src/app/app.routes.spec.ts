@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
+import { PaymentRepository } from './features/payments/data/payment.repository';
 import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
 import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
 import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
@@ -25,6 +26,14 @@ describe('app routes', () => {
         { provide: PlanMockDatabase, useFactory: () => new PlanMockDatabase(MOCK_PLANS) },
         { provide: SubscriptionMockDatabase, useFactory: () => new SubscriptionMockDatabase([]) },
         { provide: SubscriptionRepository, useClass: SubscriptionMockRepository },
+        {
+          provide: PaymentRepository,
+          useValue: {
+            getPayments: () => of({ items: [], totalCount: 0 }),
+            getSummary: () =>
+              of({ pendingCount: 0, transactionCount: 0, monthTotal: 0, cumulativeTotal: 0 }),
+          },
+        },
       ],
     });
   });
@@ -67,7 +76,7 @@ describe('app routes', () => {
   it('renders the not-found page inside the admin shell', async () => {
     signIn();
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/payments');
+    await harness.navigateByUrl('/reports');
 
     const el = harness.fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-sidebar')).toBeTruthy();
@@ -81,6 +90,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/subscriptions');
     expect(harness.fixture.nativeElement.querySelector('app-subscription-hub')).toBeTruthy();
+  });
+
+  it('serves the payments page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/payments');
+
+    expect(TestBed.inject(Location).path()).toBe('/payments');
+    expect(harness.fixture.nativeElement.querySelector('app-payment-list')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {

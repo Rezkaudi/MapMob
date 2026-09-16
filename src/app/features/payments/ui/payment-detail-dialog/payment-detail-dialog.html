@@ -1,0 +1,204 @@
+<div class="fixed inset-0 z-50 overflow-y-auto bg-[rgba(25,28,29,0.3)] backdrop-blur-[4px]">
+  <div
+    class="flex min-h-full items-center justify-center p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="payment-detail-title"
+    (click)="closed.emit()"
+  >
+    <div
+      class="w-full max-w-[672px] overflow-hidden rounded-2xl bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- RTL: the titles on the right, the close cross on the left. -->
+      <header class="flex items-center justify-between border-b border-[#eceef0] bg-white px-8 py-6">
+        <div class="flex flex-col gap-1">
+          <!-- RTL: the heading first on the right, the tag 12px to its left. -->
+          <div class="flex items-center gap-3">
+            <h2
+              id="payment-detail-title"
+              class="text-[24px]/[30px] font-bold tracking-[-0.24px] text-text-primary"
+            >
+              تفاصيل الدفعة
+            </h2>
+            <span
+              dir="ltr"
+              class="rounded-xl bg-primary-tint px-2 py-0.5 font-inter text-[12px]/[16px] font-semibold text-primary"
+            >
+              {{ detail()?.transactionNumber }}
+            </span>
+          </div>
+          <p class="text-[11px]/[14px] text-text-secondary">
+            عرض وتوثيق بيانات العملية المالية والاشتراك المرتبط
+          </p>
+        </div>
+        <button
+          type="button"
+          aria-label="إغلاق النافذة"
+          class="flex size-6 items-center justify-center rounded text-text-secondary hover:bg-surface-muted"
+          (click)="closed.emit()"
+        >
+          <app-icon name="close-thin" [size]="24" aria-hidden="true" />
+        </button>
+      </header>
+
+      @if (error(); as message) {
+        <div class="p-8">
+          <app-error-state [message]="message" (retry)="retry.emit()" />
+        </div>
+      } @else if (detail(); as d) {
+        <div class="flex flex-col gap-6 p-8">
+          <!-- RTL: the amount on the right, the date and method pills on the left. -->
+          <div
+            class="flex items-center justify-between rounded-lg border border-border bg-[#f2f4f6] p-6"
+          >
+            <div class="flex flex-col gap-1">
+              <span class="text-[12px]/[16px] text-text-secondary">قيمة المبلغ المسدد</span>
+              <span
+                dir="ltr"
+                class="font-inter text-[30px]/[38px] font-bold tracking-[-0.75px] text-status-success"
+              >
+                {{ d.amount.toFixed(2) }} {{ d.currency }}
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span
+                class="flex items-center gap-1 rounded-lg bg-white px-4 py-1 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+              >
+                <app-icon
+                  name="calendar-filled"
+                  [size]="13"
+                  class="text-text-secondary"
+                  aria-hidden="true"
+                />
+                <span dir="ltr" class="text-[12px]/[14px] font-medium text-text-secondary">{{
+                  d.paidAt | slashDate
+                }}</span>
+              </span>
+              <span class="rounded-xl bg-[#d4e3ff] px-4 py-1 text-[12px]/[14px] text-[#001c3a]">
+                {{ methodLabels[d.paymentMethod] }}
+              </span>
+            </div>
+          </div>
+
+          <section class="flex flex-col gap-3">
+            <div class="border-b border-[#eceef0] pb-1">
+              <h3 class="text-[18px]/[28px] font-medium text-text-primary">معلومات الدفعة</h3>
+            </div>
+            <!-- RTL: the first grid column is the right one. -->
+            <dl class="grid grid-cols-2 gap-4 rounded-lg bg-[#f2f4f6] p-4">
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-text-secondary">رقم العملية:</dt>
+                <dd dir="ltr" class="text-end text-[12px]/[16px] font-medium text-primary">
+                  {{ d.transactionNumber }}
+                </dd>
+              </div>
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-text-secondary">رقم الإيصال:</dt>
+                <dd dir="ltr" class="text-end text-[12px]/[16px] font-medium text-text-primary">
+                  {{ d.receiptNumber }}
+                </dd>
+              </div>
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-[#717784]">المبلغ:</dt>
+                <dd class="font-inter text-[12px]/[16px] font-semibold text-status-success">
+                  {{ d.amount.toFixed(2) }}
+                </dd>
+              </div>
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-text-secondary">العملة:</dt>
+                <dd dir="ltr" class="text-end text-[12px]/[16px] text-text-primary">
+                  {{ currencyFullNames[d.currency] }}
+                </dd>
+              </div>
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-text-secondary">تاريخ الدفع:</dt>
+                <dd dir="ltr" class="text-end font-inter text-[12px]/[18px] text-text-primary">
+                  {{ d.paidAt | slashDate }}
+                </dd>
+              </div>
+              <div class="flex flex-col gap-0.5">
+                <dt class="text-[12px]/[14px] text-text-secondary">طريقة الدفع:</dt>
+                <dd class="text-[13px]/[18px] text-text-primary">
+                  {{ methodLabels[d.paymentMethod] }}
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="flex flex-col gap-3">
+            <div class="border-b border-[#eceef0] pb-1">
+              <h3 class="text-[18px]/[28px] font-medium text-[#191c1e]">الشركة / المتجر</h3>
+            </div>
+            <div class="flex flex-col gap-3 rounded-lg bg-[#f2f4f6] p-4">
+              <div class="flex flex-col gap-1 pb-0.5">
+                <span class="text-[12px]/[16px] font-medium text-[#191c1e]">{{ d.company.name }}</span>
+                <span class="text-[12px]/[14px] text-text-secondary">{{ d.company.type }}</span>
+              </div>
+              <!-- RTL: the manager on the right edge, the phone on the left edge; each label before its value. -->
+              <div class="flex items-start gap-3 border-t border-[#eceef0] pt-1">
+                <div class="flex flex-1 items-center gap-1">
+                  <span class="text-[11px]/[14px] text-text-secondary">اسم المسؤول:</span>
+                  <span class="text-[12px]/[16px] text-text-primary">{{ d.company.contactName }}</span>
+                </div>
+                <div class="flex flex-1 items-center justify-end gap-1">
+                  <span class="text-[11px]/[14px] text-text-secondary">رقم التواصل:</span>
+                  <span dir="ltr" class="text-[12px]/[16px] font-medium text-text-primary">{{
+                    d.company.contactPhone
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          @if (d.subscription; as subscription) {
+            <section class="flex flex-col gap-3">
+              <div class="border-b border-[#eceef0] pb-1">
+                <h3 class="text-[18px]/[28px] font-medium text-text-primary">الاشتراك المرتبط</h3>
+              </div>
+              <div class="flex flex-col gap-3 rounded-lg bg-[#f2f4f6] p-4">
+                <span class="text-[18px]/[28px] text-primary">{{ subscription.planName }}</span>
+                <!-- RTL: the cycle on the right, then the start, then the end on the left. -->
+                <div class="flex items-start justify-center gap-3 border-t border-[#eceef0] pt-1">
+                  <div class="flex w-[184px] flex-col gap-[3.5px]">
+                    <span class="text-[11px]/[14px] text-text-secondary">نوع الاشتراك / الدورة:</span>
+                    <span class="text-[12px]/[16px] text-text-primary">{{ subscription.cycle }}</span>
+                  </div>
+                  <div class="flex w-[184px] flex-col gap-[3.5px]">
+                    <span class="text-[11px]/[14px] text-text-secondary">تاريخ بداية الاشتراك:</span>
+                    <span dir="ltr" class="text-end text-[12px]/[16px] font-medium text-text-primary">{{
+                      subscription.startsOn | slashDate
+                    }}</span>
+                  </div>
+                  <div class="flex w-[184px] flex-col gap-[3.5px]">
+                    <span class="text-[11px]/[14px] text-text-secondary">تاريخ انتهاء الاشتراك:</span>
+                    <span dir="ltr" class="text-end text-[12px]/[16px] font-medium text-text-primary">{{
+                      subscription.endsOn | slashDate
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          }
+
+          <section class="flex flex-col gap-1">
+            <h3 class="text-[12px]/[16px] font-medium text-text-primary">الملاحظات</h3>
+            <p
+              class="rounded-lg border border-[#eceef0] bg-[#f2f4f6] p-4 text-[13px]/[18px] text-text-primary"
+            >
+              {{ d.notes }}
+            </p>
+          </section>
+        </div>
+      } @else if (isLoading()) {
+        <div class="flex flex-col gap-6 p-8" aria-busy="true">
+          <app-skeleton height="108px" />
+          <app-skeleton height="207px" />
+          <app-skeleton height="146px" />
+          <app-skeleton height="156px" />
+          <app-skeleton height="72px" />
+        </div>
+      }
+    </div>
+  </div>
+</div>

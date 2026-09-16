@@ -1,0 +1,78 @@
+<!-- Header, the stat cards 16px below, the toolbar 40px below them, the table 30px below that, paging 8px under it. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="المدفوعات"
+    description="تسجيل ومتابعة مدفوعات الشركات والمتاجر."
+    descriptionSize="small"
+    addLabel="إضافة دفعة جديدة"
+    [isAddVisible]="!store.hasNoPayments()"
+    [isExportVisible]="!store.hasNoPayments()"
+    [isExporting]="store.isExporting()"
+    (add)="addPayment()"
+    (exportRequested)="exportPayments()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadPayments()" />
+  } @else if (store.hasNoPayments()) {
+    <app-empty-page-message
+      title="لا توجد مدفوعات لعرضها"
+      description="سجّل أول دفعة من شركة أو متجر."
+      addLabel="إضافة دفعة جديدة"
+      (add)="addPayment()"
+    />
+  } @else {
+    <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card
+          [isLoading]="store.isSummaryLoading()"
+          [icon]="card.icon"
+          [label]="card.label"
+          [value]="card.value"
+        />
+      }
+    </div>
+
+    <app-payment-toolbar
+      class="mt-10"
+      [filters]="store.filters()"
+      [activeFilterCount]="store.activeFilterCount()"
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+      (filtersApply)="store.applyFilters($event)"
+    />
+
+    <app-payment-table
+      class="mt-[30px]"
+      [entries]="store.entries()"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [emptyMessage]="store.emptyMessage()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (view)="detailStore.open($event.id)"
+    />
+
+    <app-table-pagination
+      class="mt-2"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="عملية دفع"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+</div>
+
+@if (detailStore.isOpen()) {
+  <app-payment-detail-dialog
+    [detail]="detailStore.detail()"
+    [isLoading]="detailStore.isLoading()"
+    [error]="detailStore.error()"
+    (closed)="detailStore.close()"
+    (retry)="detailStore.reload()"
+  />
+}

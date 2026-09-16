@@ -1,0 +1,59 @@
+<app-filter-popover
+  panelId="payment-filter-panel"
+  heading="تصفية المدفوعات"
+  [canApply]="canApply()"
+  (applied)="apply()"
+  (reset)="reset()"
+  (closed)="closed.emit()"
+>
+  <div class="flex flex-col gap-[8.5px] pt-[5.5px]">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">المتجر / المكان</span>
+    <!-- RTL: the name reads from the right; the clear cross sits 10px in from the left edge. -->
+    <div class="relative h-9 w-full">
+      <input
+        type="text"
+        aria-label="المتجر / المكان"
+        class="font-cairo h-9 w-full rounded-[4px] border border-text-secondary bg-white ps-3 pe-8 text-right text-[12px]/[16px] font-medium text-[#1e293b] outline-none focus-visible:border-primary"
+        [value]="draft().companyName"
+        (input)="changeCompanyName($any($event.target).value)"
+      />
+      <button
+        type="button"
+        aria-label="مسح"
+        class="absolute end-[10px] top-1/2 flex -translate-y-1/2 hover:opacity-70"
+        (click)="clearCompanyName()"
+      >
+        <app-icon name="close-small" [size]="14" class="text-[#94a3b8]" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">طريقة الدفع</span>
+    <app-choice-chips
+      label="طريقة الدفع"
+      [options]="methodOptions"
+      [selected]="draft().paymentMethod"
+      (selectedChange)="pickMethod($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">العملة</span>
+    <app-choice-chips
+      label="العملة"
+      [options]="currencyOptions"
+      [selected]="draft().currency"
+      (selectedChange)="pickCurrency($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-2.5 border-t border-[#f1f5f9] pt-3">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">تاريخ الدفع</span>
+    <app-date-range-fields
+      [range]="draft().paidOn"
+      [hasFixedWidthFields]="true"
+      (rangeChange)="changePaidOn($event)"
+    />
+  </div>
+</app-filter-popover>
