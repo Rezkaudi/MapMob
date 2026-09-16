@@ -1,13 +1,15 @@
 <!-- RTL: each item leads with its icon on the right, then the label. -->
-<app-action-menu menuStyle="sharp">
-  <button
-    type="button"
-    class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
-    (click)="pickPrimary()"
-  >
-    <app-icon [name]="primaryItem().icon" [size]="primaryItem().iconSize" aria-hidden="true" />
-    <span>{{ primaryItem().label }}</span>
-  </button>
+<app-action-menu menuStyle="sharp" [triggerTone]="triggerTone()">
+  @if (isPrimaryVisible()) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="pickPrimary()"
+    >
+      <app-icon [name]="primaryItem().icon" [size]="primaryItem().iconSize" aria-hidden="true" />
+      <span>{{ primaryItem().label }}</span>
+    </button>
+  }
   @if (isStatusChangeVisible()) {
     <button
       type="button"

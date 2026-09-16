@@ -1,0 +1,40 @@
+<app-filter-popover
+  panelId="subscription-filter-panel"
+  heading="تصفية الاشتراكات"
+  [canApply]="canApply()"
+  (applied)="apply()"
+  (reset)="reset()"
+  (closed)="closed.emit()"
+>
+  <!-- The design labels both chip groups "الحالة"; the first one picks the package. -->
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">الباقة</span>
+    <app-choice-chips
+      label="الباقة"
+      layout="fill"
+      [options]="tierOptions"
+      [selected]="draft().tier"
+      (selectedChange)="pickTier($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">الحالة</span>
+    <app-choice-chips
+      label="الحالة"
+      layout="fill"
+      [options]="statusOptions"
+      [selected]="draft().status"
+      (selectedChange)="pickStatus($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-2.5 border-t border-[#f1f5f9] pt-3">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">تاريخ الاشتراك</span>
+    <app-date-range-fields
+      [range]="draft().subscribedRange"
+      [hasFixedWidthFields]="true"
+      (rangeChange)="changeRange($event)"
+    />
+  </div>
+</app-filter-popover>

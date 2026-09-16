@@ -1,0 +1,18 @@
+<app-filter-toolbar
+  searchPlaceholder="ابحث عن شركة /متجر.."
+  panelId="subscription-filter-panel"
+  [activeFilterCount]="activeFilterCount()"
+  [controlGap]="controlGap"
+  (searchChange)="searchChange.emit($event)"
+  (sortChange)="sortChange.emit($event)"
+>
+  <ng-template let-close="close">
+    <!-- The design hangs the panel 11px under the button, 2px in from its left edge. -->
+    <app-subscription-filter-panel
+      class="mt-[11px] ml-0.5"
+      [filters]="filters()"
+      (applied)="filtersApply.emit($event); close()"
+      (closed)="close()"
+    />
+  </ng-template>
+</app-filter-toolbar>

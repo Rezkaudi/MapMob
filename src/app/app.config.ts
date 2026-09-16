@@ -15,6 +15,7 @@ import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePlacesFeature } from './features/places/places.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
+import { provideSubscriptionsFeature } from './features/subscriptions/subscriptions.providers';
 import { provideUsersFeature } from './features/users/users.providers';
 
 registerLocaleData(localeAr);
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideAdsFeature(),
     provideOffersFeature(),
     provideReviewsFeature(),
+    provideSubscriptionsFeature(),
     provideDashboardFeature(),
     provideUsersFeature(),
     provideRegionsFeature(),

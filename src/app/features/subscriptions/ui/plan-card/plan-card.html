@@ -1,0 +1,101 @@
+<!--
+  The blocks sit at fixed offsets so the three cards line up row for row, whatever
+  their content: the tagline keeps two lines of height even when it fills one.
+-->
+<article class="relative flex h-full flex-col justify-between rounded-2xl p-6" [class]="skin().card">
+  <div class="absolute top-[25px] end-[22px]">
+    <app-row-actions-menu
+      [triggerTone]="skin().menuTone"
+      (edit)="edit.emit(plan())"
+      (statusChange)="statusChange.emit(plan())"
+      (remove)="remove.emit(plan())"
+    />
+  </div>
+
+  <!-- 508px is the design's content box: it pins the button to the same line on every card. -->
+  <div class="flex min-h-[508px] flex-col">
+    <span class="flex size-12 items-center justify-center rounded-xl" [class]="skin().tile">
+      <app-icon
+        [name]="skin().tileIconName"
+        [size]="skin().tileIconSize"
+        [class]="skin().tileIcon"
+        aria-hidden="true"
+      />
+    </span>
+
+    <div class="mt-[3px] flex items-center justify-between gap-2 pt-3">
+      <h3 data-role="name" class="text-[20px]/[28px] font-bold" [class]="skin().name">
+        {{ plan().name }}
+      </h3>
+      @if (plan().badge; as badge) {
+        <span
+          data-role="badge"
+          class="rounded-full px-2 py-0.5 text-[12px]/[16px]"
+          [class]="skin().badge"
+        >
+          {{ badge }}
+        </span>
+      }
+    </div>
+
+    <p
+      data-role="tagline"
+      class="mt-1 line-clamp-2 h-[39px] text-[12px]/[19.5px]"
+      [class]="skin().tagline"
+    >
+      {{ plan().tagline }}
+    </p>
+
+    <div class="mt-[21px] flex flex-col gap-1 border-b pb-5" [class]="skin().priceDivider">
+      <p class="flex h-9 items-baseline gap-1">
+        <span data-role="amount" class="text-[30px]/[36px]" [class]="skin().amount">
+          {{ view().price.amount }}
+        </span>
+        @if (view().price.currency; as currency) {
+          <span
+            data-role="currency"
+            class="text-[12px]/[16px] font-bold"
+            [class]="skin().unit"
+            >{{ currency }}</span
+          >
+        }
+        <span data-role="period" class="text-[12px]/[16px] font-medium" [class]="skin().unit">{{
+          view().price.period
+        }}</span>
+      </p>
+      <p data-role="subscribers" class="text-[12px]/[16px]" [class]="skin().unit">
+        {{ view().subscriberLine }}
+      </p>
+    </div>
+
+    <dl class="mt-5 flex flex-col gap-2 rounded-xl p-[14px]" [class]="skin().limitsBox">
+      @for (row of view().limitRows; track row.label) {
+        <div data-role="limit-row" class="flex items-center justify-between gap-2">
+          <dt class="text-[12px]/[16px] font-medium" [class]="skin().limitLabel">
+            {{ row.label }}
+          </dt>
+          <dd class="text-[12px]/[16px] font-bold" [class]="skin().limitValue">{{ row.value }}</dd>
+        </div>
+      }
+    </dl>
+
+    <ul class="mt-5 flex flex-col gap-2.5">
+      @for (feature of plan().features; track feature) {
+        <li data-role="feature" class="flex items-center gap-2">
+          <app-icon name="check-thin" [size]="16" class="text-status-success" aria-hidden="true" />
+          <span class="text-[12px]/[16px]" [class]="skin().feature">{{ feature }}</span>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <button
+    data-role="edit"
+    type="button"
+    class="w-full rounded-[4px] px-4 py-2.5 text-center text-[12px]/[16px]"
+    [class]="skin().callToAction"
+    (click)="edit.emit(plan())"
+  >
+    تعديل خصائص الباقة
+  </button>
+</article>

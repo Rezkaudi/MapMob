@@ -108,4 +108,14 @@ describe('ActionMenu', () => {
       'text-text-primary',
     );
   });
+
+  it('turns the dots white on a dark card, where the skin colour would disappear', () => {
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('triggerTone', 'inverse');
+    fixture.detectChanges();
+
+    const trigger = fixture.nativeElement.querySelector('button[aria-haspopup]');
+    expect(trigger.className).toContain('text-white/80');
+    expect(trigger.className).not.toContain('text-text-secondary');
+  });
 });

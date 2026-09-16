@@ -18,4 +18,15 @@ describe('EmptyPageMessage', () => {
 
     expect(add).toHaveBeenCalled();
   });
+
+  it('draws the title alone when there is nothing to add from here', () => {
+    const fixture = TestBed.createComponent(EmptyPageMessage);
+    fixture.componentRef.setInput('title', 'لا توجد اشتراكات حتى الآن');
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('h2')?.textContent?.trim()).toBe('لا توجد اشتراكات حتى الآن');
+    expect(element.querySelector('p')).toBeNull();
+    expect(element.querySelector('app-add-button')).toBeNull();
+  });
 });

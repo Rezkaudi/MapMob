@@ -1,0 +1,175 @@
+<div
+  class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[rgba(25,28,29,0.3)] px-6 py-20"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="plan-form-title"
+  (click)="cancelled.emit()"
+>
+  <form
+    [formGroup]="form()"
+    class="w-full max-w-[896px] rounded-2xl border border-border/90 bg-surface shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+    (click)="$event.stopPropagation()"
+    (ngSubmit)="save()"
+  >
+    <!-- RTL: the badge and titles on the right, the close button on the left. -->
+    <header class="flex items-center justify-between gap-4 border-b border-[#f1f5f9] px-6 py-4">
+      <div class="flex items-center gap-3">
+        <span
+          class="flex size-10 items-center justify-center rounded-xl border border-[#e0efff] bg-[#f0f7ff] text-primary"
+          aria-hidden="true"
+        >
+          <app-icon name="edit-outline" [size]="20" />
+        </span>
+        <div class="flex flex-col gap-1 text-start">
+          <h2 id="plan-form-title" class="text-[18px]/[28px] font-extrabold text-text-primary">
+            تعديل الباقة
+          </h2>
+          <p class="text-[12px]/[16px] text-text-secondary">{{ subtitle() }}</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        aria-label="إغلاق النافذة"
+        class="flex size-9 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-muted"
+        (click)="cancelled.emit()"
+      >
+        <app-icon name="close-thin" [size]="24" aria-hidden="true" />
+      </button>
+    </header>
+
+    <div class="flex flex-col gap-6 p-6">
+      <p
+        class="rounded-xl border border-[#bae6fd]/80 bg-linear-90 from-[#eff6ff]/90 via-[#f0f9ff]/60 to-white p-4 text-[12px]/[16px] text-[#475569]"
+      >
+        <span class="font-bold text-[#334155]">تنويه : </span>
+        تعديل الأسعار أو المزايا يطبق على الاشتراكات الجديدة و عمليات التجديد اللاحقة فقط. تحتفظ
+        الاشتراكات السارية بكافة بنودها الحالية حتى انتهاء دورة الفوترة المعتمدة.
+      </p>
+
+      <section class="flex flex-col gap-4 rounded-xl border border-border p-5">
+        <h3
+          class="border-b border-[#f1f5f9] pb-3 text-[18px]/[20px] font-medium text-text-primary"
+        >
+          معلومات الباقة الأساسية وحالة التفعيل
+        </h3>
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <label class="flex flex-col gap-[5px]">
+            <span class="text-[14px]/[16px] font-bold text-text-primary">
+              اسم الباقة <span class="text-[11px]/[14px] font-medium text-[#ba1a1a]">*</span>
+            </span>
+            <input
+              type="text"
+              formControlName="name"
+              class="h-[42px] rounded-lg border border-border bg-surface px-3.5 text-[14px]/[20px] font-medium text-[#1e293b] outline-none focus:border-primary"
+            />
+          </label>
+
+          <div class="flex flex-col gap-[5px]">
+            <span class="text-[14px]/[16px] font-bold text-text-primary">
+              حالة ظهور الباقة للاشتراك
+              <span class="text-[11px]/[14px] font-medium text-[#ba1a1a]">*</span>
+            </span>
+            <!-- RTL: "نشطة" on the right, "موقوفة مؤقتاً" on the left, as the design draws it. -->
+            <div
+              class="flex h-[43px] items-center gap-2 rounded-xl border border-border bg-[#f1f5f9]/90 p-1 pt-[5px]"
+              role="group"
+              aria-label="حالة ظهور الباقة للاشتراك"
+            >
+              @for (option of [true, false]; track option) {
+                <button
+                  type="button"
+                  class="flex h-8 flex-1 items-center justify-center rounded-lg px-3 text-[12px]/[16px]"
+                  [class]="
+                    form().controls.isActive.value === option
+                      ? option
+                        ? 'bg-status-success font-bold text-white'
+                        : 'bg-white font-bold text-text-primary'
+                      : 'font-medium text-text-secondary'
+                  "
+                  [attr.aria-pressed]="form().controls.isActive.value === option"
+                  (click)="form().controls.isActive.setValue(option)"
+                >
+                  {{ option ? 'نشطة' : 'موقوفة مؤقتاً' }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-xl border border-border/90 p-5">
+        <h3 class="border-b border-[#f1f5f9] pb-3 text-[18px]/[20px] font-medium text-text-primary">
+          التسعير ودورات الفوترة (شهري / سنوي)
+        </h3>
+
+        <div class="flex flex-col gap-4 md:flex-row">
+          <app-price-cycle-card
+            tone="monthly"
+            title="الاشتراك الشهري"
+            badge="مُفعل"
+            priceLabel="قيمة الاشتراك الشهري"
+            [currency]="form().controls.currency.value"
+            [control]="form().controls.monthlyPrice"
+          />
+          <app-price-cycle-card
+            tone="yearly"
+            title="الاشتراك السنوي"
+            [badge]="yearlyDiscount() ? 'خصم ' + yearlyDiscount() + '%' : 'سنوي'"
+            priceLabel="قيمة الاشتراك السنوي بعد الخصم"
+            [currency]="form().controls.currency.value"
+            [control]="form().controls.yearlyPrice"
+          />
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-xl border border-border/90 p-5">
+        <h3 class="border-b border-[#f1f5f9] pb-3 text-[18px]/[20px] font-medium text-text-primary">
+          حدود الاستخدام وحصص المحتوى
+        </h3>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          @for (field of limitFields; track field.key) {
+            <app-limit-stepper
+              [label]="field.label"
+              [tag]="field.tag"
+              [tagClasses]="field.tagClasses"
+              [control]="limitControl(field)"
+            />
+          }
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-xl border border-border/90 p-5">
+        <div class="flex flex-col gap-1 border-b border-[#f1f5f9] pb-3">
+          <h3 class="text-[18px]/[20px] font-medium text-[#1e293b]">
+            المزايا التسويقية والتشغيلية للباقة
+          </h3>
+          <p class="text-[11px]/[16.5px] text-[#94a3b8]">
+            تظهر هذه المزايا كنقاط مميزة في بطاقة الاشتراك للعملاء
+          </p>
+        </div>
+
+        <app-plan-feature-rows [features]="form().controls.features" />
+      </section>
+    </div>
+
+    <!-- RTL: both buttons sit at the left end, save nearest the edge. -->
+    <footer class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
+      <button
+        type="button"
+        class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-surface-muted"
+        (click)="cancelled.emit()"
+      >
+        إلغاء
+      </button>
+      <button
+        type="submit"
+        class="h-[42px] rounded bg-primary px-6 text-[14px]/[20px] font-extrabold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="isBusy()"
+      >
+        حفظ التعديلات
+      </button>
+    </footer>
+  </form>
+</div>

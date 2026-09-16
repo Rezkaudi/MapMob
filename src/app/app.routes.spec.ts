@@ -6,6 +6,11 @@ import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
+import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
+import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
+import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
+import { SubscriptionMockRepository } from './features/subscriptions/data/subscription-mock.repository';
+import { SubscriptionRepository } from './features/subscriptions/data/subscription.repository';
 
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
 
@@ -16,6 +21,10 @@ describe('app routes', () => {
       providers: [
         provideRouter(routes),
         { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+        // Feature repositories live in `app.config.ts`, which these route tests do not load.
+        { provide: PlanMockDatabase, useFactory: () => new PlanMockDatabase(MOCK_PLANS) },
+        { provide: SubscriptionMockDatabase, useFactory: () => new SubscriptionMockDatabase([]) },
+        { provide: SubscriptionRepository, useClass: SubscriptionMockRepository },
       ],
     });
   });
@@ -63,6 +72,15 @@ describe('app routes', () => {
     const el = harness.fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-sidebar')).toBeTruthy();
     expect(el.querySelector('app-top-bar')).toBeTruthy();
+  });
+
+  it('serves the subscriptions page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/subscriptions');
+
+    expect(TestBed.inject(Location).path()).toBe('/subscriptions');
+    expect(harness.fixture.nativeElement.querySelector('app-subscription-hub')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {

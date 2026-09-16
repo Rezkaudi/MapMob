@@ -11,7 +11,8 @@ import { AddButton } from '../add-button/add-button';
 })
 export class EmptyPageMessage {
   readonly title = input.required<string>();
-  readonly description = input.required<string>();
-  readonly addLabel = input.required<string>();
+  /** The subscriptions design shows the title on its own, with no line under it and no button. */
+  readonly description = input<string>('');
+  readonly addLabel = input<string>('');
   readonly add = output<void>();
 }
