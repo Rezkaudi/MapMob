@@ -21,4 +21,13 @@ describe('ToggleSwitch', () => {
 
     expect(fixture.nativeElement.querySelector('button').getAttribute('aria-checked')).toBe('true');
   });
+
+  it('can be locked so it cannot be flipped', () => {
+    const fixture = TestBed.createComponent(ToggleSwitch);
+    fixture.componentRef.setInput('isOn', true);
+    fixture.componentRef.setInput('isDisabled', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('button').disabled).toBe(true);
+  });
 });

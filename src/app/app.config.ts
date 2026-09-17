@@ -20,6 +20,7 @@ import { providePlacesFeature } from './features/places/places.providers';
 import { provideReportsFeature } from './features/reports/reports.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
+import { provideSettingsFeature } from './features/settings/settings.providers';
 import { provideSubscriptionsFeature } from './features/subscriptions/subscriptions.providers';
 import { provideUsersFeature } from './features/users/users.providers';
 
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
     providePaymentsFeature(),
     provideReportsFeature(),
     provideReviewsFeature(),
+    provideSettingsFeature(),
     provideSubscriptionsFeature(),
     provideDashboardFeature(),
     provideUsersFeature(),

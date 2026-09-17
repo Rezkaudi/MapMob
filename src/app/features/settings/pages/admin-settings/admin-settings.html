@@ -1,0 +1,37 @@
+<!-- The design frame repeats the roles heading here; this tab uses its own title and action. -->
+<app-settings-section-heading
+  title="مشرفوا لوحة التحكم"
+  description="إدارة حسابات مشرفي لوحة التحكم وأدوارهم وحالة وصولهم."
+>
+  <app-settings-add-button
+    sectionHeadingAction
+    class="me-[3px]"
+    label="إضافة مشرف جديد"
+    (pressed)="store.openInviteDialog()"
+  />
+</app-settings-section-heading>
+
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="store.loadAdmins()" />
+} @else {
+  <app-admin-table [admins]="store.admins()" [isLoading]="store.isLoading()" />
+}
+
+@if (store.isInviteDialogOpen()) {
+  <app-admin-invite-dialog
+    [roles]="store.assignableRoles()"
+    [suggestedRoleId]="store.suggestedRoleId()"
+    [isBusy]="store.isSaving()"
+    [saveError]="store.saveError()"
+    (invited)="store.inviteAdmin($event)"
+    (closed)="store.closeInviteDialog()"
+  />
+}
+
+@if (store.hasInvited()) {
+  <app-toast
+    title="تمت إضافة المشرف"
+    message="أرسلنا رابط تفعيل الحساب وتعيين كلمة السر إلى بريده الإلكتروني."
+    (dismissed)="store.dismissInvitedNotice()"
+  />
+}

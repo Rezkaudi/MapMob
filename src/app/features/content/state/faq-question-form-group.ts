@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FaqQuestionDraft } from '../models/faq-question-draft';
-import { hasText } from './has-text';
+import { hasText } from '../../../shared/forms/has-text';
 
 /** The "0 / 250" limit the dialog draws beside the answer label. */
 export const FAQ_ANSWER_MAX_LENGTH = 250;

@@ -11,6 +11,7 @@ import { ContentPageRepository } from './features/content/data/content-page.repo
 import { NotificationRepository } from './features/notifications/data/notification.repository';
 import { PaymentRepository } from './features/payments/data/payment.repository';
 import { ReportsRepository } from './features/reports/data/reports.repository';
+import { AccountRepository } from './features/settings/data/account.repository';
 import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
 import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
 import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
@@ -58,6 +59,12 @@ describe('app routes', () => {
                 resolvedCount: 0,
                 rejectedCount: 0,
               }),
+          },
+        },
+        {
+          provide: AccountRepository,
+          useValue: {
+            getProfile: () => of({ fullName: 'خولة محمد', email: 'k@mapmob.com', roleName: '' }),
           },
         },
         {
@@ -171,6 +178,16 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/content');
     expect(harness.fixture.nativeElement.querySelector('app-content-page-list')).toBeTruthy();
+  });
+
+  it('opens the account tab behind the settings nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/settings');
+
+    expect(TestBed.inject(Location).path()).toBe('/settings/account');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-settings-layout app-account-settings')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {

@@ -1,0 +1,62 @@
+<app-settings-section-heading
+  title="الأدوار و الصلاحيات"
+  description="إدارة أدوار المشرفين وتحديد الصلاحيات المتاحة لكل دور."
+>
+  <app-settings-add-button
+    sectionHeadingAction
+    class="me-[3px]"
+    label="إضافة دور جديد"
+    (pressed)="store.openAddDialog()"
+  />
+</app-settings-section-heading>
+
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="store.loadRoles()" />
+} @else {
+  <!-- The first card in markup sits on the right in RTL. -->
+  <div class="grid grid-cols-2 gap-4">
+    @if (store.isLoading()) {
+      @for (card of placeholderCards; track $index) {
+        <app-skeleton height="206px" />
+      }
+    } @else {
+      @for (role of store.roles(); track role.id) {
+        <app-role-card
+          [role]="role"
+          (open)="store.openRole($event)"
+          (remove)="store.askToDelete($event)"
+        />
+      }
+    }
+  </div>
+}
+
+@if (store.dialog(); as dialog) {
+  <app-role-dialog
+    [dialog]="dialog"
+    [isBusy]="store.isSaving()"
+    [saveError]="store.saveError()"
+    (saved)="store.saveRole($event)"
+    (closed)="store.closeDialog()"
+  />
+}
+
+@if (store.pendingDeletion()) {
+  <app-confirm-action-dialog
+    [copy]="deleteCopy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDeletion()"
+    (cancelled)="store.cancelDeletion()"
+  />
+}
+
+@if (store.deleteError(); as error) {
+  <app-toast
+    tone="error"
+    title="تعذر حذف الدور"
+    [message]="error"
+    (dismissed)="store.clearSaveError()"
+  />
+} @else if (savedTitle(); as title) {
+  <app-toast [title]="title" [message]="savedMessage" (dismissed)="store.dismissSavedNotice()" />
+}

@@ -84,6 +84,11 @@ export const routes: Routes = [
           import('./features/content/content.routes').then((m) => m.CONTENT_ROUTES),
       },
       {
+        path: 'settings',
+        loadChildren: () =>
+          import('./features/settings/settings.routes').then((m) => m.SETTINGS_ROUTES),
+      },
+      {
         path: 'not-found',
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
       },

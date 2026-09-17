@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { touchedError } from '../../state/touched-error';
+import { touchedError } from '../../../../shared/forms/touched-error';
 
 /** `regular` is the 60px phone, email and address box; `compact` is the 52px social link box. */
 export type ContactChannelSize = 'regular' | 'compact';

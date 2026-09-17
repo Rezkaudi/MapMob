@@ -1,7 +1,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ContentPageStatus } from '../models/content-page-status';
 import { LegalPageDraft } from '../models/legal-page-draft';
-import { hasText } from './has-text';
+import { hasText } from '../../../shared/forms/has-text';
 
 export function createLegalPageFormGroup() {
   return new FormGroup({

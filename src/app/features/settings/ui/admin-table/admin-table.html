@@ -1,0 +1,64 @@
+<div class="overflow-x-auto rounded-xl bg-white outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[777px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-11 border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
+      >
+        <th class="ps-4">المشرف</th>
+        <th class="ps-[29px]">البريد الالكتروني</th>
+        <th class="text-center">الدور</th>
+        <th class="text-center">الحالة</th>
+        <th class="pe-[18px] text-center">آخر تسجيل دخول</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody
+        app-table-skeleton
+        [columnCount]="columnWidths.length"
+        [rowCount]="placeholderRowCount"
+      ></tbody>
+    } @else {
+      <tbody>
+        @for (admin of admins(); track admin.id) {
+          <tr class="h-[77px] border-b border-border last:border-0">
+            <td class="truncate ps-4 text-[12px]/[16px] font-semibold text-text-primary">
+              {{ admin.fullName }}
+            </td>
+            <td class="truncate ps-2 font-inter text-[11px]/[14px] font-medium text-[#717784]">
+              {{ admin.email }}
+            </td>
+            <td class="text-center">
+              <span
+                class="inline-flex items-center justify-center rounded-full bg-primary px-3 py-1 text-[12px]/[18px] whitespace-nowrap text-white"
+              >
+                {{ admin.roleName }}
+              </span>
+            </td>
+            <td class="text-center">
+              <app-status-pill [status]="admin.status" [label]="statusLabels[admin.status]" />
+            </td>
+            <td class="pe-[18px] text-center text-[14px] whitespace-nowrap text-text-secondary">
+              @if (admin.lastSignInOn; as lastSignInOn) {
+                {{ lastSignInOn | latinDigitDate }}
+              } @else {
+                لم يسجل الدخول بعد
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="px-6 py-10 text-center text-[14px]/[20px] text-text-secondary">
+              لا يوجد مشرفون بعد. أضف أول مشرف للوحة التحكم.
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+</div>

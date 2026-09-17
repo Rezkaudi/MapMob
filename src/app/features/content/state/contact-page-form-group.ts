@@ -1,8 +1,8 @@
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ContactPageDraft } from '../models/contact-page-draft';
 import { ContentPageStatus } from '../models/content-page-status';
-import { contactEmail, phoneNumber, webAddress } from './contact-validators';
-import { hasText } from './has-text';
+import { contactEmail, phoneNumber, webAddress } from '../../../shared/forms/contact-validators';
+import { hasText } from '../../../shared/forms/has-text';
 
 function requiredText(...extraValidators: ValidatorFn[]) {
   return new FormControl('', {

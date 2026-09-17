@@ -28,7 +28,7 @@ import {
   CONTENT_SECTION_LABEL,
 } from '../../state/content-page-names';
 import { CONTENT_URL } from '../../state/content-page-route';
-import { touchedError } from '../../state/touched-error';
+import { touchedError } from '../../../../shared/forms/touched-error';
 import { AboutBannerField } from '../../ui/about-banner-field/about-banner-field';
 import { ContactChannelField } from '../../ui/contact-channel-field/contact-channel-field';
 import { ContentFieldLabel } from '../../ui/content-field-label/content-field-label';

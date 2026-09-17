@@ -1,0 +1,44 @@
+<app-settings-section-heading
+  title="إعدادات المنصة"
+  description="إدارة الإعدادات العامة على منصة MapMob"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="store.loadSettings()" />
+} @else if (store.settings(); as settings) {
+  <app-platform-general-card
+    [general]="settings.general"
+    [isSaving]="store.isFormSaving('general')"
+    (saved)="store.saveGeneral($event)"
+  />
+  <app-map-settings-card
+    [map]="settings.map"
+    [isSaving]="store.isFormSaving('map')"
+    (saved)="store.saveMap($event)"
+  />
+  <app-language-settings-card
+    [language]="settings.language"
+    [isSaving]="store.isFormSaving('language')"
+    (saved)="store.saveLanguage($event)"
+  />
+  <app-currency-settings-card
+    [currency]="settings.currency"
+    [isSaving]="store.isFormSaving('currency')"
+    (saved)="store.saveCurrency($event)"
+  />
+} @else {
+  @for (card of placeholderCards; track $index) {
+    <app-skeleton height="208px" />
+  }
+}
+
+@if (store.failedForm() && store.saveError(); as error) {
+  <app-toast
+    tone="error"
+    [title]="failedTitle"
+    [message]="error"
+    (dismissed)="store.clearSaveError()"
+  />
+} @else if (savedMessage(); as message) {
+  <app-toast [title]="savedTitle" [message]="message" (dismissed)="store.dismissSavedNotice()" />
+}

@@ -3,8 +3,8 @@ import { UploadedImage } from '../../../shared/ui/image-upload-field/uploaded-im
 import { AboutPage } from '../models/about-page';
 import { AboutPageDraft } from '../models/about-page-draft';
 import { ContentPageStatus } from '../models/content-page-status';
-import { contactEmail, phoneNumber } from './contact-validators';
-import { hasText } from './has-text';
+import { contactEmail, phoneNumber } from '../../../shared/forms/contact-validators';
+import { hasText } from '../../../shared/forms/has-text';
 
 function requiredText(...extraValidators: ReturnType<typeof Validators.pattern>[]) {
   return new FormControl('', {

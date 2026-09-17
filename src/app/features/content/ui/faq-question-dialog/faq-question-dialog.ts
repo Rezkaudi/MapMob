@@ -17,7 +17,7 @@ import {
   createFaqQuestionFormGroup,
   toFaqQuestionDraft,
 } from '../../state/faq-question-form-group';
-import { touchedError } from '../../state/touched-error';
+import { touchedError } from '../../../../shared/forms/touched-error';
 import { FAQ_QUESTION_DIALOG_COPY } from './faq-question-dialog-copy';
 
 const MESSAGES = {

@@ -1,0 +1,154 @@
+<app-settings-section-heading
+  title="إعدادات الحساب"
+  description="إدارة بيانات حسابك الشخصي كمشرف على منصة MapMob"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="store.loadProfile()" />
+} @else {
+  <form novalidate [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+    <app-settings-card title="المعلومات الشخصية" spacing="roomy">
+      @if (store.profile(); as profile) {
+        <span
+          settingsCardBadge
+          data-role="role-badge"
+          class="rounded-xl bg-primary-tint px-3 py-1 text-[12px]/[16px] text-primary"
+        >
+          {{ profile.roleName }}
+        </span>
+      }
+
+      <!-- The first field in markup sits on the right in RTL: the name, then the email. -->
+      <div class="grid grid-cols-2 gap-4 pt-1">
+        <app-settings-field
+          label="الاسم الكامل"
+          fieldId="account-full-name"
+          icon="settings-user"
+          [error]="fieldError('fullName')"
+        >
+          <input
+            id="account-full-name"
+            type="text"
+            autocomplete="name"
+            formControlName="fullName"
+            [class]="inputWithIconClasses"
+            [attr.aria-invalid]="fieldError('fullName') !== null"
+          />
+        </app-settings-field>
+        <app-settings-field
+          label="البريد الالكتروني"
+          fieldId="account-email"
+          icon="mail-outline"
+          [error]="fieldError('email')"
+        >
+          <input
+            id="account-email"
+            type="email"
+            autocomplete="email"
+            formControlName="email"
+            class="font-inter"
+            [class]="inputWithIconClasses"
+            [attr.aria-invalid]="fieldError('email') !== null"
+          />
+        </app-settings-field>
+      </div>
+
+      <div class="flex justify-end pt-1">
+        <button
+          type="submit"
+          [class]="submitButtonClasses"
+          [disabled]="store.isLoading() || store.isSavingProfile()"
+          [attr.aria-busy]="store.isSavingProfile()"
+        >
+          حفظ التغييرات
+        </button>
+      </div>
+    </app-settings-card>
+  </form>
+}
+
+<form novalidate [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+  <app-settings-card title="تغيير كلمة المرور">
+    <div class="grid grid-cols-3 gap-4">
+      <app-settings-field
+        label="كلمة المرور الحالية"
+        fieldId="current-password"
+        [error]="currentPasswordError"
+      >
+        <input
+          id="current-password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••••••"
+          formControlName="currentPassword"
+          dir="ltr"
+          class="text-left font-inter"
+          [class]="inputClasses"
+          [attr.aria-invalid]="currentPasswordError !== null"
+        />
+      </app-settings-field>
+      <app-settings-field
+        label="كلمة المرور الجديدة"
+        fieldId="new-password"
+        [error]="newPasswordError"
+      >
+        <input
+          id="new-password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="••••••••••••"
+          formControlName="newPassword"
+          dir="ltr"
+          class="text-left font-inter"
+          [class]="inputClasses"
+          [attr.aria-invalid]="newPasswordError !== null"
+        />
+      </app-settings-field>
+      <app-settings-field
+        label="تأكيد كلمة المرور الجديدة"
+        fieldId="confirm-password"
+        [error]="confirmPasswordError"
+      >
+        <input
+          id="confirm-password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="••••••••••••"
+          formControlName="confirmPassword"
+          dir="ltr"
+          class="text-left font-inter"
+          [class]="inputClasses"
+          [attr.aria-invalid]="confirmPasswordError !== null"
+        />
+      </app-settings-field>
+    </div>
+
+    <div class="flex justify-end pt-1">
+      <button
+        type="submit"
+        [class]="submitButtonClasses"
+        [disabled]="store.isChangingPassword()"
+        [attr.aria-busy]="store.isChangingPassword()"
+      >
+        تحديث كلمة المرور
+      </button>
+    </div>
+  </app-settings-card>
+</form>
+
+<app-sign-out-panel (signOut)="signOut()" />
+
+@if (failedTitle(); as title) {
+  <app-toast
+    tone="error"
+    [title]="title"
+    [message]="store.saveError() ?? ''"
+    (dismissed)="store.clearSaveError()"
+  />
+} @else if (savedCopy(); as copy) {
+  <app-toast
+    [title]="copy.title"
+    [message]="copy.message"
+    (dismissed)="store.dismissSavedNotice()"
+  />
+}

@@ -24,7 +24,7 @@ import {
 import { CONTENT_URL } from '../../state/content-page-route';
 import { LegalPageEditorStore } from '../../state/legal-page-editor.store';
 import { createLegalPageFormGroup, toLegalPageDraft } from '../../state/legal-page-form-group';
-import { touchedError } from '../../state/touched-error';
+import { touchedError } from '../../../../shared/forms/touched-error';
 import { ContentFieldLabel } from '../../ui/content-field-label/content-field-label';
 import { ContentFormCard } from '../../ui/content-form-card/content-form-card';
 import { ContentSaveToasts } from '../../ui/content-save-toasts/content-save-toasts';

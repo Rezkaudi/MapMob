@@ -1,0 +1,8 @@
+<!-- RTL: the title block on the right, the section action on the left. -->
+<div class="flex items-center justify-between gap-4">
+  <div class="flex flex-col text-start">
+    <h2 class="text-[18px]/[28px] font-bold text-text-primary">{{ title() }}</h2>
+    <p class="text-[12px]/[18px] text-text-secondary">{{ description() }}</p>
+  </div>
+  <ng-content select="[sectionHeadingAction]" />
+</div>

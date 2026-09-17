@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { touchedError } from '../../state/touched-error';
+import { touchedError } from '../../../../shared/forms/touched-error';
 import { ContentFieldLabel } from '../content-field-label/content-field-label';
 
 const MISSING_TITLE_MESSAGE = 'اكتب عنوان الصفحة';

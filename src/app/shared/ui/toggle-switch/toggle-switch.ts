@@ -9,5 +9,6 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class ToggleSwitch {
   readonly isOn = input.required<boolean>();
   readonly label = input<string>('');
+  readonly isDisabled = input<boolean>(false);
   readonly toggled = output<boolean>();
 }

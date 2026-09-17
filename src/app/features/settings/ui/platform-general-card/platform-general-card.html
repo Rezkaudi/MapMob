@@ -1,0 +1,91 @@
+<form novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <app-settings-card title="معلومات المنصة الأساسية" spacing="roomy">
+    <!-- The first field in markup sits on the right in RTL. The 60px logo field overflows its 56px row, as drawn. -->
+    <div class="grid grid-cols-2 grid-rows-[56px] gap-4 pt-1">
+      <app-settings-field
+        label="اسم التطبيق /المنصة"
+        fieldId="platform-app-name"
+        [error]="fieldError('appName')"
+      >
+        <input
+          id="platform-app-name"
+          type="text"
+          formControlName="appName"
+          [class]="inputClasses"
+          [attr.aria-invalid]="fieldError('appName') !== null"
+        />
+      </app-settings-field>
+
+      <div class="flex flex-col gap-1">
+        <span class="text-start text-[12px]/[16px] font-medium text-text-primary">
+          شعار التطبيق(Logo)
+        </span>
+        <!-- RTL: the file name on the right, the change button on the left. -->
+        <div class="flex h-10 items-center justify-between gap-3 rounded bg-[#f2f4f6] px-4">
+          <span
+            data-role="logo-file-name"
+            class="truncate font-inter text-[14px]/[20px] text-[#191c1e]"
+          >
+            {{ logoFileName() }}
+          </span>
+          <label
+            for="platform-logo"
+            class="flex h-6 shrink-0 cursor-pointer items-center rounded bg-white px-4 text-[10px]/[20px] font-medium text-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted has-focus-visible:outline-2 has-focus-visible:outline-primary"
+          >
+            تغيير الشعار
+            <input
+              id="platform-logo"
+              type="file"
+              accept="image/svg+xml,image/png,image/webp"
+              class="sr-only"
+              (change)="pickLogo($event)"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 pt-1">
+      <app-settings-field
+        label="البريد الالكتروني للدعم الفني"
+        fieldId="platform-support-email"
+        [error]="fieldError('supportEmail')"
+      >
+        <input
+          id="platform-support-email"
+          type="email"
+          formControlName="supportEmail"
+          [class]="inputClasses"
+          [attr.aria-invalid]="fieldError('supportEmail') !== null"
+        />
+      </app-settings-field>
+      <app-settings-field
+        label="رقم هاتف مركز المساعدة"
+        fieldId="platform-support-phone"
+        [error]="fieldError('supportPhone')"
+      >
+        <!-- LTR keeps the "+" in front of the number; the design still aligns it right. -->
+        <input
+          id="platform-support-phone"
+          type="tel"
+          dir="ltr"
+          formControlName="supportPhone"
+          class="text-right font-inter"
+          [class]="inputClasses"
+          [attr.aria-invalid]="fieldError('supportPhone') !== null"
+        />
+      </app-settings-field>
+    </div>
+
+    <div class="flex justify-end pt-1">
+      <button
+        type="submit"
+        [class]="submitButtonClasses"
+        [disabled]="isSaving()"
+        [attr.aria-busy]="isSaving()"
+      >
+        حفظ التغييرات
+      </button>
+    </div>
+  </app-settings-card>
+</form>
