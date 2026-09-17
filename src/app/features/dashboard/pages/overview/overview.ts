@@ -4,23 +4,14 @@ import { ChartComponent } from 'ng-apexcharts';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { ChartPanel } from '../../../../shared/ui/chart-panel/chart-panel';
-import { ChartPeriodOption } from '../../../../shared/ui/chart-panel/chart-period-option';
+import {
+  DAY_TO_MONTH_PERIODS,
+  WEEK_TO_YEAR_PERIODS,
+} from '../../../../shared/ui/chart-panel/chart-period-choices';
 import { DashboardStore } from '../../state/dashboard.store';
-import { ChartPeriod } from '../../data/dashboard.repository';
+import { ChartPeriod } from '../../../../shared/models/chart-period';
 import { ActionCenter } from './action-center/action-center';
 import { RecentPlacesTable } from './recent-places-table/recent-places-table';
-
-const REVENUE_PERIODS: readonly ChartPeriodOption[] = [
-  { value: 'daily', label: 'يومي' },
-  { value: 'weekly', label: 'اسبوعي' },
-  { value: 'monthly', label: 'شهري' },
-];
-
-const GROWTH_PERIODS: readonly ChartPeriodOption[] = [
-  { value: 'weekly', label: 'اسبوعي' },
-  { value: 'monthly', label: 'شهري' },
-  { value: 'yearly', label: 'سنوي' },
-];
 
 const COMPANY_COLOR = '#0583ec';
 const USER_COLOR = '#f5a623';
@@ -44,8 +35,8 @@ const MARKER_FILL_OPACITY = 0.18;
 export class Overview {
   protected readonly store = inject(DashboardStore);
 
-  protected readonly revenuePeriods = REVENUE_PERIODS;
-  protected readonly growthPeriods = GROWTH_PERIODS;
+  protected readonly revenuePeriods = DAY_TO_MONTH_PERIODS;
+  protected readonly growthPeriods = WEEK_TO_YEAR_PERIODS;
 
   protected readonly revenueChart = computed(() => {
     const series = this.store.revenueSeries();

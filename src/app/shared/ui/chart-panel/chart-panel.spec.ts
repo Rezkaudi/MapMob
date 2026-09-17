@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ChartPanel } from './chart-panel';
+import { ChartPanelAppearance } from './chart-panel-appearance';
 import { ChartPeriodOption } from './chart-period-option';
 
 const PERIODS: readonly ChartPeriodOption[] = [
@@ -84,5 +85,52 @@ describe('ChartPanel while loading', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('الإيرادات');
+  });
+});
+
+@Component({
+  imports: [ChartPanel],
+  template: `<app-chart-panel
+    title="نشاط المستخدمين و سلوك الاستخدام"
+    [periods]="[]"
+    activePeriod="weekly"
+    [appearance]="appearance()"
+  />`,
+})
+class HostAppearanceComponent {
+  readonly appearance = signal<ChartPanelAppearance>('panel');
+}
+
+describe('ChartPanel appearance', () => {
+  function render(appearance: ChartPanelAppearance) {
+    const fixture = TestBed.createComponent(HostAppearanceComponent);
+    fixture.componentInstance.appearance.set(appearance);
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+    return { section: element.querySelector('section')!, title: element.querySelector('h2')! };
+  }
+
+  it('keeps the dashboard panel look by default', () => {
+    expect(render('panel').section.className).toContain('rounded-2xl');
+  });
+
+  it('draws the raised reports card with a 12px radius and a wide soft shadow', () => {
+    const { section } = render('raised');
+
+    expect(section.className).toContain('rounded-xl');
+    expect(section.className).toContain('shadow-[0_4px_30px_0_rgba(238,238,238,0.8)]');
+  });
+
+  it('draws the revenue card with a shorter shadow', () => {
+    expect(render('raised-short-shadow').section.className).toContain(
+      'shadow-[0_4px_20px_0_rgba(238,238,238,0.8)]',
+    );
+  });
+
+  it('draws the outlined card with 24px padding inside its border and a title that wraps at 229px', () => {
+    const { section, title } = render('outlined');
+
+    expect(section.className).toContain('p-[23px]');
+    expect(title.className).toContain('max-w-[229px]');
   });
 });

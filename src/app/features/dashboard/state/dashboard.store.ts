@@ -4,10 +4,11 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, of, forkJoin } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { ActionItem } from '../models/action-item';
-import { ChartSeries } from '../models/chart-point';
+import { ChartSeries } from '../../../shared/models/chart-series';
 import { DashboardSummary } from '../models/dashboard-summary';
 import { RecentPlace } from '../models/recent-place';
-import { ChartPeriod, DashboardRepository } from '../data/dashboard.repository';
+import { ChartPeriod } from '../../../shared/models/chart-period';
+import { DashboardRepository } from '../data/dashboard.repository';
 
 interface DashboardState {
   readonly summary: DashboardSummary | null;

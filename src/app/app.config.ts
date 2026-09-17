@@ -14,6 +14,7 @@ import { provideDashboardFeature } from './features/dashboard/dashboard.provider
 import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePaymentsFeature } from './features/payments/payments.providers';
 import { providePlacesFeature } from './features/places/places.providers';
+import { provideReportsFeature } from './features/reports/reports.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
 import { provideSubscriptionsFeature } from './features/subscriptions/subscriptions.providers';
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     provideAdsFeature(),
     provideOffersFeature(),
     providePaymentsFeature(),
+    provideReportsFeature(),
     provideReviewsFeature(),
     provideSubscriptionsFeature(),
     provideDashboardFeature(),

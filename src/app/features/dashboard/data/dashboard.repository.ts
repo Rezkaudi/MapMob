@@ -1,10 +1,9 @@
 import { Observable } from 'rxjs';
 import { ActionItem } from '../models/action-item';
-import { ChartSeries } from '../models/chart-point';
+import { ChartPeriod } from '../../../shared/models/chart-period';
+import { ChartSeries } from '../../../shared/models/chart-series';
 import { DashboardSummary } from '../models/dashboard-summary';
 import { RecentPlace } from '../models/recent-place';
-
-export type ChartPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 export abstract class DashboardRepository {
   abstract getSummary(): Observable<DashboardSummary>;

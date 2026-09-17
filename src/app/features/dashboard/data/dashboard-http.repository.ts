@@ -3,10 +3,11 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { ActionItem } from '../models/action-item';
-import { ChartSeries } from '../models/chart-point';
+import { ChartSeries } from '../../../shared/models/chart-series';
 import { DashboardSummary } from '../models/dashboard-summary';
 import { RecentPlace } from '../models/recent-place';
-import { ChartPeriod, DashboardRepository } from './dashboard.repository';
+import { ChartPeriod } from '../../../shared/models/chart-period';
+import { DashboardRepository } from './dashboard.repository';
 
 @Injectable()
 export class DashboardHttpRepository implements DashboardRepository {

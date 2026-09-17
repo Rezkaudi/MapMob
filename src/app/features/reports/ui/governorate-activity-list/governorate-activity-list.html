@@ -1,0 +1,45 @@
+<section
+  class="flex h-[310px] flex-col gap-6 rounded-lg border border-border bg-surface px-[17.5px] py-[23px] shadow-[0_4px_30px_0_rgba(238,238,238,0.08)]"
+  [attr.aria-busy]="isLoading() ? 'true' : null"
+>
+  <header class="flex flex-col gap-1 text-start">
+    <h2 class="text-[18px]/[28px] font-bold text-[#191c1e]">{{ title() }}</h2>
+    <p class="text-[12px]/[18px] text-text-secondary">{{ description() }}</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="flex flex-col gap-5">
+      @for (placeholder of placeholderRows; track placeholder) {
+        <app-skeleton height="18px" />
+      }
+    </div>
+  } @else {
+    <ul class="flex flex-col gap-5">
+      @for (row of rows(); track row.label) {
+        <!-- RTL: the name on the right, the bar in the middle, visits and share on the left. -->
+        <li class="flex h-[18px] items-center justify-between">
+          <span data-role="label" class="w-[84px] text-[14px]/[18px] text-[#191c1e]">{{
+            row.label
+          }}</span>
+          <app-share-bar
+            class="w-[160px]"
+            [share]="row.share"
+            [tone]="row.tone"
+            [label]="row.label"
+          />
+          <span class="flex w-[128px] justify-end gap-[7.03px]">
+            <span data-role="value" class="text-[12px]/[16px] font-bold text-[#191c1e]">{{
+              row.valueText
+            }}</span>
+            <span
+              data-role="share"
+              dir="ltr"
+              class="text-[12px]/[16px] font-medium text-[#717784]"
+              >{{ row.shareText }}</span
+            >
+          </span>
+        </li>
+      }
+    </ul>
+  }
+</section>

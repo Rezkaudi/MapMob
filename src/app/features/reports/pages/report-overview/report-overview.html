@@ -1,0 +1,94 @@
+<!-- Header, then a 622px column on the right and a 406px column on the left, 16px apart. -->
+<div class="flex flex-col">
+  <app-page-header
+    title="الاحصائيات و التقارير"
+    description="نظرة عامة على أداء المنصة و نشاط المستخدمين والشركات و الايرادات التشغيلية"
+    descriptionSize="small"
+    [isAddVisible]="false"
+    [isExportVisible]="true"
+    (exportRequested)="exportReport()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadReports()" />
+  } @else {
+    <div class="mt-10 grid grid-cols-1 items-start gap-x-4 gap-y-6 xl:grid-cols-[622fr_406fr]">
+      <app-chart-panel
+        appearance="raised"
+        [title]="titles.growth"
+        [isLoading]="store.isGrowthLoading()"
+        chartHeight="250px"
+        [periods]="weekToYearPeriods"
+        [activePeriod]="store.growth().period"
+        (periodChange)="changeGrowthPeriod($event)"
+      >
+        <apx-chart
+          [chart]="store.growthChart().chart"
+          [series]="store.growthChart().series"
+          [xaxis]="store.growthChart().xaxis"
+          [yaxis]="store.growthChart().yaxis"
+          [grid]="store.growthChart().grid"
+          [legend]="store.growthChart().legend"
+          [stroke]="store.growthChart().stroke"
+          [fill]="store.growthChart().fill"
+          [markers]="store.growthChart().markers"
+          [colors]="store.growthChart().colors"
+          [dataLabels]="store.growthChart().dataLabels"
+          [tooltip]="store.growthChart().tooltip"
+        />
+      </app-chart-panel>
+
+      <app-category-share-chart
+        [title]="titles.categoryShares"
+        [shares]="store.categoryShares()"
+        [isLoading]="store.isLoading()"
+      />
+
+      <app-chart-panel
+        appearance="outlined"
+        [title]="titles.usageMetrics"
+        [isLoading]="store.isUsageLoading()"
+        chartHeight="184px"
+        [periods]="weekToYearPeriods"
+        [activePeriod]="store.usage().period"
+        (periodChange)="changeUsagePeriod($event)"
+      >
+        <app-usage-metric-list [rows]="store.usageMetricRows()" />
+      </app-chart-panel>
+
+      <app-governorate-activity-list
+        [title]="titles.governorateActivities"
+        description="توزيع التفاعل والزيارات حسب المحافظات الأكثر نشاطاً"
+        [rows]="store.governorateActivityRows()"
+        [isLoading]="store.isLoading()"
+      />
+
+      <app-chart-panel
+        appearance="raised-short-shadow"
+        [title]="titles.revenue"
+        [isLoading]="store.isRevenueLoading()"
+        chartHeight="245px"
+        [periods]="dayToMonthPeriods"
+        [activePeriod]="store.revenue().period"
+        (periodChange)="changeRevenuePeriod($event)"
+      >
+        <!-- The wave runs edge to edge, past the card's side padding. -->
+        <apx-chart
+          class="-mx-[18.5px] block"
+          [chart]="store.revenueChart().chart"
+          [series]="store.revenueChart().series"
+          [xaxis]="store.revenueChart().xaxis"
+          [yaxis]="store.revenueChart().yaxis"
+          [grid]="store.revenueChart().grid"
+          [legend]="store.revenueChart().legend"
+          [stroke]="store.revenueChart().stroke"
+          [fill]="store.revenueChart().fill"
+          [markers]="store.revenueChart().markers"
+          [colors]="store.revenueChart().colors"
+          [dataLabels]="store.revenueChart().dataLabels"
+          [tooltip]="store.revenueChart().tooltip"
+        />
+      </app-chart-panel>
+    </div>
+  }
+</div>
