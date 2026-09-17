@@ -1,0 +1,59 @@
+<div class="overflow-x-auto rounded-xl bg-white outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[777px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-11 border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
+      >
+        <th class="ps-4">وسيلة الدفع</th>
+        <th class="ps-0.5">النوع</th>
+        <th class="text-center">الحالة</th>
+        <th class="pe-2 text-center">اجراءات</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody
+        app-table-skeleton
+        [columnCount]="columnWidths.length"
+        [rowCount]="placeholderRowCount"
+      ></tbody>
+    } @else {
+      <tbody>
+        @for (method of methods(); track method.id) {
+          <tr class="h-[77px] border-b border-border last:border-0">
+            <td class="truncate ps-4 text-[12px]/[16px] font-semibold text-text-primary">
+              {{ method.name }}
+            </td>
+            <td class="ps-0.5 text-[11px]/[14px] font-medium text-[#717784]">
+              {{ kindLabels[method.kind] }}
+            </td>
+            <td class="text-center">
+              <app-status-pill [status]="method.status" [label]="statusLabels[method.status]" />
+            </td>
+            <td class="pe-2 text-center">
+              <button
+                type="button"
+                class="inline-flex rounded align-middle text-black hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                [attr.aria-label]="'تعديل ' + method.name"
+                (click)="edit.emit(method)"
+              >
+                <app-icon name="edit-outline" [size]="20" aria-hidden="true" />
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="px-6 py-10 text-center text-[14px]/[20px] text-text-secondary">
+              لا توجد وسائل دفع بعد. أضف أول بوابة دفع.
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+</div>

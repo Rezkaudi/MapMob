@@ -1,0 +1,48 @@
+<div class="overflow-x-auto rounded-lg border border-[rgba(192,199,213,0.3)]">
+  <table class="w-full min-w-[844px] table-fixed">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-8 border-b border-[rgba(192,199,213,0.2)] bg-[#eceef0] text-[12px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-4 text-start">القسم / الوحدة</th>
+        @for (column of actionColumns; track column.action) {
+          <th class="text-center">{{ column.label }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      @for (row of rows(); track row.module.id) {
+        <tr class="h-[37px] border-t border-[rgba(192,199,213,0.2)] align-top first:border-t-0">
+          <td class="ps-4 pt-2 text-start text-[13px]/[18px] text-[#191c1e]">
+            {{ row.module.label }}
+          </td>
+          @for (cell of row.cells; track cell.action) {
+            <td class="pt-2 text-center">
+              @if (cell.grant; as grant) {
+                <input
+                  type="checkbox"
+                  class="size-4 cursor-pointer align-top accent-primary aria-disabled:cursor-default"
+                  [checked]="cell.isChecked"
+                  [attr.aria-disabled]="isReadOnly()"
+                  [attr.aria-label]="cell.label"
+                  (click)="onBoxClick($event, grant)"
+                />
+              } @else {
+                <span
+                  data-role="no-permission"
+                  class="mt-[9.5px] inline-block h-px w-[13px] bg-[#717784] align-top"
+                  aria-hidden="true"
+                ></span>
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

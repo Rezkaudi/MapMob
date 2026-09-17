@@ -1,0 +1,165 @@
+<div class="fixed inset-0 z-50 bg-[rgba(25,28,29,0.3)] backdrop-blur-[4px]">
+  <div
+    class="flex h-full items-center justify-center p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="role-dialog-title"
+    (click)="closed.emit()"
+  >
+    <form
+      novalidate
+      class="flex max-h-[min(100%,922px)] w-full max-w-[896px] flex-col overflow-hidden rounded-lg border border-[rgba(192,199,213,0.3)] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
+      [formGroup]="form"
+      (click)="$event.stopPropagation()"
+      (ngSubmit)="submit()"
+    >
+      <!-- RTL: the title on the right, the cross on the left. -->
+      <header
+        class="flex shrink-0 items-center justify-between gap-4 border-b border-[#eceef0] p-6"
+      >
+        <div class="flex flex-col gap-0.5 text-start">
+          <h2 id="role-dialog-title" class="text-[18px]/[28px] font-bold text-text-primary">
+            {{ copy().title }}
+          </h2>
+          <p class="text-[13px]/[18px] text-text-secondary">{{ copy().description }}</p>
+        </div>
+        <button
+          type="button"
+          aria-label="إغلاق النافذة"
+          class="flex size-8 shrink-0 items-center justify-center rounded text-[#717784] hover:bg-surface-muted"
+          (click)="closed.emit()"
+        >
+          <app-icon name="dialog-close" [size]="32" aria-hidden="true" />
+        </button>
+      </header>
+
+      <div class="flex min-h-0 flex-col gap-6 overflow-y-auto p-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1 pb-1">
+            <label for="role-name" class="flex items-center gap-1 text-start">
+              <span class="text-[12px]/[16px] font-medium text-text-primary">اسم الدور</span>
+              <span class="text-[12px]/[16px] font-semibold text-closed" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="role-name"
+              type="text"
+              placeholder="مثال مشرف عمليات"
+              formControlName="name"
+              [class]="inputClasses"
+              [attr.aria-invalid]="nameError !== null"
+            />
+            @if (nameError; as message) {
+              <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="text-start text-[12px]/[16px] font-medium text-text-primary"
+              >حالة الدور</span
+            >
+            <!-- RTL: the wording on the right, the switch on the left. -->
+            <div
+              class="flex h-[42px] items-center justify-between rounded border border-border bg-[#f2f4f6] px-4"
+            >
+              <span class="text-[12px]/[16px] text-[#191c1e]">{{ copy().statusLabel }}</span>
+              <app-toggle-switch
+                label="حالة الدور"
+                [isOn]="form.controls.isActive.value"
+                [isDisabled]="isReadOnly()"
+                (toggled)="setActive($event)"
+              />
+            </div>
+          </div>
+
+          <div class="col-span-2 flex flex-col gap-1">
+            <label
+              for="role-description"
+              class="text-start text-[12px]/[16px] font-medium text-text-primary"
+            >
+              وصف الدور والمسؤوليات
+            </label>
+            <textarea
+              id="role-description"
+              formControlName="description"
+              placeholder="وصف موجز للمسؤوليات الموكلة لهذا الدور ونطاق الصلاحيات التشغيلية..."
+              class="block h-[58px] w-full resize-none rounded border border-border bg-[#f2f4f6] px-4 pt-2 pb-7 text-start text-[14px]/[20px] text-text-primary outline-none placeholder:text-[#94a3b8] focus:border-primary disabled:opacity-60"
+            ></textarea>
+          </div>
+        </div>
+
+        <section class="flex flex-col gap-3">
+          <!-- RTL: the matrix title on the right, the select-all pair on the left. -->
+          <div class="flex items-center justify-between gap-4 border-b border-[#eceef0] pb-3">
+            <div class="flex flex-col text-start">
+              <h3 class="text-[12px]/[16px] font-medium text-[#191c1e]">مصفوفة الصلاحيات</h3>
+              <p class="text-[12px]/[18px] text-text-secondary">
+                حدد أذونات العرض، الإضافة، التعديل والحذف لكل وحدة في النظام
+              </p>
+            </div>
+            @if (!isReadOnly()) {
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  class="rounded bg-primary/16 px-3 py-1 text-[11px]/[14px] text-primary hover:bg-primary/25"
+                  (click)="selectAll()"
+                >
+                  تحديد كل الصلاحيات
+                </button>
+                <button
+                  type="button"
+                  class="rounded bg-text-secondary/16 px-3 py-1 text-[11px]/[14px] text-text-primary hover:bg-text-secondary/25"
+                  (click)="clearAll()"
+                >
+                  إلغاء تحديد الكل
+                </button>
+              </div>
+            }
+          </div>
+          @if (grantsError; as message) {
+            <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+          }
+          <app-permission-matrix
+            [grants]="form.controls.grants.value"
+            [isReadOnly]="isReadOnly()"
+            (grantToggled)="toggle($event)"
+          />
+        </section>
+
+        @if (saveError(); as error) {
+          <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ error }}</p>
+        }
+      </div>
+
+      <!-- The design frame is cut off before its footer; this follows the other settings dialogs. -->
+      <footer
+        class="flex shrink-0 items-center justify-between border-t border-[#eceef0] bg-[rgba(248,250,252,0.7)] px-6 py-4"
+      >
+        @if (copy().submitLabel; as submitLabel) {
+          <button
+            type="submit"
+            class="h-10 rounded-lg bg-primary px-6 text-[12px]/[16px] font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="isBusy()"
+            [attr.aria-busy]="isBusy()"
+          >
+            {{ submitLabel }}
+          </button>
+          <button
+            type="button"
+            class="h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted"
+            (click)="closed.emit()"
+          >
+            إلغاء
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="ms-auto h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted"
+            (click)="closed.emit()"
+          >
+            إغلاق
+          </button>
+        }
+      </footer>
+    </form>
+  </div>
+</div>

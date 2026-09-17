@@ -1,0 +1,23 @@
+<div
+  class="overflow-hidden rounded-xl border bg-surface focus-within:border-primary"
+  [class]="isInvalid() ? 'border-closed' : 'border-border'"
+>
+  <app-rich-text-toolbar [state]="state()" (command)="runCommand($event)" />
+  <!-- 46px under the text, as the design leaves room below the last line. -->
+  <div
+    #area
+    role="textbox"
+    aria-multiline="true"
+    class="px-5 pt-5 pb-[46px] text-start outline-none [&_a]:text-primary [&_a]:underline [&_h1]:text-[24px]/[32px] [&_h1]:font-bold [&_h1]:text-text-primary [&_h2]:text-[20px]/[28px] [&_h2]:font-bold [&_h2]:text-text-primary [&_h3]:text-[16px]/[24px] [&_h3]:font-bold [&_h3]:text-text-primary [&_ol]:list-decimal [&_ol]:ps-6 [&_ul]:list-disc [&_ul]:ps-6"
+    [class]="areaClasses()"
+    [attr.contenteditable]="!isDisabled()"
+    [attr.aria-label]="ariaLabel()"
+    [attr.aria-invalid]="isInvalid()"
+    (input)="saveTyping()"
+    (focus)="useParagraphLines()"
+    (blur)="markTouched()"
+    (keyup)="refreshState()"
+    (mouseup)="refreshState()"
+    (paste)="pastePlainText($event)"
+  ></div>
+</div>

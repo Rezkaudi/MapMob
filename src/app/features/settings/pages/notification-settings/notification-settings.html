@@ -1,0 +1,36 @@
+<app-settings-section-heading
+  title="إعدادات الإشعارات"
+  description="حدد التنبيهات التي تريد استلامها كمشرف."
+/>
+
+@if (store.error(); as error) {
+  <app-error-state [message]="error" (retry)="store.loadAlerts()" />
+} @else {
+  <app-settings-card title="تنبيهات لوحة التحكم">
+    @if (store.isLoading()) {
+      @for (row of placeholderRows; track $index) {
+        <app-skeleton class="my-3" height="36px" />
+      }
+    } @else {
+      <ul>
+        @for (alert of store.alerts(); track alert.kind) {
+          <li>
+            <app-notification-alert-row
+              [alert]="alert"
+              (toggled)="store.setAlertEnabled(alert.kind, $event)"
+            />
+          </li>
+        }
+      </ul>
+    }
+  </app-settings-card>
+}
+
+@if (store.saveError(); as error) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التنبيه"
+    [message]="error"
+    (dismissed)="store.clearSaveError()"
+  />
+}

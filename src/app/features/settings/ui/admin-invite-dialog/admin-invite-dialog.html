@@ -1,0 +1,61 @@
+<form novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <app-settings-dialog-frame
+    title="إضافة مشرف جديد"
+    description="أدخل بيانات المشرف وسيتم إرسال رابط تفعيل الحساب وتعيين كلمة السر عبر البريد الالكتروني"
+    icon="settings-user"
+    submitLabel="إضافة المشرف"
+    [isBusy]="isBusy()"
+    [saveError]="saveError()"
+    (closed)="closed.emit()"
+  >
+    <app-settings-dialog-field
+      label="اسم المشرف بالكامل"
+      fieldId="admin-full-name"
+      [error]="fieldError('fullName')"
+    >
+      <input
+        id="admin-full-name"
+        type="text"
+        autocomplete="off"
+        placeholder="مثال: يوسف محمد"
+        formControlName="fullName"
+        [class]="inputClasses"
+        [attr.aria-invalid]="fieldError('fullName') !== null"
+      />
+    </app-settings-dialog-field>
+
+    <app-settings-dialog-field
+      label="البريد الالكتروني المهني"
+      fieldId="admin-email"
+      [error]="fieldError('email')"
+    >
+      <input
+        id="admin-email"
+        type="email"
+        autocomplete="off"
+        placeholder="name@gmail.com"
+        formControlName="email"
+        [class]="inputClasses"
+        [attr.aria-invalid]="fieldError('email') !== null"
+      />
+    </app-settings-dialog-field>
+
+    <app-settings-dialog-field
+      label="الدور الوظيفي والصلاحيات"
+      fieldId="admin-role"
+      [hasChevron]="true"
+      [error]="fieldError('roleId')"
+    >
+      <select
+        id="admin-role"
+        formControlName="roleId"
+        [class]="selectClasses"
+        [attr.aria-invalid]="fieldError('roleId') !== null"
+      >
+        @for (role of roles(); track role.id) {
+          <option [value]="role.id">{{ role.name }} ({{ role.englishName }})</option>
+        }
+      </select>
+    </app-settings-dialog-field>
+  </app-settings-dialog-frame>
+</form>

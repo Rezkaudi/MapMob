@@ -1,0 +1,80 @@
+<app-form-page-heading
+  [parentLabel]="sectionLabel"
+  [parentLink]="contentUrl"
+  [currentLabel]="stepLabel"
+  [title]="pageName"
+  [description]="description"
+  descriptionSize="small"
+>
+  <app-add-button pageHeadingAction label="إضافة سؤال جديد" (pressed)="store.openAddDialog()" />
+</app-form-page-heading>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.loadQuestions()" />
+} @else {
+  <!-- The card starts 24px under the heading. -->
+  <section
+    class="mt-6 overflow-hidden rounded-2xl border border-[rgba(226,232,240,0.8)] bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  >
+    <app-faq-list-header
+      [questionCount]="store.questionCount()"
+      (expandAll)="store.expandAll()"
+      (collapseAll)="store.collapseAll()"
+    />
+
+    @if (store.isLoading()) {
+      @for (row of placeholderRows; track $index) {
+        <div class="border-t border-[#f1f5f9] p-4 first:border-t-0">
+          <app-skeleton height="34px" />
+        </div>
+      }
+    } @else if (store.hasNoQuestions()) {
+      <p class="px-6 py-12 text-center text-[14px]/[20px] text-text-secondary">
+        لا توجد أسئلة بعد. أضف أول سؤال ليظهر للمستخدمين.
+      </p>
+    } @else {
+      <ul>
+        @for (row of store.rows(); track row.question.id) {
+          <li class="border-t border-[#f1f5f9] first:border-t-0">
+            <app-faq-question-item
+              [question]="row.question"
+              [number]="row.number"
+              [isExpanded]="row.isExpanded"
+              (toggle)="store.toggleExpanded(row.question.id)"
+              (edit)="store.openEditDialog($event)"
+              (remove)="store.askToDelete($event)"
+            />
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (store.dialog(); as dialog) {
+  <app-faq-question-dialog
+    [dialog]="dialog"
+    [isBusy]="store.isSaving()"
+    [saveError]="store.saveError()"
+    (saved)="store.saveQuestion($event)"
+    (closed)="store.closeDialog()"
+  />
+}
+
+@if (store.pendingDeletion()) {
+  <app-confirm-action-dialog
+    [copy]="deleteCopy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDeletion()"
+    (cancelled)="store.cancelDeletion()"
+  />
+
+  @if (store.saveError(); as saveError) {
+    <app-toast
+      tone="error"
+      title="تعذر حذف السؤال"
+      [message]="saveError"
+      (dismissed)="store.clearSaveError()"
+    />
+  }
+}

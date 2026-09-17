@@ -1,0 +1,125 @@
+<div class="fixed inset-0 z-50 overflow-y-auto bg-[rgba(25,28,29,0.3)] backdrop-blur-[4px]">
+  <div
+    class="flex min-h-full items-center justify-center p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="faq-dialog-title"
+    (click)="closed.emit()"
+  >
+    <form
+      class="w-full max-w-[580px] overflow-hidden rounded-3xl border border-[#f1f5f9] bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      novalidate
+      [formGroup]="form"
+      (click)="$event.stopPropagation()"
+      (ngSubmit)="submit()"
+    >
+      <!-- RTL: the question badge and the title on the right, the cross on the left. -->
+      <header class="flex items-start justify-between border-b border-[#f1f5f9] px-6 pt-6 pb-4">
+        <div class="flex items-start gap-4">
+          <img class="size-12 shrink-0" src="assets/icons/question-badge.svg" alt="" />
+          <div class="flex flex-col gap-[3px] text-start">
+            <h2
+              id="faq-dialog-title"
+              class="text-[20px]/[28px] font-bold tracking-[-0.5px] text-text-primary"
+            >
+              {{ copy().title }}
+              @if (editedNumber(); as number) {
+                (<span dir="ltr">#{{ number }}</span
+                >)
+              }
+            </h2>
+            <p class="text-[12px]/[19.5px] text-text-secondary">{{ copy().subtitle }}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          aria-label="إغلاق النافذة"
+          class="flex size-8 items-center justify-center rounded text-[#94a3b8] hover:bg-surface-muted"
+          (click)="closed.emit()"
+        >
+          <app-icon name="dialog-close" [size]="32" aria-hidden="true" />
+        </button>
+      </header>
+
+      <div class="flex flex-col gap-4 px-6 pt-5 pb-6">
+        <div class="flex flex-col gap-1.5">
+          <label for="faq-question" class="flex h-5 items-center gap-1 text-start">
+            <span class="text-[12px]/[16px] font-bold text-text-primary">نص السؤال</span>
+            <span class="text-[14px]/[20px] font-bold text-status-error" aria-hidden="true">*</span>
+          </label>
+          <!-- Typed text is 14px bold; the placeholder is 12px, so the empty box is 38px, as drawn. -->
+          <input
+            id="faq-question"
+            type="text"
+            formControlName="question"
+            placeholder="اكتب نص السؤال بوضوع"
+            class="block w-full rounded border bg-white px-4 py-2.5 text-start text-[14px]/[20px] font-bold text-text-primary outline-none placeholder:text-[#94a3b8] placeholder-shown:text-[12px]/[16px] placeholder-shown:font-normal focus:border-primary"
+            [class]="questionError ? 'border-closed' : 'border-text-secondary'"
+            [attr.aria-invalid]="questionError !== null"
+          />
+          @if (questionError; as message) {
+            <p class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <!-- RTL: the label on the right, the character count on the left. -->
+          <div class="flex h-5 items-center justify-between">
+            <label for="faq-answer" class="flex items-center gap-1 text-start">
+              <span class="text-[12px]/[16px] font-bold text-text-primary"
+                >نص الإجابة التفصيلية</span
+              >
+              <span class="text-[14px]/[20px] font-bold text-status-error" aria-hidden="true"
+                >*</span
+              >
+            </label>
+            <span
+              data-role="answer-count"
+              dir="ltr"
+              class="text-[11px]/[16.5px] font-bold text-[#94a3b8]"
+              >{{ answerLength() }} / {{ answerMaxLength }}</span
+            >
+          </div>
+          <!-- Grows with the answer from the 84px the empty frame draws; 53px stays free below the text. -->
+          <textarea
+            id="faq-answer"
+            formControlName="answer"
+            placeholder="اكتب نص الإجابة بوضوع"
+            class="block min-h-[84px] w-full resize-none rounded border bg-white px-3.5 pt-[13.25px] pb-[53px] text-start text-[12px]/[19.5px] text-text-secondary outline-none [field-sizing:content] placeholder:text-[#94a3b8] placeholder-shown:leading-4 focus:border-primary"
+            [class]="answerError ? 'border-closed' : 'border-text-secondary'"
+            [attr.maxlength]="answerMaxLength"
+            [attr.aria-invalid]="answerError !== null"
+          ></textarea>
+          @if (answerError; as message) {
+            <p class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+          }
+        </div>
+
+        @if (saveError(); as error) {
+          <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ error }}</p>
+        }
+      </div>
+
+      <!-- RTL: the main action on the right, cancel on the left. -->
+      <footer
+        class="flex items-center justify-between border-t border-[#f1f5f9] bg-[rgba(248,250,252,0.7)] px-6 pt-4 pb-6"
+      >
+        <button
+          type="submit"
+          class="h-10 rounded-lg bg-primary px-6 text-[12px]/[16px] font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isBusy()"
+          [attr.aria-busy]="isBusy()"
+        >
+          {{ copy().submitLabel }}
+        </button>
+        <button
+          type="button"
+          class="h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted"
+          (click)="closed.emit()"
+        >
+          إلغاء
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<app-page-header
+  title="الإعدادات"
+  description="إدارة إعدادات المنصة."
+  descriptionSize="small"
+  [isAddVisible]="false"
+/>
+
+<!-- 12 columns with 24px gaps: the tabs take 3 (243px), the open section 9 (777px). -->
+<div data-role="settings-columns" class="mt-6 grid grid-cols-12 items-start gap-6">
+  <app-settings-nav class="col-span-3" />
+  <div class="col-span-9 min-w-0">
+    <router-outlet />
+  </div>
+</div>

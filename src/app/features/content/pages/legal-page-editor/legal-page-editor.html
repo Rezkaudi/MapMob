@@ -1,0 +1,50 @@
+<app-form-page-heading
+  [parentLabel]="sectionLabel"
+  [parentLink]="contentUrl"
+  [currentLabel]="stepLabel"
+  [title]="pageName()"
+  [description]="description"
+  descriptionSize="small"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.retry()" />
+} @else if (!store.page()) {
+  <app-skeleton class="mt-6 block" height="838px" />
+} @else {
+  <!-- The card starts 24px under the heading; the action bar sits 40px under the card. -->
+  <form class="mt-6 flex flex-1 flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-content-form-card>
+      <app-page-title-field [control]="form.controls.title" />
+
+      <div>
+        <app-content-field-label text="محتوى الصفحة" [isRequired]="true" />
+        <app-rich-text-editor
+          class="mt-2"
+          formControlName="body"
+          appearance="document"
+          [ariaLabel]="'محتوى ' + pageName()"
+          [isInvalid]="bodyError !== null"
+        />
+        @if (bodyError; as message) {
+          <p role="alert" class="mt-2 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+        }
+      </div>
+    </app-content-form-card>
+
+    <app-form-action-bar
+      class="mt-10"
+      saveLabel="حفظ التغييرات"
+      [cancelLink]="contentUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+<app-content-save-toasts
+  [savedStatus]="store.savedStatus()"
+  [saveError]="store.saveError()"
+  (savedDismissed)="store.dismissSavedMessage()"
+  (errorDismissed)="store.clearSaveError()"
+/>

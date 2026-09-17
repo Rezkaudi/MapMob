@@ -1,0 +1,15 @@
+<!-- Label, 8px, the 50px box, then the 24px line the design leaves free, where a message shows. -->
+<app-content-field-label text="عنوان الصفحة" forId="page-title" [isRequired]="true" />
+<input
+  id="page-title"
+  type="text"
+  class="mt-2 block h-[50px] w-full rounded border bg-white px-4 py-3 text-start text-[16px]/[24px] font-bold text-text-primary outline-none focus:border-primary"
+  [class]="error ? 'border-closed' : 'border-text-secondary'"
+  [formControl]="control()"
+  [attr.aria-invalid]="error !== null"
+/>
+<div class="flex h-6 items-center">
+  @if (error; as message) {
+    <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+  }
+</div>

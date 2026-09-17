@@ -1,0 +1,46 @@
+<form novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <app-settings-dialog-frame
+    icon="payments"
+    [title]="copy().title"
+    [description]="copy().description"
+    [submitLabel]="copy().submitLabel"
+    [isBusy]="isBusy()"
+    [saveError]="saveError()"
+    (closed)="closed.emit()"
+  >
+    <app-settings-dialog-field
+      label="اسم وسيلة الدفع"
+      fieldId="payment-method-name"
+      [error]="nameError"
+    >
+      <input
+        id="payment-method-name"
+        type="text"
+        placeholder="مثال: تحويل بنكي"
+        formControlName="name"
+        [class]="inputClasses"
+        [attr.aria-invalid]="nameError !== null"
+      />
+    </app-settings-dialog-field>
+
+    <app-settings-dialog-field
+      label="نوع الوسيلة"
+      fieldId="payment-method-kind"
+      [hasChevron]="true"
+    >
+      <select id="payment-method-kind" formControlName="kind" [class]="selectClasses">
+        @for (choice of kindChoices; track choice.value) {
+          <option [ngValue]="choice.value">{{ choice.label }}</option>
+        }
+      </select>
+    </app-settings-dialog-field>
+
+    <app-settings-dialog-field label="الحالة" fieldId="payment-method-status" [hasChevron]="true">
+      <select id="payment-method-status" formControlName="status" [class]="selectClasses">
+        @for (choice of statusChoices; track choice.value) {
+          <option [ngValue]="choice.value">{{ choice.label }}</option>
+        }
+      </select>
+    </app-settings-dialog-field>
+  </app-settings-dialog-frame>
+</form>

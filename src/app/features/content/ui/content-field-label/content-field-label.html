@@ -1,0 +1,26 @@
+<ng-template #labelText>
+  {{ text() }}
+  @if (isRequired()) {
+    <!-- RTL: the star follows the label on its left, 11px Inter as drawn. -->
+    <span
+      class="self-start font-inter text-[11px]/[14px] font-medium text-closed"
+      aria-hidden="true"
+      >*</span
+    >
+  }
+</ng-template>
+
+@if (forId()) {
+  <label
+    class="flex items-start text-start text-[14px]/[20px] font-bold text-text-primary"
+    [attr.for]="forId()"
+    ><ng-container *ngTemplateOutlet="labelText"
+  /></label>
+} @else {
+  <h2 class="flex items-start text-start text-[14px]/[20px] font-bold text-text-primary">
+    <ng-container *ngTemplateOutlet="labelText" />
+  </h2>
+}
+@if (hint()) {
+  <p class="mt-0.5 text-start text-[12px]/[16px] text-text-secondary">{{ hint() }}</p>
+}

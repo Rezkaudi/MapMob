@@ -7,9 +7,15 @@
     parentLabel()
   }}</a>
   <app-icon name="chevron-left-small" [size]="8" class="text-text-secondary" aria-hidden="true" />
-  <span class="text-text-primary" aria-current="page">{{ title() }}</span>
+  <span class="text-text-primary" aria-current="page">{{ crumbLabel() }}</span>
 </nav>
-<div class="mt-4 flex flex-col gap-1 text-start">
-  <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
-  <p class="text-[16px]/[19px] text-text-secondary">{{ description() }}</p>
+<!-- RTL: the title block on the right, an optional page action on the left. -->
+<div data-role="heading-row" class="mt-4 flex items-center justify-between gap-4">
+  <div class="flex flex-col gap-1 text-start">
+    <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
+    @if (description()) {
+      <p class="text-text-secondary" [class]="descriptionClasses()">{{ description() }}</p>
+    }
+  </div>
+  <ng-content select="[pageHeadingAction]" />
 </div>

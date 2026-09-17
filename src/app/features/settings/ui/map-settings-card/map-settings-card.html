@@ -1,0 +1,51 @@
+<form novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <app-settings-card title="إعدادات الخرائط والموقع الجغرافي">
+    <div class="grid grid-cols-2 gap-4 pt-1">
+      <app-settings-field
+        label="وحدة قياس المسافة"
+        fieldId="map-distance-unit"
+        icon="chevron-left-thin"
+        iconPlacement="chevron"
+      >
+        <select id="map-distance-unit" formControlName="distanceUnit" [class]="selectClasses">
+          @for (choice of unitChoices; track choice.value) {
+            <option [ngValue]="choice.value">{{ choice.label }}</option>
+          }
+        </select>
+      </app-settings-field>
+
+      <app-settings-field
+        label="نصف قطر البحث الافتراضي"
+        fieldId="map-search-radius"
+        [error]="radiusError"
+      >
+        <!-- The number and its unit read as one value, e.g. "15 كم". -->
+        <div
+          class="flex h-9 items-center gap-1 rounded bg-[#f2f4f6] px-4 text-[14px]/[20px] text-[#191c1e] focus-within:ring-2 focus-within:ring-primary/40"
+        >
+          <input
+            id="map-search-radius"
+            type="number"
+            min="1"
+            formControlName="searchRadiusKm"
+            class="min-w-0 [appearance:textfield] bg-transparent outline-none [field-sizing:content] [&::-webkit-inner-spin-button]:appearance-none"
+            [attr.max]="maxRadius"
+            [attr.aria-invalid]="radiusError !== null"
+          />
+          <span data-role="radius-unit">{{ radiusUnitLabel() }}</span>
+        </div>
+      </app-settings-field>
+    </div>
+
+    <div class="flex justify-end pt-1">
+      <button
+        type="submit"
+        [class]="submitButtonClasses"
+        [disabled]="isSaving()"
+        [attr.aria-busy]="isSaving()"
+      >
+        حفظ التغييرات
+      </button>
+    </div>
+  </app-settings-card>
+</form>

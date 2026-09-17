@@ -121,3 +121,40 @@ describe('StatCard while loading', () => {
     expect(fixture.nativeElement.textContent).not.toContain('إجمالي المستخدمين');
   });
 });
+
+describe('StatCard dot', () => {
+  function renderDot(tone: 'primary' | 'warning' | 'error' | 'success') {
+    const fixture = TestBed.createComponent(StatCard);
+    fixture.componentRef.setInput('label', 'قيد المراجعة');
+    fixture.componentRef.setInput('value', '10');
+    fixture.componentRef.setInput('dotTone', tone);
+    fixture.detectChanges();
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  it('draws a 16px dot in place of the icon tile', () => {
+    const element = renderDot('warning');
+
+    const dot = element.querySelector('[data-role="dot"]') as HTMLElement;
+    expect(dot.classList).toContain('size-4');
+    expect(element.querySelector('app-icon')).toBeNull();
+  });
+
+  it('tints the dot by tone', () => {
+    const dotOf = (tone: 'primary' | 'warning' | 'error' | 'success') =>
+      renderDot(tone).querySelector('[data-role="dot"]')?.classList;
+
+    expect(dotOf('primary')).toContain('bg-primary');
+    expect(dotOf('warning')).toContain('bg-accent');
+    expect(dotOf('error')).toContain('bg-closed');
+    expect(dotOf('success')).toContain('bg-status-success');
+  });
+
+  it('keeps the icon tile when there is no dot', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-role="dot"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('app-icon')).toBeTruthy();
+  });
+});

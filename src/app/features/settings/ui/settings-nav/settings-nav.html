@@ -1,0 +1,29 @@
+<nav
+  aria-label="أقسام الإعدادات"
+  class="flex flex-col gap-1 rounded-lg bg-white p-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+>
+  @for (section of sections; track section.path) {
+    <!-- The open tab carries aria-current, which tints it. RTL: tile and label right, chevron left. -->
+    <a
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      class="group flex h-14 items-center justify-between rounded p-3 text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-primary aria-[current=page]:bg-primary-tint aria-[current=page]:text-primary"
+      [routerLink]="[settingsUrl, section.path]"
+    >
+      <span class="flex items-center gap-3">
+        <span
+          class="flex size-8 items-center justify-center rounded bg-[#f2f4f6] group-aria-[current=page]:bg-white"
+        >
+          <app-icon [name]="section.icon" [size]="section.iconSize" aria-hidden="true" />
+        </span>
+        <span data-role="tab-label" [class]="section.labelClasses">{{ section.label }}</span>
+      </span>
+      <app-icon
+        name="chevron-left-thin"
+        class="group-aria-[current=page]:opacity-80"
+        [size]="16"
+        aria-hidden="true"
+      />
+    </a>
+  }
+</nav>

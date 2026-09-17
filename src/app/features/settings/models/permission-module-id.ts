@@ -1,0 +1,15 @@
+export type PermissionModuleId =
+  | 'home'
+  | 'places'
+  | 'categories'
+  | 'regions'
+  | 'users'
+  | 'reviews'
+  | 'offers'
+  | 'subscriptions'
+  | 'payments'
+  | 'reports'
+  | 'complaints'
+  | 'notifications'
+  | 'content'
+  | 'system';

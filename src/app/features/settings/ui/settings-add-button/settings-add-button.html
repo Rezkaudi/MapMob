@@ -1,0 +1,9 @@
+<!-- RTL: the plus leads on the right, the label follows. -->
+<button
+  type="button"
+  class="flex h-10 min-w-[150px] items-center justify-center gap-1 rounded-lg border border-primary bg-primary px-5 text-[12px]/[12px] font-bold tracking-[0.5px] text-surface-muted hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  (click)="pressed.emit()"
+>
+  <app-icon name="add" [size]="16" aria-hidden="true" />
+  <span>{{ label() }}</span>
+</button>

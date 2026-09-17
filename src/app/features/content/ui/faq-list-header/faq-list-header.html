@@ -1,0 +1,33 @@
+<!-- RTL: the name and count on the right; expand, a divider and collapse on the left. -->
+<div
+  class="flex h-[57px] items-center justify-between border-b border-[#f1f5f9] bg-[rgba(248,250,252,0.4)] px-6"
+>
+  <div class="flex items-center gap-2">
+    <h2 class="text-[14px]/[20px] font-bold text-[#1e293b]">قائمة الأسئلة المعروضة</h2>
+    <span
+      data-role="question-count"
+      class="rounded-full bg-primary-tint px-2 py-0.5 text-[12px]/[16px] font-bold text-primary"
+      >{{ questionCount() }}</span
+    >
+  </div>
+
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      class="flex items-center gap-1 font-cairo text-[12px]/[16px] font-bold text-text-secondary hover:text-primary"
+      (click)="expandAll.emit()"
+    >
+      <app-icon name="expand-all" [size]="12" aria-hidden="true" />
+      <span>توسيع الكل</span>
+    </button>
+    <span class="text-[16px]/[24px] text-[#cbd5e1]" aria-hidden="true">|</span>
+    <button
+      type="button"
+      class="flex items-center gap-1 text-[12px]/[16px] font-bold text-text-secondary hover:text-primary"
+      (click)="collapseAll.emit()"
+    >
+      <app-icon name="collapse-all" [size]="11" aria-hidden="true" />
+      <span>طي الكل</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<app-complaint-detail-card class="h-full" heading="المحتوى المُبلّغ عنه" headingWeight="regular">
+  <div class="overflow-hidden rounded-lg bg-[#f2f4f6]">
+    @if (place().imageUrl; as imageUrl) {
+      <img class="h-32 w-full object-cover" [src]="imageUrl" [alt]="place().name" />
+    } @else {
+      <div data-role="image-placeholder" class="h-32 bg-[#e6e8ea]"></div>
+    }
+
+    <div class="flex flex-col gap-2 p-4">
+      <h3 class="text-[16px]/[28px] font-medium text-[#191c1e]">{{ place().name }}</h3>
+      <p class="text-[12px]/[18px] text-text-secondary">{{ place().categoryName }}</p>
+      <!-- RTL: the pin leads on the right of the address. -->
+      <p class="flex items-center gap-1 text-[13px]/[18px] text-text-secondary">
+        <app-icon name="map-pin-small" [size]="14" aria-hidden="true" />
+        <span>{{ place().address }}</span>
+      </p>
+      <p class="flex items-center gap-1 pt-1">
+        <app-icon name="star-solid" [size]="12" class="text-accent" aria-hidden="true" />
+        <span data-role="rating" dir="ltr" class="text-[12px]/[16px] font-medium text-[#191c1e]">{{
+          view().ratingLabel
+        }}</span>
+        <span class="text-[11px]/[14px] text-text-secondary">{{ view().reviewCountLabel }}</span>
+      </p>
+    </div>
+  </div>
+
+  <a
+    class="flex h-11 shrink-0 items-center justify-center rounded border border-primary bg-white px-4 text-[14px]/[20px] text-primary hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    [routerLink]="view().placeLink"
+  >
+    معاينة صفحة المكان
+  </a>
+</app-complaint-detail-card>

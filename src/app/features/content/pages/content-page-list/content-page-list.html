@@ -1,0 +1,31 @@
+<!-- Header, the search card 40px below, the table 32px under the card. -->
+<app-page-header
+  title="إدارة المحتوى والصفحات التعريفية"
+  description="إدارة نصوص و صفحات التطبيق الثابتة."
+  descriptionSize="small"
+  [isAddVisible]="false"
+/>
+
+<!-- 15px padding: the 1px border sits inside the 72px card in the design, as padding here. -->
+<section class="mt-10 rounded-xl border border-border bg-surface p-[15px]">
+  <app-list-search-field
+    class="w-full max-w-[390px]"
+    placeholder="ابحث عن صفحة بالاسم...."
+    (searchChange)="store.setSearch($event)"
+  />
+</section>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-8" [message]="error" (retry)="store.loadPages()" />
+} @else {
+  <app-content-page-table
+    class="mt-8"
+    [pages]="store.visiblePages()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+  />
+}

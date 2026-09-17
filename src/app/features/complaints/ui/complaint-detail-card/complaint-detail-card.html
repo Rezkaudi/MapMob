@@ -1,0 +1,8 @@
+<section
+  class="flex h-full flex-col gap-4 rounded-lg bg-white px-6 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  [class]="spacingClasses()"
+  [attr.aria-labelledby]="headingId"
+>
+  <h2 class="text-[18px]/[28px]" [class]="headingClasses()" [id]="headingId">{{ heading() }}</h2>
+  <ng-content />
+</section>

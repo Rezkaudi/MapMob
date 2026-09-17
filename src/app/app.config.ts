@@ -10,6 +10,8 @@ import { provideUseMockApi } from './core/config/use-mock-api';
 import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
 import { provideCategoriesFeature } from './features/categories/categories.providers';
+import { provideComplaintsFeature } from './features/complaints/complaints.providers';
+import { provideContentFeature } from './features/content/content.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
 import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
@@ -18,6 +20,7 @@ import { providePlacesFeature } from './features/places/places.providers';
 import { provideReportsFeature } from './features/reports/reports.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
+import { provideSettingsFeature } from './features/settings/settings.providers';
 import { provideSubscriptionsFeature } from './features/subscriptions/subscriptions.providers';
 import { provideUsersFeature } from './features/users/users.providers';
 
@@ -32,11 +35,14 @@ export const appConfig: ApplicationConfig = {
     provideApiBaseUrl(),
     provideUseMockApi(),
     provideAdsFeature(),
+    provideComplaintsFeature(),
+    provideContentFeature(),
     provideNotificationsFeature(),
     provideOffersFeature(),
     providePaymentsFeature(),
     provideReportsFeature(),
     provideReviewsFeature(),
+    provideSettingsFeature(),
     provideSubscriptionsFeature(),
     provideDashboardFeature(),
     provideUsersFeature(),

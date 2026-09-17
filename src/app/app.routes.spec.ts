@@ -6,9 +6,12 @@ import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
+import { ComplaintRepository } from './features/complaints/data/complaint.repository';
+import { ContentPageRepository } from './features/content/data/content-page.repository';
 import { NotificationRepository } from './features/notifications/data/notification.repository';
 import { PaymentRepository } from './features/payments/data/payment.repository';
 import { ReportsRepository } from './features/reports/data/reports.repository';
+import { AccountRepository } from './features/settings/data/account.repository';
 import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
 import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
 import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
@@ -41,6 +44,27 @@ describe('app routes', () => {
           useValue: {
             getNotifications: () => of({ items: [], totalCount: 0 }),
             getSummary: () => of({ totalCount: 0, sentCount: 0, scheduledCount: 0, draftCount: 0 }),
+          },
+        },
+        { provide: ContentPageRepository, useValue: { getPages: () => of([]) } },
+        {
+          provide: ComplaintRepository,
+          useValue: {
+            getComplaints: () => of({ items: [], totalCount: 0 }),
+            getSummary: () =>
+              of({
+                totalCount: 0,
+                newCount: 0,
+                inReviewCount: 0,
+                resolvedCount: 0,
+                rejectedCount: 0,
+              }),
+          },
+        },
+        {
+          provide: AccountRepository,
+          useValue: {
+            getProfile: () => of({ fullName: 'خولة محمد', email: 'k@mapmob.com', roleName: '' }),
           },
         },
         {
@@ -136,6 +160,34 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/notifications');
     expect(harness.fixture.nativeElement.querySelector('app-notification-list')).toBeTruthy();
+  });
+
+  it('serves the complaints page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/complaints');
+
+    expect(TestBed.inject(Location).path()).toBe('/complaints');
+    expect(harness.fixture.nativeElement.querySelector('app-complaint-list')).toBeTruthy();
+  });
+
+  it('serves the content pages list behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/content');
+
+    expect(TestBed.inject(Location).path()).toBe('/content');
+    expect(harness.fixture.nativeElement.querySelector('app-content-page-list')).toBeTruthy();
+  });
+
+  it('opens the account tab behind the settings nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/settings');
+
+    expect(TestBed.inject(Location).path()).toBe('/settings/account');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-settings-layout app-account-settings')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {

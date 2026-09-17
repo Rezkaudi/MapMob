@@ -1,15 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { ChoiceOption } from './choice-option';
 
-/** `wrap` keeps the design's 60px chips; `fill` shares one row so a long group stays on one line. */
-export type ChoiceChipsLayout = 'wrap' | 'fill';
+/**
+ * `wrap` keeps the design's 60px chips; `fill` shares one row so a long group stays on one line;
+ * `row` keeps 60px chips on one line, as the complaints status group runs a little past its edge.
+ */
+export type ChoiceChipsLayout = 'wrap' | 'fill' | 'row';
 
 const PICKED_CHIP = 'border-primary bg-primary text-white';
 const IDLE_CHIP = 'border-border bg-white text-text-secondary hover:text-text-primary';
-const GROUP_CLASSES: Record<ChoiceChipsLayout, string> = { wrap: 'flex-wrap', fill: 'flex-nowrap' };
+const GROUP_CLASSES: Record<ChoiceChipsLayout, string> = {
+  wrap: 'flex-wrap',
+  fill: 'flex-nowrap',
+  row: 'flex-nowrap',
+};
 const CHIP_SIZE_CLASSES: Record<ChoiceChipsLayout, string> = {
   wrap: 'min-w-[60px] px-2',
   fill: 'min-w-0 flex-1 px-1',
+  row: 'min-w-[60px] shrink-0 px-1',
 };
 
 /** The row of 30px single-pick chips the filter panels draw for status and type. */

@@ -1,0 +1,82 @@
+<!-- Header, the stat cards 16px below, the toolbar 40px below them, the table 30px below that, paging 8px under it. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="البلاغات"
+    description="متابعة وإدارة البلاغات المقدمة من المستخدمين على الأماكن والمحتوى."
+    descriptionSize="small"
+    [isAddVisible]="false"
+    [isExportVisible]="!store.hasNoComplaints()"
+    [isExporting]="store.isExporting()"
+    (exportRequested)="exportComplaints()"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadComplaints()" />
+  } @else if (store.hasNoComplaints()) {
+    <!-- The frame centres the message on the whole screen; 64px off the bottom lifts it by half the top bar. -->
+    <app-empty-page-message class="bottom-16" [title]="noComplaintsMessage" />
+  } @else {
+    <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      @for (card of store.statCards(); track card.label) {
+        <app-stat-card
+          [isLoading]="store.isSummaryLoading()"
+          [icon]="card.icon"
+          [dotTone]="card.dotTone"
+          [label]="card.label"
+          [value]="card.value"
+        />
+      }
+    </div>
+
+    <app-complaint-toolbar
+      class="mt-10"
+      [filters]="store.filters()"
+      [activeFilterCount]="store.activeFilterCount()"
+      (searchChange)="store.setSearch($event)"
+      (sortChange)="store.setSort($event)"
+      (filtersApply)="store.applyFilters($event)"
+    />
+
+    <app-complaint-table
+      class="mt-[30px]"
+      [rows]="store.rows()"
+      [selectedIdSet]="store.selectedIdSet()"
+      [areAllSelected]="store.areAllVisibleSelected()"
+      [isLoading]="store.isLoading()"
+      [hasNoResults]="store.hasNoResults()"
+      [emptyMessage]="store.emptyMessage()"
+      [rowCount]="store.pageSize()"
+      (rowToggle)="store.toggleSelected($event)"
+      (allToggle)="store.toggleAllVisible()"
+      (view)="openComplaint($event)"
+      (remove)="pendingDeletion.set($event)"
+    />
+
+    <app-table-pagination
+      class="mt-2"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      itemNoun="بلاغ"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+</div>
+
+@if (deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="confirmDeletion()"
+    (cancelled)="cancelDeletion()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}
