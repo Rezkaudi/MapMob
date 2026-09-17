@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
 import { PaymentRepository } from './features/payments/data/payment.repository';
+import { ReportsRepository } from './features/reports/data/reports.repository';
 import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
 import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
 import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
@@ -32,6 +33,16 @@ describe('app routes', () => {
             getPayments: () => of({ items: [], totalCount: 0 }),
             getSummary: () =>
               of({ pendingCount: 0, transactionCount: 0, monthTotal: 0, cumulativeTotal: 0 }),
+          },
+        },
+        {
+          provide: ReportsRepository,
+          useValue: {
+            getCategoryShares: () => of([]),
+            getGovernorateActivities: () => of([]),
+            getGrowthSeries: () => of([]),
+            getUsageMetrics: () => of([]),
+            getRevenueSeries: () => of({ name: '', points: [] }),
           },
         },
       ],
@@ -76,7 +87,7 @@ describe('app routes', () => {
   it('renders the not-found page inside the admin shell', async () => {
     signIn();
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/reports');
+    await harness.navigateByUrl('/content');
 
     const el = harness.fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-sidebar')).toBeTruthy();
@@ -99,6 +110,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/payments');
     expect(harness.fixture.nativeElement.querySelector('app-payment-list')).toBeTruthy();
+  });
+
+  it('serves the reports page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/reports');
+
+    expect(TestBed.inject(Location).path()).toBe('/reports');
+    expect(harness.fixture.nativeElement.querySelector('app-report-overview')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {

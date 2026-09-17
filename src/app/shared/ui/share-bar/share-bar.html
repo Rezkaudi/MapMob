@@ -1,0 +1,15 @@
+<div
+  role="meter"
+  class="h-3 w-full overflow-hidden rounded-xl bg-[#eceef0]"
+  [attr.aria-label]="label()"
+  [attr.aria-valuenow]="share()"
+  [attr.aria-valuemin]="minShare"
+  [attr.aria-valuemax]="maxShare"
+>
+  <div
+    data-role="share-fill"
+    class="h-full rounded-xl"
+    [class]="fillBackground()"
+    [style.width]="fillWidth()"
+  ></div>
+</div>

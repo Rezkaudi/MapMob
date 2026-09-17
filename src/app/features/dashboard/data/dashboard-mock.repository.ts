@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CHART_PERIOD_LABELS } from '../../../../mock/chart-period-labels';
 import { mockResponse } from '../../../../mock/mock-delay';
 import { createSeededRandom, randomInt } from '../../../../mock/random';
 import { ActionItem } from '../models/action-item';
-import { ChartSeries } from '../models/chart-point';
+import { ChartSeries } from '../../../shared/models/chart-series';
 import { DashboardSummary } from '../models/dashboard-summary';
 import { RecentPlace } from '../models/recent-place';
-import { ChartPeriod, DashboardRepository } from './dashboard.repository';
+import { ChartPeriod } from '../../../shared/models/chart-period';
+import { DashboardRepository } from './dashboard.repository';
 
 const SUMMARY: DashboardSummary = {
   revenue: 23000,
@@ -35,13 +37,6 @@ const RECENT_PLACES: readonly RecentPlace[] = Array.from({ length: 4 }, (_, i) =
   logoUrl: 'assets/pharmacy-logo.jpg',
 }));
 
-const PERIOD_LABELS: Record<ChartPeriod, readonly string[]> = {
-  daily: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
-  weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-  monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  yearly: ['2021', '2022', '2023', '2024', '2025'],
-};
-
 function buildSeries(
   seed: number,
   name: string,
@@ -50,7 +45,7 @@ function buildSeries(
   max: number,
 ): ChartSeries {
   const next = createSeededRandom(seed);
-  const labels = PERIOD_LABELS[period];
+  const labels = CHART_PERIOD_LABELS[period];
   return {
     name,
     points: labels.map((label) => ({ label, value: randomInt(next, min, max) })),

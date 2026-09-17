@@ -1,0 +1,36 @@
+<section
+  class="flex h-[320px] flex-col items-center gap-[17px] rounded-xl border border-border bg-surface pt-[23px] shadow-[0_4px_30px_0_rgba(238,238,238,0.8)]"
+  [attr.aria-busy]="isLoading() ? 'true' : null"
+>
+  <h2 class="text-[18px]/[24px] font-bold text-[#3c3c41]">{{ title() }}</h2>
+
+  @if (isLoading()) {
+    <app-skeleton [width]="pieSizeInPixels" [height]="pieSizeInPixels" shape="circle" />
+  } @else {
+    <svg
+      role="img"
+      [attr.aria-label]="title()"
+      [attr.width]="pieSize"
+      [attr.height]="pieSize"
+      [attr.viewBox]="'0 0 ' + pieSize + ' ' + pieSize"
+    >
+      @for (slice of slices(); track slice.name) {
+        <path [attr.d]="slice.path" [attr.fill]="slice.color">
+          <title>{{ slice.spokenName }}</title>
+        </path>
+      }
+      @for (slice of slices(); track slice.name) {
+        <text
+          aria-hidden="true"
+          class="fill-white text-[13px]"
+          text-anchor="middle"
+          dominant-baseline="central"
+          [attr.x]="slice.labelX"
+          [attr.y]="slice.labelY"
+        >
+          {{ slice.name }}
+        </text>
+      }
+    </svg>
+  }
+</section>

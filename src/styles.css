@@ -145,3 +145,11 @@ button:disabled,
     animation-duration: 3s;
   }
 }
+
+/* ApexCharts wraps a custom tooltip in its own grey frame; the revenue design draws only a white card. */
+.apexcharts-tooltip:has(.revenue-tooltip) {
+  border: 0 !important;
+  border-radius: 2px !important;
+  background: var(--color-surface) !important;
+  box-shadow: 0 15px 35px 0 rgb(152 169 188 / 0.2) !important;
+}

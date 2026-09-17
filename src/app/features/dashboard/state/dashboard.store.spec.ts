@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { NEVER, of } from 'rxjs';
-import { ChartPeriod, DashboardRepository } from '../data/dashboard.repository';
+import { ChartPeriod } from '../../../shared/models/chart-period';
+import { DashboardRepository } from '../data/dashboard.repository';
 import { DashboardStore } from './dashboard.store';
 
 const SUMMARY = {

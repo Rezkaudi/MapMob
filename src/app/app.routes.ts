@@ -52,12 +52,19 @@ export const routes: Routes = [
       {
         path: 'subscriptions',
         loadChildren: () =>
-          import('./features/subscriptions/subscriptions.routes').then((m) => m.SUBSCRIPTIONS_ROUTES),
+          import('./features/subscriptions/subscriptions.routes').then(
+            (m) => m.SUBSCRIPTIONS_ROUTES,
+          ),
       },
       {
         path: 'payments',
         loadChildren: () =>
           import('./features/payments/payments.routes').then((m) => m.PAYMENTS_ROUTES),
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
       },
       {
         path: 'not-found',
