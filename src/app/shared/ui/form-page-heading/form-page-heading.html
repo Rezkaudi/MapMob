@@ -11,5 +11,7 @@
 </nav>
 <div class="mt-4 flex flex-col gap-1 text-start">
   <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
-  <p class="text-[16px]/[19px] text-text-secondary">{{ description() }}</p>
+  @if (description()) {
+    <p class="text-[16px]/[19px] text-text-secondary">{{ description() }}</p>
+  }
 </div>

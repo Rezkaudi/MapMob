@@ -1,0 +1,42 @@
+<app-complaint-detail-card heading="مراجعة البلاغ وتحديث حالته">
+  <div class="flex flex-col gap-2">
+    <label for="complaint-status" class="text-[14px]/[24px] font-bold text-[#1f2937]">
+      اختيار الحالة الجديدة
+    </label>
+    <!-- The status reads 50px in from the right; the chevron sits 35px in from the left. -->
+    <div class="relative">
+      <select
+        id="complaint-status"
+        class="h-12 w-full cursor-pointer appearance-none rounded-lg border border-primary bg-white pr-[49px] pl-[70px] text-right text-[16px]/[24px] text-[#1b1b1f] outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        [value]="status()"
+        (change)="pickStatus($event)"
+      >
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+      <app-icon
+        name="chevron-down-stroke"
+        [size]="24"
+        class="pointer-events-none absolute top-1/2 left-[35px] -translate-y-1/2 text-primary"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+
+  <div class="flex h-[117px] flex-col justify-center gap-2">
+    <label
+      for="complaint-admin-notes"
+      class="text-[14px]/[20px] font-bold tracking-[0.7px] text-[#1f2937]"
+    >
+      ملاحظات الأدمن
+    </label>
+    <textarea
+      id="complaint-admin-notes"
+      class="h-[70px] resize-none rounded-lg border border-text-secondary bg-transparent px-3 pt-[13px] pb-3.5 text-[12px]/[16px] text-text-primary outline-none placeholder:text-text-secondary/60 focus-visible:border-primary"
+      placeholder="اكتب ملاحظاتك"
+      [value]="notes()"
+      (input)="typeNotes($event)"
+    ></textarea>
+  </div>
+</app-complaint-detail-card>

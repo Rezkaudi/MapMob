@@ -1,0 +1,98 @@
+<!--
+  Headers keep the design's right-aligned text; values sit where the design draws them. The whole
+  row opens the complaint, so the checkbox and menu cells stop their clicks from reaching it.
+-->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="text-center">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <!-- The design lets this header reach 4px past its column into the checkbox one. -->
+        <th><span class="inline-block translate-x-1">رقم البلاغ</span></th>
+        <th class="ps-[27px]">المُّبلغ</th>
+        <th class="ps-9">البلاغ على</th>
+        <th class="ps-[46px]">نوع البلاغ</th>
+        <th class="ps-[65px]">التاريخ</th>
+        <th class="ps-[66px]">الحالة</th>
+        <th>الإجراء</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.complaint.id) {
+          <tr
+            role="button"
+            tabindex="0"
+            class="h-[77px] cursor-pointer border-b border-border bg-surface text-[14px]/[17px] last:border-0 hover:bg-surface-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+            [attr.aria-label]="'عرض البلاغ ' + row.complaint.reference"
+            (click)="view.emit(row.complaint)"
+            (keydown.enter)="view.emit(row.complaint)"
+          >
+            <td class="text-center" (click)="$event.stopPropagation()">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد البلاغ ' + row.complaint.reference"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.complaint.id)"
+                (change)="rowToggle.emit(row.complaint.id)"
+              />
+            </td>
+            <td class="text-[12px]/[16px] font-semibold text-text-primary" dir="ltr">
+              {{ row.complaint.reference }}
+            </td>
+            <td class="ps-2.5">
+              <span data-role="reporter-name" class="block truncate text-text-primary">{{
+                row.complaint.reporter.name
+              }}</span>
+              <span
+                data-role="reporter-email"
+                class="mt-0.5 block truncate text-[11px]/[14px] font-medium text-[#717784]"
+                >{{ row.complaint.reporter.email }}</span
+              >
+            </td>
+            <td class="text-center text-text-secondary">
+              <span class="line-clamp-1">{{ row.complaint.place.name }}</span>
+            </td>
+            <td class="text-center text-text-secondary">{{ row.reasonLabel }}</td>
+            <td class="text-center whitespace-nowrap text-text-secondary">
+              {{ row.complaint.reportedOn | arabicDate }}
+            </td>
+            <td class="text-center">
+              <app-complaint-status-pill [status]="row.complaint.status" />
+            </td>
+            <td class="ps-2.5" (click)="$event.stopPropagation()">
+              <app-row-actions-menu
+                primaryAction="view"
+                [isStatusChangeVisible]="false"
+                (view)="view.emit(row.complaint)"
+                (remove)="remove.emit(row.complaint)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

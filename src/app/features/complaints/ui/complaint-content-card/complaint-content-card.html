@@ -1,0 +1,59 @@
+<app-complaint-detail-card heading="بيانات البلاغ وسبب التبليغ" spacing="tight">
+  <div class="flex h-16 flex-col justify-center gap-1 rounded-lg bg-[#f2f4f6] px-4">
+    <span class="text-[12px]/[16px] text-text-secondary">وصف البلاغ</span>
+    <p class="line-clamp-1 text-[16px]/[29.25px] text-text-primary">{{ detail().description }}</p>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="text-[12px]/[16px] text-text-secondary">تفاصيل إضافية من المستخدم:</span>
+    <p class="text-[14px]/[22.75px] whitespace-pre-line text-text-primary">
+      {{ detail().userDetails }}
+    </p>
+  </div>
+
+  @if (detail().attachmentUrls.length > 0) {
+    <div class="flex flex-col gap-1 pt-2">
+      <span class="text-[12px]/[16px] text-text-secondary">المرفقات والصور</span>
+      <!-- RTL: the first picture sits on the right, the next ones 16px to its left. -->
+      <div class="flex flex-wrap gap-4">
+        @for (url of detail().attachmentUrls; track url; let index = $index) {
+          <a
+            data-role="attachment"
+            class="relative block h-[118px] w-[157px] overflow-hidden rounded-xl bg-[#e6e8ea] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            target="_blank"
+            rel="noopener"
+            [href]="url"
+          >
+            <img class="size-full object-cover" [src]="url" [alt]="'مرفق البلاغ ' + (index + 1)" />
+            <span
+              class="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.6)_0%,rgba(0,0,0,0)_50%)]"
+              aria-hidden="true"
+            ></span>
+          </a>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- RTL: the reference on the right, the date in the middle, the status on the left. -->
+  <dl class="flex items-center justify-between gap-4">
+    <div data-role="fact" class="flex min-w-[103px] flex-col gap-1">
+      <dt class="text-[12px]/[16px] text-text-secondary">رقم البلاغ</dt>
+      <dd class="text-[16px]/[18px] font-medium text-text-primary">
+        <span dir="ltr">{{ detail().reference }}</span>
+      </dd>
+    </div>
+    <div data-role="fact" class="flex min-w-[103px] flex-col gap-1">
+      <dt class="text-[12px]/[16px] text-text-secondary">تاريخ البلاغ</dt>
+      <dd class="text-[16px]/[18px] font-medium whitespace-nowrap text-text-primary">
+        {{ detail().reportedOn | arabicDate }}
+      </dd>
+    </div>
+    <div data-role="fact" class="flex min-w-[103px] flex-col gap-1">
+      <dt class="text-[12px]/[16px] text-text-secondary">حالة البلاغ</dt>
+      <dd class="flex">
+        <app-complaint-status-pill [status]="detail().status" />
+      </dd>
+    </div>
+  </dl>
+</app-complaint-detail-card>

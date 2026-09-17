@@ -1,0 +1,66 @@
+<app-form-page-heading parentLabel="البلاغات" parentLink="/complaints" title="تفاصيل البلاغ" />
+
+<!-- The cards 24px under the title. RTL: the wide complaint column on the right, the people and place on the left. -->
+<div class="mt-6 flex-1">
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="reload()" />
+  } @else if (store.isLoading()) {
+    <app-complaint-detail-skeleton />
+  } @else if (store.detail(); as detail) {
+    @if (store.view(); as view) {
+      <div class="grid grid-cols-1 gap-6 xl:grid-cols-[725fr_295fr]">
+        <div class="flex min-w-0 flex-col gap-6">
+          <app-complaint-content-card [detail]="detail" [view]="view" />
+          @if (store.draftStatus(); as draftStatus) {
+            <app-complaint-review-card
+              [status]="draftStatus"
+              [notes]="store.draftNotes()"
+              (statusChange)="store.changeStatus($event)"
+              (notesChange)="store.changeNotes($event)"
+            />
+          }
+        </div>
+        <div class="flex min-w-0 flex-col gap-6">
+          <app-complaint-reporter-card
+            [reporter]="detail.reporter"
+            [profileLink]="view.reporterProfileLink"
+          />
+          <app-reported-place-card class="flex-1" [place]="detail.place" [view]="view" />
+        </div>
+      </div>
+    }
+  }
+</div>
+
+@if (store.detail()) {
+  <!-- Runs the full width of the content area, through main's 32px padding. RTL puts the button on the right. -->
+  <footer class="-mx-8 mt-6 -mb-8 flex border-t border-border px-8 py-6">
+    <button
+      type="button"
+      class="flex h-12 items-center gap-2.5 rounded bg-primary px-5 text-[16px]/[24px] tracking-[0.5px] text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="store.isSaving()"
+      [attr.aria-busy]="store.isSaving()"
+      (click)="store.saveReview()"
+    >
+      <span>حفظ التغييرات</span>
+      <app-icon name="check-rounded" [size]="24" aria-hidden="true" />
+    </button>
+  </footer>
+}
+
+@if (store.isSaved()) {
+  <app-toast
+    title="تم حفظ التغييرات"
+    message="تم تحديث حالة البلاغ وملاحظات الأدمن."
+    (dismissed)="store.dismissSavedMessage()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

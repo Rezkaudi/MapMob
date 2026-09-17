@@ -10,6 +10,7 @@ import { provideUseMockApi } from './core/config/use-mock-api';
 import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
 import { provideCategoriesFeature } from './features/categories/categories.providers';
+import { provideComplaintsFeature } from './features/complaints/complaints.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
 import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     provideApiBaseUrl(),
     provideUseMockApi(),
     provideAdsFeature(),
+    provideComplaintsFeature(),
     provideNotificationsFeature(),
     provideOffersFeature(),
     providePaymentsFeature(),

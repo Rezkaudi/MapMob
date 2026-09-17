@@ -67,4 +67,17 @@ describe('ChoiceChips', () => {
     expect(group.className).toContain('flex-nowrap');
     expect(chips(fixture).every((chip) => chip.className.includes('flex-1'))).toBe(true);
   });
+
+  it('can keep 60px chips on one row, letting a long label widen its chip', () => {
+    const fixture = render(null);
+    fixture.componentRef.setInput('layout', 'row');
+    fixture.detectChanges();
+    const group = (fixture.nativeElement as HTMLElement).querySelector(
+      '[role="radiogroup"]',
+    ) as HTMLElement;
+
+    expect(group.classList).toContain('flex-nowrap');
+    expect(chips(fixture).every((chip) => chip.classList.contains('min-w-[60px]'))).toBe(true);
+    expect(chips(fixture).every((chip) => chip.classList.contains('px-1'))).toBe(true);
+  });
 });

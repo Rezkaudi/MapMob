@@ -30,3 +30,18 @@ describe('FormPageHeading', () => {
     expect(element.textContent).toContain('أضف عرضاً جديداً ليظهر للمستخدمين ضمن العروض المتاحة.');
   });
 });
+
+describe('FormPageHeading without a description', () => {
+  it('leaves the description line out, as the complaint detail page draws it', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(FormPageHeading);
+    fixture.componentRef.setInput('parentLabel', 'البلاغات');
+    fixture.componentRef.setInput('parentLink', '/complaints');
+    fixture.componentRef.setInput('title', 'تفاصيل البلاغ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('h1')?.textContent?.trim()).toBe('تفاصيل البلاغ');
+    expect(element.querySelector('p')).toBeNull();
+  });
+});

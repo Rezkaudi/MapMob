@@ -46,10 +46,19 @@
       </span>
     </div>
 
-    <span
-      class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-[0_3.5px_5.5px_0_rgba(0,0,0,0.02)]"
-    >
-      <app-icon [name]="icon()" [size]="20" />
-    </span>
+    @if (dotClasses(); as dotColor) {
+      <!-- The 52px text block is centred, so 16px down puts the dot level with its label. -->
+      <span
+        data-role="dot"
+        class="mt-4 size-4 shrink-0 self-start rounded-full shadow-[0_3.5px_5.5px_0_rgba(0,0,0,0.02)]"
+        [class]="dotColor"
+      ></span>
+    } @else {
+      <span
+        class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-[0_3.5px_5.5px_0_rgba(0,0,0,0.02)]"
+      >
+        <app-icon [name]="icon()" [size]="20" />
+      </span>
+    }
   }
 </div>

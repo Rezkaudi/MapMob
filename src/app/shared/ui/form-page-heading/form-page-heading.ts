@@ -14,5 +14,6 @@ export class FormPageHeading {
   readonly parentLabel = input.required<string>();
   readonly parentLink = input.required<string>();
   readonly title = input.required<string>();
-  readonly description = input.required<string>();
+  /** The complaint detail page shows the title on its own. */
+  readonly description = input<string>('');
 }

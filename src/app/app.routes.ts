@@ -74,6 +74,11 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'complaints',
+        loadChildren: () =>
+          import('./features/complaints/complaints.routes').then((m) => m.COMPLAINTS_ROUTES),
+      },
+      {
         path: 'not-found',
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
       },
