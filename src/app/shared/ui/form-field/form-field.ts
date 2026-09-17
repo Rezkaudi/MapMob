@@ -14,5 +14,7 @@ export class FormField {
   /** The ad form writes its labels in bold; the offer form does not. */
   readonly isLabelBold = input<boolean>(false);
   readonly hint = input<string>('');
+  /** A character count such as "60/0", drawn at the far end of the label row. */
+  readonly counter = input<string>('');
   readonly error = input<string | null>(null);
 }

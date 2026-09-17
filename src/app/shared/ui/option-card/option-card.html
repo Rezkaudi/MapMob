@@ -2,39 +2,24 @@
 <button
   type="button"
   role="radio"
-  class="flex size-full items-center gap-2.5 rounded-xl text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  class="flex size-full gap-2.5 rounded-xl text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
   [class]="classes()"
   [attr.aria-checked]="isSelected()"
   (click)="picked.emit()"
 >
-  @if (isSelected()) {
-    <span
-      data-role="radio-dot"
-      class="flex size-[18px] shrink-0 items-center justify-center rounded-full bg-primary"
-      aria-hidden="true"
-    >
-      <span class="size-1.5 rounded-full bg-white"></span>
-    </span>
-  } @else {
-    <span
-      data-role="radio-dot"
-      class="size-4 shrink-0 rounded-full border border-[#6b7280] bg-white"
-      aria-hidden="true"
-    ></span>
-  }
+  <app-radio-dot [isChecked]="isSelected()" />
 
   @if (description(); as descriptionText) {
     <span class="flex min-w-0 flex-col gap-[5.5px] pb-[3.5px]">
-      <span class="text-[12px]/[16px] font-bold text-text-primary">{{ title() }}</span>
-      <span data-role="description" class="text-[10px]/[15px] text-text-secondary">
+      <span data-role="title" class="text-[12px]/[16px] font-bold text-text-primary">{{
+        title()
+      }}</span>
+      <span data-role="description" class="text-text-secondary" [class]="descriptionClasses()">
         {{ descriptionText }}
       </span>
     </span>
   } @else {
-    <span
-      class="text-[12px]/[16px]"
-      [class]="isSelected() ? 'font-bold text-primary' : 'font-semibold text-text-primary'"
-    >
+    <span data-role="title" class="text-[12px]/[16px]" [class]="titleClasses()">
       {{ title() }}
     </span>
   }

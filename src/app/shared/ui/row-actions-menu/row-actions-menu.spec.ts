@@ -78,4 +78,28 @@ describe('RowActionsMenu', () => {
     expect(view).toHaveBeenCalledOnce();
     expect(edit).not.toHaveBeenCalled();
   });
+
+  it('can add "تعديل" and a copy item under "عرض التفاصيل", as the notifications menu does', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.componentRef.setInput('isStatusChangeVisible', false);
+    fixture.componentRef.setInput('isEditVisible', true);
+    fixture.componentRef.setInput('duplicateLabel', 'نسخ الإشعار');
+    fixture.detectChanges();
+    const edit = vi.fn();
+    const duplicate = vi.fn();
+    fixture.componentInstance.edit.subscribe(edit);
+    fixture.componentInstance.duplicate.subscribe(duplicate);
+
+    const panel = openPanel(fixture);
+    const labels = Array.from(panel.querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    itemNamed(panel, 'تعديل').click();
+    itemNamed(openPanel(fixture), 'نسخ الإشعار').click();
+
+    expect(labels).toEqual(['عرض التفاصيل', 'تعديل', 'نسخ الإشعار', 'حذف']);
+    expect(edit).toHaveBeenCalledOnce();
+    expect(duplicate).toHaveBeenCalledOnce();
+  });
 });

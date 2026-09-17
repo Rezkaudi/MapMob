@@ -67,6 +67,13 @@ export const routes: Routes = [
           import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
       },
       {
+        path: 'notifications',
+        loadChildren: () =>
+          import('./features/notifications/notifications.routes').then(
+            (m) => m.NOTIFICATIONS_ROUTES,
+          ),
+      },
+      {
         path: 'not-found',
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
       },

@@ -9,6 +9,7 @@ import { FilterPopover } from './filter-popover';
       panelId="ad-filter-panel"
       heading="تصفية الإعلانات"
       [canApply]="canApply()"
+      [footerSize]="footerSize()"
       (applied)="log.push('apply')"
       (reset)="log.push('reset')"
       (closed)="log.push('close')"
@@ -19,6 +20,7 @@ import { FilterPopover } from './filter-popover';
 })
 class HostComponent {
   readonly canApply = signal(true);
+  readonly footerSize = signal<'regular' | 'compact'>('regular');
   readonly log: string[] = [];
 }
 
@@ -59,5 +61,18 @@ describe('FilterPopover', () => {
     fixture.componentInstance.canApply.set(false);
     fixture.detectChanges();
     expect(buttonNamed(element, 'تطبيق الفلاتر').disabled).toBe(true);
+  });
+
+  it("keeps the 65px footer, or the notifications frame's 49px one when compact", () => {
+    const fixture = render();
+    const footer = () =>
+      (fixture.nativeElement as HTMLElement).querySelector('footer') as HTMLElement;
+    expect(footer().classList).toContain('h-[65px]');
+
+    fixture.componentInstance.footerSize.set('compact');
+    fixture.detectChanges();
+
+    expect(footer().classList).toContain('h-[49px]');
+    expect(footer().classList).not.toContain('h-[65px]');
   });
 });

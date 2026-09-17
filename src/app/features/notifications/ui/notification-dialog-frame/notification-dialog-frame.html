@@ -1,0 +1,72 @@
+<div class="fixed inset-0 z-50 overflow-y-auto bg-[rgba(25,28,29,0.3)] backdrop-blur-[4px]">
+  <div
+    class="flex min-h-full items-center justify-center p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="notification-dialog-title"
+    (click)="closed.emit()"
+  >
+    <div
+      class="w-full max-w-[576px] overflow-hidden rounded-lg border border-[#e6e8ea] bg-white shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)]"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- RTL: the arrow or tile and the heading on the right, the cross on the left. -->
+      <!-- The frames draw this bar 73px tall with the tile or cross, 70px with the back arrow. -->
+      <header
+        class="flex items-center justify-between border-b border-[#e6e8ea] bg-[#f2f4f6] px-6"
+        [class]="isBackVisible() ? 'h-[70px]' : 'h-[73px]'"
+      >
+        <div class="flex items-center gap-3">
+          @if (isBackVisible()) {
+            <button
+              type="button"
+              aria-label="رجوع"
+              class="flex size-5 items-center justify-center text-[#130f26] hover:text-primary"
+              (click)="back.emit()"
+            >
+              <app-icon name="arrow-right-curved" [size]="20" aria-hidden="true" />
+            </button>
+          }
+          @if (headingIcon(); as icon) {
+            <span
+              data-role="icon-tile"
+              class="flex size-10 items-center justify-center rounded-lg bg-primary-tint text-primary"
+            >
+              <app-icon [name]="icon" [size]="20" aria-hidden="true" />
+            </span>
+          }
+          <div class="flex flex-col gap-1 text-start">
+            <h2
+              id="notification-dialog-title"
+              class="text-[18px]/[22.5px] font-bold text-text-primary"
+            >
+              {{ heading() }}
+            </h2>
+            <p class="text-[11px]/[14px] text-text-secondary">{{ subheading() }}</p>
+          </div>
+        </div>
+        @if (!isBackVisible()) {
+          <button
+            type="button"
+            aria-label="إغلاق النافذة"
+            class="flex size-8 items-center justify-center rounded text-text-secondary hover:bg-border"
+            (click)="closed.emit()"
+          >
+            <app-icon name="close-sharp" [size]="12" aria-hidden="true" />
+          </button>
+        }
+      </header>
+
+      <div data-role="dialog-body" class="flex flex-col gap-4 p-6">
+        <ng-content />
+      </div>
+
+      <!-- RTL: justify-end packs the buttons against the left edge; the first one lands on the right. -->
+      <footer
+        class="flex min-h-[79px] items-center justify-end gap-4 border-t border-[#e6e8ea] bg-[#f2f4f6] p-4"
+      >
+        <ng-content select="[dialogFooter]" />
+      </footer>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,26 @@
       <span>{{ primaryItem().label }}</span>
     </button>
   }
+  @if (isEditVisible()) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="edit.emit()"
+    >
+      <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
+      <span>تعديل</span>
+    </button>
+  }
+  @if (duplicateLabel(); as label) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="duplicate.emit()"
+    >
+      <app-icon name="copy-filled" [size]="15" aria-hidden="true" />
+      <span>{{ label }}</span>
+    </button>
+  }
   @if (isStatusChangeVisible()) {
     <button
       type="button"

@@ -1,0 +1,38 @@
+<label class="flex flex-col gap-1">
+  <span class="text-start" [class]="classes().label">{{ label() }}</span>
+  <!-- RTL: the icon sits at the right end; the value reads left-to-right from the left end. -->
+  <span
+    class="relative flex items-center gap-1 rounded-lg border px-4 focus-within:border-primary"
+    [class]="classes().box"
+  >
+    @if (isIconShown()) {
+      <app-icon
+        [name]="skin().icon"
+        [size]="skin().iconSize"
+        class="text-text-secondary"
+        aria-hidden="true"
+      />
+    }
+    @if (text(); as shownText) {
+      <span
+        data-role="moment-text"
+        dir="ltr"
+        class="flex-1 text-left font-inter text-[13px]/[18px] text-text-primary"
+      >
+        {{ shownText }}
+      </span>
+    } @else {
+      <span class="flex-1 text-start text-[13px]/[18px] text-[#94a3b8]">{{
+        skin().placeholder
+      }}</span>
+    }
+    <input
+      class="absolute inset-0 size-full cursor-pointer opacity-0"
+      [type]="kind()"
+      [attr.aria-label]="label()"
+      [value]="value() ?? ''"
+      (click)="openPicker($event)"
+      (change)="onChange($event)"
+    />
+  </span>
+</label>
