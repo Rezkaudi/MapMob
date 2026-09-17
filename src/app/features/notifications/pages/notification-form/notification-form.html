@@ -1,0 +1,135 @@
+<app-form-page-heading
+  parentLabel="الإشعارات"
+  [parentLink]="notificationsUrl"
+  [title]="copy().title"
+  [description]="copy().description"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-12" [message]="error" (retry)="store.retry()" />
+} @else if (!store.isReady()) {
+  <app-skeleton class="mt-6 block" height="640px" />
+} @else {
+  <!-- The cards start 24px under the heading, 24px apart; the action bar sits 17px under the last. -->
+  <form class="mt-6 flex flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <div class="flex flex-col gap-6">
+      <app-form-card heading="محتوى الإشعار و الرسالة">
+        <div class="flex flex-col gap-6">
+          <!-- The design keeps 17px of hint room under the title box, empty or not. -->
+          <app-form-field
+            class="pb-[22px]"
+            label="عنوان الإشعار"
+            forId="notification-title"
+            [isRequired]="true"
+            [isLabelBold]="true"
+            [counter]="titleCounter"
+            [error]="errors.title"
+          >
+            <input
+              id="notification-title"
+              type="text"
+              formControlName="title"
+              placeholder="عروض جديدة بانتظارك"
+              [attr.maxlength]="titleMaxLength"
+              [class]="controlClasses.text"
+              [attr.aria-invalid]="errors.title !== null"
+            />
+          </app-form-field>
+
+          <app-form-field
+            class="pb-2.5"
+            label="نص الإشعار التفصيلي"
+            forId="notification-body"
+            [isRequired]="true"
+            [isLabelBold]="true"
+            [counter]="bodyCounter"
+            [error]="errors.body"
+          >
+            <textarea
+              id="notification-body"
+              formControlName="body"
+              placeholder="اكتشف أحدث العروض والأماكن القريبة منك الآن."
+              class="mt-[3px] h-[82px] py-2.5"
+              [attr.maxlength]="bodyMaxLength"
+              [class]="controlClasses.textarea"
+              [attr.aria-invalid]="errors.body !== null"
+            ></textarea>
+          </app-form-field>
+
+          <div class="flex flex-col gap-6">
+            <span class="text-start text-[14px]/[16px] font-bold text-[#334155]">
+              صورة الإشعار (اختياري)
+            </span>
+            <app-image-upload-field
+              [rules]="pictureRules"
+              [image]="image()"
+              (imageChange)="image.set($event)"
+            />
+          </div>
+        </div>
+      </app-form-card>
+
+      <app-form-card heading="الفئة المستهدفة">
+        <app-notification-audience-picker
+          [audience]="form.controls.audience.value"
+          [recipientMode]="form.controls.recipientMode.value"
+          (audienceChange)="changeAudience($event)"
+          (recipientModeChange)="changeRecipientMode($event)"
+        />
+
+        @switch (form.controls.recipientMode.value) {
+          @case ('location') {
+            <app-notification-location-criteria
+              [governorates]="store.governorates()"
+              [governorateId]="form.controls.governorateId.value"
+              [areaId]="form.controls.areaId.value"
+              [estimate]="store.estimate()"
+              [error]="errors.governorateId"
+              (governorateIdChange)="changeGovernorate($event)"
+              (areaIdChange)="form.controls.areaId.setValue($event)"
+            />
+          }
+          @case ('selected') {
+            <app-notification-recipient-picker
+              [recipients]="store.recipients()"
+              [selectedIds]="form.controls.recipientIds.value"
+              [isLoading]="store.isRecipientsLoading()"
+              [error]="errors.recipientIds"
+              (searchChange)="recipientSearch.set($event)"
+              (selectedIdsChange)="changeRecipients($event)"
+            />
+          }
+        }
+      </app-form-card>
+
+      <app-form-card heading="موعد الإرسال وخطة الجدولة">
+        <app-notification-send-timing
+          [timing]="form.controls.timing.value"
+          [sendDay]="form.controls.sendDay.value"
+          [sendTime]="form.controls.sendTime.value"
+          [error]="errors.sendTime"
+          (timingChange)="changeTiming($event)"
+          (sendDayChange)="changeSendDay($event)"
+          (sendTimeChange)="changeSendTime($event)"
+        />
+      </app-form-card>
+    </div>
+
+    <app-form-action-bar
+      class="mt-[17px]"
+      saveLabel="حفظ الإشعار"
+      [cancelLink]="notificationsUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ الإشعار"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

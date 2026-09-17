@@ -11,6 +11,7 @@ import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
 import { provideCategoriesFeature } from './features/categories/categories.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
+import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePaymentsFeature } from './features/payments/payments.providers';
 import { providePlacesFeature } from './features/places/places.providers';
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideApiBaseUrl(),
     provideUseMockApi(),
     provideAdsFeature(),
+    provideNotificationsFeature(),
     provideOffersFeature(),
     providePaymentsFeature(),
     provideReportsFeature(),

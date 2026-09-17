@@ -1,0 +1,99 @@
+<!--
+  Headers keep the design's right-aligned text; values sit where the design draws them, most
+  under their header's centre. The outline is drawn inside the box, like the design's stroke.
+-->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-2 text-center">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[15px]">الاشعار</th>
+        <th class="ps-[3px]">الفئة المستهدفة</th>
+        <th class="ps-[22px]">نوع الإشعار</th>
+        <th class="ps-12">المستلمون</th>
+        <th class="ps-12">تاريخ الإرسال</th>
+        <th class="ps-[67px]">الحالة</th>
+        <!-- The design lets this header reach 8px past its column into the status one. -->
+        <th><span class="inline-block translate-x-2">الإجراء</span></th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.notification.id) {
+          <tr class="h-[59px] border-b border-border bg-surface text-[14px]/[17px] last:border-0">
+            <td class="ps-2 text-center">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد الإشعار ' + row.notification.title"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.notification.id)"
+                (change)="rowToggle.emit(row.notification.id)"
+              />
+            </td>
+            <td class="ps-2">
+              <button
+                type="button"
+                data-role="open-notification"
+                class="line-clamp-2 max-w-full text-right font-bold text-text-primary hover:text-primary"
+                (click)="view.emit(row.notification)"
+              >
+                {{ row.notification.title }}
+              </button>
+            </td>
+            <td class="ps-2 text-text-primary">
+              <span class="line-clamp-1">{{ row.audienceLabel }}</span>
+            </td>
+            <td class="text-center text-text-secondary">{{ row.kindLabel }}</td>
+            <td class="text-center text-text-secondary">
+              <span class="line-clamp-1">{{ row.recipientLabel }}</span>
+            </td>
+            <td class="text-center whitespace-nowrap text-text-secondary">
+              @if (row.sendDay; as sendDay) {
+                {{ sendDay | arabicDate }}
+              } @else {
+                —
+              }
+            </td>
+            <td class="text-center">
+              <app-notification-status-pill [status]="row.notification.status" />
+            </td>
+            <td class="ps-1">
+              <app-row-actions-menu
+                primaryAction="view"
+                duplicateLabel="نسخ الإشعار"
+                [isEditVisible]="true"
+                [isStatusChangeVisible]="false"
+                (view)="view.emit(row.notification)"
+                (edit)="edit.emit(row.notification)"
+                (duplicate)="duplicate.emit(row.notification)"
+                (remove)="remove.emit(row.notification)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

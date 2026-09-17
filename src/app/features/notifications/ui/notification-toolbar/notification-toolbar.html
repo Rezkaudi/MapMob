@@ -1,0 +1,17 @@
+<app-filter-toolbar
+  searchPlaceholder="ابحث عن إشعار.."
+  panelId="notification-filter-panel"
+  [activeFilterCount]="activeFilterCount()"
+  [controlGap]="controlGap"
+  (searchChange)="searchChange.emit($event)"
+  (sortChange)="sortChange.emit($event)"
+>
+  <ng-template let-close="close">
+    <app-notification-filter-panel
+      class="mt-1.5 ml-0.5"
+      [filters]="filters()"
+      (applied)="filtersApply.emit($event); close()"
+      (closed)="close()"
+    />
+  </ng-template>
+</app-filter-toolbar>

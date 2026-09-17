@@ -16,6 +16,12 @@ export const MINUTE_WORDS: CountWords = {
 };
 export const HOUR_WORDS: CountWords = { one: 'ساعة', two: 'ساعتين', few: 'ساعات', many: 'ساعة' };
 export const DAY_WORDS: CountWords = { one: 'يوم', two: 'يومين', few: 'أيام', many: 'يوماً' };
+export const WEEK_WORDS: CountWords = {
+  one: 'أسبوع',
+  two: 'أسبوعين',
+  few: 'أسابيع',
+  many: 'أسبوعاً',
+};
 export const MONTH_WORDS: CountWords = { one: 'شهر', two: 'شهرين', few: 'أشهر', many: 'شهراً' };
 export const YEAR_WORDS: CountWords = { one: 'سنة', two: 'سنتين', few: 'سنوات', many: 'سنة' };
 

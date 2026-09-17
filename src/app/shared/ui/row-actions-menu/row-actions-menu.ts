@@ -28,11 +28,16 @@ export class RowActionsMenu {
   readonly isPrimaryVisible = input<boolean>(true);
   /** Reviews change their status from the detail drawer, so their menu leaves this out. */
   readonly isStatusChangeVisible = input<boolean>(true);
+  /** Notifications open their details first, then still offer an edit straight from the row. */
+  readonly isEditVisible = input<boolean>(false);
+  /** Names the copy item, e.g. "نسخ الإشعار"; empty leaves it out. */
+  readonly duplicateLabel = input<string>('');
   /** The featured package card carries the menu on dark blue. */
   readonly triggerTone = input<ActionMenuTriggerTone>('default');
   readonly edit = output<void>();
   readonly view = output<void>();
   readonly statusChange = output<void>();
+  readonly duplicate = output<void>();
   readonly remove = output<void>();
 
   protected readonly primaryItem = computed(() => PRIMARY_ITEMS[this.primaryAction()]);

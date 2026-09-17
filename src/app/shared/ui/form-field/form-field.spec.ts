@@ -12,6 +12,7 @@ import { FormField } from './form-field';
       [isLabelBold]="isLabelBold()"
       hint="سيتم استخدام هذا العنوان للتعريف بالعرض"
       [error]="error()"
+      [counter]="counter()"
     >
       <input id="offer-title" />
     </app-form-field>
@@ -20,6 +21,7 @@ import { FormField } from './form-field';
 class HostComponent {
   readonly error = signal<string | null>(null);
   readonly isLabelBold = signal(false);
+  readonly counter = signal('');
 }
 
 function render() {
@@ -49,5 +51,16 @@ describe('FormField', () => {
     expect(element.querySelector('[role="alert"]')?.textContent?.trim()).toBe('اكتب اسم العرض');
     expect(element.textContent).not.toContain('سيتم استخدام هذا العنوان');
     expect(element.querySelector('label')?.className).toContain('font-bold');
+  });
+
+  it('puts the character counter on the far side of the label row', () => {
+    const fixture = render();
+    fixture.componentInstance.counter.set('60/0');
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const row = element.querySelector('label')?.parentElement as HTMLElement;
+    expect(row.className).toContain('justify-between');
+    expect(row.lastElementChild?.textContent?.trim()).toBe('60/0');
   });
 });

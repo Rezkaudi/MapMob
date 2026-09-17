@@ -1,0 +1,72 @@
+<app-notification-dialog-frame
+  heading="إعادة جدولة الإشعار"
+  subheading="قم بتحديد الموعد الجديد لإرسال الإشعار المجدول"
+  [isBackVisible]="true"
+  (back)="back.emit()"
+  (closed)="closed.emit()"
+>
+  <!-- RTL: the calendar and the current time on the right, how long is left on the left. -->
+  <div
+    class="flex items-center justify-between gap-3 rounded-lg border border-accent bg-accent/16 p-[15px]"
+  >
+    <div class="flex items-center gap-3">
+      <app-icon
+        name="calendar-filled"
+        [size]="15"
+        class="w-8 justify-center text-[#c27a00]"
+        aria-hidden="true"
+      />
+      <div class="flex flex-col gap-1">
+        <span class="text-[12px]/[14px] text-[#9a6100]">تاريخ ووقت الإرسال الحالي</span>
+        <span class="text-[14px]/[14px] text-text-primary">{{ view().sendTimeLabel }}</span>
+      </div>
+    </div>
+    @if (view().sendDistanceLabel; as distance) {
+      <span class="rounded-xl bg-text-secondary/16 px-2 py-1 text-[11px]/[14px] text-[#895600]">
+        {{ distance }}
+      </span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="text-[12px]/[16px] font-medium text-text-primary"
+      >تحديد الموعد الجديد للإرسال</span
+    >
+    <!-- RTL: the date on the right, the time on the left. -->
+    <div class="grid grid-cols-2 gap-3">
+      <app-send-moment-field
+        kind="date"
+        label="تاريخ الإرسال الجديد"
+        appearance="filled"
+        [value]="moment().day || null"
+        (valueChange)="changeDay($event)"
+      />
+      <app-send-moment-field
+        kind="time"
+        label="تحديد وقت الإرسال الجديد"
+        appearance="filled"
+        [value]="moment().time || null"
+        (valueChange)="changeTime($event)"
+      />
+    </div>
+  </div>
+
+  <div dialogFooter class="flex items-center gap-4">
+    <button
+      type="button"
+      class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-border/40"
+      (click)="back.emit()"
+    >
+      إلغاء
+    </button>
+    <button
+      type="button"
+      class="h-[46px] rounded bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="!canConfirm() || isBusy()"
+      [attr.aria-busy]="isBusy()"
+      (click)="confirm()"
+    >
+      تأكيد إعادة جدولة
+    </button>
+  </div>
+</app-notification-dialog-frame>

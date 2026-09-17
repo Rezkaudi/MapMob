@@ -1,0 +1,54 @@
+<div class="flex max-w-[576px] flex-col gap-4 rounded-xl bg-[#f2f4f6] p-4">
+  <!-- RTL: the magnifier leads on the right of the 296px search box. -->
+  <label
+    class="flex h-10 w-[296px] max-w-full items-center rounded-lg bg-white ps-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] focus-within:ring-1 focus-within:ring-primary"
+  >
+    <app-icon name="search-thin" [size]="14" class="text-[#717784]" aria-hidden="true" />
+    <input
+      type="search"
+      aria-label="البحث عن مستلم"
+      placeholder="ابحث باسم المستخدم أو رقم الهاتف..."
+      class="h-full min-w-0 flex-1 bg-transparent px-3 text-[14px] text-text-primary outline-none placeholder:text-text-secondary"
+      (input)="search($event)"
+    />
+  </label>
+
+  <div
+    class="flex max-h-[224px] flex-col gap-1 overflow-y-auto pr-1 [scrollbar-width:none]"
+    role="group"
+    aria-label="المستلمون"
+  >
+    @if (isLoading()) {
+      @for (row of skeletonRows; track row) {
+        <app-skeleton height="64px" />
+      }
+    } @else {
+      @for (recipient of recipients(); track recipient.id) {
+        <!-- RTL: the tick leads on the right, 12px before the name. -->
+        <label
+          data-role="recipient"
+          class="flex min-h-16 cursor-pointer items-center gap-3 rounded-lg bg-white p-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted"
+        >
+          <input
+            type="checkbox"
+            class="size-[18px] shrink-0 rounded border border-[#94a3b8] accent-primary"
+            [checked]="selectedIdSet().has(recipient.id)"
+            (change)="toggle(recipient.id)"
+          />
+          <span class="flex flex-col text-start">
+            <span class="text-[14px]/[20px] text-text-primary">{{ recipient.name }}</span>
+            <span class="text-[12px]/[20px] text-text-secondary">
+              {{ recipient.city }} • <span dir="ltr">{{ recipient.phone }}</span>
+            </span>
+          </span>
+        </label>
+      } @empty {
+        <p class="py-4 text-center text-[13px] text-text-secondary">لا توجد نتائج مطابقة</p>
+      }
+    }
+  </div>
+
+  @if (error(); as message) {
+    <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+  }
+</div>

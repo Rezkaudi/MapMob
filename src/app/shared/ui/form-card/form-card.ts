@@ -14,7 +14,8 @@ const DEFAULT_ICON_SIZE_PX = 20;
 })
 export class FormCard {
   readonly heading = input.required<string>();
-  readonly icon = input.required<string>();
+  /** `null` leaves the icon out, as the notification form's cards do. */
+  readonly icon = input<string | null>(null);
   readonly iconSize = input<number>(DEFAULT_ICON_SIZE_PX);
 
   protected readonly headingId = `form-card-heading-${nextHeadingNumber++}`;

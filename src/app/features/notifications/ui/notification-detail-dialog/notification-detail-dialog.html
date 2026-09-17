@@ -1,0 +1,96 @@
+<app-notification-dialog-frame
+  heading="تفاصيل الإشعار"
+  subheading="معاينة الإشعار ومعلومات الجدولة والاستهداف"
+  headingIcon="notifications"
+  (closed)="closed.emit()"
+>
+  @if (error(); as message) {
+    <app-error-state [message]="message" (retry)="retry.emit()" />
+  } @else if (notification() && view()) {
+    <!-- RTL: the first box of each pair is the right one; the 76px status box spills 2px into its 74px row. -->
+    <div class="grid auto-rows-[74px] grid-cols-2 items-start gap-3">
+      <div class="flex flex-col gap-1 rounded-lg bg-[#f2f4f6] px-4 pt-4 pb-5">
+        <span class="text-[12px]/[14px] text-text-secondary">عنوان الإشعار</span>
+        <span class="text-[14px]/[20px] text-text-primary">{{ notification()!.title }}</span>
+      </div>
+      <div class="flex flex-col gap-1 rounded-lg bg-[#f2f4f6] p-4">
+        <span class="text-[12px]/[14px] text-text-secondary">حالة الإشعار</span>
+        <span class="flex">
+          <app-notification-status-pill [status]="notification()!.status" />
+        </span>
+      </div>
+      <div class="flex flex-col gap-1 rounded-lg bg-[#f2f4f6] p-4">
+        <span class="text-[12px]/[14px] text-text-secondary">نوع الإشعار</span>
+        <span class="flex items-center gap-1 py-1 text-[14px]/[16px] text-status-success">
+          <span class="size-1.5 rounded-full bg-status-success" aria-hidden="true"></span>
+          {{ view()!.kindLabel }}
+        </span>
+      </div>
+      <div class="flex flex-col gap-1 rounded-lg bg-[#f2f4f6] px-4 pt-4 pb-5">
+        <span class="text-[12px]/[14px] text-text-secondary">الجمهور والعدد</span>
+        <span class="flex items-center justify-between gap-2">
+          <span class="text-[14px]/[18px] text-text-primary">{{ view()!.recipientLabel }}</span>
+          <span
+            class="rounded-xl bg-primary-tint px-2 py-0.5 text-[12px]/[16px] font-medium whitespace-nowrap text-primary"
+          >
+            {{ view()!.recipientCountLabel }}
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- RTL: the calendar tile and the time on the right, how long is left on the left. -->
+    <div class="flex min-h-16 items-center justify-between gap-3 rounded-lg bg-[#f2f4f6] p-4">
+      <div class="flex items-center gap-3">
+        <span class="flex size-8 items-center justify-center rounded bg-primary-tint text-primary">
+          <app-icon name="calendar-filled" [size]="15" aria-hidden="true" />
+        </span>
+        <div class="flex flex-col gap-1">
+          <span class="text-[12px]/[14px] text-text-secondary">تاريخ ووقت الإرسال</span>
+          <span class="text-[14px]/[14px] text-text-primary">{{ view()!.sendTimeLabel }}</span>
+        </div>
+      </div>
+      @if (view()!.sendDistanceLabel; as distance) {
+        <span class="rounded-xl bg-status-success/16 px-2 py-1 text-[11px]/[14px] text-[#00754e]">
+          {{ distance }}
+        </span>
+      }
+    </div>
+
+    <section class="flex flex-col gap-1">
+      <h3 class="text-[14px]/[16px] text-[#191c1e]">محتوى الإشعار</h3>
+      <p
+        class="min-h-20 rounded-lg border border-[#e6e8ea] bg-[#f2f4f6] px-4 pt-[15px] pb-4 text-[14px]/[22.75px] text-text-primary"
+      >
+        {{ notification()!.body }}
+      </p>
+    </section>
+  } @else if (isLoading()) {
+    <div class="flex flex-col gap-4" aria-busy="true">
+      <app-skeleton height="160px" />
+      <app-skeleton height="64px" />
+      <app-skeleton height="100px" />
+    </div>
+  }
+
+  @if (view(); as loaded) {
+    <div dialogFooter class="flex items-center gap-4">
+      <button
+        type="button"
+        class="h-[46px] rounded border border-closed px-4 text-[14px]/[20px] font-medium text-closed hover:bg-closed/5 disabled:opacity-60"
+        [disabled]="isBusy()"
+        (click)="remove.emit()"
+      >
+        حذف الإشعار
+      </button>
+      <button
+        type="button"
+        class="h-[46px] rounded bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:opacity-60"
+        [disabled]="isBusy()"
+        (click)="primaryAction.emit(loaded.primaryAction.kind)"
+      >
+        {{ loaded.primaryAction.label }}
+      </button>
+    </div>
+  }
+</app-notification-dialog-frame>

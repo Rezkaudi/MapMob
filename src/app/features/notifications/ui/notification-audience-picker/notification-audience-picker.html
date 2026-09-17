@@ -1,0 +1,33 @@
+<div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-2.5">
+    <span class="text-start text-[14px]/[16px] font-bold text-text-primary">الفئة المستهدفون</span>
+    <div role="radiogroup" aria-label="الفئة المستهدفة" class="flex flex-wrap gap-3">
+      @for (choice of audienceChoices; track choice.audience) {
+        <!-- The design gives every card the same 237px, so picking one does not resize it. -->
+        <app-option-card
+          class="min-w-[237px]"
+          [title]="choice.title"
+          [description]="choice.description"
+          [isSelected]="audience() === choice.audience"
+          (picked)="audienceChange.emit(choice.audience)"
+        />
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2.5">
+    <span class="text-start text-[14px]/[16px] font-bold text-text-primary">تحديد المستلمين</span>
+    <div role="radiogroup" aria-label="تحديد المستلمين" class="flex flex-wrap gap-3">
+      @for (choice of recipientChoices(); track choice.mode) {
+        <!-- The design gives every card the same 237px, so picking one does not resize it. -->
+        <app-option-card
+          class="min-w-[237px]"
+          size="bar"
+          [title]="choice.title"
+          [isSelected]="recipientMode() === choice.mode"
+          (picked)="recipientModeChange.emit(choice.mode)"
+        />
+      }
+    </div>
+  </div>
+</div>

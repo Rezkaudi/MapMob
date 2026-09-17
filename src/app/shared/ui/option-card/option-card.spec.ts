@@ -57,4 +57,48 @@ describe('OptionCard', () => {
     fixture.detectChanges();
     expect(card().className).toContain('py-[13px]');
   });
+
+  it("draws the resend frame's tall card: dot at the top, a 2px grey idle border, 11px description", () => {
+    const fixture = render(false);
+    fixture.componentRef.setInput('size', 'tall');
+    fixture.detectChanges();
+    const card = cardOf(fixture);
+
+    expect(card.classList).toContain('items-start');
+    expect(card.classList).not.toContain('items-center');
+    expect(card.classList).toContain('border-2');
+    expect(card.classList).toContain('border-text-secondary');
+    expect(card.querySelector('[data-role="description"]')?.className).toContain(
+      'text-[11px]/[18px]',
+    );
+  });
+
+  it("draws the notification form's 48px bar: a title only, bold and dark whether picked or not", () => {
+    const fixture = render(true, '');
+    fixture.componentRef.setInput('size', 'bar');
+    fixture.detectChanges();
+    const title = () => cardOf(fixture).querySelector('[data-role="title"]') as HTMLElement;
+
+    expect(cardOf(fixture).classList).toContain('py-[13px]');
+    expect(title().classList).toContain('font-bold');
+    expect(title().classList).toContain('text-text-primary');
+
+    fixture.componentRef.setInput('isSelected', false);
+    fixture.detectChanges();
+    expect(cardOf(fixture).classList).toContain('py-[14px]');
+    expect(title().classList).toContain('font-bold');
+  });
+
+  it("draws the notification form's send-now card: centred dot with an 11px description", () => {
+    const fixture = render(true);
+    fixture.componentRef.setInput('size', 'featured');
+    fixture.detectChanges();
+    const card = cardOf(fixture);
+
+    expect(card.classList).toContain('items-center');
+    expect(card.classList).toContain('py-3');
+    expect(card.querySelector('[data-role="description"]')?.className).toContain(
+      'text-[11px]/[18px]',
+    );
+  });
 });

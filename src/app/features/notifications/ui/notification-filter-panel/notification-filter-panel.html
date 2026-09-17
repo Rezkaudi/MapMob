@@ -1,0 +1,50 @@
+<app-filter-popover
+  panelId="notification-filter-panel"
+  heading="تصفية الإشعارات"
+  footerSize="compact"
+  [canApply]="canApply()"
+  (applied)="apply()"
+  (reset)="reset()"
+  (closed)="closed.emit()"
+>
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">الفئة المستهدفة</span>
+    <app-choice-chips
+      label="الفئة المستهدفة"
+      [options]="audienceOptions"
+      [selected]="draft().audience"
+      (selectedChange)="pickAudience($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">نوع الإشعار</span>
+    <app-choice-chips
+      label="نوع الإشعار"
+      [options]="kindOptions"
+      [selected]="draft().kind"
+      (selectedChange)="pickKind($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">الحالة</span>
+    <app-choice-chips
+      label="الحالة"
+      [options]="statusOptions"
+      [selected]="draft().status"
+      (selectedChange)="pickStatus($event)"
+    />
+  </div>
+
+  <!-- The frame reads "تاريخ التسجيل", copied from the users panel; notifications filter by send day. -->
+  <app-date-period-filter
+    heading="تاريخ الإرسال"
+    headingIcon="calendar-outline"
+    [hasFixedWidthFields]="true"
+    [period]="draft().sendPeriod"
+    [customRange]="draft().customRange"
+    (periodChange)="pickPeriod($event)"
+    (customRangeChange)="changeCustomRange($event)"
+  />
+</app-filter-popover>

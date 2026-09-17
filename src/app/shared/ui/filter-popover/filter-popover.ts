@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
 
+/** `regular` is the 65px footer of the offers and ads panels; `compact` the notifications frame's 49px one. */
+export type FilterPopoverFooterSize = 'regular' | 'compact';
+
+const FOOTER_HEIGHTS: Record<FilterPopoverFooterSize, string> = {
+  regular: 'h-[65px]',
+  compact: 'h-[49px]',
+};
+
 /** The 384px card under "الفلاتر" on the offers and ads pages: heading, groups, reset and apply. */
 @Component({
   selector: 'app-filter-popover',
@@ -14,9 +22,11 @@ export class FilterPopover {
   readonly panelId = input.required<string>();
   readonly heading = input.required<string>();
   readonly canApply = input<boolean>(true);
+  readonly footerSize = input<FilterPopoverFooterSize>('regular');
   readonly applied = output<void>();
   readonly reset = output<void>();
   readonly closed = output<void>();
 
+  protected readonly footerHeight = computed(() => FOOTER_HEIGHTS[this.footerSize()]);
   protected readonly headingId = computed(() => `${this.panelId()}-title`);
 }

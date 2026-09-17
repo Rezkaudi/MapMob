@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
+import { NotificationRepository } from './features/notifications/data/notification.repository';
 import { PaymentRepository } from './features/payments/data/payment.repository';
 import { ReportsRepository } from './features/reports/data/reports.repository';
 import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-database';
@@ -33,6 +34,13 @@ describe('app routes', () => {
             getPayments: () => of({ items: [], totalCount: 0 }),
             getSummary: () =>
               of({ pendingCount: 0, transactionCount: 0, monthTotal: 0, cumulativeTotal: 0 }),
+          },
+        },
+        {
+          provide: NotificationRepository,
+          useValue: {
+            getNotifications: () => of({ items: [], totalCount: 0 }),
+            getSummary: () => of({ totalCount: 0, sentCount: 0, scheduledCount: 0, draftCount: 0 }),
           },
         },
         {
@@ -119,6 +127,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/reports');
     expect(harness.fixture.nativeElement.querySelector('app-report-overview')).toBeTruthy();
+  });
+
+  it('serves the notifications page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/notifications');
+
+    expect(TestBed.inject(Location).path()).toBe('/notifications');
+    expect(harness.fixture.nativeElement.querySelector('app-notification-list')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {
