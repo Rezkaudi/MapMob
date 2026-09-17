@@ -1,0 +1,88 @@
+<app-form-page-heading
+  [parentLabel]="sectionLabel"
+  [parentLink]="contentUrl"
+  [currentLabel]="stepLabel"
+  [title]="pageName"
+  [description]="description"
+  descriptionSize="small"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.retry()" />
+} @else if (!store.page()) {
+  <app-skeleton class="mt-6 block" height="1140px" />
+} @else {
+  <form class="mt-6 flex flex-1 flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-content-form-card>
+      <app-page-title-field [control]="form.controls.title" />
+
+      <!-- A faint rule 16px above the banner section separates it from the title. -->
+      <app-about-banner-field
+        class="border-t border-[#f1f5f9] pt-4"
+        [banner]="banner()"
+        (bannerChange)="banner.set($event)"
+      />
+
+      <div>
+        <app-content-field-label text="نبذة عن التطبيق" [isRequired]="true" />
+        <app-rich-text-editor
+          class="mt-2"
+          formControlName="summary"
+          appearance="summary"
+          ariaLabel="نبذة عن التطبيق"
+          [isInvalid]="summaryError !== null"
+        />
+        @if (summaryError; as message) {
+          <p role="alert" class="mt-2 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+        }
+      </div>
+
+      <div>
+        <app-content-field-label text="معلومات التواصل" [isRequired]="true" />
+        <!-- The channel boxes take the right 675px of the card, 16px apart. -->
+        <div class="mt-2 flex max-w-[675px] flex-col gap-4">
+          <app-contact-channel-field
+            label="رقم الهاتف الرسمي"
+            inputId="about-phone"
+            type="tel"
+            icon="contact-phone"
+            [iconSize]="14"
+            [control]="form.controls.phone"
+            [errorMessage]="messages.phone"
+          />
+          <app-contact-channel-field
+            label="البريد الإلكتروني"
+            inputId="about-email"
+            type="email"
+            icon="contact-mail"
+            [control]="form.controls.email"
+            [errorMessage]="messages.email"
+          />
+          <app-contact-channel-field
+            label="الموقع الجغرافي / المقر الرئيسي"
+            inputId="about-address"
+            icon="contact-pin"
+            [isLatin]="false"
+            [control]="form.controls.address"
+            [errorMessage]="messages.address"
+          />
+        </div>
+      </div>
+    </app-content-form-card>
+
+    <app-form-action-bar
+      class="mt-10"
+      saveLabel="حفظ التغييرات"
+      [cancelLink]="contentUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+<app-content-save-toasts
+  [savedStatus]="store.savedStatus()"
+  [saveError]="store.saveError()"
+  (savedDismissed)="store.dismissSavedMessage()"
+  (errorDismissed)="store.clearSaveError()"
+/>

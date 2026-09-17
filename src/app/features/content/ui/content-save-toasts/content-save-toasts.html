@@ -1,0 +1,10 @@
+@if (saveError(); as error) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="error"
+    (dismissed)="errorDismissed.emit()"
+  />
+} @else if (savedCopy(); as copy) {
+  <app-toast [title]="copy.title" [message]="copy.message" (dismissed)="savedDismissed.emit()" />
+}

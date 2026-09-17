@@ -1,0 +1,39 @@
+<!-- RTL: the red star follows the label on its left. -->
+<label class="flex items-start font-bold" [class]="skin().label" [attr.for]="inputId()"
+  >{{ label() }}
+  @if (isRequired()) {
+    <span class="font-inter text-[11px]/[14px] font-medium text-closed" aria-hidden="true">*</span>
+  }
+</label>
+
+<!-- 6px under the label. RTL: ps pads the right, where the icon sits 10px from the input. -->
+<div
+  data-role="channel-box"
+  class="mt-1.5 flex items-center gap-2.5 rounded-xl border border-[#e5e7eb] bg-surface-muted"
+  [class]="skin().box"
+>
+  <span
+    data-role="channel-icon"
+    class="flex shrink-0 justify-center text-primary"
+    [class]="skin().iconSlot"
+    aria-hidden="true"
+  >
+    @if (brandIcon()) {
+      <img class="size-5 max-w-none" alt="" [src]="brandIconUrl()" />
+    } @else if (icon()) {
+      <app-icon [name]="icon()" [size]="iconSize()" />
+    }
+  </span>
+  <input
+    class="block min-w-0 flex-1 rounded border bg-transparent px-3 outline-none focus:border-primary"
+    [class]="skin().input + (error ? ' border-closed' : ' border-text-primary')"
+    [id]="inputId()"
+    [type]="type()"
+    [attr.dir]="isLatin() ? 'ltr' : 'rtl'"
+    [formControl]="control()"
+    [attr.aria-invalid]="error !== null"
+  />
+</div>
+@if (error; as message) {
+  <p role="alert" class="mt-1 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+}

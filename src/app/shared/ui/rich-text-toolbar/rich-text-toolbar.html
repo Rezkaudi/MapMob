@@ -1,0 +1,49 @@
+<ng-template #toolbarButton let-item>
+  <!-- mousedown is cancelled so the click does not take the text selection away from the editor. -->
+  <button
+    type="button"
+    class="flex shrink-0 items-center hover:bg-border/70 focus-visible:outline-2 focus-visible:outline-primary aria-pressed:rounded aria-pressed:bg-primary-tint aria-pressed:font-bold aria-pressed:text-primary"
+    [class]="item.buttonClass"
+    [attr.aria-label]="item.ariaLabel"
+    [attr.aria-pressed]="pressedState(item)"
+    [attr.title]="item.ariaLabel"
+    (mousedown)="$event.preventDefault()"
+    (click)="command.emit(item.command)"
+  >
+    @if (item.icon) {
+      <app-icon [name]="item.icon" [size]="item.label ? 14 : 16" aria-hidden="true" />
+    }
+    @if (item.marker) {
+      <span aria-hidden="true" dir="ltr" [class]="item.markerClass">{{ item.marker }}</span>
+    }
+    @if (item.label) {
+      <span aria-hidden="true">{{ item.label }}</span>
+    }
+  </button>
+</ng-template>
+
+<!-- RTL: history on the right, then each group behind a thin divider; clear format ends on the left. -->
+<div
+  role="toolbar"
+  aria-label="أدوات تنسيق النص"
+  class="flex min-h-[45px] flex-wrap items-center gap-1 border-b border-border bg-surface-muted px-3 py-2"
+>
+  @for (group of groups; track $index) {
+    @if (!$first) {
+      <span class="flex h-4 w-[9px] justify-center" aria-hidden="true">
+        <span class="w-px bg-[#cbd5e1]"></span>
+      </span>
+    }
+    <div class="flex items-center" [class]="group.gapClass">
+      @for (item of group.items; track item.command) {
+        <ng-container *ngTemplateOutlet="toolbarButton; context: { $implicit: item }" />
+      }
+    </div>
+  }
+  <span class="flex h-4 w-[9px] justify-center" aria-hidden="true">
+    <span class="w-px bg-[#cbd5e1]"></span>
+  </span>
+  <div class="ms-auto flex">
+    <ng-container *ngTemplateOutlet="toolbarButton; context: { $implicit: clearFormatItem }" />
+  </div>
+</div>

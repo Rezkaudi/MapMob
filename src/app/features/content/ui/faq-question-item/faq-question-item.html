@@ -1,0 +1,60 @@
+<!-- RTL: the number on the right, 12px from the question column; the actions end on the left. -->
+<div class="flex items-start bg-white p-4">
+  <span class="shrink-0 pt-0.5">
+    <span
+      data-role="question-number"
+      dir="ltr"
+      class="flex size-8 items-center justify-center rounded-full border text-[12px]/[16px] font-extrabold"
+      [class]="numberClasses()"
+      >#{{ number() }}</span
+    >
+  </span>
+
+  <div class="ms-3 min-w-0 flex-1">
+    <button
+      type="button"
+      class="flex min-h-5 w-full items-start justify-between gap-4 text-start focus-visible:outline-2 focus-visible:outline-primary"
+      [attr.aria-expanded]="isExpanded()"
+      [attr.aria-controls]="answerId()"
+      (click)="toggle.emit()"
+    >
+      <h3 class="text-[14px]/[20px] font-bold text-text-primary">{{ question().question }}</h3>
+      <app-icon
+        name="chevron-down-small"
+        [size]="18"
+        class="mt-px text-[#94a3b8] transition-transform"
+        [class.rotate-180]="isExpanded()"
+        aria-hidden="true"
+      />
+    </button>
+
+    @if (isExpanded()) {
+      <p
+        data-role="answer"
+        class="mt-2 rounded-xl border border-[#f1f5f9] bg-[rgba(248,250,252,0.8)] p-[13px] text-start text-[12px]/[19.5px] whitespace-pre-line text-text-secondary"
+        [id]="answerId()"
+      >
+        {{ question().answer }}
+      </p>
+    }
+  </div>
+
+  <div class="flex shrink-0 items-center">
+    <button
+      type="button"
+      class="flex size-8 items-center justify-center rounded text-text-secondary hover:bg-surface-muted hover:text-primary"
+      [attr.aria-label]="'تعديل السؤال ' + number()"
+      (click)="edit.emit(question())"
+    >
+      <app-icon name="edit-filled" [size]="14" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      class="flex size-8 items-center justify-center rounded text-[#94a3b8] hover:bg-surface-muted hover:text-closed"
+      [attr.aria-label]="'حذف السؤال ' + number()"
+      (click)="remove.emit(question())"
+    >
+      <app-icon name="trash-filled" [size]="14" aria-hidden="true" />
+    </button>
+  </div>
+</div>

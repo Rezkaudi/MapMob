@@ -1,0 +1,70 @@
+<!-- Each header and value keeps the design's right edge, set by the padding on its cell. -->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="text-center">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="pe-1">الصفحة</th>
+        <th class="pe-1">آخر تحديث</th>
+        <th class="pe-9">الحالة</th>
+        <th>الإجراء</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount"></tbody>
+    } @else {
+      <tbody>
+        @for (page of pages(); track page.kind) {
+          <tr class="h-[77px] border-b border-border bg-surface last:border-0">
+            <td class="text-center">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد ' + page.title"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(page.kind)"
+                (change)="rowToggle.emit(page.kind)"
+              />
+            </td>
+            <td class="pe-2 text-[12px]/[16px] font-medium text-text-primary">{{ page.title }}</td>
+            <td class="pe-5 text-[14px]/[17px] whitespace-nowrap text-text-secondary">
+              {{ page.updatedOn | latinDigitDate }}
+            </td>
+            <!-- The design lets the pill run 34px into the date column, centred under "الحالة". -->
+            <td class="pe-0.5">
+              <app-content-status-pill [status]="page.status" />
+            </td>
+            <td class="pe-4">
+              <a
+                class="inline-flex rounded align-middle text-black hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                [routerLink]="editUrl(page.kind)"
+                [attr.aria-label]="'تعديل ' + page.title"
+              >
+                <app-icon name="edit-outline" [size]="20" aria-hidden="true" />
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty message="لا توجد صفحات مطابقة للبحث" />
+  }
+</div>

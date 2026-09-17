@@ -1,0 +1,102 @@
+<app-form-page-heading
+  [parentLabel]="sectionLabel"
+  [parentLink]="contentUrl"
+  [currentLabel]="stepLabel"
+  [title]="pageName"
+  [description]="description"
+  descriptionSize="small"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.retry()" />
+} @else if (!store.page()) {
+  <app-skeleton class="mt-6 block" height="964px" />
+} @else {
+  <form class="mt-6 flex flex-1 flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-content-form-card>
+      <app-page-title-field [control]="form.controls.title" />
+
+      <!-- Label, the Cairo hint 8px below, the 49px box 8px under the hint. -->
+      <div>
+        <app-content-field-label
+          text="النص التعريفي"
+          forId="contact-introduction"
+          [isRequired]="true"
+        />
+        <p class="mt-2 text-start font-cairo text-[12px]/[16px] text-text-secondary">
+          هذا النص يظهر للمستخدم في أعلى شاشة «تواصل معنا» أسفل العنوان الرئيسي مباشرة ليوضح قنوات
+          المساعدة.
+        </p>
+        <input
+          id="contact-introduction"
+          type="text"
+          formControlName="introduction"
+          class="mt-2 block h-[49px] w-full rounded border bg-white px-4 py-3 text-start font-cairo text-[14px]/[22.75px] text-[#1e293b] outline-none focus:border-primary"
+          [class]="introductionError ? 'border-closed' : 'border-text-secondary'"
+          [attr.aria-invalid]="introductionError !== null"
+        />
+        @if (introductionError; as message) {
+          <p role="alert" class="mt-1 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+        }
+      </div>
+
+      <div>
+        <app-content-field-label text="معلومات الدعم المباشر" [isRequired]="true" />
+        <div class="mt-2 flex max-w-[675px] flex-col gap-4">
+          <app-contact-channel-field
+            label="الدعم الهاتفي"
+            inputId="contact-phone"
+            type="tel"
+            icon="contact-phone"
+            [iconSize]="14"
+            [isRequired]="true"
+            [control]="form.controls.supportPhone"
+            [errorMessage]="messages.phone"
+          />
+          <app-contact-channel-field
+            label="دعم البريد الالكتروني"
+            inputId="contact-email"
+            type="email"
+            icon="contact-mail"
+            [isRequired]="true"
+            [control]="form.controls.supportEmail"
+            [errorMessage]="messages.email"
+          />
+        </div>
+      </div>
+
+      <div>
+        <app-content-field-label text="معلومات التواصل الاجتماعي(حسابات MapMob الرسمية)" />
+        <div class="mt-2 flex max-w-[675px] flex-col gap-4">
+          @for (channel of socialChannels; track channel.field) {
+            <app-contact-channel-field
+              size="compact"
+              type="url"
+              [label]="channel.label"
+              [inputId]="channel.inputId"
+              [brandIcon]="channel.brandIcon"
+              [isRequired]="true"
+              [control]="form.controls[channel.field]"
+              [errorMessage]="messages.link"
+            />
+          }
+        </div>
+      </div>
+    </app-content-form-card>
+
+    <app-form-action-bar
+      class="mt-10"
+      saveLabel="حفظ التغييرات"
+      [cancelLink]="contentUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+<app-content-save-toasts
+  [savedStatus]="store.savedStatus()"
+  [saveError]="store.saveError()"
+  (savedDismissed)="store.dismissSavedMessage()"
+  (errorDismissed)="store.clearSaveError()"
+/>

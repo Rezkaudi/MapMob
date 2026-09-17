@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
 import { AuthStore } from './features/auth/state/auth.store';
 import { ComplaintRepository } from './features/complaints/data/complaint.repository';
+import { ContentPageRepository } from './features/content/data/content-page.repository';
 import { NotificationRepository } from './features/notifications/data/notification.repository';
 import { PaymentRepository } from './features/payments/data/payment.repository';
 import { ReportsRepository } from './features/reports/data/reports.repository';
@@ -44,6 +45,7 @@ describe('app routes', () => {
             getSummary: () => of({ totalCount: 0, sentCount: 0, scheduledCount: 0, draftCount: 0 }),
           },
         },
+        { provide: ContentPageRepository, useValue: { getPages: () => of([]) } },
         {
           provide: ComplaintRepository,
           useValue: {
@@ -160,6 +162,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/complaints');
     expect(harness.fixture.nativeElement.querySelector('app-complaint-list')).toBeTruthy();
+  });
+
+  it('serves the content pages list behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/content');
+
+    expect(TestBed.inject(Location).path()).toBe('/content');
+    expect(harness.fixture.nativeElement.querySelector('app-content-page-list')).toBeTruthy();
   });
 
   it('serves the not-found page directly', async () => {
