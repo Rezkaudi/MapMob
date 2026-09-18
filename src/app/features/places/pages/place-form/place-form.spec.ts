@@ -11,6 +11,27 @@ function render(id: string | undefined = '') {
   return fixture;
 }
 
+const REQUIRED_VALUES = {
+  name: 'صيدلية الحياة',
+  ownerPhone: '0955000000',
+  mainCategory: 'صيدلية',
+  city: 'الرياض',
+  region: 'المركز',
+  address: 'شارع الثورة',
+  phone: '0955111111',
+};
+
+function fillRequiredFields(fixture: ReturnType<typeof render>): void {
+  fixture.componentInstance['form'].patchValue(REQUIRED_VALUES);
+  fixture.detectChanges();
+}
+
+function submit(fixture: ReturnType<typeof render>): void {
+  const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+  form.dispatchEvent(new Event('submit'));
+  fixture.detectChanges();
+}
+
 describe('PlaceForm', () => {
   it('renders all six sections of the design', () => {
     const text = render().nativeElement.textContent;
@@ -70,13 +91,26 @@ describe('PlaceForm', () => {
 
   it('confirms with a toast once the place is saved', () => {
     const fixture = render();
-    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
-    form.dispatchEvent(new Event('submit'));
-    fixture.detectChanges();
+    fillRequiredFields(fixture);
+    submit(fixture);
 
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('تم حفظ المكان بنجاح');
     expect(text).toContain('تمت إضافة المكان بنجاح وسيظهر في قائمة الشركات والمتاجر.');
+  });
+
+  it('does not claim the place was saved while required fields are empty', () => {
+    const fixture = render();
+    submit(fixture);
+
+    expect(fixture.nativeElement.textContent).not.toContain('تم حفظ المكان بنجاح');
+  });
+
+  it('marks the empty fields so the form says what is missing', () => {
+    const fixture = render();
+    submit(fixture);
+
+    expect(fixture.componentInstance['form'].controls.name.touched).toBe(true);
   });
 
   it('adds the products section and follows the package limit when the package changes', () => {

@@ -181,6 +181,9 @@ export class PlaceForm {
   /** The write endpoint is not built yet, so saving only validates and confirms. */
   protected save(): void {
     this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
     this.hasSaved.set(true);
   }
 
