@@ -15,35 +15,31 @@
     </button>
 
     <div class="flex items-center gap-1">
-      @for (page of leadingPages(); track page) {
-        <button
-          type="button"
-          class="flex items-center justify-center rounded-lg text-[12px]/[16px]"
-          [class]="
-            page === pageIndex()
-              ? 'size-6 bg-primary font-bold text-white'
-              : 'size-8 text-text-secondary'
-          "
-          (click)="goTo(page)"
-        >
-          {{ page + 1 }}
-        </button>
-      }
-
-      @if (hasTrailingPage()) {
-        <span class="px-1 text-[16px]/[24px] text-text-secondary">...</span>
-        <button
-          type="button"
-          class="flex items-center justify-center rounded-lg text-[12px]/[16px]"
-          [class]="
-            lastPageIndex() === pageIndex()
-              ? 'size-6 bg-primary font-bold text-white'
-              : 'size-8 text-text-secondary'
-          "
-          (click)="goTo(lastPageIndex())"
-        >
-          {{ pageCount() }}
-        </button>
+      @for (step of pageSteps(); track $index) {
+        @if (step === gap) {
+          <span
+            data-role="page-gap"
+            class="px-1 text-[16px]/[24px] text-text-secondary"
+            aria-hidden="true"
+            >…</span
+          >
+        } @else {
+          <button
+            type="button"
+            data-role="page-step"
+            class="flex items-center justify-center rounded-lg text-[12px]/[16px]"
+            [class]="
+              step === pageIndex()
+                ? 'size-6 bg-primary font-bold text-white'
+                : 'size-8 text-text-secondary'
+            "
+            [attr.aria-current]="step === pageIndex() ? 'page' : null"
+            [attr.aria-label]="'صفحة ' + (step + 1)"
+            (click)="goTo(step)"
+          >
+            {{ step + 1 }}
+          </button>
+        }
       }
     </div>
 
