@@ -56,6 +56,48 @@ describe('UsersStore', () => {
     expect(store.isSummaryLoading()).toBe(false);
   });
 
+  it('falls back to the last page when a reload leaves the current one empty', () => {
+    // Enough rows for three pages, then a reload that only fills one.
+    let isShrunk = false;
+    const { store } = createStore({
+      getUsers: (query) => {
+        if (!isShrunk) {
+          return of({ items: [AHMAD], totalCount: USERS_PAGE_SIZE * 3 });
+        }
+        return of(
+          query.pageIndex === 0 ? { items: [AHMAD], totalCount: 1 } : { items: [], totalCount: 1 },
+        );
+      },
+    });
+
+    store.loadUsers();
+    store.changePage(2);
+    isShrunk = true;
+    store.loadUsers();
+
+    expect(store.pageIndex()).toBe(0);
+    expect(store.entries()).toEqual([AHMAD]);
+    expect(store.isLoading()).toBe(false);
+  });
+
+  it('drops the ticks of rows a reload no longer returns', () => {
+    const other = buildUser({ id: 'user-2' });
+    let isTrimmed = false;
+    const { store } = createStore({
+      getUsers: () =>
+        of(
+          isTrimmed ? { items: [AHMAD], totalCount: 1 } : { items: [AHMAD, other], totalCount: 2 },
+        ),
+    });
+
+    store.loadUsers();
+    store.toggleAllVisible();
+    isTrimmed = true;
+    store.loadUsers();
+
+    expect(store.selectedIds()).toEqual([AHMAD.id]);
+  });
+
   it('builds the four stat cards in the design order and number style', () => {
     const { store } = createStore();
 

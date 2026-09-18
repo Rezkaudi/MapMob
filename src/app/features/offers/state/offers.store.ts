@@ -60,22 +60,29 @@ export const OffersStore = signalStore(
       };
     };
 
-    return {
-      currentOfferQuery,
-      loadOffers: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getOffers(currentOfferQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadOffers = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getOffers(currentOfferQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadOffers();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentOfferQuery,
+      loadOffers,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

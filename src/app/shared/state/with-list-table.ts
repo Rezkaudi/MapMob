@@ -72,10 +72,25 @@ export function withListTable<TEntry extends { readonly id: string }>(
         store.clearSelection();
         store.goToPage(0);
       },
-      showPage(page: PagedResult<TEntry>): void {
+      /**
+       * Shows a loaded page. Resolves `true` when the page came back past the end of
+       * the rows — a status change or another admin's delete can shrink the list under
+       * us — in which case it steps back and the caller loads again.
+       */
+      showPage(page: PagedResult<TEntry>): boolean {
+        const lastPage = Math.max(0, Math.ceil(page.totalCount / store.pageSize()) - 1);
+        const isPageStale = page.items.length === 0 && store.pageIndex() > lastPage;
+        if (isPageStale) {
+          store.setTotalCount(page.totalCount);
+          store.goToPage(lastPage);
+          return true;
+        }
+
         patchState(store, { entries: page.items });
         store.setTotalCount(page.totalCount);
+        store.keepOnlySelected(page.items.map((entry) => entry.id));
         store.setLoaded();
+        return false;
       },
       async saveThenRefresh(
         request: Observable<unknown>,

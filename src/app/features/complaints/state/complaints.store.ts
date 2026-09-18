@@ -65,22 +65,29 @@ export const ComplaintsStore = signalStore(
       };
     };
 
-    return {
-      currentComplaintQuery,
-      loadComplaints: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getComplaints(currentComplaintQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadComplaints = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getComplaints(currentComplaintQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadComplaints();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentComplaintQuery,
+      loadComplaints,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

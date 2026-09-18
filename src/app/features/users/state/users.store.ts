@@ -63,22 +63,29 @@ export const UsersStore = signalStore(
       };
     };
 
-    return {
-      currentUserQuery,
-      loadUsers: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getUsers(currentUserQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadUsers = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getUsers(currentUserQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadUsers();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentUserQuery,
+      loadUsers,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

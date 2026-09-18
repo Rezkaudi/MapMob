@@ -34,6 +34,24 @@ describe('withSelection', () => {
     expect(store.selectedIds()).toEqual(['a', 'b', 'c']);
   });
 
+  it('keepOnlySelected drops the ids that are no longer on the page', () => {
+    const store = createStore();
+    store.selectAll(['a', 'b', 'c']);
+
+    store.keepOnlySelected(['a', 'c', 'd']);
+
+    expect(store.selectedIds()).toEqual(['a', 'c']);
+  });
+
+  it('keepOnlySelected leaves a matching selection untouched', () => {
+    const store = createStore();
+    store.selectAll(['a', 'b']);
+
+    store.keepOnlySelected(['a', 'b']);
+
+    expect(store.selectedIds()).toEqual(['a', 'b']);
+  });
+
   it('clearSelection empties the selection', () => {
     const store = createStore();
     store.selectAll(['a', 'b']);

@@ -6,10 +6,7 @@ import { ListSort } from '../../../shared/models/list-sort';
 import { withListTable } from '../../../shared/state/with-list-table';
 import { SubscriptionRepository } from '../data/subscription.repository';
 import { Subscription } from '../models/subscription';
-import {
-  NO_SUBSCRIPTION_FILTERS,
-  SubscriptionFilters,
-} from '../models/subscription-filters';
+import { NO_SUBSCRIPTION_FILTERS, SubscriptionFilters } from '../models/subscription-filters';
 import { SubscriptionQuery } from '../models/subscription-query';
 import { countActiveSubscriptionFilters } from './count-active-subscription-filters';
 
@@ -56,22 +53,28 @@ export const SubscriptionsStore = signalStore(
       };
     };
 
-    return {
-      currentSubscriptionQuery,
-      loadSubscriptions: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getSubscriptions(currentSubscriptionQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadSubscriptions = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getSubscriptions(currentSubscriptionQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadSubscriptions();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentSubscriptionQuery,
+      loadSubscriptions,
     };
   }),
   withMethods((store, repository = inject(SubscriptionRepository)) => ({
@@ -97,7 +100,9 @@ export const SubscriptionsStore = signalStore(
     async exportSubscriptions(): Promise<Blob | null> {
       patchState(store, { isExporting: true, saveError: null });
       try {
-        return await lastValueFrom(repository.exportSubscriptions(store.currentSubscriptionQuery()));
+        return await lastValueFrom(
+          repository.exportSubscriptions(store.currentSubscriptionQuery()),
+        );
       } catch (error) {
         patchState(store, { saveError: (error as Error).message });
         return null;

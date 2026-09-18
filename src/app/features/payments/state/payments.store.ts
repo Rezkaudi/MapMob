@@ -61,22 +61,29 @@ export const PaymentsStore = signalStore(
       };
     };
 
-    return {
-      currentPaymentQuery,
-      loadPayments: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getPayments(currentPaymentQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadPayments = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getPayments(currentPaymentQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadPayments();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentPaymentQuery,
+      loadPayments,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

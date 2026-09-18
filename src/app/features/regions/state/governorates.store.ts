@@ -12,13 +12,17 @@ import { RegionStatus } from '../models/region-status';
 export const GovernoratesStore = signalStore(
   { providedIn: 'root' },
   withListTable<RegionEntry>(),
-  withMethods((store, repository = inject(GovernorateRepository)) => ({
-    loadGovernorates: rxMethod<void>(
+  withMethods((store, repository = inject(GovernorateRepository)) => {
+    const loadGovernorates = rxMethod<void>(
       pipe(
         tap(() => store.setLoading()),
         switchMap(() =>
           repository.getGovernorates(store.currentQuery()).pipe(
-            tap((page) => store.showPage(page)),
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadGovernorates();
+              }
+            }),
             catchError((error: Error) => {
               store.setError(error.message);
               return of(null);
@@ -26,8 +30,10 @@ export const GovernoratesStore = signalStore(
           ),
         ),
       ),
-    ),
-  })),
+    );
+
+    return { loadGovernorates };
+  }),
   withMethods((store, repository = inject(GovernorateRepository)) => {
     const saveThenReload = (request: Observable<unknown>, onSaved?: () => void) =>
       store.saveThenRefresh(request, () => store.loadGovernorates(), onSaved);

@@ -45,6 +45,44 @@ describe('withListTable', () => {
     expect(store.currentQuery()).toEqual({ pageIndex: 0, pageSize: LIST_PAGE_SIZE });
   });
 
+  it('reports a fresh page as nothing more to do', () => {
+    const store = createStore();
+
+    expect(store.showPage({ items: [TARTUS, HOMS], totalCount: 12 })).toBe(false);
+  });
+
+  it('steps back when a reload leaves the current page past the end of the rows', () => {
+    const store = createStore();
+    store.showPage({ items: [TARTUS], totalCount: 12 });
+    store.goToPage(2);
+
+    const isPageStale = store.showPage({ items: [], totalCount: 7 });
+
+    expect(isPageStale).toBe(true);
+    expect(store.pageIndex()).toBe(1);
+  });
+
+  it('stays on the first page when a reload empties the list entirely', () => {
+    const store = createStore();
+    store.showPage({ items: [TARTUS], totalCount: 3 });
+
+    const isPageStale = store.showPage({ items: [], totalCount: 0 });
+
+    expect(isPageStale).toBe(false);
+    expect(store.pageIndex()).toBe(0);
+  });
+
+  it('keeps the ticks of rows that survived the reload', () => {
+    const store = createStore();
+    store.showPage({ items: [TARTUS, HOMS], totalCount: 12 });
+    store.toggleSelected('a');
+    store.toggleSelected('b');
+
+    store.showPage({ items: [TARTUS], totalCount: 11 });
+
+    expect(store.selectedIds()).toEqual(['a']);
+  });
+
   it('goes back to the first page and clears the ticks when the query changes', () => {
     const store = createStore();
     store.showPage({ items: [TARTUS, HOMS], totalCount: 12 });

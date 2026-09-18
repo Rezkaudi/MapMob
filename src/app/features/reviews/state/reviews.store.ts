@@ -67,22 +67,29 @@ export const ReviewsStore = signalStore(
       };
     };
 
-    return {
-      currentReviewQuery,
-      loadReviews: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getReviews(currentReviewQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadReviews = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getReviews(currentReviewQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadReviews();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentReviewQuery,
+      loadReviews,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

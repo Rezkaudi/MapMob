@@ -30,6 +30,15 @@ export function withSelection() {
         next.has(id) ? next.delete(id) : next.add(id);
         patchState(store, { selectedIdSet: next });
       },
+      /** Called after a reload: ticks for rows that are gone would count toward nothing. */
+      keepOnlySelected(ids: readonly string[]): void {
+        const onPage = new Set(ids);
+        const next = new Set([...store.selectedIdSet()].filter((id) => onPage.has(id)));
+        if (next.size === store.selectedIdSet().size) {
+          return;
+        }
+        patchState(store, { selectedIdSet: next });
+      },
       selectAll(ids: readonly string[]): void {
         patchState(store, { selectedIdSet: new Set(ids) });
       },

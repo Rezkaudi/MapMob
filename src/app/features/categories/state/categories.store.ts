@@ -69,24 +69,30 @@ export const CategoriesStore = signalStore(
       };
     };
 
-    return {
-      loadCategories: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getCategories(currentCategoryQuery()).pipe(
-              tap((page) => {
-                store.showPage(page);
-                patchState(store, { kindCounts: page.kindCounts });
-              }),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadCategories = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getCategories(currentCategoryQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadCategories();
+                return;
+              }
+              patchState(store, { kindCounts: page.kindCounts });
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      loadCategories,
+
       loadMainCategories: rxMethod<void>(
         pipe(
           switchMap(() =>

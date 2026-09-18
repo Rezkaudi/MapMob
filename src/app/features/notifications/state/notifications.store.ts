@@ -65,21 +65,28 @@ export const NotificationsStore = signalStore(
       };
     };
 
-    return {
-      loadNotifications: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getNotifications(currentNotificationQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadNotifications = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getNotifications(currentNotificationQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadNotifications();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      loadNotifications,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>

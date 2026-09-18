@@ -33,15 +33,19 @@ export const AreasStore = signalStore(
       store,
       areaRepository = inject(AreaRepository),
       governorateRepository = inject(GovernorateRepository),
-    ) => ({
-      loadAreas: rxMethod<void>(
+    ) => {
+      const loadAreas = rxMethod<void>(
         pipe(
           tap(() => store.setLoading()),
           switchMap(() =>
             areaRepository
               .getAreas({ governorateId: store.governorateId(), ...store.currentQuery() })
               .pipe(
-                tap((page) => store.showPage(page)),
+                tap((page) => {
+                  if (store.showPage(page)) {
+                    loadAreas();
+                  }
+                }),
                 catchError((error: Error) => {
                   store.setError(error.message);
                   return of(null);
@@ -49,21 +53,25 @@ export const AreasStore = signalStore(
               ),
           ),
         ),
-      ),
-      loadGovernorate: rxMethod<void>(
-        pipe(
-          switchMap(() =>
-            governorateRepository.getGovernorate(store.governorateId()).pipe(
-              tap((governorate) => patchState(store, { governorate })),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
+      );
+
+      return {
+        loadAreas,
+        loadGovernorate: rxMethod<void>(
+          pipe(
+            switchMap(() =>
+              governorateRepository.getGovernorate(store.governorateId()).pipe(
+                tap((governorate) => patchState(store, { governorate })),
+                catchError((error: Error) => {
+                  store.setError(error.message);
+                  return of(null);
+                }),
+              ),
             ),
           ),
         ),
-      ),
-    }),
+      };
+    },
   ),
   withMethods((store, areaRepository = inject(AreaRepository)) => {
     const saveThenReload = (request: Observable<unknown>, onSaved?: () => void) =>

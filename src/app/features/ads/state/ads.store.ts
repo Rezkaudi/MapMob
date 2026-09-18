@@ -63,22 +63,29 @@ export const AdsStore = signalStore(
       };
     };
 
-    return {
-      currentAdQuery,
-      loadAds: rxMethod<void>(
-        pipe(
-          tap(() => store.setLoading()),
-          switchMap(() =>
-            repository.getAds(currentAdQuery()).pipe(
-              tap((page) => store.showPage(page)),
-              catchError((error: Error) => {
-                store.setError(error.message);
-                return of(null);
-              }),
-            ),
+    const loadAds = rxMethod<void>(
+      pipe(
+        tap(() => store.setLoading()),
+        switchMap(() =>
+          repository.getAds(currentAdQuery()).pipe(
+            tap((page) => {
+              if (store.showPage(page)) {
+                loadAds();
+              }
+            }),
+            catchError((error: Error) => {
+              store.setError(error.message);
+              return of(null);
+            }),
           ),
         ),
       ),
+    );
+
+    return {
+      currentAdQuery,
+      loadAds,
+
       loadSummary: rxMethod<void>(
         pipe(
           switchMap(() =>
