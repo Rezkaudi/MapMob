@@ -18,30 +18,33 @@
     </div>
   } @else {
     <ul class="flex flex-col gap-4">
-      @for (item of items(); track item.id) {
+      @for (row of rows(); track row.item.id) {
         <li
           class="flex h-[60px] items-center justify-between rounded-xl p-4"
-          [class]="rowClasses[item.tone]"
+          [class]="rowClasses[row.item.tone]"
         >
           <!-- RTL: the tinted icon tile leads on the right, the review button sits on the left. -->
           <div class="flex items-center gap-4">
             <span
               class="flex shrink-0 items-center justify-center rounded-lg p-2 text-white"
-              [class]="iconClasses[item.tone]"
+              [class]="iconClasses[row.item.tone]"
             >
-              <app-icon [name]="iconNames[item.tone]" [size]="18" />
+              <app-icon [name]="iconNames[row.item.tone]" [size]="18" />
             </span>
             <span class="text-[14px]/[24px] text-text-primary"
-              >{{ item.count }} {{ item.label }}</span
+              >{{ row.item.count }} {{ row.item.label }}</span
             >
           </div>
 
-          <button
-            type="button"
-            class="rounded-lg px-4 py-2 text-[16px]/[24px] font-bold text-text-primary"
-          >
-            مراجعة
-          </button>
+          @if (row.reviewRoute; as reviewRoute) {
+            <a
+              data-role="review"
+              [routerLink]="reviewRoute"
+              class="rounded-lg px-4 py-2 text-[16px]/[24px] font-bold text-text-primary"
+            >
+              مراجعة
+            </a>
+          }
         </li>
       }
     </ul>

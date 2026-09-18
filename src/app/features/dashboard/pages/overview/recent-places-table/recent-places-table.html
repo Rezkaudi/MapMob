@@ -3,7 +3,12 @@
 >
   <header class="flex items-center justify-between gap-4">
     <h2 class="text-[16px]/[24px] font-bold text-text-primary">أحدث الشركات والمتاجر</h2>
-    <a href="javascript:void(0)" class="text-[14px]/[24px] font-bold text-accent">عرض الكل</a>
+    <a
+      data-role="view-all"
+      routerLink="/places"
+      class="text-[14px]/[24px] font-bold text-accent"
+      >عرض الكل</a
+    >
   </header>
 
   <div class="overflow-x-auto rounded-xl border-[0.5px] border-border">
@@ -70,13 +75,16 @@
                 {{ place.joinedAt | arabicDate }}
               </td>
               <td class="px-4 py-3.5 text-center">
-                <button
-                  type="button"
-                  class="rounded-md p-1 text-text-secondary"
-                  [attr.aria-label]="'إجراءات ' + place.name"
-                >
-                  <app-icon name="more-vertical" [size]="14" />
-                </button>
+                <app-action-menu>
+                  <a
+                    data-role="row-detail"
+                    [routerLink]="['/places', place.id]"
+                    class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                  >
+                    <span>عرض التفاصيل</span>
+                    <app-icon name="eye" [size]="16" class="text-text-secondary" />
+                  </a>
+                </app-action-menu>
               </td>
             </tr>
           }

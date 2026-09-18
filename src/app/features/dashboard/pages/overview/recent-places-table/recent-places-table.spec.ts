@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { RecentPlace } from '../../../models/recent-place';
 import { RecentPlacesTable } from './recent-places-table';
 
@@ -25,6 +26,8 @@ class HostComponent {
 }
 
 describe('RecentPlacesTable', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
   it('shows the heading and the view-all link', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
@@ -32,6 +35,29 @@ describe('RecentPlacesTable', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('أحدث الشركات والمتاجر');
     expect(text).toContain('عرض الكل');
+  });
+
+  it('sends the view-all link to the places list', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const viewAll: HTMLAnchorElement = fixture.nativeElement.querySelector(
+      '[data-role="view-all"]',
+    );
+    expect(viewAll.getAttribute('href')).toBe('/places');
+  });
+
+  it('opens each row on its place detail page', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('tbody app-action-menu button').click();
+    fixture.detectChanges();
+
+    const detail: HTMLAnchorElement = fixture.nativeElement.querySelector(
+      '[data-role="row-detail"]',
+    );
+    expect(detail.getAttribute('href')).toBe('/places/place-1');
   });
 
   it('lists every column the design asks for', () => {
@@ -89,6 +115,8 @@ describe('RecentPlacesTable while loading', () => {
     template: `<app-recent-places-table [places]="[]" [isLoading]="true" />`,
   })
   class HostLoadingComponent {}
+
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
 
   it('draws placeholder rows', () => {
     const fixture = TestBed.createComponent(HostLoadingComponent);

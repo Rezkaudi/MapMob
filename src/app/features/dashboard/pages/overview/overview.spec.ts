@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { NEVER, of } from 'rxjs';
 import { DashboardRepository } from '../../data/dashboard.repository';
 import { Overview } from './overview';
@@ -16,6 +17,7 @@ describe('Overview', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideRouter([]),
         {
           provide: DashboardRepository,
           useValue: {
@@ -66,6 +68,7 @@ describe('Overview while loading', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideRouter([]),
         {
           provide: DashboardRepository,
           useValue: {

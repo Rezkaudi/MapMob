@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ActionMenu } from '../../../../../shared/ui/action-menu/action-menu';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { Badge, BadgeTone } from '../../../../../shared/ui/badge/badge';
 import { LazyImage } from '../../../../../shared/ui/lazy-image/lazy-image';
@@ -17,7 +19,7 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
 
 @Component({
   selector: 'app-recent-places-table',
-  imports: [AppIcon, Badge, LazyImage, TableSkeleton, ArabicDatePipe],
+  imports: [ActionMenu, AppIcon, Badge, LazyImage, RouterLink, TableSkeleton, ArabicDatePipe],
   templateUrl: './recent-places-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
