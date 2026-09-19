@@ -41,10 +41,20 @@ describe('RecentPlacesTable', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const viewAll: HTMLAnchorElement = fixture.nativeElement.querySelector(
-      '[data-role="view-all"]',
-    );
+    const viewAll: HTMLAnchorElement =
+      fixture.nativeElement.querySelector('[data-role="view-all"]');
     expect(viewAll.getAttribute('href')).toBe('/places');
+  });
+
+  // A CSS filter makes the card the frame for fixed children, so the row menu would open far from its button.
+  it('draws the card shadow without a filter so the row menu opens by its button', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const card: HTMLElement = fixture.nativeElement.querySelector(
+      'app-recent-places-table section',
+    );
+    expect(card.className).not.toContain('drop-shadow');
   });
 
   it('opens each row on its place detail page', () => {
