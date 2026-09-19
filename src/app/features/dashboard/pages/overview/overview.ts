@@ -17,6 +17,9 @@ const COMPANY_COLOR = '#0583ec';
 const USER_COLOR = '#f5a623';
 const GRID_COLOR = '#f1f5f9';
 const MARKER_FILL_OPACITY = 0.18;
+const CHART_HEIGHT = 230;
+// ApexCharts leaves this much room under the drawing, so the placeholder must too.
+const CHART_BOTTOM_SPACE = 15;
 
 @Component({
   selector: 'app-overview',
@@ -37,11 +40,17 @@ export class Overview {
 
   protected readonly revenuePeriods = DAY_TO_MONTH_PERIODS;
   protected readonly growthPeriods = WEEK_TO_YEAR_PERIODS;
+  protected readonly chartPlaceholderHeight = `${CHART_HEIGHT + CHART_BOTTOM_SPACE}px`;
 
   protected readonly revenueChart = computed(() => {
     const series = this.store.revenueSeries();
     return {
-      chart: { type: 'area' as const, toolbar: { show: false }, height: 230 },
+      chart: {
+        type: 'area' as const,
+        toolbar: { show: false },
+        height: CHART_HEIGHT,
+        parentHeightOffset: CHART_BOTTOM_SPACE,
+      },
       series: [{ name: series?.name ?? '', data: (series?.points ?? []).map((p) => p.value) }],
       xaxis: {
         categories: (series?.points ?? []).map((p) => p.label),
@@ -65,7 +74,12 @@ export class Overview {
   protected readonly growthChart = computed(() => {
     const [companies, users] = this.store.growthSeries();
     return {
-      chart: { type: 'area' as const, toolbar: { show: false }, height: 230 },
+      chart: {
+        type: 'area' as const,
+        toolbar: { show: false },
+        height: CHART_HEIGHT,
+        parentHeightOffset: CHART_BOTTOM_SPACE,
+      },
       series: [
         { name: companies?.name ?? '', data: (companies?.points ?? []).map((p) => p.value) },
         { name: users?.name ?? '', data: (users?.points ?? []).map((p) => p.value) },

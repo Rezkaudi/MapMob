@@ -42,6 +42,7 @@
       <app-chart-panel
         title="نمو الشركات والمستخدمين"
         [isLoading]="store.isGrowthChartLoading()"
+        [chartHeight]="chartPlaceholderHeight"
         [periods]="growthPeriods"
         [activePeriod]="store.growthPeriod()"
         (periodChange)="onGrowthPeriodChange($event)"
@@ -64,6 +65,7 @@
       <app-chart-panel
         title="الإيرادات"
         [isLoading]="store.isRevenueChartLoading()"
+        [chartHeight]="chartPlaceholderHeight"
         [periods]="revenuePeriods"
         [activePeriod]="store.revenuePeriod()"
         (periodChange)="onRevenuePeriodChange($event)"

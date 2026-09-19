@@ -91,6 +91,30 @@ describe('Overview while loading', () => {
     expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
   });
 
+  it('keeps each chart card the same height while its chart loads', () => {
+    const fixture = TestBed.createComponent(Overview);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance as unknown as {
+      growthChart: () => { chart: { height: number; parentHeightOffset: number } };
+      revenueChart: () => { chart: { height: number; parentHeightOffset: number } };
+    };
+    const placeholderHeights = Array.from(
+      fixture.nativeElement.querySelectorAll(
+        'app-chart-panel app-skeleton',
+      ) as NodeListOf<HTMLElement>,
+      (placeholder) => placeholder.style.height,
+    );
+
+    const spaceTakenBy = ({ chart }: { chart: { height: number; parentHeightOffset: number } }) =>
+      `${chart.height + chart.parentHeightOffset}px`;
+
+    expect(placeholderHeights).toEqual([
+      spaceTakenBy(component.growthChart()),
+      spaceTakenBy(component.revenueChart()),
+    ]);
+  });
+
   it('keeps the page title while the data loads', () => {
     const fixture = TestBed.createComponent(Overview);
     fixture.detectChanges();
