@@ -26,8 +26,28 @@ describe('Login', () => {
     expect(text).toContain('أهلاً بعودتك');
     expect(text).toContain('البريد الالكتروني');
     expect(text).toContain('كلمة المرور');
-    expect(text).toContain('نسيت كلمة المرور؟');
     expect(text).toContain('تسجيل دخول');
+  });
+
+  it('does not offer a forgotten-password link', () => {
+    const fixture = TestBed.createComponent(Login);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).not.toContain('نسيت كلمة المرور؟');
+  });
+
+  it('starts each field label at the reading start, so RTL puts it on the right', () => {
+    const fixture = TestBed.createComponent(Login);
+    fixture.detectChanges();
+
+    const labels: HTMLLabelElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('label'),
+    );
+    expect(labels.length).toBe(2);
+    for (const label of labels) {
+      expect(label.parentElement!.classList).toContain('items-start');
+      expect(label.parentElement!.classList).not.toContain('items-end');
+    }
   });
 
   it('puts the eye toggle after the password input, so it lands on the left in RTL', () => {
