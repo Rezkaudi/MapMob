@@ -74,6 +74,10 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'inbox',
+        loadChildren: () => import('./features/inbox/inbox.routes').then((m) => m.INBOX_ROUTES),
+      },
+      {
         path: 'complaints',
         loadChildren: () =>
           import('./features/complaints/complaints.routes').then((m) => m.COMPLAINTS_ROUTES),

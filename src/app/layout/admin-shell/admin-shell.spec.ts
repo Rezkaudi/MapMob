@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthRepository } from '../../features/auth/data/auth.repository';
+import { InboxRepository } from '../../features/inbox/data/inbox.repository';
 import { AuthStorage } from '../../features/auth/data/auth-storage';
 import { AuthStore } from '../../features/auth/state/auth.store';
 import { AdminShell } from './admin-shell';
@@ -15,6 +16,7 @@ describe('AdminShell', () => {
       providers: [
         provideRouter([]),
         { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+        { provide: InboxRepository, useValue: { getNotifications: () => of([]) } },
       ],
     });
   });

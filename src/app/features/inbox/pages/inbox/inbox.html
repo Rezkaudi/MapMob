@@ -1,0 +1,43 @@
+<!-- Header, the tabs 40px below it, the feed 24px under the tabs, 18px between cards. -->
+<div class="relative flex flex-1 flex-col">
+  <app-page-header
+    title="الإشعارات الواردة"
+    description="جميع الإشعارات والتنبيهات التي تتطلب انتباهك ."
+    [isAddVisible]="false"
+  />
+
+  <app-inbox-tabs
+    class="mt-10"
+    [selected]="store.tab()"
+    [unreadCount]="store.unreadCount()"
+    (selectTab)="store.setTab($event)"
+  />
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-6" [message]="error" (retry)="store.loadNotifications()" />
+  } @else if (store.isLoading()) {
+    <div class="mt-6 flex flex-col gap-[18px]">
+      @for (row of placeholderRows; track row) {
+        <app-skeleton height="84px" />
+      }
+    </div>
+  } @else if (store.hasNoNotifications()) {
+    <!-- The frame centres this on the whole screen, so it lifts by half the top bar. -->
+    <app-empty-page-message
+      class="bottom-16"
+      title="لم تصلك أي إشعارات حتى الآن"
+      description="لا توجد إشعارات جديدة حاليًا. ستظهر هنا التنبيهات والتحديثات التي تحتاج إلى انتباهك."
+    />
+  } @else {
+    <ul class="mt-6 flex flex-col gap-[18px]">
+      @for (notification of store.visibleNotifications(); track notification.id) {
+        <li>
+          <app-inbox-notification-card
+            [notification]="notification"
+            (markRead)="store.markAsRead(notification.id)"
+          />
+        </li>
+      }
+    </ul>
+  }
+</div>

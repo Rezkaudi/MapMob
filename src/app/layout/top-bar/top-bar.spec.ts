@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
@@ -7,8 +7,17 @@ import { TopBar } from './top-bar';
 
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
 
-@Component({ imports: [TopBar], template: `<app-top-bar userName="أحمد" userRole="Admin" />` })
-class HostComponent {}
+@Component({
+  imports: [TopBar],
+  template: `<app-top-bar
+    userName="أحمد"
+    userRole="Admin"
+    [unreadNotificationCount]="unreadNotificationCount()"
+  />`,
+})
+class HostComponent {
+  readonly unreadNotificationCount = signal(0);
+}
 
 describe('TopBar', () => {
   beforeEach(() => {
@@ -47,15 +56,30 @@ describe('TopBar', () => {
     expect(fixture.nativeElement.querySelector('input')).toBeTruthy();
   });
 
-  it('draws the bell from its multi-colour asset, dot included', () => {
+  it('sends the bell to the inbox page', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const bell: HTMLImageElement = fixture.nativeElement.querySelector(
-      'img[src="assets/icons/notification.svg"]',
-    );
-    expect(bell).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('.bg-error')).toBeNull();
+    const bell: HTMLAnchorElement = fixture.nativeElement.querySelector('a[data-role="inbox"]');
+    expect(bell.getAttribute('href')).toBe('/inbox');
+    expect(bell.getAttribute('aria-label')).toBe('الإشعارات الواردة');
+  });
+
+  it('draws the red dot only while something is unread', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const bellSource = () =>
+      fixture.nativeElement.querySelector('a[data-role="inbox"] img').getAttribute('src');
+    expect(bellSource()).toBe('assets/icons/bell.svg');
+
+    fixture.componentInstance.unreadNotificationCount.set(3);
+    fixture.detectChanges();
+
+    expect(bellSource()).toBe('assets/icons/notification.svg');
+    expect(
+      fixture.nativeElement.querySelector('a[data-role="inbox"]').getAttribute('aria-label'),
+    ).toBe('الإشعارات الواردة (3 غير مقروءة)');
   });
 
   it('offers the user menu', () => {

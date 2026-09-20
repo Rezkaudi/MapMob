@@ -13,6 +13,7 @@ import { provideCategoriesFeature } from './features/categories/categories.provi
 import { provideComplaintsFeature } from './features/complaints/complaints.providers';
 import { provideContentFeature } from './features/content/content.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
+import { provideInboxFeature } from './features/inbox/inbox.providers';
 import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePaymentsFeature } from './features/payments/payments.providers';
@@ -37,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     provideAdsFeature(),
     provideComplaintsFeature(),
     provideContentFeature(),
+    provideInboxFeature(),
     provideNotificationsFeature(),
     provideOffersFeature(),
     providePaymentsFeature(),

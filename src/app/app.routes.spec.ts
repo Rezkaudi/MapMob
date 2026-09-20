@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './features/auth/data/auth.repository';
+import { InboxRepository } from './features/inbox/data/inbox.repository';
 import { AuthStore } from './features/auth/state/auth.store';
 import { ComplaintRepository } from './features/complaints/data/complaint.repository';
 import { ContentPageRepository } from './features/content/data/content-page.repository';
@@ -27,6 +28,7 @@ describe('app routes', () => {
       providers: [
         provideRouter(routes),
         { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+        { provide: InboxRepository, useValue: { getNotifications: () => of([]) } },
         // Feature repositories live in `app.config.ts`, which these route tests do not load.
         { provide: PlanMockDatabase, useFactory: () => new PlanMockDatabase(MOCK_PLANS) },
         { provide: SubscriptionMockDatabase, useFactory: () => new SubscriptionMockDatabase([]) },
@@ -160,6 +162,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/notifications');
     expect(harness.fixture.nativeElement.querySelector('app-notification-list')).toBeTruthy();
+  });
+
+  it('serves the inbox behind the top-bar bell', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/inbox');
+
+    expect(TestBed.inject(Location).path()).toBe('/inbox');
+    expect(harness.fixture.nativeElement.querySelector('app-inbox')).toBeTruthy();
   });
 
   it('serves the complaints page behind its nav link', async () => {

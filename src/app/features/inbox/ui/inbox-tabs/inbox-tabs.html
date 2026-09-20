@@ -1,0 +1,18 @@
+<!-- RTL: the row hugs the right edge, so الكل leads and غير مقروءة ends up on the left.
+     The frame's `justify: flex-end` is LTR — the RTL equivalent is justify-start. -->
+<div class="flex w-full items-center justify-start border-b border-border" role="tablist">
+  <div class="flex items-start gap-8">
+    @for (tab of tabs(); track tab.value) {
+      <button
+        type="button"
+        role="tab"
+        class="flex items-center gap-2 border-b-2 px-1 py-3 text-[14px]/[20px]"
+        [class]="tab.value === selected() ? activeClasses : idleClasses"
+        [attr.aria-selected]="tab.value === selected()"
+        (click)="selectTab.emit(tab.value)"
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+</div>

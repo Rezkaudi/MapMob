@@ -1,0 +1,33 @@
+<!-- RTL: the leading 8px edge and the unread dot sit on the right, the arrival time on the left.
+     Figma draws that edge inside the card box, so the start padding carries 8px less than the
+     other three to keep the content where the frame puts it. -->
+<article
+  class="flex items-start gap-4 rounded-xl border-s-8 bg-surface p-4 ps-2 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  [class]="edgeColour()"
+>
+  <div class="flex flex-1 flex-col gap-1 px-2">
+    <div class="flex items-center justify-between">
+      <div data-role="title-group" class="flex items-center gap-2">
+        @if (!notification().isRead) {
+          <!-- The dot is the only control the design draws, so it keeps its exact 14px box
+               and widens its hit area with an overlay instead of padding. -->
+          <button
+            type="button"
+            data-role="unread-dot"
+            class="relative size-[14px] shrink-0 rounded-full bg-primary after:absolute after:-inset-2 after:content-['']"
+            aria-label="تحديد كمقروء"
+            (click)="markRead.emit()"
+          ></button>
+        }
+        <h3 class="text-[16px]/[24px] font-bold text-[#1e293b]">{{ notification().title }}</h3>
+        <span data-role="category" class="rounded px-2 py-0.5 text-[11px]/[17px] text-[#1e293b]">
+          {{ categoryLabel() }}
+        </span>
+      </div>
+
+      <span data-role="time" class="text-[16px]/[24px] text-[#1e293b]">{{ time() }}</span>
+    </div>
+
+    <p data-role="body" class="text-[16px]/[24px] text-[#1e293b]">{{ notification().body }}</p>
+  </div>
+</article>

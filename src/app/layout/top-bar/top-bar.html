@@ -5,10 +5,16 @@
   <app-search-input placeholder="البحث" class="w-[340px]" />
 
   <div class="flex items-center gap-6">
-    <!-- The exported bell already carries its red dot, so it renders as an image, not a mask. -->
-    <button type="button" aria-label="الإشعارات">
-      <img src="assets/icons/notification.svg" alt="" class="h-6 w-6" />
-    </button>
+    <!-- The bell is multi-colour, so it renders as an image, not a mask. The design's red
+         dot is baked into the asset, so an empty inbox swaps in the plain bell instead. -->
+    <a
+      data-role="inbox"
+      routerLink="/inbox"
+      [attr.aria-label]="bellLabel()"
+      class="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+    >
+      <img [src]="bellIcon()" alt="" class="h-6 w-6" />
+    </a>
 
     <app-user-menu [userName]="userName()" [userRole]="userRole()" [avatarUrl]="avatarUrl()" />
   </div>
