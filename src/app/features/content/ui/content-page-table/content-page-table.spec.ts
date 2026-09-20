@@ -84,3 +84,16 @@ describe('ContentPageTable', () => {
     );
   });
 });
+
+describe('ContentPageTable title', () => {
+  it('links each title to its page editor', () => {
+    const { element } = render();
+
+    const titles = element.querySelectorAll<HTMLAnchorElement>('[data-role="open-page"]');
+
+    expect(Array.from(titles, (title) => title.getAttribute('href'))).toEqual([
+      '/content/about',
+      '/content/faq',
+    ]);
+  });
+});

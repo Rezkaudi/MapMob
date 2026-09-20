@@ -106,3 +106,18 @@ describe('PlaceProductsCard', () => {
     expect(fired).toEqual(['status:p1']);
   });
 });
+
+describe('PlaceProductsCard name', () => {
+  it('opens the product to edit when its name is clicked', () => {
+    const fixture = build(PRODUCTS);
+    const edited: string[] = [];
+    fixture.componentInstance.editProduct.subscribe((product) => edited.push(product.id));
+
+    const names = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+      '[data-role="open-product"]',
+    );
+    names[1].click();
+
+    expect(edited).toEqual(['p2']);
+  });
+});

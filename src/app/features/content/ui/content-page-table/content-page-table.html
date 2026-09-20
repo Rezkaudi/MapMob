@@ -41,7 +41,11 @@
                 (change)="rowToggle.emit(page.kind)"
               />
             </td>
-            <td class="pe-2 text-[12px]/[16px] font-medium text-text-primary">{{ page.title }}</td>
+            <td class="pe-2 text-[12px]/[16px] font-medium text-text-primary">
+              <a data-role="open-page" class="hover:text-primary" [routerLink]="editUrl(page.kind)">
+                {{ page.title }}
+              </a>
+            </td>
             <td class="pe-5 text-[14px]/[17px] whitespace-nowrap text-text-secondary">
               {{ page.updatedOn | latinDigitDate }}
             </td>

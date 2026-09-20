@@ -55,9 +55,14 @@
                   {{ row.entry.name }}
                 </a>
               } @else {
-                <span class="line-clamp-1 text-[14px] font-bold text-text-primary">
+                <button
+                  type="button"
+                  data-role="open-area"
+                  class="line-clamp-1 text-right text-[14px] font-bold text-text-primary hover:text-primary"
+                  (click)="edit.emit(row.entry)"
+                >
                   {{ row.entry.name }}
-                </span>
+                </button>
               }
             </td>
             <td class="px-4 text-center text-[14px] text-text-primary">

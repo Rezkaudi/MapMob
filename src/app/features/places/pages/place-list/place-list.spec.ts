@@ -162,3 +162,17 @@ describe('PlaceList', () => {
     expect(fixture.nativeElement.textContent).toContain('تنبيه: إجراء نهائي لا يمكن التراجع عنه');
   });
 });
+
+describe('PlaceList name', () => {
+  it('links each place name to its details page', () => {
+    configure({ getPlaces: () => of({ items: [createPlace({ id: 'place-7' })], totalCount: 1 }) });
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    const name = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      '[data-role="open-place"]',
+    );
+
+    expect(name?.getAttribute('href')).toBe('/places/place-7');
+  });
+});

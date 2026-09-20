@@ -128,3 +128,18 @@ describe('RegionTable', () => {
     expect(element.textContent).toContain('لا توجد نتائج مطابقة لبحثك');
   });
 });
+
+describe('RegionTable name', () => {
+  it('opens an area to edit when its name is clicked and it has no page of its own', () => {
+    const fixture = render();
+    const edited: unknown[] = [];
+    fixture.componentInstance.edit.subscribe((entry) => edited.push(entry));
+
+    const names = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+      '[data-role="open-area"]',
+    );
+    names[1].click();
+
+    expect(edited).toEqual([LATAKIA]);
+  });
+});

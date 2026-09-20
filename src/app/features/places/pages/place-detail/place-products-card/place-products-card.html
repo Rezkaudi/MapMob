@@ -44,7 +44,16 @@
                   </span>
                 }
               </td>
-              <td class="px-4 py-[14px] text-[14px] text-text-secondary">{{ product.name }}</td>
+              <td class="px-4 py-[14px] text-[14px] text-text-secondary">
+                <button
+                  type="button"
+                  data-role="open-product"
+                  class="text-right hover:text-primary"
+                  (click)="editProduct.emit(product)"
+                >
+                  {{ product.name }}
+                </button>
+              </td>
               <td class="px-4 py-[14px] font-latin text-[14px] text-text-secondary">
                 {{ product.price | number: '1.0-2' }} {{ product.currency }}
               </td>

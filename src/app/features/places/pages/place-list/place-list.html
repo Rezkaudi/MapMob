@@ -114,9 +114,13 @@
                   <div class="flex items-center gap-3">
                     <app-place-logo [name]="place.name" [imageUrl]="place.logoUrl" />
                     <div class="flex flex-col">
-                      <span class="text-[14px]/[17px] font-bold text-text-primary">
+                      <a
+                        data-role="open-place"
+                        class="text-[14px]/[17px] font-bold text-text-primary hover:text-primary"
+                        [routerLink]="['/places', place.id]"
+                      >
                         {{ place.name }}
-                      </span>
+                      </a>
                       <span class="font-latin text-[12px]/[14px] text-text-secondary">
                         ID #{{ place.code }}
                       </span>

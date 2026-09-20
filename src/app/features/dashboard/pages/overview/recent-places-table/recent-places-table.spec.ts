@@ -135,3 +135,18 @@ describe('RecentPlacesTable while loading', () => {
     expect(fixture.nativeElement.querySelector('tbody[app-table-skeleton]')).toBeTruthy();
   });
 });
+
+describe('RecentPlacesTable name', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('links each place name to its details page', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const name = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      '[data-role="open-place"]',
+    );
+
+    expect(name?.getAttribute('href')).toBe('/places/place-1');
+  });
+});

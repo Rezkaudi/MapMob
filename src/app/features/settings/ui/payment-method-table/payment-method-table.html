@@ -26,8 +26,15 @@
       <tbody>
         @for (method of methods(); track method.id) {
           <tr class="h-[77px] border-b border-border last:border-0">
-            <td class="truncate ps-4 text-[12px]/[16px] font-semibold text-text-primary">
-              {{ method.name }}
+            <td class="ps-4 text-[12px]/[16px] font-semibold text-text-primary">
+              <button
+                type="button"
+                data-role="open-method"
+                class="block max-w-full truncate text-right hover:text-primary"
+                (click)="edit.emit(method)"
+              >
+                {{ method.name }}
+              </button>
             </td>
             <td class="ps-0.5 text-[11px]/[14px] font-medium text-[#717784]">
               {{ kindLabels[method.kind] }}

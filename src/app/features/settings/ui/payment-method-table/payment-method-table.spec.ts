@@ -64,3 +64,14 @@ describe('PaymentMethodTable', () => {
     expect(element.textContent).not.toContain('لا توجد وسائل دفع بعد');
   });
 });
+
+describe('PaymentMethodTable name', () => {
+  it('opens the payment method to edit when its name is clicked', () => {
+    const method = buildPaymentMethod();
+    const { element, edited } = render([method]);
+
+    element.querySelector<HTMLButtonElement>('[data-role="open-method"]')!.click();
+
+    expect(edited).toEqual([method]);
+  });
+});

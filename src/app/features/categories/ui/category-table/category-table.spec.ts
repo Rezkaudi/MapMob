@@ -130,3 +130,18 @@ describe('CategoryTable', () => {
     expect(element.textContent).toContain('لا توجد نتائج مطابقة لبحثك');
   });
 });
+
+describe('CategoryTable name', () => {
+  it('opens the category to edit when its name is clicked', () => {
+    const fixture = render();
+    const edited: unknown[] = [];
+    fixture.componentInstance.edit.subscribe((entry) => edited.push(entry));
+
+    const names = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+      '[data-role="open-category"]',
+    );
+    names[1].click();
+
+    expect(edited).toEqual([SEAFOOD]);
+  });
+});
