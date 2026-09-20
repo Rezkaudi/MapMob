@@ -53,4 +53,13 @@ describe('TopBar', () => {
 
     expect(fixture.nativeElement.querySelector('button[aria-haspopup="menu"]')).toBeTruthy();
   });
+
+  it('stacks above the page so the open user menu is not covered', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const header: HTMLElement = fixture.nativeElement.querySelector('header');
+    expect(header.classList.contains('relative')).toBe(true);
+    expect(header.classList.contains('z-30')).toBe(true);
+  });
 });
