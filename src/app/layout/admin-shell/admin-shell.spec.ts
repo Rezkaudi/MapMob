@@ -19,6 +19,14 @@ describe('AdminShell', () => {
     });
   });
 
+  it('keeps room for the scrollbar so the top bar can match the page inset', () => {
+    const fixture = TestBed.createComponent(AdminShell);
+    fixture.detectChanges();
+
+    const main: HTMLElement = fixture.nativeElement.querySelector('main');
+    expect(main.className).toContain('[scrollbar-gutter:stable]');
+  });
+
   it('renders the sidebar, top bar and a router outlet', () => {
     const fixture = TestBed.createComponent(AdminShell);
     fixture.detectChanges();

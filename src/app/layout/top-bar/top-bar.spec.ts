@@ -29,6 +29,17 @@ describe('TopBar', () => {
     expect(text).toContain('Admin');
   });
 
+  it('lines the header up with the page padding below it', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const header: HTMLElement = fixture.nativeElement.querySelector('header')!;
+    const cluster: HTMLElement = fixture.nativeElement.querySelector('header > div')!;
+    expect(header.className).toContain('ps-8');
+    expect(header.className).toContain('pe-[calc(2rem+var(--scroll-gutter,0px))]');
+    expect(cluster.className).not.toContain('min-w-');
+  });
+
   it('renders a search field', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
