@@ -26,6 +26,15 @@ describe('ActionCenter', () => {
     expect(text).toContain('عناصر تحتاج إلى مراجعتك');
   });
 
+  it('starts the heading and subtitle on the same side', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const titles: HTMLElement = fixture.nativeElement.querySelector('header div');
+    expect(titles.className).toContain('items-start');
+    expect(titles.className).not.toContain('items-end');
+  });
+
   it('reads each row as a count followed by its label', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
