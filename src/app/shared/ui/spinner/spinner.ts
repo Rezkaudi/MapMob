@@ -9,6 +9,11 @@ const DEFAULT_LABEL = 'جاري التحميل';
 @Component({
   selector: 'app-spinner',
   templateUrl: './spinner.html',
+  host: {
+    class: 'inline-flex shrink-0 items-center justify-center',
+    role: 'status',
+    '[attr.aria-label]': 'label()',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Spinner {

@@ -33,6 +33,15 @@ describe('Spinner', () => {
     expect(circle.className).toContain('animate-spin');
   });
 
+  it('centres itself next to the text beside it', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const host: HTMLElement = fixture.nativeElement.querySelector('app-spinner');
+    expect(host.className).toContain('inline-flex');
+    expect(host.className).toContain('items-center');
+  });
+
   it('uses the given label', () => {
     const fixture = TestBed.createComponent(HostWithLabelComponent);
     fixture.detectChanges();
