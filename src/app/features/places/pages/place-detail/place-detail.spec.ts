@@ -1,4 +1,4 @@
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { NEVER, of, throwError } from 'rxjs';
 import { PlaceRepository } from '../../data/place.repository';
@@ -100,5 +100,68 @@ describe('PlaceDetail', () => {
     expect(text).toContain('بعض من المنتجات والخدمات التي يقدمها المكان.');
     expect(text).toContain('سيروم تحت العين');
     expect(text).toContain('200 ل.س');
+  });
+});
+
+describe('PlaceDetail actions', () => {
+  function render(repository: Partial<PlaceRepository>) {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([{ path: 'places', children: [] }]),
+        {
+          provide: PlaceRepository,
+          useValue: { getPlace: () => of(createPlaceDetail()), ...repository },
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(PlaceDetail);
+    fixture.componentRef.setInput('id', 'place-1');
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function buttonNamed(element: HTMLElement, label: string): HTMLButtonElement | undefined {
+    return Array.from(element.querySelectorAll('button')).find(
+      (button) => button.textContent?.trim() === label,
+    );
+  }
+
+  function confirmDialog(fixture: { nativeElement: HTMLElement }): HTMLElement {
+    return fixture.nativeElement.querySelector('app-confirm-action-dialog') as HTMLElement;
+  }
+
+  it('suspends the place once the dialog is confirmed', async () => {
+    let saved = '';
+    const fixture = render({
+      setPlacesStatus: (ids, status) => {
+        saved = `${ids.join(',')}|${status}`;
+        return of(undefined);
+      },
+    });
+
+    buttonNamed(fixture.nativeElement, 'إيقاف النشاط')?.click();
+    fixture.detectChanges();
+    buttonNamed(confirmDialog(fixture), 'إيقاف النشاط')?.click();
+    await fixture.whenStable();
+
+    expect(saved).toBe('place-1|suspended');
+  });
+
+  it('leaves the page for the list once the place is deleted', async () => {
+    let deletedIds: readonly string[] = [];
+    const fixture = render({
+      deletePlaces: (ids) => {
+        deletedIds = ids;
+        return of(undefined);
+      },
+    });
+
+    buttonNamed(fixture.nativeElement, 'حذف المكان')?.click();
+    fixture.detectChanges();
+    buttonNamed(confirmDialog(fixture), 'حذف المكان')?.click();
+    await fixture.whenStable();
+
+    expect(deletedIds).toEqual(['place-1']);
+    expect(TestBed.inject(Router).url).toBe('/places');
   });
 });

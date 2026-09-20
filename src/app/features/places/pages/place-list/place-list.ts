@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { CLOCK } from '../../../../core/config/clock';
+import { FileSaver } from '../../../../shared/files/file-saver';
+import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
 import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
@@ -13,6 +16,7 @@ import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
 import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
+import { Toast } from '../../../../shared/ui/toast/toast';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_SORT_LABEL, PlaceSort } from '../../models/place-sort';
@@ -22,7 +26,8 @@ import { PackageBadge } from './package-badge/package-badge';
 import { PlaceFilters } from './place-filters/place-filters';
 import { NotifyDialog } from './notify-dialog/notify-dialog';
 import { PlaceLogo } from './place-logo/place-logo';
-import { BulkAction, BULK_ACTION_DIALOG } from './bulk-action';
+import { PlaceAction } from './place-action';
+import { PlaceActionFlow } from './place-action-flow';
 
 const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
   active: 'success',
@@ -63,6 +68,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
     PlaceFilters,
     PlaceLogo,
     TablePagination,
+    Toast,
     ArabicDatePipe,
     DecimalPipe,
     RouterLink,
@@ -71,6 +77,9 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceList {
+  private readonly fileSaver = inject(FileSaver);
+  private readonly clock = inject(CLOCK);
+
   protected readonly store = inject(PlacesStore);
   protected readonly statusLabel = PLACE_STATUS_LABEL;
   protected readonly tableColumnCount = TABLE_COLUMN_COUNT;
@@ -99,10 +108,10 @@ export class PlaceList {
   protected readonly selectedStatus = computed(() => this.store.status() ?? 'all');
 
   protected readonly isComposingNotification = signal(false);
-  protected readonly pendingAction = signal<BulkAction | null>(null);
-  protected readonly dialog = computed(() => {
-    const action = this.pendingAction();
-    return action ? BULK_ACTION_DIALOG[action] : null;
+  protected readonly flow = new PlaceActionFlow({
+    changeStatus: (ids, status) => this.store.changeStatus(ids, status),
+    deletePlaces: (ids) => this.store.deletePlaces(ids),
+    exportPlaces: (ids) => this.saveExport(ids),
   });
 
   constructor() {
@@ -139,8 +148,8 @@ export class PlaceList {
     this.store.changePage(pageIndex);
   }
 
-  protected askFor(action: BulkAction): void {
-    this.pendingAction.set(action);
+  protected askForSelection(action: PlaceAction): void {
+    this.flow.askForSelection(action, this.store.selectedIds());
   }
 
   protected composeNotification(): void {
@@ -157,13 +166,22 @@ export class PlaceList {
     this.isComposingNotification.set(false);
   }
 
-  /** The write endpoints are not built yet, so confirming only clears the selection. */
-  protected confirmAction(): void {
-    this.pendingAction.set(null);
-    this.store.clearSelection();
+  protected cancelAction(): void {
+    this.flow.close();
+    this.store.clearSaveError();
   }
 
-  protected cancelAction(): void {
-    this.pendingAction.set(null);
+  /** The header button exports every place the filters match, not just the ticked rows. */
+  protected exportAll(): void {
+    this.saveExport([]);
+  }
+
+  private async saveExport(ids: readonly string[]): Promise<boolean> {
+    const file = await this.store.exportPlaces(ids);
+    if (!file) {
+      return false;
+    }
+    this.fileSaver.save(file, `places-${toCalendarDay(this.clock())}.csv`);
+    return true;
   }
 }

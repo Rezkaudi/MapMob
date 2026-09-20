@@ -69,3 +69,17 @@ describe('ConfirmDialog', () => {
     }
   });
 });
+
+describe('ConfirmDialog while saving', () => {
+  it('blocks a second confirm until the save is done', () => {
+    const fixture = TestBed.createComponent(ConfirmDialog);
+    fixture.componentRef.setInput('title', 'حذف الشركات');
+    fixture.componentRef.setInput('message', 'متأكد؟');
+    fixture.componentRef.setInput('confirmLabel', 'حذف الشركات');
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    const confirm: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(confirm.disabled).toBe(true);
+  });
+});

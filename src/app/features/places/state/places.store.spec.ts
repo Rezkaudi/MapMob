@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { PlaceRepository } from '../data/place.repository';
 import { createPlace } from '../testing/place-fixture';
 import { PlacesStore } from './places.store';
@@ -115,5 +115,97 @@ describe('PlacesStore', () => {
     store.setStatusFilter('active');
 
     expect(store.selectedCount()).toBe(0);
+  });
+});
+
+describe('PlacesStore writes', () => {
+  it('sends the status change, then reloads the rows and the counts', async () => {
+    let loadCount = 0;
+    let countsCount = 0;
+    let saved = '';
+    const store = createStore({
+      getPlaces: () => {
+        loadCount += 1;
+        return of({ items: [PLACE], totalCount: 1 });
+      },
+      getStatusCounts: () => {
+        countsCount += 1;
+        return of(EMPTY_COUNTS);
+      },
+      setPlacesStatus: (ids, status) => {
+        saved = `${ids.join(',')}|${status}`;
+        return of(undefined);
+      },
+    });
+    store.loadPlaces();
+
+    expect(await store.changeStatus(['place-1'], 'suspended')).toBe(true);
+
+    expect(saved).toBe('place-1|suspended');
+    expect(loadCount).toBe(2);
+    expect(countsCount).toBe(1);
+  });
+
+  it('drops the ticked rows once a delete goes through', async () => {
+    const store = createStore({
+      getPlaces: () => of({ items: [PLACE], totalCount: 1 }),
+      deletePlaces: () => of(undefined),
+    });
+    store.loadPlaces();
+    store.toggleSelected('place-1');
+
+    expect(await store.deletePlaces(['place-1'])).toBe(true);
+
+    expect(store.selectedCount()).toBe(0);
+  });
+
+  it('steps back a page when the delete empties the last one', async () => {
+    const store = createStore({
+      getPlaces: () => of({ items: [PLACE], totalCount: 9 }),
+      deletePlaces: () => of(undefined),
+    });
+    store.changePage(1);
+
+    await store.deletePlaces(['place-1']);
+
+    expect(store.pageIndex()).toBe(0);
+  });
+
+  it('keeps the failure message when a write fails', async () => {
+    const store = createStore({
+      getPlaces: () => of({ items: [PLACE], totalCount: 1 }),
+      deletePlaces: () => throwError(() => new Error('تعذر الحذف')),
+    });
+
+    expect(await store.deletePlaces(['place-1'])).toBe(false);
+    expect(store.saveError()).toBe('تعذر الحذف');
+  });
+
+  it('exports the ticked rows, or the whole filtered list', async () => {
+    const requests: string[] = [];
+    const store = createStore({
+      getPlaces: () => of({ items: [PLACE], totalCount: 1 }),
+      exportPlaces: (request) => {
+        requests.push(`${request.query.status}|${request.ids.join(',')}`);
+        return of(new Blob(['csv']));
+      },
+    });
+    store.setStatusFilter('active');
+
+    expect(await store.exportPlaces(['place-1'])).toBeInstanceOf(Blob);
+    expect(await store.exportPlaces([])).toBeInstanceOf(Blob);
+
+    expect(requests).toEqual(['active|place-1', 'active|']);
+    expect(store.isExporting()).toBe(false);
+  });
+
+  it('keeps the failure message when the export fails', async () => {
+    const store = createStore({
+      getPlaces: () => of({ items: [PLACE], totalCount: 1 }),
+      exportPlaces: () => throwError(() => new Error('تعذر التصدير')),
+    });
+
+    expect(await store.exportPlaces([])).toBeNull();
+    expect(store.saveError()).toBe('تعذر التصدير');
   });
 });

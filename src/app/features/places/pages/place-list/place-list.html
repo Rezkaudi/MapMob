@@ -16,7 +16,10 @@
         </a>
         <button
           type="button"
-          class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text-primary"
+          class="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="store.isExporting()"
+          [attr.aria-busy]="store.isExporting()"
+          (click)="exportAll()"
         >
           <span>تصدير</span>
           <app-icon name="export" [size]="16" />
@@ -57,11 +60,11 @@
     @if (store.hasSelection()) {
       <app-bulk-action-bar
         [selectedCount]="store.selectedCount()"
-        (activate)="askFor('activate')"
-        (suspend)="askFor('suspend')"
+        (activate)="askForSelection('activate')"
+        (suspend)="askForSelection('suspend')"
         (notify)="composeNotification()"
-        (exportRows)="askFor('export')"
-        (remove)="askFor('delete')"
+        (exportRows)="askForSelection('export')"
+        (remove)="askForSelection('delete')"
         (clear)="store.clearSelection()"
       />
     }
@@ -162,6 +165,7 @@
                     <button
                       type="button"
                       class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                      (click)="flow.askForStatusChange(place)"
                     >
                       <span>تغيير الحالة</span>
                       <app-icon name="refresh" [size]="12" class="text-text-secondary" />
@@ -170,6 +174,7 @@
                     <button
                       type="button"
                       class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
+                      (click)="flow.askForRow(place, 'delete')"
                     >
                       <span>حذف</span>
                       <app-icon name="trash" [size]="14" />
@@ -197,16 +202,26 @@
   }
 </div>
 
-@if (dialog(); as confirm) {
+@if (flow.dialog(); as confirm) {
   <app-confirm-dialog
     [title]="confirm.title"
     [message]="confirm.message"
-    [note]="'تم تحديد ' + store.selectedCount() + ' شركات'"
+    [note]="flow.note()"
     [warning]="confirm.warning ?? ''"
     [confirmLabel]="confirm.confirmLabel"
     [tone]="confirm.tone"
-    (confirmed)="confirmAction()"
+    [isBusy]="store.isSaving() || store.isExporting()"
+    (confirmed)="flow.confirm()"
     (cancelled)="cancelAction()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    title="تعذر تنفيذ الإجراء"
+    [message]="saveError"
+    tone="error"
+    (dismissed)="store.clearSaveError()"
   />
 }
 

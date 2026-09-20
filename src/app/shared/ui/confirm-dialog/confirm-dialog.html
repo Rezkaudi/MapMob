@@ -31,8 +31,9 @@
     <div class="mt-6 flex items-center gap-4">
       <button
         type="button"
-        class="h-10 flex-1 rounded-lg text-[14px] font-medium text-white"
+        class="h-10 flex-1 rounded-lg text-[14px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
         [class]="skin().confirm"
+        [disabled]="isBusy()"
         (click)="confirmed.emit()"
       >
         {{ confirmLabel() }}

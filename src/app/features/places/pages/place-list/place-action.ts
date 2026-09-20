@@ -1,8 +1,8 @@
 import { ConfirmTone } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
 
-export type BulkAction = 'activate' | 'suspend' | 'export' | 'delete';
+export type PlaceAction = 'activate' | 'suspend' | 'export' | 'delete';
 
-interface BulkActionDialog {
+interface PlaceActionDialog {
   readonly title: string;
   readonly message: string;
   readonly confirmLabel: string;
@@ -10,8 +10,8 @@ interface BulkActionDialog {
   readonly warning?: string;
 }
 
-/** What the confirm dialog says for each bulk action. */
-export const BULK_ACTION_DIALOG: Record<BulkAction, BulkActionDialog> = {
+/** What the confirm dialog says for each action, whether one row asked or the bulk bar did. */
+export const PLACE_ACTION_DIALOG: Record<PlaceAction, PlaceActionDialog> = {
   activate: {
     title: 'تفعيل الشركات',
     message: 'هل أنت متأكد من تفعيل الشركات المحددة؟',

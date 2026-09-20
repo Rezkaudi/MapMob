@@ -46,6 +46,7 @@ export class ConfirmDialog {
   readonly warning = input<string>('');
   readonly confirmLabel = input.required<string>();
   readonly tone = input<ConfirmTone>('success');
+  readonly isBusy = input<boolean>(false);
   readonly confirmed = output<void>();
   readonly cancelled = output<void>();
 
