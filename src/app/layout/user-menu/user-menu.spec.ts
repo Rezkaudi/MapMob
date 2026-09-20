@@ -32,6 +32,23 @@ describe('UserMenu', () => {
     });
   });
 
+  it('lines the name and role up on the side the avatar sits on', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const names: HTMLElement = trigger(fixture).querySelector('span.flex-col')!;
+    expect(names.className).toContain('items-start');
+    expect(names.className).not.toContain('items-end');
+  });
+
+  it('marks the trigger with the design chevron', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const glyph: HTMLElement = trigger(fixture).querySelector('app-icon span')!;
+    expect(glyph.style.maskImage).toContain('assets/icons/chevron-down-bold.svg');
+  });
+
   it('shows the signed-in name and role on the trigger', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
