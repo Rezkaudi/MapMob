@@ -7,7 +7,9 @@
       <h2 class="text-[16px]/[24px] font-bold text-text-primary">يحتاج إلى إجراء</h2>
       <p class="text-[16px]/[24px] text-text-secondary">عناصر تحتاج إلى مراجعتك</p>
     </div>
-    <a href="javascript:void(0)" class="text-[14px]/[24px] font-bold text-accent">عرض الكل</a>
+    <a data-role="view-all" routerLink="/inbox" class="text-[14px]/[24px] font-bold text-accent"
+      >عرض الكل</a
+    >
   </header>
 
   @if (isLoading()) {

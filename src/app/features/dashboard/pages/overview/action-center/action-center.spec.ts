@@ -35,6 +35,17 @@ describe('ActionCenter', () => {
     expect(titles.className).not.toContain('items-end');
   });
 
+  it('sends عرض الكل to the inbox, where every alert is listed', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector(
+      'header [data-role="view-all"]',
+    );
+    expect(link.textContent?.trim()).toBe('عرض الكل');
+    expect(link.getAttribute('href')).toBe('/inbox');
+  });
+
   it('reads each row as a count followed by its label', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
