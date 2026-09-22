@@ -1,37 +1,53 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { PICTURE_RULES } from '../../../../shared/files/picture-rules';
 import { VIDEO_RULES } from '../../../../shared/files/video-rules';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
 import { MediaFile } from '../../../../shared/ui/media-picker/media-file';
 import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
+import { toSavedMediaFiles } from '../../../../shared/ui/media-picker/saved-media-files';
 import { PackageQuotaBadge } from '../../../../shared/ui/package-quota-badge/package-quota-badge';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
 import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
 import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
+import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
+import { PlaceDetail } from '../../models/place-detail';
 import { PlaceProduct } from '../../models/place-product';
 import { ProductDraft } from '../../models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
+import { createPlaceFormGroup } from '../../state/place-form-group';
+import { toPlaceFormValue } from '../../state/place-form-mapping';
+import { toSavedVideoFiles } from '../../state/place-video-files';
+import { PlaceFormStore } from '../../state/place-form.store';
+import { withSavedOption } from '../../state/with-saved-option';
+import { toWorkingWeek } from '../../state/working-week-from-rows';
 import { ProductDialog } from '../../ui/product-dialog/product-dialog';
 import { ProductsEditor } from './products-editor/products-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
 
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
+const REGIONS = ['المركز', 'الشمال', 'الجنوب', 'الشرق', 'الغرب'];
 /** Syrian pound, the only currency the design offers. */
 const CURRENCY = 'ل.س';
-
-/** Tartus, the city the design centres its map on. */
-const DEFAULT_LATITUDE = 34.8959;
-const DEFAULT_LONGITUDE = 35.8866;
 
 const ALL_DAY_OPENS_AT = '00:00';
 const ALL_DAY_CLOSES_AT = '23:59';
@@ -40,6 +56,7 @@ const ALL_DAY_CLOSES_AT = '23:59';
   selector: 'app-place-form',
   imports: [
     AppIcon,
+    ErrorState,
     FieldLabel,
     MapPicker,
     MediaPicker,
@@ -47,22 +64,33 @@ const ALL_DAY_CLOSES_AT = '23:59';
     PackageQuotaBadge,
     ProductDialog,
     ProductsEditor,
+    Skeleton,
     Toast,
     WorkingHoursEditor,
     ReactiveFormsModule,
     RouterLink,
   ],
   templateUrl: './place-form.html',
+  providers: [PlaceFormStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceForm {
   /** Set on the edit route; the add route leaves it undefined. */
   readonly id = input<string | undefined>('');
 
-  private readonly formBuilder = inject(FormBuilder);
+  protected readonly store = inject(PlaceFormStore);
+  protected readonly form = createPlaceFormGroup(inject(FormBuilder));
 
-  protected readonly categories = CATEGORIES;
-  protected readonly cities = CITIES;
+  /** The saved value joins the list when the list does not already offer it. */
+  protected readonly categories = computed(() =>
+    withSavedOption(CATEGORIES, this.store.editedPlace()?.mainCategory),
+  );
+  protected readonly cities = computed(() =>
+    withSavedOption(CITIES, this.store.editedPlace()?.location.city),
+  );
+  protected readonly regions = computed(() =>
+    withSavedOption(REGIONS, this.store.editedPlace()?.location.region),
+  );
   protected readonly packages = (Object.keys(PLACE_PACKAGE_LABEL) as PlacePackage[]).map(
     (value) => ({ value, label: PLACE_PACKAGE_LABEL[value] }),
   );
@@ -87,39 +115,25 @@ export class PlaceForm {
   protected readonly isAddingProduct = signal(false);
   protected readonly videos = signal<readonly MediaFile[]>([]);
 
-  protected readonly form = this.formBuilder.nonNullable.group({
-    name: ['', Validators.required],
-    ownerName: [''],
-    ownerPhone: ['', Validators.required],
-    ownerExtraPhone: [''],
-    mainCategory: ['', Validators.required],
-    subCategory: [''],
-    city: ['', Validators.required],
-    region: ['', Validators.required],
-    address: ['', Validators.required],
-    latitude: [DEFAULT_LATITUDE],
-    longitude: [DEFAULT_LONGITUDE],
-    phone: ['', Validators.required],
-    extraPhone: [''],
-    website: [''],
-    whatsapp: [''],
-    useMainPhoneForWhatsapp: [false],
-    facebook: [''],
-    instagram: [''],
-    telegram: [''],
-    description: [''],
-    package: ['free', Validators.required],
-    status: ['pending', Validators.required],
-  });
-
   /** The control's value only reaches a computed through its value stream. */
   private readonly selectedPackage = toSignal(this.form.controls.package.valueChanges, {
     initialValue: this.form.controls.package.value,
   });
-  protected readonly currentPackage = computed(() => this.selectedPackage() as PlacePackage);
+  protected readonly currentPackage = computed(() => this.selectedPackage());
   protected readonly productLimit = computed(() => PACKAGE_PRODUCT_LIMIT[this.currentPackage()]);
   protected readonly mediaLimit = computed(() => PACKAGE_MEDIA_LIMIT[this.currentPackage()]);
   protected readonly packageLabel = computed(() => PLACE_PACKAGE_LABEL[this.currentPackage()]);
+
+  constructor() {
+    // The add route binds no id, and its empty string means "adding", the same as none.
+    this.store.load(computed(() => this.id() || null));
+    effect(() => {
+      const place = this.store.editedPlace();
+      if (place) {
+        untracked(() => this.fillFrom(place));
+      }
+    });
+  }
 
   protected composeProduct(): void {
     this.isAddingProduct.set(true);
@@ -189,5 +203,13 @@ export class PlaceForm {
 
   protected dismissSavedToast(): void {
     this.hasSaved.set(false);
+  }
+
+  private fillFrom(place: PlaceDetail): void {
+    this.form.reset(toPlaceFormValue(place));
+    this.week.set(toWorkingWeek(place.workingHours));
+    this.images.set(toSavedMediaFiles(place.images));
+    this.videos.set(toSavedVideoFiles(place.videos));
+    this.products.set(place.products);
   }
 }

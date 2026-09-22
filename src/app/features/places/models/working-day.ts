@@ -7,7 +7,7 @@ export interface WorkingDay {
 
 const DEFAULT_OPENS_AT = '09:00';
 const DEFAULT_CLOSES_AT = '18:00';
-const WEEK_DAYS = [
+export const WEEK_DAYS = [
   'السبت',
   'الأحد',
   'الإثنين',

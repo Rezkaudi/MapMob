@@ -26,6 +26,7 @@
         @if (kind() === 'video') {
           <video
             [src]="item.previewUrl"
+            [poster]="item.posterUrl ?? ''"
             class="size-full object-cover"
             muted
             preload="metadata"

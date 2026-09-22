@@ -9,6 +9,9 @@ const DESCRIPTION =
   'نحرص على تقديم أفضل خدمة صيدلانية مع استشارات طبية متخصصة من قبل صيادلة مؤهلين.';
 
 const IMAGES = 'assets/images';
+const SUB_CATEGORY = 'خدمات عامة';
+const REGION = 'المركز';
+const ADDRESS = 'شارع الثورة، بجانب الحديقة العامة';
 
 const WORKING_HOURS = [
   { days: 'الأحد - الخميس', hours: '09:00 AM - 11:00 PM', isToday: false },
@@ -56,10 +59,10 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
     name: place.name,
     status: place.status,
     description: DESCRIPTION,
-    mainCategory: 'صيدليات',
-    subCategory: 'صيدليات',
+    mainCategory: place.category,
+    subCategory: SUB_CATEGORY,
     images: GALLERY,
-    owner: { name: 'أحمد عبدالله', phone: '096077789' },
+    owner: { name: 'أحمد عبدالله', phone: '096077789', extraPhone: '0933111222' },
     subscription: {
       package: place.package,
       status: place.status,
@@ -68,13 +71,17 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
     activity: { addedAt: '2024-10-24T00:00:00.000Z', updatedLabel: 'منذ يومين' },
     contact: {
       phone: '+966 50 123 4567',
+      extraPhone: '+966 50 765 4321',
+      website: 'https://alhayatpharmacy.com',
       whatsapp: '+966 50 123 4567',
       facebook: 'https://facebook.com/alhayatpharmacy',
       instagram: 'https://instagram.com/alhayatpharmacy',
+      telegram: 'https://t.me/alhayatpharmacy',
     },
     location: {
-      city: 'طرطوس',
-      address: 'طرطوس ، شارع الثورة، بجانب',
+      city: place.city,
+      region: REGION,
+      address: ADDRESS,
       latitude: 34.889,
       longitude: 35.886,
     },
