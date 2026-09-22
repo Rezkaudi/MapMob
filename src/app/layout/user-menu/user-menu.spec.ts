@@ -146,6 +146,6 @@ describe('UserMenu', () => {
     fixture.detectChanges();
 
     const link: HTMLAnchorElement = menu(fixture)!.querySelector('a[role="menuitem"]')!;
-    expect(link.getAttribute('href')).toBe('/profile');
+    expect(link.getAttribute('href')).toBe('/settings/account');
   });
 });
