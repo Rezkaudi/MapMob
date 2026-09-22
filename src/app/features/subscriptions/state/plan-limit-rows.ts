@@ -31,7 +31,7 @@ function formatImages(count: number): string {
   if (count === 1) {
     return 'صورة واحدة';
   }
-  return count <= LAST_PLURAL_COUNT ? `${count} صور` : `${count} صورة`;
+  return count <= LAST_PLURAL_COUNT ? `حتى ${count} صور` : `${count} صورة`;
 }
 
 function format(limit: number | null, words: (count: number) => string): string {

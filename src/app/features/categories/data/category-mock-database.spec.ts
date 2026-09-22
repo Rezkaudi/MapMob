@@ -2,7 +2,7 @@ import { buildCategory } from '../testing/category-fixture';
 import { CategoryMockDatabase } from './category-mock-database';
 
 const RESTAURANTS = buildCategory({ id: 'm1', name: 'مطاعم' });
-const CAFES = buildCategory({ id: 'm2', name: 'مقاهي', icon: 'coffee' });
+const CAFES = buildCategory({ id: 'm2', name: 'مقاهي', icon: 'coffee', color: '#0583EC' });
 const SEAFOOD = buildCategory({
   id: 's1',
   name: 'مطاعم بحرية',
@@ -30,7 +30,7 @@ describe('CategoryMockDatabase', () => {
   it('adds a new, active, empty sub category at the top with its parent name', () => {
     const database = createDatabase();
 
-    const added = database.add({ name: 'مخابز', kind: 'sub', parentId: 'm2', icon: 'store' });
+    const added = database.add({ name: 'مخابز', kind: 'sub', parentId: 'm2', icon: 'store', color: '#0583EC' });
 
     expect(added).toMatchObject({
       name: 'مخابز',
@@ -38,6 +38,7 @@ describe('CategoryMockDatabase', () => {
       parentId: 'm2',
       parentName: 'مقاهي',
       icon: 'store',
+      color: '#0583EC',
       placeCount: 0,
       status: 'active',
     });
@@ -50,6 +51,7 @@ describe('CategoryMockDatabase', () => {
       kind: 'main',
       parentId: 'm1',
       icon: 'store',
+      color: '#0583EC',
     });
 
     expect(added.parentId).toBeNull();
@@ -58,7 +60,7 @@ describe('CategoryMockDatabase', () => {
 
   it('refuses a sub category without a known main category', () => {
     expect(() =>
-      createDatabase().add({ name: 'مخابز', kind: 'sub', parentId: 'nope', icon: 'store' }),
+      createDatabase().add({ name: 'مخابز', kind: 'sub', parentId: 'nope', icon: 'store', color: '#0583EC' }),
     ).toThrowError('اختر التصنيف الرئيسي التابع له');
   });
 
@@ -70,6 +72,7 @@ describe('CategoryMockDatabase', () => {
       kind: 'sub',
       parentId: 'm2',
       icon: 'coffee',
+      color: '#0583EC',
     });
 
     expect(updated).toMatchObject({ name: 'أسماك', parentName: 'مقاهي', placeCount: 12 });
@@ -79,7 +82,7 @@ describe('CategoryMockDatabase', () => {
   it('renames the parent shown on sub categories when a main category is renamed', () => {
     const database = createDatabase();
 
-    database.update('m1', { name: 'مطاعم فاخرة', kind: 'main', parentId: null, icon: 'utensils' });
+    database.update('m1', { name: 'مطاعم فاخرة', kind: 'main', parentId: null, icon: 'utensils-crossed', color: '#0583EC' });
 
     expect(database.list()[2].parentName).toBe('مطاعم فاخرة');
   });

@@ -1,5 +1,7 @@
 import { provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
+import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { PlaceForm } from './place-form';
 
 function render(id: string | undefined = '') {
@@ -33,19 +35,31 @@ function submit(fixture: ReturnType<typeof render>): void {
 }
 
 describe('PlaceForm', () => {
-  it('renders all six sections of the design', () => {
-    const text = render().nativeElement.textContent;
+  it('renders the six sections of the design, in its order', () => {
+    const headings: HTMLElement[] = Array.from(
+      render().nativeElement.querySelectorAll('app-form-section h2, app-form-section h3'),
+    );
 
-    for (const heading of [
+    expect(headings.map((heading) => heading.textContent?.trim())).toEqual([
       'المعلومات الأساسية',
       'موقع المكان',
       'تفاصيل المكان',
       'أوقات العمل',
-      'الخدمات والصور',
       'الباقة والحالة',
-    ]) {
-      expect(text).toContain(heading);
-    }
+      'معرض الصور و الفيديوهات',
+      'المنتجات والخدمات',
+    ]);
+  });
+
+  it('counts the gallery against what the package allows', () => {
+    const badges: HTMLElement[] = Array.from(
+      render().nativeElement.querySelectorAll('app-package-quota-badge'),
+    );
+
+    expect(badges).toHaveLength(3);
+    expect(badges[0].textContent).toContain('0 / 3 صور');
+    expect(badges[1].textContent).toContain('0 / 1 فيديو');
+    expect(badges[2].textContent).toContain('0 / 3 منتجات وخدمات');
   });
 
   it('titles itself "إضافة مكان جديد" when adding and "تعديل المكان" when editing', () => {
@@ -67,11 +81,32 @@ describe('PlaceForm', () => {
     expect(text).toContain('إلغاء');
   });
 
-  it('starts with the week and the default services filled in', () => {
+  it('runs the action bar as the frame reads it, left to right', () => {
+    const actions: HTMLElement[] = Array.from(
+      render().nativeElement.querySelectorAll('[data-testid="form-actions"] > *'),
+    );
+
+    // RTL packs them left and the first child lands rightmost, so this list is back to front.
+    expect(actions.map((action) => action.textContent?.trim())).toEqual([
+      'حفظ المكان',
+      'حفظ كمسودة',
+      'إلغاء',
+    ]);
+  });
+
+  it('holds each gallery picker to what the package allows', () => {
+    const pickers = render().debugElement
+      .queryAll(By.directive(MediaPicker))
+      .map((picker) => picker.componentInstance as MediaPicker);
+
+    expect(pickers.map((picker) => picker.limit())).toEqual([3, 1]);
+    expect(pickers.map((picker) => picker.noun())).toEqual(['صور', 'فيديو']);
+  });
+
+  it('starts with a full week of opening hours', () => {
     const fixture = render();
 
     expect(fixture.nativeElement.querySelectorAll('button[role="switch"]').length).toBe(7);
-    expect(fixture.nativeElement.textContent).toContain('مواقف سيارات');
   });
 
   it('"مفتوح 24 ساعة" opens every day of the week', () => {

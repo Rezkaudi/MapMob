@@ -46,14 +46,17 @@
             <td>
               <!-- RTL: the 24px icon leads on the right, 6px before the name. -->
               <div class="flex items-center gap-1.5 pe-2">
-                <app-icon
-                  data-testid="category-icon"
-                  class="text-black"
-                  [attr.data-icon]="row.iconAssetName"
-                  [name]="row.iconAssetName"
-                  [size]="24"
-                  aria-hidden="true"
-                />
+                @if (row.icon; as icon) {
+                  <svg
+                    data-testid="category-icon"
+                    class="shrink-0"
+                    [attr.data-icon]="row.category.icon"
+                    [style.color]="row.category.color"
+                    [lucideIcon]="icon"
+                    [size]="24"
+                    aria-hidden="true"
+                  ></svg>
+                }
                 <button
                   type="button"
                   data-role="open-category"

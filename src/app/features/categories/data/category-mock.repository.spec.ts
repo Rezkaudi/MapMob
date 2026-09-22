@@ -40,7 +40,7 @@ describe('CategoryMockRepository', () => {
 
   it('writes through to the database', async () => {
     const created = await firstValueFrom(
-      repository.createCategory({ name: 'فنادق', kind: 'main', parentId: null, icon: 'store' }),
+      repository.createCategory({ name: 'فنادق', kind: 'main', parentId: null, icon: 'store', color: '#0583EC' }),
     );
     await firstValueFrom(repository.updateCategory(created.id, { ...created, name: 'فنادق فخمة' }));
     await firstValueFrom(repository.setCategoryStatus(created.id, 'suspended'));
@@ -57,7 +57,7 @@ describe('CategoryMockRepository', () => {
   it('reports a failed write as an error', async () => {
     await expect(
       firstValueFrom(
-        repository.createCategory({ name: 'مخابز', kind: 'sub', parentId: null, icon: 'store' }),
+        repository.createCategory({ name: 'مخابز', kind: 'sub', parentId: null, icon: 'store', color: '#0583EC' }),
       ),
     ).rejects.toThrowError('اختر التصنيف الرئيسي التابع له');
   });

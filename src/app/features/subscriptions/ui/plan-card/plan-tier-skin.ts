@@ -3,6 +3,8 @@ import { PlanTier } from '../../models/plan-tier';
 
 /** Every colour the card changes between tiers. The geometry is the same for all three. */
 export interface PlanTierSkin {
+  /** Classes for the grid cell itself: the featured tier overhangs the row it sits in. */
+  readonly host: string;
   readonly card: string;
   readonly tile: string;
   readonly tileIcon: string;
@@ -29,6 +31,7 @@ const PLAIN_LIMITS = 'bg-surface-muted';
 
 export const PLAN_TIER_SKINS: Record<PlanTier, PlanTierSkin> = {
   featured: {
+    host: 'block -mt-[11px] -mb-[3px]',
     card: 'outline-2 -outline-offset-2 outline-primary bg-linear-to-b from-[#0583EC] to-[#0359A0]',
     tile: 'bg-white/20 backdrop-blur-[4px]',
     tileIcon: 'text-[#FCD34D]',
@@ -49,6 +52,7 @@ export const PLAN_TIER_SKINS: Record<PlanTier, PlanTierSkin> = {
     menuTone: 'inverse',
   },
   basic: {
+    host: 'block',
     card: PLAIN_CARD,
     tile: 'bg-[#EFF6FF]',
     tileIcon: 'text-primary',
@@ -69,6 +73,7 @@ export const PLAN_TIER_SKINS: Record<PlanTier, PlanTierSkin> = {
     menuTone: 'default',
   },
   free: {
+    host: 'block',
     card: PLAIN_CARD,
     tile: 'bg-[#F1F5F9]',
     tileIcon: 'text-text-secondary',

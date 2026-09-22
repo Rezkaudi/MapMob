@@ -8,24 +8,24 @@ import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
 import { MediaFile } from '../../../../shared/ui/media-picker/media-file';
 import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
+import { PackageQuotaBadge } from '../../../../shared/ui/package-quota-badge/package-quota-badge';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
 import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
 import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
+import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
 import { PlaceProduct } from '../../models/place-product';
 import { ProductDraft } from '../../models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
 import { ProductDialog } from '../../ui/product-dialog/product-dialog';
 import { ProductsEditor } from './products-editor/products-editor';
-import { ServicesEditor } from './services-editor/services-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
 
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
-const DEFAULT_SERVICES = ['توصيل', 'خدمة 24 ساعة', 'مواقف سيارات'];
 /** Syrian pound, the only currency the design offers. */
 const CURRENCY = 'ل.س';
 
@@ -44,9 +44,9 @@ const ALL_DAY_CLOSES_AT = '23:59';
     MapPicker,
     MediaPicker,
     FormSection,
+    PackageQuotaBadge,
     ProductDialog,
     ProductsEditor,
-    ServicesEditor,
     Toast,
     WorkingHoursEditor,
     ReactiveFormsModule,
@@ -78,7 +78,6 @@ export class PlaceForm {
   );
 
   protected readonly week = signal<readonly WorkingDay[]>(createDefaultWeek());
-  protected readonly services = signal<readonly string[]>(DEFAULT_SERVICES);
   protected readonly imageRules = PICTURE_RULES;
   protected readonly videoRules = VIDEO_RULES;
   protected readonly isPickingOnMap = signal(false);
@@ -119,6 +118,7 @@ export class PlaceForm {
   });
   protected readonly currentPackage = computed(() => this.selectedPackage() as PlacePackage);
   protected readonly productLimit = computed(() => PACKAGE_PRODUCT_LIMIT[this.currentPackage()]);
+  protected readonly mediaLimit = computed(() => PACKAGE_MEDIA_LIMIT[this.currentPackage()]);
   protected readonly packageLabel = computed(() => PLACE_PACKAGE_LABEL[this.currentPackage()]);
 
   protected composeProduct(): void {

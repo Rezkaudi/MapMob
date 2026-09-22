@@ -1,0 +1,25 @@
+<!-- RTL: the package name sits on the right, the count on the left. -->
+<div
+  class="flex w-[291px] flex-col gap-2 rounded border border-[rgba(192,199,213,0.6)] bg-[#f2f4f6] px-3 py-[13px]"
+>
+  <div class="flex items-center justify-between gap-3">
+    <span class="text-[12px]/[14px] text-text-secondary">
+      الباقة الحالية:
+      <strong class="font-medium text-text-primary">{{ packageLabel() }}</strong>
+    </span>
+    <span
+      data-testid="quota-count"
+      class="font-latin text-[11px]/[14px]"
+      [class]="isOverLimit() ? 'text-error' : 'text-primary'"
+      >{{ quotaLabel() }}</span
+    >
+  </div>
+  <div class="h-1.5 overflow-hidden rounded-xl bg-[#e0e3e5]">
+    <div
+      data-testid="quota-fill"
+      class="h-full rounded-xl"
+      [class]="isOverLimit() ? 'bg-error' : 'bg-primary'"
+      [style.width]="fillWidth()"
+    ></div>
+  </div>
+</div>

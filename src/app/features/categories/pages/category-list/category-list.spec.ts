@@ -96,7 +96,8 @@ describe('CategoryList', () => {
       name: 'فنادق',
       kind: 'main',
       parentId: null,
-      icon: 'utensils',
+      icon: 'utensils-crossed',
+      color: '#0583EC',
     });
     expect(element.querySelector('[role="dialog"]')).toBeNull();
   });

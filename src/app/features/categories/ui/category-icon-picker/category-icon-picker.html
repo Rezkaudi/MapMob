@@ -1,23 +1,51 @@
-<!-- 142px tinted box: two rows of five 42px buttons, 8px apart, with the design's wide row gap. -->
-<div
-  class="grid grid-cols-5 gap-x-2 gap-y-[36.5px] rounded-xl border border-border bg-[rgba(248,250,252,0.6)] px-[13px] pt-[13px] pb-[8.5px]"
-  role="group"
-  aria-label="أيقونة التصنيف"
->
-  @for (option of options; track option.icon) {
-    <button
-      type="button"
-      class="flex h-[42px] items-center justify-center rounded-xl transition-colors"
-      [class]="
-        option.icon === value()
-          ? 'border-2 border-primary bg-[#eff7ff] text-primary'
-          : 'border border-border bg-white text-text-secondary hover:border-primary/40'
-      "
-      [attr.aria-label]="option.label"
-      [attr.aria-pressed]="option.icon === value()"
-      (click)="valueChange.emit(option.icon)"
-    >
-      <app-icon [name]="option.assetName" [size]="20" aria-hidden="true" />
-    </button>
-  }
+<div class="flex flex-col gap-2">
+  <!-- RTL: the 14px magnifier sits at the right edge, 16px in, and the text runs left of it. -->
+  <div
+    class="flex h-8 items-center gap-2 rounded-lg border border-border bg-[rgba(248,250,252,0.6)] py-2 pe-4 ps-1 shadow-[0_4px_12px_rgba(15,23,42,0.05)]"
+  >
+    <app-icon name="search" [size]="14" class="text-text-secondary" aria-hidden="true" />
+    <input
+      type="search"
+      data-testid="category-icon-search"
+      autocomplete="off"
+      placeholder="ابحث عن رمز أيقونة...."
+      aria-label="ابحث عن رمز أيقونة"
+      class="min-w-0 flex-1 bg-transparent text-right text-[12px] text-text-primary outline-none placeholder:text-text-secondary"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+    />
+  </div>
+
+  <!--
+    142px tinted box: two rows of five 42px buttons, 8px apart, with the design's wide row gap.
+    The library runs past those ten, so the box scrolls rather than growing.
+  -->
+  <div
+    class="max-h-[142px] overflow-y-auto rounded-xl border border-border bg-[rgba(248,250,252,0.6)] px-[13px] pt-[13px] pb-[8.5px] [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin]"
+  >
+    <div class="grid grid-cols-5 gap-x-2 gap-y-[36.5px]" role="group" aria-label="أيقونة التصنيف">
+      @for (option of options(); track option.name) {
+        @let isPicked = option.name === value();
+        <button
+          type="button"
+          class="flex h-[42px] items-center justify-center rounded-xl transition-colors"
+          [class]="
+            isPicked
+              ? 'border-2 border-primary bg-[#eff7ff]'
+              : 'border border-border bg-white text-text-secondary hover:border-primary/40'
+          "
+          [style.color]="isPicked ? color() : null"
+          [attr.aria-label]="option.label"
+          [attr.aria-pressed]="isPicked"
+          (click)="valueChange.emit(option.name)"
+        >
+          <svg [lucideIcon]="option.data" [size]="20" aria-hidden="true"></svg>
+        </button>
+      } @empty {
+        <p class="col-span-5 py-3 text-center text-[12px] text-text-secondary">
+          لا توجد أيقونة بهذا الاسم
+        </p>
+      }
+    </div>
+  </div>
 </div>

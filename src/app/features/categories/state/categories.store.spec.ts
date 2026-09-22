@@ -8,7 +8,7 @@ import { buildCategory } from '../testing/category-fixture';
 import { CategoriesStore } from './categories.store';
 
 const RESTAURANTS = buildCategory({ id: 'm1', name: 'مطاعم' });
-const DRAFT: CategoryDraft = { name: 'مخابز', kind: 'main', parentId: null, icon: 'store' };
+const DRAFT: CategoryDraft = { name: 'مخابز', kind: 'main', parentId: null, icon: 'store', color: '#0583EC' };
 const PAGE: CategoryPage = {
   items: [RESTAURANTS],
   totalCount: 1,

@@ -35,7 +35,7 @@ describe('buildPlanLimitRows', () => {
 
   it('counts gallery images the way Arabic does', () => {
     expect(buildPlanLimitRows(limits({ galleryImages: 1 }))[2].value).toBe('صورة واحدة');
-    expect(buildPlanLimitRows(limits({ galleryImages: 5 }))[2].value).toBe('5 صور');
+    expect(buildPlanLimitRows(limits({ galleryImages: 5 }))[2].value).toBe('حتى 5 صور');
     expect(buildPlanLimitRows(limits({ galleryImages: 100 }))[2].value).toBe('100 صورة');
   });
 });

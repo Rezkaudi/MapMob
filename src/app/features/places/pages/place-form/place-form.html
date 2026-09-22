@@ -86,7 +86,7 @@
           formControlName="city"
           class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
         >
-          <option value="">اختر المدينة...</option>
+          <option value="">اختر المحافظة...</option>
           @for (city of cities; track city) {
             <option [value]="city">{{ city }}</option>
           }
@@ -99,7 +99,7 @@
           formControlName="region"
           class="mt-[18px] h-[46px] w-full appearance-none rounded-lg border border-border pr-4 pl-10 text-right text-[14px] text-text-primary outline-none"
         >
-          <option value="">اختر المدينة...</option>
+          <option value="">اختر المنطقة...</option>
           @for (city of cities; track city) {
             <option [value]="city">{{ city }}</option>
           }
@@ -195,6 +195,7 @@
         <input
           id="website"
           type="url"
+          dir="ltr"
           formControlName="website"
           placeholder="https://"
           class="font-latin mt-[18px] h-[46px] w-full rounded-lg border border-border px-4 text-right text-[14px] text-text-primary outline-none placeholder:text-placeholder"
@@ -270,37 +271,6 @@
     <app-working-hours-editor [week]="week()" (weekChange)="week.set($event)" />
   </app-form-section>
 
-  <app-form-section heading="الخدمات والصور" icon="image">
-    <p class="text-start text-[13px] text-text-primary">الخدمات والمرافق</p>
-    <div class="mt-3">
-      <app-services-editor [services]="services()" (servicesChange)="services.set($event)" />
-    </div>
-
-    <p class="mt-8 text-start text-[13px] text-text-primary">صور المكان</p>
-    <div class="mt-3">
-      <app-media-picker
-        prompt="اسحب وأفلت الصور هنا"
-        hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
-        accept="image/jpeg,image/png"
-        [rules]="imageRules"
-        [files]="images()"
-        (filesChange)="images.set($event)"
-      />
-    </div>
-
-    <p class="mt-8 text-start text-[13px] text-text-primary">فيديوهات المكان</p>
-    <div class="mt-3">
-      <app-media-picker
-        prompt="اسحب وأفلت الفيديو هنا"
-        accept="video/*"
-        kind="video"
-        [rules]="videoRules"
-        [files]="videos()"
-        (filesChange)="videos.set($event)"
-      />
-    </div>
-  </app-form-section>
-
   <app-form-section heading="الباقة والحالة" icon="settings">
     <div class="grid grid-cols-2 gap-6">
       <div>
@@ -333,6 +303,53 @@
     </div>
   </app-form-section>
 
+  <!-- RTL: each row keeps its label on the right and its quota badge on the left. -->
+  <app-form-section heading="معرض الصور و الفيديوهات" icon="image">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p class="text-start text-[13px] text-text-primary">صور المكان</p>
+      <app-package-quota-badge
+        [packageLabel]="packageLabel()"
+        [used]="images().length"
+        [limit]="mediaLimit().images"
+        noun="صور"
+      />
+    </div>
+    <div class="mt-4">
+      <app-media-picker
+        prompt="اسحب وأفلت الصور هنا"
+        hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+        accept="image/jpeg,image/png"
+        noun="صور"
+        [limit]="mediaLimit().images"
+        [rules]="imageRules"
+        [files]="images()"
+        (filesChange)="images.set($event)"
+      />
+    </div>
+
+    <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="text-start text-[13px] text-text-primary">فيديوهات المكان</p>
+      <app-package-quota-badge
+        [packageLabel]="packageLabel()"
+        [used]="videos().length"
+        [limit]="mediaLimit().videos"
+        noun="فيديو"
+      />
+    </div>
+    <div class="mt-4">
+      <app-media-picker
+        prompt="اسحب وأفلت الفيديو هنا"
+        accept="video/*"
+        kind="video"
+        noun="فيديو"
+        [limit]="mediaLimit().videos"
+        [rules]="videoRules"
+        [files]="videos()"
+        (filesChange)="videos.set($event)"
+      />
+    </div>
+  </app-form-section>
+
   <app-products-editor
     [products]="products()"
     [limit]="productLimit()"
@@ -345,25 +362,26 @@
     The action bar stays on screen while the long form scrolls. The negative margins and
     `-bottom-8` pull it through main's 32px padding on all sides, so it sits flush against
     the edges of the scroll area. RTL: `justify-end` packs the buttons against the left
-    edge, and the DOM order runs right to left, so "حفظ المكان" lands leftmost.
+    edge and the first child lands rightmost, so the frame's left-to-right run of
+    "إلغاء، حفظ كمسودة، حفظ المكان" is written here back to front.
   -->
   <div
     data-testid="form-actions"
     class="sticky -bottom-8 z-30 -mx-8 -mb-8 flex items-center justify-end gap-3 border-t border-border bg-surface px-8 py-4 shadow-[0_-4px_16px_rgba(15,23,42,0.06)]"
   >
-    <a routerLink="/places" class="px-4 text-[14px] font-medium text-error">إلغاء</a>
-    <button
-      type="button"
-      class="h-11.5 rounded-lg border border-border bg-surface-muted px-6 text-[14px] font-medium text-text-primary"
-    >
-      حفظ كمسودة
-    </button>
     <button
       type="submit"
       class="h-11.5 rounded-lg bg-primary px-6 text-[14px] font-medium text-white"
     >
       حفظ المكان
     </button>
+    <button
+      type="button"
+      class="h-11.5 rounded-lg border border-border bg-surface-muted px-6 text-[14px] font-medium text-text-primary"
+    >
+      حفظ كمسودة
+    </button>
+    <a routerLink="/places" class="px-4 text-[14px] font-medium text-error">إلغاء</a>
   </div>
 </form>
 

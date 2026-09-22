@@ -10,6 +10,7 @@ const SEAFOOD = buildCategory({
   parentId: 'm1',
   parentName: 'مطاعم',
   icon: 'coffee',
+  color: '#0583EC',
   status: 'suspended',
 });
 
@@ -69,9 +70,9 @@ describe('CategoryTable', () => {
     const second = rowsOf(render().nativeElement)[1];
 
     expect(cellTexts(second).slice(1, 6)).toEqual(['مطاعم بحرية', 'فرعي', 'مطاعم', '50', 'معطل']);
-    expect(second.querySelector('[data-testid="category-icon"]')?.getAttribute('data-icon')).toBe(
-      'category-coffee',
-    );
+    const icon = second.querySelector('[data-testid="category-icon"]') as SVGElement;
+    expect(icon.getAttribute('data-icon')).toBe('coffee');
+    expect(icon.style.color).toBe('rgb(5, 131, 236)');
   });
 
   it('ticks the selected rows and reports row and header ticks', () => {

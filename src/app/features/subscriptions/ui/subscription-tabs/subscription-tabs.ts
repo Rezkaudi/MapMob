@@ -33,7 +33,7 @@ export class SubscriptionTabs {
     },
     {
       id: 'records',
-      label: 'سجل الاشتراكات',
+      label: 'سجل المشتركين',
       icon: 'users-group',
       count: this.format(this.recordCount()),
     },

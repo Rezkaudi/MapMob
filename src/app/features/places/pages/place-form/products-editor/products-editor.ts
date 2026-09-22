@@ -2,13 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { DecimalPipe } from '@angular/common';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { FormSection } from '../../../../../shared/ui/form-section/form-section';
+import { PackageQuotaBadge } from '../../../../../shared/ui/package-quota-badge/package-quota-badge';
 import { PlaceProduct } from '../../../models/place-product';
-
-const FULL_BAR_PERCENT = 100;
 
 @Component({
   selector: 'app-products-editor',
-  imports: [AppIcon, FormSection, DecimalPipe],
+  imports: [AppIcon, DecimalPipe, FormSection, PackageQuotaBadge],
   templateUrl: './products-editor.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,11 +23,4 @@ export class ProductsEditor {
   readonly removeProduct = output<PlaceProduct>();
 
   protected readonly isFull = computed(() => this.products().length >= this.limit());
-  protected readonly quotaLabel = computed(
-    () => `${this.products().length} / ${this.limit()} منتجات وخدمات`,
-  );
-  protected readonly fillWidth = computed(() => {
-    const share = (this.products().length / this.limit()) * FULL_BAR_PERCENT;
-    return `${Math.min(share, FULL_BAR_PERCENT)}%`;
-  });
 }

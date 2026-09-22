@@ -15,11 +15,15 @@ function createFile(name: string, type: string, sizeInBytes = 10): File {
   return file;
 }
 
-function render(files: MediaFile[] = []) {
+function render(files: MediaFile[] = [], limit?: number) {
   const fixture = TestBed.createComponent(MediaPicker);
   fixture.componentRef.setInput('prompt', 'اسحب وأفلت الصور هنا');
   fixture.componentRef.setInput('rules', IMAGE_RULES);
   fixture.componentRef.setInput('files', files);
+  if (limit !== undefined) {
+    fixture.componentRef.setInput('limit', limit);
+    fixture.componentRef.setInput('noun', 'صور');
+  }
   const emitted: MediaFile[][] = [];
   fixture.componentInstance.filesChange.subscribe((next) => emitted.push([...next]));
   fixture.detectChanges();
@@ -50,6 +54,65 @@ describe('MediaPicker', () => {
     expect(emitted[0][0].name).toBe('shop.png');
     expect(emitted[0][0].previewUrl).toContain('blob:');
     expect(emitted[0][0].file).toBe(picked);
+  });
+
+  it('takes only as many files as the package still allows, and says why', () => {
+    const existing: MediaFile[] = [
+      {
+        id: 'a',
+        name: 'a.png',
+        sizeInBytes: 10,
+        file: createFile('a.png', 'image/png'),
+        previewUrl: 'blob:a',
+      },
+      {
+        id: 'b',
+        name: 'b.png',
+        sizeInBytes: 10,
+        file: createFile('b.png', 'image/png'),
+        previewUrl: 'blob:b',
+      },
+    ];
+    const { fixture, emitted } = render(existing, 3);
+
+    drop(fixture, [createFile('c.png', 'image/png'), createFile('d.png', 'image/png')]);
+
+    expect(emitted[0].map((item) => item.name)).toEqual(['a.png', 'b.png', 'c.png']);
+    expect(fixture.nativeElement.textContent).toContain('لا تسمح الباقة الحالية بأكثر من 3 صور');
+  });
+
+  it('adds nothing once the package quota is already full', () => {
+    const existing: MediaFile[] = [
+      {
+        id: 'a',
+        name: 'a.png',
+        sizeInBytes: 10,
+        file: createFile('a.png', 'image/png'),
+        previewUrl: 'blob:a',
+      },
+    ];
+    const { fixture, emitted } = render(existing, 1);
+
+    drop(fixture, [createFile('b.png', 'image/png')]);
+
+    expect(emitted).toHaveLength(0);
+    expect(fixture.nativeElement.textContent).toContain('لا تسمح الباقة الحالية بأكثر من 1 صور');
+  });
+
+  it('counts a file that the rules reject against nothing', () => {
+    const { fixture, emitted } = render([], 1);
+
+    drop(fixture, [createFile('bad.pdf', 'application/pdf'), createFile('ok.png', 'image/png')]);
+
+    expect(emitted[0].map((item) => item.name)).toEqual(['ok.png']);
+  });
+
+  it('keeps taking files when no limit is given', () => {
+    const { fixture, emitted } = render();
+
+    drop(fixture, [createFile('a.png', 'image/png'), createFile('b.png', 'image/png')]);
+
+    expect(emitted[0]).toHaveLength(2);
   });
 
   it('rejects a file of the wrong type and shows why, without adding it', () => {
@@ -104,6 +167,27 @@ describe('MediaPicker', () => {
     expect(fixture.nativeElement.textContent).toContain('الصورة الرئيسية');
   });
 
+  it('drops the quota message once a file is removed and a slot is free again', () => {
+    const existing: MediaFile[] = [
+      {
+        id: 'a',
+        name: 'a.png',
+        sizeInBytes: 10,
+        file: createFile('a.png', 'image/png'),
+        previewUrl: 'blob:a',
+      },
+    ];
+    const { fixture } = render(existing, 1);
+
+    drop(fixture, [createFile('b.png', 'image/png')]);
+    expect(fixture.nativeElement.textContent).toContain('لا تسمح الباقة الحالية بأكثر من 1 صور');
+
+    fixture.nativeElement.querySelector('button[aria-label="إزالة a.png"]').click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).not.toContain('لا تسمح الباقة الحالية');
+  });
+
   it('removes a file when its remove button is pressed', () => {
     const { fixture, emitted } = render([
       {
@@ -125,6 +209,28 @@ describe('MediaPicker', () => {
     fixture.nativeElement.querySelector('button[aria-label="إزالة a.png"]').click();
 
     expect(emitted[0].map((item) => item.id)).toEqual(['b']);
+  });
+
+  it('labels the promote button with the words the design puts on it', () => {
+    const { fixture } = render([
+      {
+        id: 'a',
+        name: 'a.png',
+        sizeInBytes: 10,
+        file: createFile('a.png', 'image/png'),
+        previewUrl: 'blob:a',
+      },
+      {
+        id: 'b',
+        name: 'b.png',
+        sizeInBytes: 10,
+        file: createFile('b.png', 'image/png'),
+        previewUrl: 'blob:b',
+      },
+    ]);
+
+    const promote = fixture.nativeElement.querySelector('button[aria-label="اجعل b.png الصورة الرئيسية"]');
+    expect(promote.textContent.trim()).toBe('تعيين كرئيسية');
   });
 
   it('moves a file to the front when it is made the main image', () => {
@@ -150,7 +256,7 @@ describe('MediaPicker', () => {
     expect(emitted[0].map((item) => item.id)).toEqual(['b', 'a']);
   });
 
-  it('shows every file name, and sizes in KB below one megabyte', () => {
+  it('names each picture for a screen reader, as the design shows no caption', () => {
     const { fixture } = render([
       {
         id: 'a',
@@ -159,20 +265,11 @@ describe('MediaPicker', () => {
         file: createFile('a.png', 'image/png'),
         previewUrl: 'blob:a',
       },
-      {
-        id: 'b',
-        name: 'b.png',
-        sizeInBytes: 3 * 1024 * 1024,
-        file: createFile('b.png', 'image/png'),
-        previewUrl: 'blob:b',
-      },
     ]);
 
-    const text = fixture.nativeElement.textContent;
-    expect(text).toContain('a.png');
-    expect(text).toContain('b.png');
-    expect(text).toContain('0.9 ك.ب');
-    expect(text).toContain('3.0 م.ب');
+    const image = fixture.nativeElement.querySelector('li img') as HTMLImageElement;
+    expect(image.getAttribute('alt')).toBe('a.png');
+    expect(fixture.nativeElement.textContent).not.toContain('ك.ب');
   });
 
   it('shows one message when several rejected files share the same reason', () => {

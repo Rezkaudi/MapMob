@@ -32,6 +32,21 @@ function textOf(fixture: ReturnType<typeof render>, selector: string): string {
 }
 
 describe('PlanCard', () => {
+  it('lifts the featured card out of the row, as the design pops it forward', () => {
+    expect(render({ tier: 'featured' }).nativeElement.classList).toContain('-mt-[11px]');
+    expect(render().nativeElement.classList).not.toContain('-mt-[11px]');
+  });
+
+  it('prices by the year when the yearly cycle is picked', () => {
+    const fixture = TestBed.createComponent(PlanCard);
+    fixture.componentRef.setInput('plan', plan());
+    fixture.componentRef.setInput('cycle', 'yearly');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('192');
+    expect(fixture.nativeElement.textContent).toContain('/ سنوياً');
+  });
+
   it('names the package and shows its badge', () => {
     const fixture = render();
 

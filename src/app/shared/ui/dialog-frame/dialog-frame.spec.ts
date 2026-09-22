@@ -1,37 +1,45 @@
 import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { NotificationDialogFrame } from './notification-dialog-frame';
+import { DialogFrame } from './dialog-frame';
 
 @Component({
-  imports: [NotificationDialogFrame],
+  imports: [DialogFrame],
   template: `
-    <app-notification-dialog-frame
+    <app-dialog-frame
       heading="تفاصيل الإشعار"
       subheading="معاينة الإشعار"
       [headingIcon]="headingIcon()"
       [isBackVisible]="isBackVisible()"
+      [appearance]="appearance()"
     >
       <p data-role="body">المحتوى</p>
       <button dialogFooter type="button">حفظ</button>
-    </app-notification-dialog-frame>
+    </app-dialog-frame>
   `,
 })
 class HostComponent {
   readonly headingIcon = input<string | null>('notifications');
   readonly isBackVisible = input<boolean>(false);
+  readonly appearance = input<'compact' | 'roomy'>('compact');
 }
 
-function render(inputs: { headingIcon?: string | null; isBackVisible?: boolean } = {}) {
+function render(
+  inputs: {
+    headingIcon?: string | null;
+    isBackVisible?: boolean;
+    appearance?: 'compact' | 'roomy';
+  } = {},
+) {
   const fixture = TestBed.createComponent(HostComponent);
   for (const [name, value] of Object.entries(inputs)) {
     fixture.componentRef.setInput(name, value);
   }
   fixture.detectChanges();
-  const frame = fixture.debugElement.children[0].componentInstance as NotificationDialogFrame;
+  const frame = fixture.debugElement.children[0].componentInstance as DialogFrame;
   return { fixture, element: fixture.nativeElement as HTMLElement, frame };
 }
 
-describe('NotificationDialogFrame', () => {
+describe('DialogFrame', () => {
   it('shows the heading, the icon tile, the body and the footer in their places', () => {
     const { element } = render();
 
@@ -55,6 +63,21 @@ describe('NotificationDialogFrame', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
     expect(closed).toHaveBeenCalledTimes(3);
+  });
+
+  it('gives the roomy card the wider chrome the payment frame draws', () => {
+    const { element } = render({ appearance: 'roomy' });
+
+    expect(element.querySelector('header')?.className).toContain('px-8');
+    expect(element.querySelector('header')?.className).toContain('h-[92px]');
+    expect(element.querySelector('[data-role="dialog-body"]')?.className).toContain('p-8');
+  });
+
+  it('keeps the compact card as the notification frames draw it', () => {
+    const { element } = render();
+
+    expect(element.querySelector('header')?.className).toContain('px-6');
+    expect(element.querySelector('[data-role="dialog-body"]')?.className).toContain('p-6');
   });
 
   it('swaps the tile and the cross for a back arrow when asked', () => {

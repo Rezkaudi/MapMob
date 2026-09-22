@@ -1,0 +1,235 @@
+<app-dialog-frame
+  appearance="roomy"
+  heading="إضافة دفعة جديدة"
+  subheading="سجّل دفعة نقدية تم استلامها من أحد التجار وتفعيل الخدمة فورياً."
+  headingIcon="payments"
+  (closed)="store.close()"
+>
+  <form class="flex flex-col gap-4" novalidate (submit)="$event.preventDefault(); store.submit()">
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">
+        التاجر / المكان <span class="text-status-error" aria-hidden="true">*</span>
+      </p>
+      <div class="relative">
+        <select
+          data-testid="payment-merchant"
+          aria-label="التاجر / المكان"
+          class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-center text-[16px] text-text-primary outline-none"
+          (change)="onMerchantChange($event)"
+        >
+          @for (merchant of store.merchants(); track merchant.id) {
+            <option [value]="merchant.id" [selected]="merchant.id === store.merchantId()">
+              {{ merchant.name }}
+            </option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down"
+          [size]="16"
+          class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-text-primary"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">
+        نوع الدفعة <span class="text-status-error" aria-hidden="true">*</span>
+      </p>
+      <app-segmented-choice
+        data-testid="payment-kind"
+        label="نوع الدفعة"
+        [options]="kindChoices"
+        [selected]="store.kind()"
+        (selectedChange)="onKindChange($event)"
+      />
+    </div>
+
+    @if (store.currentSubscription(); as running) {
+      <app-current-subscription-card [planName]="running.planName" [endsOn]="running.endsOn" />
+    }
+
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">
+        {{ store.planField().label }}
+        @if (store.planField().isRequired) {
+          <span class="text-status-error" aria-hidden="true">*</span>
+        }
+      </p>
+      @if (store.planField().isSelectable) {
+        <div class="relative">
+          <select
+            data-testid="payment-plan-select"
+            [attr.aria-label]="store.planField().label"
+            class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-center text-[16px] text-text-primary outline-none"
+            (change)="onPlanChange($event)"
+          >
+            @for (plan of store.plans(); track plan.id) {
+              <option [value]="plan.id" [selected]="plan.id === store.planField().planId">
+                {{ plan.name }}
+              </option>
+            }
+          </select>
+          <app-icon
+            name="chevron-down"
+            [size]="16"
+            class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-text-primary"
+            aria-hidden="true"
+          />
+        </div>
+      } @else {
+        <p
+          data-testid="payment-plan-text"
+          class="flex h-12 items-center justify-center rounded-lg bg-[#F2F4F6] text-[16px] text-text-primary"
+        >
+          {{ store.planField().planName }}
+        </p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">
+        مدة الاشتراك <span class="text-status-error" aria-hidden="true">*</span>
+      </p>
+      <app-segmented-choice
+        data-testid="payment-term"
+        label="مدة الاشتراك"
+        [options]="termChoices"
+        [selected]="store.term()"
+        (selectedChange)="onTermChange($event)"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="payment-amount" class="text-[12px]/[16px] font-bold text-[#334155]">
+        المبلغ المطلوب استلامه <span class="text-status-error" aria-hidden="true">*</span>
+      </label>
+      <!-- RTL: the number keeps the right of the box and the currency chip sits on the left. -->
+      <div class="relative">
+        <!-- `dir="ltr"` keeps the grouped number readable, so its padding must be physical. -->
+        <input
+          id="payment-amount"
+          data-testid="payment-amount"
+          type="text"
+          inputmode="numeric"
+          dir="ltr"
+          class="h-12 w-full rounded-lg bg-[#F2F4F6] pr-5 pl-20 text-right text-[24px]/[32px] font-bold tracking-[-0.24px] text-primary outline-none"
+          [value]="groupedAmount()"
+          (input)="onAmountInput($event)"
+        />
+        <!-- RTL puts the first child rightmost, so the chevron leads and "ل.س" lands on its left. -->
+        <span
+          data-testid="payment-currency"
+          class="absolute end-[13px] top-[6.5px] flex h-8 items-center rounded-[2px] bg-[#ECEEF0] px-1 py-0.5"
+        >
+          <app-icon name="chevron-down" [size]="18" aria-hidden="true" />
+          <span class="text-center text-[12px]/[28px] font-medium text-text-primary">
+            {{ currencySymbols[store.currency()] }}
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">طريقة الدفع</p>
+      <p class="flex h-12 items-center rounded-lg bg-[#F2F4F6] px-4 text-[12px]/[18px] text-[#10B981]">
+        {{ cashLabel }}
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="payment-paid-at" class="text-[12px]/[16px] font-bold text-[#334155]">
+        تاريخ الدفع <span class="text-status-error" aria-hidden="true">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="payment-paid-at"
+          data-testid="payment-paid-at"
+          type="date"
+          class="h-12 w-full rounded-lg bg-[#F2F4F6] ps-11 pe-4 text-left text-[14px] text-text-primary outline-none [&::-webkit-calendar-picker-indicator]:opacity-0"
+          [value]="store.paidAt()"
+          (input)="onPaidAtInput($event)"
+        />
+        <app-icon
+          name="calendar-outline"
+          [size]="18"
+          class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-text-secondary"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <p class="text-[12px]/[16px] font-bold text-[#334155]">
+        فترة سريان الاشتراك المحسوبة تلقائياً
+      </p>
+      <!--
+        RTL: the start day is the first child so it keeps the right half of the box. Each date
+        carries `dir="ltr"` to hold its digits in order, which would left-align it, so the design's
+        shared right edge with the label above is set explicitly.
+      -->
+      <div class="flex items-start gap-3 rounded-lg border border-[#ECEEF0] bg-[#F2F4F6] p-3">
+        <div class="flex w-[calc((100%-12px)/2)] shrink-0 flex-col gap-0.5">
+          <span class="text-[14px]/[20px] text-text-secondary">تاريخ البداية:</span>
+          <span
+            data-testid="window-date"
+            dir="ltr"
+            class="font-inter text-right text-[13px]/[18px] text-text-primary"
+          >
+            {{ store.window().startsOn | slashDate }}
+          </span>
+        </div>
+        <div
+          class="flex w-[calc((100%-12px)/2)] shrink-0 flex-col gap-0.5 border-s border-[#ECEEF0] ps-3"
+        >
+          <span class="text-[14px]/[20px] text-text-secondary">تاريخ النهاية:</span>
+          <span
+            data-testid="window-date"
+            dir="ltr"
+            class="font-inter text-right text-[13px]/[18px] text-text-primary"
+          >
+            {{ store.window().endsOn | slashDate }}
+          </span>
+        </div>
+      </div>
+      <p class="text-[11px]/[14px] text-text-secondary">
+        يبدأ الاشتراك فورياً من تاريخ استلام الدفعة اليوم.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="payment-notes" class="text-[12px]/[16px] font-bold text-[#334155]">
+        ملاحظات <span class="text-[11px] font-normal text-text-secondary">(اختياري)</span>
+      </label>
+      <textarea
+        id="payment-notes"
+        data-testid="payment-notes"
+        rows="2"
+        class="min-h-[68px] w-full resize-none rounded-lg bg-[#F2F4F6] px-4 pt-4 pb-[34px] text-right text-[13px]/[18px] text-text-primary outline-none"
+        [value]="store.notes()"
+        (input)="onNotesInput($event)"
+      ></textarea>
+    </div>
+  </form>
+
+  <!-- RTL: justify-end packs the pair left, so "إلغاء" comes first and lands on the right. -->
+  <button
+    dialogFooter
+    type="button"
+    data-testid="payment-cancel"
+    class="h-[42px] rounded-[4px] border border-border bg-white px-5 text-[14px]/[20px] font-medium text-text-primary hover:bg-surface-muted"
+    (click)="store.close()"
+  >
+    إلغاء
+  </button>
+  <button
+    dialogFooter
+    type="button"
+    data-testid="payment-submit"
+    class="h-[46px] rounded-[4px] bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+    [disabled]="!store.canSubmit()"
+    (click)="store.submit()"
+  >
+    تسجيل الدفعة و تفعيل الاشتراك
+  </button>
+</app-dialog-frame>

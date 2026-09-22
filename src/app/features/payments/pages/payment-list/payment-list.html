@@ -67,6 +67,10 @@
   }
 </div>
 
+@if (newPayment.isOpen()) {
+  <app-new-payment-dialog />
+}
+
 @if (detailStore.isOpen()) {
   <app-payment-detail-dialog
     [detail]="detailStore.detail()"

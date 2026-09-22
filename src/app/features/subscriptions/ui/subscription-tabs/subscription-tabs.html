@@ -10,16 +10,21 @@
         class="flex items-center gap-2 border-b-2 py-3 text-[14px]/[20px] font-bold"
         [class]="
           isSelected
-            ? 'rounded-t-lg border-primary bg-[#EFF8FF]/40 px-3 text-primary'
+            ? 'border-primary px-1 text-primary'
             : 'border-transparent px-1 text-text-secondary'
         "
         (click)="selectedChange.emit(tab.id)"
       >
         <app-icon [name]="tab.icon" [size]="16" aria-hidden="true" />
         <span>{{ tab.label }}</span>
+        <!-- The design stretches the chosen tab's count box to 21px, which lifts that tab by 5px. -->
         <span
-          class="rounded-full py-0.5 text-center text-[12px]/[16px] font-bold"
-          [class]="isSelected ? 'bg-primary/16 px-2.5 text-primary' : 'bg-[#64748B]/16 px-2'"
+          class="px-2 py-0.5 text-center text-[12px] font-bold"
+          [class]="
+            isSelected
+              ? 'rounded-xl bg-primary/16 leading-[21px] text-primary'
+              : 'rounded-full bg-[#64748B]/16 leading-4'
+          "
           >{{ tab.count }}</span
         >
       </button>

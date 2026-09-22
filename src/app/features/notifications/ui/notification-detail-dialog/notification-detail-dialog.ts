@@ -7,13 +7,13 @@ import {
   NotificationDetailView,
   NotificationPrimaryActionKind,
 } from '../../state/notification-detail-view';
-import { NotificationDialogFrame } from '../notification-dialog-frame/notification-dialog-frame';
+import { DialogFrame } from '../../../../shared/ui/dialog-frame/dialog-frame';
 import { NotificationStatusPill } from '../notification-status-pill/notification-status-pill';
 
 /** The "Notification/detail notification" frames: a scheduled one and a sent one. */
 @Component({
   selector: 'app-notification-detail-dialog',
-  imports: [AppIcon, ErrorState, NotificationDialogFrame, NotificationStatusPill, Skeleton],
+  imports: [AppIcon, ErrorState, DialogFrame, NotificationStatusPill, Skeleton],
   templateUrl: './notification-detail-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,0 +1,19 @@
+<!-- RTL: the first option lands on the right, as the design reads the track. -->
+<div
+  role="radiogroup"
+  class="flex h-12 items-center gap-1 rounded-lg bg-[#F2F4F6] p-1"
+  [attr.aria-label]="label()"
+>
+  @for (segment of segments(); track segment.option.label) {
+    <button
+      type="button"
+      role="radio"
+      class="flex h-[30px] flex-1 items-center justify-center rounded-[4px] px-1 text-[12px]/[14px] whitespace-nowrap transition-colors"
+      [class]="segment.classes"
+      [attr.aria-checked]="segment.isPicked"
+      (click)="selectedChange.emit(segment.option.value)"
+    >
+      {{ segment.option.label }}
+    </button>
+  }
+</div>

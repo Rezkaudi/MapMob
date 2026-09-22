@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
+import { PaymentMockDataLoader } from './payment-mock-data-loader';
 import { PaymentMockRepository } from './payment-mock.repository';
 
 describe('PaymentMockRepository', () => {
   let repository: PaymentMockRepository;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [PaymentMockRepository] });
+    TestBed.configureTestingModule({ providers: [PaymentMockDataLoader, PaymentMockRepository] });
     repository = TestBed.inject(PaymentMockRepository);
   });
 

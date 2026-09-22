@@ -1,0 +1,21 @@
+<!--
+  Ten 40px swatches fit the 530px body, so the row wraps to three. The design draws no
+  selected state; a white tick inside the swatch fills the slot its padding leaves free.
+  The tick is inline Lucide rather than a masked asset, so it paints without a request.
+-->
+<div class="flex flex-wrap gap-3" role="group" aria-label="لون الأيقونة">
+  @for (color of colors; track color) {
+    <button
+      type="button"
+      class="flex size-10 items-center justify-center rounded-xl text-white"
+      [style.background-color]="color"
+      [attr.aria-label]="color"
+      [attr.aria-pressed]="color === value()"
+      (click)="valueChange.emit(color)"
+    >
+      @if (color === value()) {
+        <svg [lucideIcon]="tick" [size]="16" [strokeWidth]="3" aria-hidden="true"></svg>
+      }
+    </button>
+  }
+</div>

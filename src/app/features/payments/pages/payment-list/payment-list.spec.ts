@@ -20,6 +20,7 @@ function createPage(overrides: Partial<PaymentRepository> = {}) {
     getSummary: () => of(SUMMARY),
     getPaymentDetail: () => of(DETAIL),
     exportPayments: () => of(new Blob(['csv'])),
+    getPaymentFormOptions: () => of({ merchants: [], plans: [] }),
     ...overrides,
   };
   const savedFiles: string[] = [];
@@ -78,12 +79,13 @@ describe('PaymentList', () => {
     expect(element.querySelector('app-payment-table')).toBeNull();
   });
 
-  it('goes to the add page from the header button', () => {
-    const { element, navigateByUrl } = createPage();
+  it('opens the add dialog from the header button', async () => {
+    const { fixture, element } = createPage();
 
     buttonNamed(element.querySelector('app-page-header') as HTMLElement, 'إضافة دفعة جديدة').click();
+    await settle(fixture);
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/payments/new');
+    expect(element.querySelector('app-new-payment-dialog')).not.toBeNull();
   });
 
   it('saves the export under a dated file name', async () => {

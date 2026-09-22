@@ -9,7 +9,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     id: 'free',
     name: 'مجانية',
     tier: 'free',
-    tagline: 'انطلاقة مثالية للمتاجر الناشئة لتسجيل التواجد الأساسي على الخريطة.',
+    tagline: 'مناسبة للمتاجر الجديدة للتعرف على منصة MapMob وبدء التواجد الأولي.',
     badge: 'نشطة',
     monthlyPrice: 0,
     yearlyPrice: null,

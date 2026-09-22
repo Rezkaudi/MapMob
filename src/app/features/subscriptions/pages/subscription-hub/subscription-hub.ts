@@ -16,6 +16,8 @@ import { SubscriptionTab } from '../../models/subscription-tab';
 import { PackagesStore } from '../../state/packages.store';
 import { SubscriptionsStore } from '../../state/subscriptions.store';
 import { buildPlanDeleteCopy, buildPlanStatusCopy } from '../../ui/plan-dialog-copy';
+import { BillingCycle } from '../../models/billing-cycle';
+import { BillingCycleToggle } from '../../ui/billing-cycle-toggle/billing-cycle-toggle';
 import { PlanCard } from '../../ui/plan-card/plan-card';
 import { PlanFormDialog } from '../../ui/plan-form-dialog/plan-form-dialog';
 import { SubscriptionTable } from '../../ui/subscription-table/subscription-table';
@@ -35,6 +37,7 @@ interface PendingPlanAction {
     EmptyPageMessage,
     ErrorState,
     PageHeader,
+    BillingCycleToggle,
     PlanCard,
     PlanFormDialog,
     StatCard,
@@ -55,6 +58,7 @@ export class SubscriptionHub {
   protected readonly store = inject(PackagesStore);
   protected readonly records = inject(SubscriptionsStore);
   protected readonly selectedTab = signal<SubscriptionTab>('packages');
+  protected readonly cycle = signal<BillingCycle>('monthly');
   protected readonly pendingAction = signal<PendingPlanAction | null>(null);
   /** The package the edit dialog is open on, if any. */
   protected readonly editedPlan = signal<PackagePlan | null>(null);

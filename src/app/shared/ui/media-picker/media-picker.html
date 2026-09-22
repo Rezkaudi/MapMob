@@ -1,4 +1,5 @@
 <app-file-dropzone
+  appearance="dashed"
   [prompt]="prompt()"
   [hint]="hint()"
   [accept]="accept()"
@@ -17,9 +18,10 @@
   <!-- RTL: the list starts on the right, so the main file sits first as in the design. -->
   <ul class="mt-4 flex flex-wrap gap-4">
     @for (item of files(); track item.id; let first = $first) {
+      @let isMain = first && kind() === 'image';
       <li
-        class="group relative h-[130px] w-[230px] overflow-clip rounded-lg border-2"
-        [class]="first && kind() === 'image' ? 'border-primary' : 'border-border'"
+        class="group relative h-[132px] w-[229px] overflow-clip rounded"
+        [class]="isMain ? 'border-2 border-primary' : 'border border-[#c0c7d5]'"
       >
         @if (kind() === 'video') {
           <video
@@ -37,43 +39,37 @@
           />
         }
 
-        @if (first && kind() === 'image') {
+        @if (isMain) {
           <span
-            class="absolute start-2 top-2 rounded bg-primary px-2 py-0.5 text-[11px] font-medium text-white"
+            class="absolute start-0 top-0 rounded-bl px-2 py-1 text-[11px]/[15px] font-medium text-white"
+            [class]="'bg-primary'"
           >
             الصورة الرئيسية
           </span>
         }
 
-        <div class="absolute end-2 top-2 flex items-center gap-1">
-          @if (!first && kind() === 'image') {
-            <button
-              type="button"
-              class="flex size-6 items-center justify-center rounded-full bg-black/50 text-white"
-              [attr.aria-label]="'اجعل ' + item.name + ' الصورة الرئيسية'"
-              title="اجعلها الصورة الرئيسية"
-              (click)="makeMain(item)"
-            >
-              <app-icon name="crown" [size]="12" />
-            </button>
-          }
+        <!-- The design shows the actions over a dimmed picture; they appear on hover or focus. -->
+        <div
+          class="absolute inset-0 flex items-center justify-center gap-3 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100"
+        >
           <button
             type="button"
-            class="flex size-6 items-center justify-center rounded-full bg-black/50 text-white"
+            class="flex size-8 items-center justify-center rounded-full bg-white/15 text-white"
             [attr.aria-label]="'إزالة ' + item.name"
             (click)="remove(item)"
           >
-            <app-icon name="close" [size]="12" />
+            <app-icon name="trash" [size]="14" />
           </button>
-        </div>
-
-        <div
-          class="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-black/45 px-2 py-1"
-        >
-          <span class="font-latin shrink-0 text-[11px] text-white/80">
-            {{ sizeLabel(item.sizeInBytes) }}
-          </span>
-          <span class="truncate text-[11px] text-white">{{ item.name }}</span>
+          @if (!isMain && kind() === 'image') {
+            <button
+              type="button"
+              class="rounded bg-white px-2 py-1 text-[11px]/[16px] font-medium text-text-primary"
+              [attr.aria-label]="'اجعل ' + item.name + ' الصورة الرئيسية'"
+              (click)="makeMain(item)"
+            >
+              تعيين كرئيسية
+            </button>
+          }
         </div>
       </li>
     }

@@ -15,9 +15,6 @@ import { MediaFile } from './media-file';
 
 export type MediaKind = 'image' | 'video';
 
-const BYTES_PER_KILOBYTE = 1024;
-const BYTES_PER_MEGABYTE = 1024 * 1024;
-
 @Component({
   selector: 'app-media-picker',
   imports: [AppIcon, FileDropzone, LazyImage],
@@ -31,6 +28,10 @@ export class MediaPicker {
   readonly accept = input<string>('');
   readonly rules = input.required<FileRules>();
   readonly kind = input<MediaKind>('image');
+  /** How many files the current package allows; left out, the picker takes any number. */
+  readonly limit = input<number>(Number.POSITIVE_INFINITY);
+  /** What is being counted in the "package is full" message: "صور", "فيديو". */
+  readonly noun = input<string>('ملفات');
   readonly files = input.required<readonly MediaFile[]>();
   readonly filesChange = output<readonly MediaFile[]>();
 
@@ -50,6 +51,7 @@ export class MediaPicker {
   protected add(picked: readonly File[]): void {
     const errors: string[] = [];
     const accepted: MediaFile[] = [];
+    let freeSlots = this.limit() - this.files().length;
 
     for (const file of picked) {
       const error = findFileError(file, this.rules());
@@ -57,6 +59,12 @@ export class MediaPicker {
         errors.push(error);
         continue;
       }
+      // A file the rules already turned away never took a slot, so only good ones count.
+      if (freeSlots <= 0) {
+        errors.push(`لا تسمح الباقة الحالية بأكثر من ${this.limit()} ${this.noun()}`);
+        continue;
+      }
+      freeSlots -= 1;
       accepted.push(this.toMediaFile(file));
     }
 
@@ -69,19 +77,14 @@ export class MediaPicker {
 
   protected remove(target: MediaFile): void {
     URL.revokeObjectURL(target.previewUrl);
+    // Removing frees a slot, so a "package is full" message would no longer be true.
+    this.errors.set([]);
     this.filesChange.emit(this.files().filter((item) => item.id !== target.id));
   }
 
   /** The first file is the main one, so promoting means moving it to the front. */
   protected makeMain(target: MediaFile): void {
     this.filesChange.emit([target, ...this.files().filter((item) => item.id !== target.id)]);
-  }
-
-  protected sizeLabel(sizeInBytes: number): string {
-    if (sizeInBytes < BYTES_PER_MEGABYTE) {
-      return `${(sizeInBytes / BYTES_PER_KILOBYTE).toFixed(1)} ك.ب`;
-    }
-    return `${(sizeInBytes / BYTES_PER_MEGABYTE).toFixed(1)} م.ب`;
   }
 
   private toMediaFile(file: File): MediaFile {

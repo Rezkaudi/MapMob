@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { LucideDynamicIcon, LucideIconData } from '@lucide/angular';
 import { RowActionsMenu } from '../../../../shared/ui/row-actions-menu/row-actions-menu';
 import { StatusPill } from '../../../../shared/ui/status-pill/status-pill';
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
 import { Category } from '../../models/category';
-import { categoryIconAssetName } from '../../models/category-icon';
+import { findCategoryIcon } from '../../models/category-icon';
 import { CATEGORY_KIND_LABEL } from '../../models/category-kind';
 import { CATEGORY_STATUS_LABEL } from '../../models/category-status';
 
@@ -20,7 +20,7 @@ const NO_PARENT_LABEL = '_';
 
 interface CategoryTableRow {
   readonly category: Category;
-  readonly iconAssetName: string;
+  readonly icon: LucideIconData | null;
   readonly kindLabel: string;
   readonly parentLabel: string;
   readonly statusLabel: string;
@@ -28,7 +28,7 @@ interface CategoryTableRow {
 
 @Component({
   selector: 'app-category-table',
-  imports: [AppIcon, RowActionsMenu, StatusPill, TableEmpty, TableSkeleton],
+  imports: [LucideDynamicIcon, RowActionsMenu, StatusPill, TableEmpty, TableSkeleton],
   templateUrl: './category-table.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +53,7 @@ export class CategoryTable {
   protected readonly rows = computed<readonly CategoryTableRow[]>(() =>
     this.entries().map((category) => ({
       category,
-      iconAssetName: categoryIconAssetName(category.icon),
+      icon: findCategoryIcon(category.icon)?.data ?? null,
       kindLabel: CATEGORY_KIND_LABEL[category.kind],
       parentLabel: category.parentName ?? NO_PARENT_LABEL,
       statusLabel: CATEGORY_STATUS_LABEL[category.status],

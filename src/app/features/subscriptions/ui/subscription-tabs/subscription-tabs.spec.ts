@@ -20,7 +20,7 @@ describe('SubscriptionTabs', () => {
     const [packages, records] = tabs(render());
 
     expect(packages.textContent).toContain('باقات الاشتراك');
-    expect(records.textContent).toContain('سجل الاشتراكات');
+    expect(records.textContent).toContain('سجل المشتركين');
   });
 
   it('groups the record count in thousands', () => {
@@ -32,6 +32,14 @@ describe('SubscriptionTabs', () => {
 
     expect(records.getAttribute('aria-selected')).toBe('true');
     expect(packages.getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('underlines the selected tab without tinting it, as the packages frame draws it', () => {
+    const [packages, records] = tabs(render());
+
+    expect(packages.classList).toContain('border-primary');
+    expect(packages.classList).not.toContain('bg-[#EFF8FF]/40');
+    expect(records.classList).toContain('border-transparent');
   });
 
   it('asks for the tab that was clicked', () => {

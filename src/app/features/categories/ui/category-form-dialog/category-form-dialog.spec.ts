@@ -7,7 +7,7 @@ const PARENTS = [
   { value: 'm1', label: 'مطاعم' },
   { value: 'm2', label: 'مقاهي' },
 ];
-const NEW_DRAFT: CategoryDraft = { name: '', kind: 'main', parentId: null, icon: 'utensils' };
+const NEW_DRAFT: CategoryDraft = { name: '', kind: 'main', parentId: null, icon: 'utensils-crossed', color: '#0583EC' };
 
 function render(mode: 'create' | 'edit', draft: CategoryDraft = NEW_DRAFT) {
   const fixture = TestBed.createComponent(CategoryFormDialog);
@@ -86,7 +86,7 @@ describe('CategoryFormDialog', () => {
     fixture.detectChanges();
     query<HTMLButtonElement>(fixture, 'category-submit')!.click();
 
-    expect(submitted).toEqual([{ name: 'فنادق', kind: 'main', parentId: null, icon: 'store' }]);
+    expect(submitted).toEqual([{ name: 'فنادق', kind: 'main', parentId: null, icon: 'store', color: '#0583EC' }]);
   });
 
   it('opens the edit dialog of a sub category without the kind picker', () => {
@@ -95,6 +95,7 @@ describe('CategoryFormDialog', () => {
       kind: 'sub',
       parentId: 'm2',
       icon: 'coffee',
+      color: '#0583EC',
     });
     const submitted = captureSubmits(fixture);
     const element = fixture.nativeElement as HTMLElement;
@@ -112,7 +113,7 @@ describe('CategoryFormDialog', () => {
     query<HTMLButtonElement>(fixture, 'category-submit')!.click();
 
     expect(submitted).toEqual([
-      { name: 'مطاعم بحرية', kind: 'sub', parentId: 'm1', icon: 'coffee' },
+      { name: 'مطاعم بحرية', kind: 'sub', parentId: 'm1', icon: 'coffee', color: '#0583EC' },
     ]);
   });
 
@@ -121,7 +122,8 @@ describe('CategoryFormDialog', () => {
       name: 'مطاعم',
       kind: 'main',
       parentId: null,
-      icon: 'utensils',
+      icon: 'utensils-crossed',
+      color: '#0583EC',
     });
 
     expect(query(fixture, 'category-parent')).toBeNull();

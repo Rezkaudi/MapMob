@@ -1,0 +1,11 @@
+<!-- RTL: each row leads with its label on the right and puts the value on the left. -->
+<div class="flex flex-col gap-4 rounded-lg bg-[#F2F4F6] px-4 pt-4 pb-[34px] text-[12px]/[18px]">
+  <div data-role="plan-row" class="flex items-end justify-between">
+    <span class="font-bold text-text-primary">بيانات الاشتراك الحالي:</span>
+    <span class="font-bold text-primary">{{ planName() }}</span>
+  </div>
+  <div data-role="ends-row" class="flex items-end justify-between">
+    <span class="text-text-secondary">تاريخ انتهاء الاشتراك الحالي</span>
+    <span class="font-bold text-text-primary" dir="ltr">{{ endsOn() | slashDate }}</span>
+  </div>
+</div>

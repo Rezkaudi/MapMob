@@ -8,6 +8,7 @@ const SEAFOOD = buildCategory({
   kind: 'sub',
   parentId: 'm1',
   icon: 'coffee',
+  color: '#0583EC',
 });
 const PARENTS = [{ value: 'm1', label: 'مطاعم' }];
 

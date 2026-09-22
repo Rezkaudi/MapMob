@@ -27,6 +27,24 @@ describe('buildPlanCardView', () => {
     expect(view.price).toEqual({ amount: '20', currency: 'دولار', period: '/ شهرياً' });
   });
 
+  it('prices a paid plan by the year when the yearly cycle is picked', () => {
+    const view = buildPlanCardView(plan(), 'yearly');
+
+    expect(view.price).toEqual({ amount: '192', currency: 'دولار', period: '/ سنوياً' });
+  });
+
+  it('keeps the monthly price when a plan has no yearly one', () => {
+    const view = buildPlanCardView(plan({ yearlyPrice: null }), 'yearly');
+
+    expect(view.price).toEqual({ amount: '20', currency: 'دولار', period: '/ شهرياً' });
+  });
+
+  it('stays free on the yearly cycle', () => {
+    const view = buildPlanCardView(plan({ tier: 'free', monthlyPrice: 0 }), 'yearly');
+
+    expect(view.price).toEqual({ amount: 'مجاناً', currency: null, period: '/ دائماً' });
+  });
+
   it('prices a free plan as "مجاناً" with no currency and a forever period', () => {
     const view = buildPlanCardView(plan({ tier: 'free', monthlyPrice: 0 }));
 

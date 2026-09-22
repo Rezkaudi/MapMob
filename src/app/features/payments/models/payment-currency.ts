@@ -1,5 +1,11 @@
 export type PaymentCurrency = 'USD' | 'SYP';
 
+/** The short sign the amount field puts beside the number. */
+export const PAYMENT_CURRENCY_SYMBOLS: Record<PaymentCurrency, string> = {
+  USD: '$',
+  SYP: 'ل.س',
+};
+
 export const PAYMENT_CURRENCY_LABELS: Record<PaymentCurrency, string> = {
   USD: 'دولار',
   SYP: 'ليرة سورية',

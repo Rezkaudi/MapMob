@@ -8,7 +8,7 @@ import { buildCategory } from '../testing/category-fixture';
 import { CategoryHttpRepository } from './category-http.repository';
 
 const BASE_URL = 'https://api.test';
-const DRAFT: CategoryDraft = { name: 'مخابز', kind: 'sub', parentId: 'm1', icon: 'store' };
+const DRAFT: CategoryDraft = { name: 'مخابز', kind: 'sub', parentId: 'm1', icon: 'store', color: '#0583EC' };
 const BAKERY = buildCategory({ id: 'c1', name: 'مخابز' });
 const EMPTY_PAGE = { items: [], totalCount: 0, kindCounts: { all: 0, main: 0, sub: 0 } };
 

@@ -3,6 +3,8 @@ import { CrudDialogRequest } from '../../../../shared/state/crud-dialog-request'
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { Category } from '../../models/category';
+import { DEFAULT_CATEGORY_COLOR } from '../../models/category-color';
+import { DEFAULT_CATEGORY_ICON } from '../../models/category-icon';
 import { CategoryDraft } from '../../models/category-draft';
 import { buildCategoryConfirmCopy, buildCategoryFormCopy } from '../category-dialog-copy';
 import { CategoryFormDialog } from '../category-form-dialog/category-form-dialog';
@@ -12,7 +14,8 @@ const NEW_CATEGORY_DRAFT: CategoryDraft = {
   name: '',
   kind: 'main',
   parentId: null,
-  icon: 'utensils',
+  icon: DEFAULT_CATEGORY_ICON,
+  color: DEFAULT_CATEGORY_COLOR,
 };
 
 @Component({
@@ -39,7 +42,13 @@ export class CategoryDialogs {
       mode: request.mode,
       copy: buildCategoryFormCopy(request.mode),
       draft: entry
-        ? { name: entry.name, kind: entry.kind, parentId: entry.parentId, icon: entry.icon }
+        ? {
+            name: entry.name,
+            kind: entry.kind,
+            parentId: entry.parentId,
+            icon: entry.icon,
+            color: entry.color,
+          }
         : NEW_CATEGORY_DRAFT,
     };
   });

@@ -35,10 +35,17 @@
     />
 
     @if (selectedTab() === 'packages') {
-      <div class="mt-9 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <!-- RTL: the heading is the first child so it sits on the right, the toggle on the left. -->
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-[18px]/[28px] font-extrabold text-text-primary">الباقات المتاحة</h2>
+        <app-billing-cycle-toggle [value]="cycle()" (valueChange)="cycle.set($event)" />
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
         @for (plan of store.plans(); track plan.id) {
           <app-plan-card
             [plan]="plan"
+            [cycle]="cycle()"
             (edit)="editPlan($event)"
             (statusChange)="askToChangeStatus($event)"
             (remove)="askToDelete($event)"

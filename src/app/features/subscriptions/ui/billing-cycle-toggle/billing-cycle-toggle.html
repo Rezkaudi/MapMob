@@ -1,0 +1,25 @@
+<!-- RTL: "شهرياً" comes first so it sits on the right, as the design lays the track out. -->
+<div class="inline-flex items-center rounded-xl border border-border bg-[#F1F5F9] p-1.5">
+  <button
+    type="button"
+    class="rounded-lg px-4 py-2 text-center text-[12px]/[16px] font-bold"
+    [class]="value() === 'monthly' ? 'bg-white text-text-primary' : 'text-text-secondary'"
+    [attr.aria-pressed]="value() === 'monthly'"
+    (click)="valueChange.emit('monthly')"
+  >
+    شهرياً
+  </button>
+  <button
+    type="button"
+    class="flex items-center gap-1.5 rounded-xl px-4 py-2 text-[12px]/[16px] font-medium"
+    [class]="value() === 'yearly' ? 'bg-white text-text-primary' : 'text-text-secondary'"
+    [attr.aria-pressed]="value() === 'yearly'"
+    (click)="valueChange.emit('yearly')"
+  >
+    <span>سنوياً</span>
+    <span
+      class="rounded-full bg-accent px-2 py-1 text-center text-[10px]/[11px] font-extrabold text-white"
+      >خصم 20%</span
+    >
+  </button>
+</div>

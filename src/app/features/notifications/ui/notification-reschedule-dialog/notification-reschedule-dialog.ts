@@ -13,7 +13,7 @@ import { AppNotification } from '../../models/notification';
 import { NotificationDetailView } from '../../state/notification-detail-view';
 import { SendMoment, joinSendAt, splitSendAt } from '../../state/send-moment';
 import { toWallClockTime } from '../../state/wall-clock-time';
-import { NotificationDialogFrame } from '../notification-dialog-frame/notification-dialog-frame';
+import { DialogFrame } from '../../../../shared/ui/dialog-frame/dialog-frame';
 import { SendMomentField } from '../send-moment-field/send-moment-field';
 
 const EMPTY_MOMENT: SendMoment = { day: '', time: '' };
@@ -21,7 +21,7 @@ const EMPTY_MOMENT: SendMoment = { day: '', time: '' };
 /** The "إعادة جدولة الاشعار" frame, opened from a scheduled notification's details. */
 @Component({
   selector: 'app-notification-reschedule-dialog',
-  imports: [AppIcon, NotificationDialogFrame, SendMomentField],
+  imports: [AppIcon, DialogFrame, SendMomentField],
   templateUrl: './notification-reschedule-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

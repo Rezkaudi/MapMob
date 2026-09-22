@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Payment } from '../models/payment';
+import { NewPaymentDraft } from '../models/new-payment-draft';
 import { PaymentDetail } from '../models/payment-detail';
+import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentQuery } from '../models/payment-query';
 import { PaymentSummary } from '../models/payment-summary';
 import { toPaymentQueryParams } from './payment-query-params';
@@ -31,6 +33,14 @@ export class PaymentHttpRepository implements PaymentRepository {
 
   getPaymentDetail(id: string): Observable<PaymentDetail> {
     return this.httpClient.get<PaymentDetail>(`${this.paymentsUrl}/${id}`);
+  }
+
+  getPaymentFormOptions(): Observable<PaymentFormOptions> {
+    return this.httpClient.get<PaymentFormOptions>(`${this.paymentsUrl}/form-options`);
+  }
+
+  createPayment(draft: NewPaymentDraft): Observable<Payment> {
+    return this.httpClient.post<Payment>(this.paymentsUrl, draft);
   }
 
   exportPayments(query: PaymentQuery): Observable<Blob> {

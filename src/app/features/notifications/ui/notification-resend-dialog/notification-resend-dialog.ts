@@ -16,7 +16,7 @@ import { NotificationDetailView } from '../../state/notification-detail-view';
 import { joinSendAt } from '../../state/send-moment';
 import { suggestSendMoment } from '../../state/suggest-send-moment';
 import { toWallClockTime } from '../../state/wall-clock-time';
-import { NotificationDialogFrame } from '../notification-dialog-frame/notification-dialog-frame';
+import { DialogFrame } from '../../../../shared/ui/dialog-frame/dialog-frame';
 import { SendMomentField } from '../send-moment-field/send-moment-field';
 
 interface TimingChoice {
@@ -42,7 +42,7 @@ const TIMING_CHOICES: readonly TimingChoice[] = [
 /** The "RESEND NOTIFICATION" frame, opened from a sent notification's details. */
 @Component({
   selector: 'app-notification-resend-dialog',
-  imports: [AppIcon, NotificationDialogFrame, OptionCard, SendMomentField],
+  imports: [AppIcon, DialogFrame, OptionCard, SendMomentField],
   templateUrl: './notification-resend-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
