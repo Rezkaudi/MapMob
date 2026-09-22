@@ -7,30 +7,55 @@
   @if (isLoading()) {
     <app-skeleton [width]="pieSizeInPixels" [height]="pieSizeInPixels" shape="circle" />
   } @else {
-    <svg
-      role="img"
-      [attr.aria-label]="title()"
-      [attr.width]="pieSize"
-      [attr.height]="pieSize"
-      [attr.viewBox]="'0 0 ' + pieSize + ' ' + pieSize"
-    >
-      @for (slice of slices(); track slice.name) {
-        <path [attr.d]="slice.path" [attr.fill]="slice.color">
-          <title>{{ slice.spokenName }}</title>
-        </path>
-      }
-      @for (slice of slices(); track slice.name) {
-        <text
-          aria-hidden="true"
-          class="fill-white text-[13px]"
-          text-anchor="middle"
-          dominant-baseline="central"
-          [attr.x]="slice.labelX"
-          [attr.y]="slice.labelY"
+    <div class="relative" [style.width]="pieSizeInPixels" [style.height]="pieSizeInPixels">
+      <svg
+        role="group"
+        [attr.aria-label]="title()"
+        [attr.width]="pieSize"
+        [attr.height]="pieSize"
+        [attr.viewBox]="'0 0 ' + pieSize + ' ' + pieSize"
+        (mouseleave)="hideTooltip()"
+      >
+        @for (slice of slices(); track slice.name) {
+          <path
+            role="img"
+            tabindex="0"
+            class="cursor-pointer outline-none transition-opacity duration-150"
+            [attr.d]="slice.path"
+            [attr.fill]="slice.color"
+            [attr.opacity]="opacityOf(slice.index)"
+            [attr.aria-label]="slice.spokenName"
+            (mouseenter)="showTooltipFor(slice.index)"
+            (mouseleave)="hideTooltip()"
+            (focus)="showTooltipFor(slice.index)"
+            (blur)="hideTooltip()"
+          ></path>
+        }
+        @for (slice of slices(); track slice.name) {
+          <text
+            aria-hidden="true"
+            class="pointer-events-none fill-white text-[13px]"
+            text-anchor="middle"
+            dominant-baseline="central"
+            [attr.x]="slice.labelX"
+            [attr.y]="slice.labelY"
+          >
+            {{ slice.name }}
+          </text>
+        }
+      </svg>
+
+      @if (hoveredSlice(); as hovered) {
+        <div
+          data-testid="category-share-tooltip"
+          role="status"
+          class="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-[calc(100%+8px)] whitespace-nowrap rounded-lg bg-[#3c3c41] px-3 py-1.5 text-[12px]/[18px] font-medium text-white shadow-[0_4px_12px_0_rgba(0,0,0,0.2)]"
+          [style.left.px]="hovered.labelX"
+          [style.top.px]="hovered.labelY"
         >
-          {{ slice.name }}
-        </text>
+          {{ hovered.tooltipText }}
+        </div>
       }
-    </svg>
+    </div>
   }
 </section>

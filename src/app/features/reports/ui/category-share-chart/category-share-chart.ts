@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { CategoryShare } from '../../models/category-share';
 import { PieCircle } from './pie-circle';
@@ -11,6 +11,8 @@ const PIE_CIRCLE: PieCircle = {
   radius: PIE_SIZE / 2,
   labelRadiusRatio: 0.54,
 };
+const FULL_OPACITY = 1;
+const DIMMED_OPACITY = 0.45;
 const SLICE_COLORS: readonly string[] = [
   '#8979ff',
   '#ff928a',
@@ -36,6 +38,13 @@ export class CategoryShareChart {
   protected readonly pieSize = PIE_SIZE;
   protected readonly pieSizeInPixels = `${PIE_SIZE}px`;
 
+  protected readonly hoveredIndex = signal<number | null>(null);
+
+  protected readonly hoveredSlice = computed(() => {
+    const index = this.hoveredIndex();
+    return index === null ? null : (this.slices()[index] ?? null);
+  });
+
   protected readonly slices = computed(() => {
     const shares = this.shares();
     const geometry = buildPieSlices(
@@ -47,6 +56,21 @@ export class CategoryShareChart {
       name: shares[index].categoryName,
       spokenName: `${shares[index].categoryName} ${shares[index].share}%`,
       color: SLICE_COLORS[index % SLICE_COLORS.length],
+      tooltipText: `${shares[index].categoryName} · ${shares[index].share}%`,
+      index,
     }));
   });
+
+  protected opacityOf(index: number): number {
+    const hovered = this.hoveredIndex();
+    return hovered === null || hovered === index ? FULL_OPACITY : DIMMED_OPACITY;
+  }
+
+  protected showTooltipFor(index: number): void {
+    this.hoveredIndex.set(index);
+  }
+
+  protected hideTooltip(): void {
+    this.hoveredIndex.set(null);
+  }
 }
