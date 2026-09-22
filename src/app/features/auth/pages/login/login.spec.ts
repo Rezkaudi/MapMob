@@ -29,6 +29,17 @@ describe('Login', () => {
     expect(text).toContain('تسجيل دخول');
   });
 
+  it('aligns the brand lockup with the tagline edge, so RTL keeps it on the right', () => {
+    const fixture = TestBed.createComponent(Login);
+    fixture.detectChanges();
+
+    const wordmark: HTMLElement = fixture.nativeElement.querySelector('img[src*="mapmob-logo"]')
+      .parentElement;
+    const column = wordmark.parentElement!;
+    expect(column.classList).toContain('items-start');
+    expect(column.classList).not.toContain('items-end');
+  });
+
   it('does not offer a forgotten-password link', () => {
     const fixture = TestBed.createComponent(Login);
     fixture.detectChanges();
