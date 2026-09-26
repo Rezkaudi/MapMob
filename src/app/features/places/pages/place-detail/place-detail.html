@@ -88,7 +88,11 @@
           (editProduct)="goToEdit('products')"
         />
 
-        <app-place-offers-card [offers]="place.offers" [placeName]="place.name" />
+        <app-place-offers-card
+          [offers]="place.offers"
+          [placeName]="place.name"
+          (addOffer)="goToNewOffer()"
+        />
 
         <app-place-videos-card [videos]="place.videos" (addVideo)="goToEdit('media')" />
       </div>

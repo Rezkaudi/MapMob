@@ -3,6 +3,7 @@
   [badge]="countLabel()"
   [subtitle]="subtitle()"
   actionLabel="إضافة عرض"
+  (action)="addOffer.emit()"
 >
   @if (offers().length) {
     <!-- Three 200px cards with a 16px gap overrun the 621px grid, so the row scrolls. -->

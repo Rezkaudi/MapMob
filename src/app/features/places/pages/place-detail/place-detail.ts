@@ -91,6 +91,10 @@ export class PlaceDetail {
     this.router.navigate(['/places', this.id(), 'edit'], { fragment: section });
   }
 
+  protected goToNewOffer(): void {
+    this.router.navigate(['/offers', 'new']);
+  }
+
   protected askForStatusChange(): void {
     this.pendingAction.set(this.isSuspended() ? 'activate' : 'suspend');
   }

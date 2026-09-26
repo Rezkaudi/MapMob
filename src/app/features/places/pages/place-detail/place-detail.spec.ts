@@ -174,6 +174,7 @@ describe('PlaceDetail edit links', () => {
         provideRouter([
           { path: 'places/:id/edit', children: [] },
           { path: 'places', children: [] },
+          { path: 'offers/new', children: [] },
         ]),
         { provide: PlaceRepository, useValue: { getPlace: () => of(createPlaceDetail()) } },
       ],
@@ -236,6 +237,15 @@ describe('PlaceDetail edit links', () => {
     await fixture.whenStable();
 
     expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#products');
+  });
+
+  it('opens the offer form when a promotional offer is added', async () => {
+    const fixture = render();
+
+    buttonNamedIn(fixture.nativeElement, 'إضافة عرض').click();
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/offers/new');
   });
 
   it('opens the edit page at the products section when a product is edited', async () => {
