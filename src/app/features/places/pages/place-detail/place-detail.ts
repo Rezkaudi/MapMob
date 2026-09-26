@@ -10,6 +10,7 @@ import { Toast } from '../../../../shared/ui/toast/toast';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
+import { PlaceEditSection } from '../../models/place-edit-section';
 import { PlaceDetailStore } from '../../state/place-detail.store';
 import { PlaceDetailSkeleton } from './place-detail-skeleton/place-detail-skeleton';
 import { PlaceGallery } from './place-gallery/place-gallery';
@@ -18,7 +19,6 @@ import { PlaceHoursCard } from './place-hours-card/place-hours-card';
 import { PlaceLocationCard } from './place-location-card/place-location-card';
 import { PlaceOffersCard } from './place-offers-card/place-offers-card';
 import { PlaceProductsCard } from './place-products-card/place-products-card';
-import { ProductDialog } from '../../ui/product-dialog/product-dialog';
 import { buildPlaceConfirmCopy } from '../../ui/place-confirm-copy';
 import { PlaceVideosCard } from './place-videos-card/place-videos-card';
 
@@ -50,7 +50,6 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
     PlaceOffersCard,
     PlaceProductsCard,
     PlaceVideosCard,
-    ProductDialog,
     Toast,
     ArabicDatePipe,
     RouterLink,
@@ -71,7 +70,6 @@ export class PlaceDetail {
   protected readonly packageLabel = PLACE_PACKAGE_LABEL;
 
   protected readonly place = this.store.place;
-  protected readonly isAddingProduct = signal(false);
   protected readonly isSuspended = computed(() => this.place()?.status === 'suspended');
   protected readonly pendingAction = signal<ConfirmAction | null>(null);
   protected readonly confirmCopy = computed(() => {
@@ -88,13 +86,9 @@ export class PlaceDetail {
     this.store.loadPlace(this.id());
   }
 
-  protected composeProduct(): void {
-    this.isAddingProduct.set(true);
-  }
-
-  /** The product endpoints are not built yet, so saving only closes the dialog. */
-  protected closeProductDialog(): void {
-    this.isAddingProduct.set(false);
+  /** Every edit on this page opens the form, scrolled to the matching section. */
+  protected goToEdit(section: PlaceEditSection): void {
+    this.router.navigate(['/places', this.id(), 'edit'], { fragment: section });
   }
 
   protected askForStatusChange(): void {

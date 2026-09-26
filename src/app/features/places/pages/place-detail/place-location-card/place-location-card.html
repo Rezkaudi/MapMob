@@ -1,4 +1,4 @@
-<app-info-card heading="الموقع" [canEdit]="true">
+<app-info-card heading="الموقع" [canEdit]="true" (edit)="edit.emit()">
   <div class="relative h-[469px] overflow-clip rounded-xl bg-surface-muted">
     <div class="flex size-full items-center justify-center text-placeholder">
       <app-icon name="map" [size]="48" />

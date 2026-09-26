@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  Injector,
+  afterNextRender,
   effect,
   inject,
   input,
@@ -10,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PICTURE_RULES } from '../../../../shared/files/picture-rules';
 import { VIDEO_RULES } from '../../../../shared/files/video-rules';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
@@ -124,15 +126,33 @@ export class PlaceForm {
   protected readonly mediaLimit = computed(() => PACKAGE_MEDIA_LIMIT[this.currentPackage()]);
   protected readonly packageLabel = computed(() => PLACE_PACKAGE_LABEL[this.currentPackage()]);
 
+  /** The detail page links to a section of this form through the route fragment. */
+  private readonly section = toSignal(inject(ActivatedRoute).fragment);
+  private readonly injector = inject(Injector);
+
   constructor() {
     // The add route binds no id, and its empty string means "adding", the same as none.
     this.store.load(computed(() => this.id() || null));
+    effect(() => {
+      const section = this.section();
+      if (section && this.store.isReady()) {
+        untracked(() => this.scrollToSection(section));
+      }
+    });
     effect(() => {
       const place = this.store.editedPlace();
       if (place) {
         untracked(() => this.fillFrom(place));
       }
     });
+  }
+
+  /** The section only exists once the form has drawn, one render after it is ready. */
+  private scrollToSection(section: string): void {
+    afterNextRender(
+      () => document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }),
+      { injector: this.injector },
+    );
   }
 
   protected composeProduct(): void {

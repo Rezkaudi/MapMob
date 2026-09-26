@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { InfoCard } from '../../../../../shared/ui/info-card/info-card';
 import { WorkingHoursRow } from '../../../models/working-hours-row';
 
@@ -12,4 +12,5 @@ import { WorkingHoursRow } from '../../../models/working-hours-row';
 export class PlaceHoursCard {
   readonly rows = input.required<readonly WorkingHoursRow[]>();
   readonly isOpenNow = input<boolean>(false);
+  readonly edit = output<void>();
 }

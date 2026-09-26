@@ -1,4 +1,4 @@
-<app-info-card heading="معلومات التوصل" [canEdit]="true">
+<app-info-card heading="معلومات التوصل" [canEdit]="true" (edit)="edit.emit()">
   <ul class="flex flex-col gap-3">
     @for (link of links(); track link.icon) {
       <li class="flex h-8 items-center gap-3">

@@ -53,9 +53,13 @@
     <!-- RTL: the wide media column comes first (right), the summary cards sit left. -->
     <div class="flex items-start gap-6">
       <div class="flex min-w-0 flex-1 flex-col gap-4">
-        <app-place-gallery [images]="place.images" [name]="place.name" />
+        <app-place-gallery
+          [images]="place.images"
+          [name]="place.name"
+          (addImage)="goToEdit('media')"
+        />
 
-        <app-info-card heading="المعلومات الأساسية" [canEdit]="true">
+        <app-info-card heading="المعلومات الأساسية" [canEdit]="true" (edit)="goToEdit('basic-info')">
           <p class="text-[14px]/[24px] text-text-secondary">{{ place.description }}</p>
           <div class="mt-6 grid grid-cols-2 gap-6">
             <div>
@@ -70,19 +74,32 @@
         </app-info-card>
 
         <div class="grid grid-cols-2 gap-4">
-          <app-place-hours-card [rows]="place.workingHours" [isOpenNow]="place.isOpenNow" />
-          <app-place-contact-card [contact]="place.contact" />
+          <app-place-hours-card
+            [rows]="place.workingHours"
+            [isOpenNow]="place.isOpenNow"
+            (edit)="goToEdit('working-hours')"
+          />
+          <app-place-contact-card [contact]="place.contact" (edit)="goToEdit('details')" />
         </div>
 
-        <app-place-products-card [products]="place.products" (addProduct)="composeProduct()" />
+        <app-place-products-card
+          [products]="place.products"
+          (addProduct)="goToEdit('products')"
+          (editProduct)="goToEdit('products')"
+        />
 
         <app-place-offers-card [offers]="place.offers" [placeName]="place.name" />
 
-        <app-place-videos-card [videos]="place.videos" />
+        <app-place-videos-card [videos]="place.videos" (addVideo)="goToEdit('media')" />
       </div>
 
       <div class="flex w-[353px] shrink-0 flex-col gap-4">
-        <app-info-card heading="معلومات المالك" [canEdit]="true" padding="compact">
+        <app-info-card
+          heading="معلومات المالك"
+          [canEdit]="true"
+          padding="compact"
+          (edit)="goToEdit('basic-info')"
+        >
           <dl class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <dt class="text-[13px] text-text-primary">اسم المالك/المسؤول</dt>
@@ -104,7 +121,12 @@
           </a>
         </app-info-card>
 
-        <app-info-card heading="الاشتراك" [canEdit]="true" padding="compact">
+        <app-info-card
+          heading="الاشتراك"
+          [canEdit]="true"
+          padding="compact"
+          (edit)="goToEdit('subscription')"
+        >
           <dl class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <dt class="text-[13px] text-text-primary">خطة الاشتراك</dt>
@@ -145,14 +167,10 @@
           </dl>
         </app-info-card>
 
-        <app-place-location-card [location]="place.location" />
+        <app-place-location-card [location]="place.location" (edit)="goToEdit('location')" />
       </div>
     </div>
   </div>
-}
-
-@if (isAddingProduct()) {
-  <app-product-dialog (submitted)="closeProductDialog()" (cancelled)="closeProductDialog()" />
 }
 
 @if (confirmCopy(); as copy) {

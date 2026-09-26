@@ -165,3 +165,91 @@ describe('PlaceDetail actions', () => {
     expect(TestBed.inject(Router).url).toBe('/places');
   });
 });
+
+describe('PlaceDetail edit links', () => {
+  function render() {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          { path: 'places/:id/edit', children: [] },
+          { path: 'places', children: [] },
+        ]),
+        { provide: PlaceRepository, useValue: { getPlace: () => of(createPlaceDetail()) } },
+      ],
+    });
+    const fixture = TestBed.createComponent(PlaceDetail);
+    fixture.componentRef.setInput('id', 'place-1');
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function editButtonOfCard(element: HTMLElement, heading: string): HTMLButtonElement {
+    const card = Array.from(element.querySelectorAll('app-info-card')).find(
+      (one) => one.querySelector('h2')?.textContent?.trim() === heading,
+    );
+    return card?.querySelector('button') as HTMLButtonElement;
+  }
+
+  const CARD_SECTIONS: readonly [string, string][] = [
+    ['المعلومات الأساسية', 'basic-info'],
+    ['معلومات المالك', 'basic-info'],
+    ['الاشتراك', 'subscription'],
+    ['أوقات العمل', 'working-hours'],
+    ['معلومات التوصل', 'details'],
+    ['الموقع', 'location'],
+  ];
+
+  for (const [heading, section] of CARD_SECTIONS) {
+    it(`opens the edit page at the ${section} section from the ${heading} card`, async () => {
+      const fixture = render();
+
+      editButtonOfCard(fixture.nativeElement, heading).click();
+      await fixture.whenStable();
+
+      expect(TestBed.inject(Router).url).toBe(`/places/place-1/edit#${section}`);
+    });
+  }
+
+  it('opens the edit page at the media section from the gallery', async () => {
+    const fixture = render();
+
+    (fixture.nativeElement.querySelector('[data-testid="add-image"]') as HTMLElement).click();
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#media');
+  });
+
+  it('opens the edit page at the media section from the videos card', async () => {
+    const fixture = render();
+
+    buttonNamedIn(fixture.nativeElement, 'إضافة فيديو').click();
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#media');
+  });
+
+  it('opens the edit page at the products section when a product is added', async () => {
+    const fixture = render();
+
+    buttonNamedIn(fixture.nativeElement, 'إضافة منتج أو خدمة').click();
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#products');
+  });
+
+  it('opens the edit page at the products section when a product is edited', async () => {
+    const fixture = render();
+
+    (fixture.nativeElement.querySelector('[data-role="open-product"]') as HTMLElement).click();
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#products');
+  });
+});
+
+function buttonNamedIn(element: HTMLElement, label: string): HTMLButtonElement {
+  return Array.from(element.querySelectorAll('button')).find(
+    (button) => button.textContent?.trim() === label,
+  ) as HTMLButtonElement;
+}

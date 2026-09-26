@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { InfoCard } from '../../../../../shared/ui/info-card/info-card';
 import { PlaceContact } from '../../../models/place-contact';
@@ -13,6 +13,7 @@ import { ContactLink } from './contact-link';
 })
 export class PlaceContactCard {
   readonly contact = input.required<PlaceContact>();
+  readonly edit = output<void>();
 
   protected readonly links = computed<ContactLink[]>(() => {
     const contact = this.contact();

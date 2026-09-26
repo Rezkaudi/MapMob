@@ -1,4 +1,4 @@
-<app-info-card heading="أوقات العمل" [canEdit]="true">
+<app-info-card heading="أوقات العمل" [canEdit]="true" (edit)="edit.emit()">
   @if (isOpenNow()) {
     <span
       class="mb-3 inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-1 text-[12px] font-medium text-success"

@@ -1,4 +1,4 @@
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { Observable, of, throwError } from 'rxjs';
@@ -288,5 +288,52 @@ describe('PlaceForm', () => {
     // has to be its own stacking context or it covers the bar.
     expect(mapBox.className).toContain('isolate');
     expect(saveBar.className).toContain('z-30');
+  });
+});
+
+describe('PlaceForm sections', () => {
+  function renderWithFragment(fragment: string) {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        {
+          provide: PlaceRepository,
+          useValue: { getPlace: (id: string) => of(createPlaceDetail({ id })) },
+        },
+        { provide: ActivatedRoute, useValue: { fragment: of(fragment) } },
+      ],
+    });
+    const fixture = TestBed.createComponent(PlaceForm);
+    fixture.componentRef.setInput('id', 'place-1');
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it('gives every section the anchor the detail page links to', () => {
+    const sections: HTMLElement[] = Array.from(
+      render().nativeElement.querySelectorAll('form > app-form-section, form > app-products-editor'),
+    );
+
+    expect(sections.map((section) => section.id)).toEqual([
+      'basic-info',
+      'location',
+      'details',
+      'working-hours',
+      'subscription',
+      'media',
+      'products',
+    ]);
+  });
+
+  it('scrolls to the section the route fragment names', () => {
+    const scrolled: string[] = [];
+    Element.prototype.scrollIntoView = function scrollIntoView(this: Element) {
+      scrolled.push(this.id);
+    };
+
+    renderWithFragment('working-hours');
+
+    expect(scrolled).toEqual(['working-hours']);
   });
 });

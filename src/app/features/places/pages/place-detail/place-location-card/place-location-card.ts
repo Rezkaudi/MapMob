@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { InfoCard } from '../../../../../shared/ui/info-card/info-card';
 import { PlaceLocation } from '../../../models/place-location';
@@ -12,4 +12,5 @@ import { PlaceLocation } from '../../../models/place-location';
 })
 export class PlaceLocationCard {
   readonly location = input.required<PlaceLocation>();
+  readonly edit = output<void>();
 }
