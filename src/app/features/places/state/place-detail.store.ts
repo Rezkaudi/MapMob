@@ -75,6 +75,9 @@ export const PlaceDetailStore = signalStore(
     };
 
     return {
+      addProduct(draft: ProductDraft): void {
+        withProducts((products) => [...products, { ...draft, id: crypto.randomUUID() }]);
+      },
       saveProduct(id: string, draft: ProductDraft): void {
         withProducts((products) =>
           products.map((product) => (product.id === id ? { ...product, ...draft } : product)),

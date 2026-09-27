@@ -5,6 +5,7 @@ export interface ProductDraft {
   readonly name: string;
   readonly price: number;
   readonly currency: CurrencyCode;
+  readonly isAvailable: boolean;
   readonly imageUrl: string;
   readonly orderUrl: string;
 }

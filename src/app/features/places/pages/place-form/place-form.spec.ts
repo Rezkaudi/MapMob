@@ -280,6 +280,24 @@ describe('PlaceForm', () => {
     expect(fixture.nativeElement.querySelector('app-confirm-dialog')).toBeNull();
   });
 
+  it('keeps the status picked in the dialog when a product is added', () => {
+    const fixture = render();
+    click(fixture, '[data-testid="add-product"]');
+
+    typeInto(fixture, 'product-name', 'خدمة موقوفة');
+    typeInto(fixture, 'product-price', '150');
+    const status: HTMLSelectElement = fixture.nativeElement.querySelector(
+      '[data-testid="product-status"]',
+    );
+    status.value = 'unavailable';
+    status.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    click(fixture, '[data-testid="submit-product"]');
+
+    const added = fixture.componentInstance['products']().at(-1);
+    expect(added?.isAvailable).toBe(false);
+  });
+
   it('shows the saved gallery, videos and products when editing', () => {
     const fixture = render('place-1');
     const detail = createPlaceDetail();

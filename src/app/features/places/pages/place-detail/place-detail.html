@@ -88,7 +88,7 @@
 
         <app-place-products-card
           [products]="place.products"
-          (addProduct)="goToEdit('products')"
+          (addProduct)="composeProduct()"
           (editProduct)="editProduct($event)"
           (changeStatus)="changeProductAvailability($event)"
           (removeProduct)="askToRemoveProduct($event)"
@@ -192,9 +192,9 @@
   />
 }
 
-@if (editedProduct()) {
+@if (isProductDialogOpen()) {
   <app-product-dialog
-    mode="edit"
+    [mode]="productDialogMode()"
     [initialDraft]="editedProductDraft()"
     (submitted)="saveProduct($event)"
     (cancelled)="closeProductDialog()"

@@ -1,5 +1,5 @@
 import { Router, provideRouter } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NEVER, of, throwError } from 'rxjs';
 import { PlaceRepository } from '../../data/place.repository';
 import { createPlaceDetail } from '../../testing/place-detail-fixture';
@@ -32,10 +32,6 @@ describe('PlaceDetail', () => {
       .find((button) => button.textContent?.includes(label))!
       .click();
     fixture.detectChanges();
-  }
-
-  function productRows(fixture: ReturnType<typeof render>): HTMLElement[] {
-    return Array.from(fixture.nativeElement.querySelectorAll('app-place-products-card tbody tr'));
   }
 
   it('edits a product from its menu, filling the dialog and keeping the change', () => {
@@ -313,14 +309,35 @@ describe('PlaceDetail edit links', () => {
     expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#media');
   });
 
-  it('opens the edit page at the products section when a product is added', async () => {
+  it('adds a product through the dialog, without leaving the page', async () => {
     const fixture = render();
+    const before = productRows(fixture).length;
 
     buttonNamedIn(fixture.nativeElement, 'إضافة منتج أو خدمة').click();
     await fixture.whenStable();
+    fixture.detectChanges();
 
-    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#products');
+    expect(fixture.nativeElement.textContent).toContain('إضافة منتج أو خدمة');
+    expect(TestBed.inject(Router).url).toBe('/');
+
+    typeIntoDialog(fixture, 'product-name', 'كريم مرطب');
+    typeIntoDialog(fixture, 'product-price', '350');
+    (fixture.nativeElement.querySelector('[data-testid="submit-product"]') as HTMLElement).click();
+    fixture.detectChanges();
+
+    const rows = productRows(fixture);
+    expect(rows).toHaveLength(before + 1);
+    expect(rows.at(-1)?.textContent).toContain('كريم مرطب');
   });
+
+  function typeIntoDialog(fixture: ReturnType<typeof render>, testId: string, value: string): void {
+    const field: HTMLInputElement = fixture.nativeElement.querySelector(
+      `[data-testid="${testId}"]`,
+    );
+    field.value = value;
+    field.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
 
   it('opens the offer form when a promotional offer is added', async () => {
     const fixture = render();
@@ -345,6 +362,10 @@ describe('PlaceDetail edit links', () => {
     expect(TestBed.inject(Router).url).toBe('/');
   });
 });
+
+function productRows(fixture: ComponentFixture<PlaceDetail>): HTMLElement[] {
+  return Array.from(fixture.nativeElement.querySelectorAll('app-place-products-card tbody tr'));
+}
 
 function buttonNamedIn(element: HTMLElement, label: string): HTMLButtonElement {
   return Array.from(element.querySelectorAll('button')).find(

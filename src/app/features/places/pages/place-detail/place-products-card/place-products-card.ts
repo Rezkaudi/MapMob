@@ -6,6 +6,7 @@ import { Badge } from '../../../../../shared/ui/badge/badge';
 import { SectionPanel } from '../../../../../shared/ui/section-panel/section-panel';
 import { PlaceProduct } from '../../../models/place-product';
 import { CurrencySymbolPipe } from '../../../../../shared/pipes/currency-symbol.pipe';
+import { PRODUCT_AVAILABILITY_LABELS } from '../../../models/product-availability';
 
 @Component({
   selector: 'app-place-products-card',
@@ -14,6 +15,7 @@ import { CurrencySymbolPipe } from '../../../../../shared/pipes/currency-symbol.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceProductsCard {
+  protected readonly labels = PRODUCT_AVAILABILITY_LABELS;
   readonly products = input.required<readonly PlaceProduct[]>();
   readonly addProduct = output<void>();
   readonly editProduct = output<PlaceProduct>();

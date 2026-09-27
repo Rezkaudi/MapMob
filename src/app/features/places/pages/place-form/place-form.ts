@@ -143,8 +143,8 @@ export class PlaceForm {
     if (!product) {
       return EMPTY_PRODUCT_DRAFT;
     }
-    const { name, price, currency, imageUrl, orderUrl } = product;
-    return { name, price, currency, imageUrl, orderUrl };
+    const { name, price, currency, isAvailable, imageUrl, orderUrl } = product;
+    return { name, price, currency, isAvailable, imageUrl, orderUrl };
   });
   protected readonly removeProductCopy = computed(() => ({
     ...REMOVE_PRODUCT_COPY,
@@ -202,7 +202,7 @@ export class PlaceForm {
     this.products.update((products) =>
       edited
         ? products.map((one) => (one.id === edited.id ? { ...one, ...draft } : one))
-        : [...products, { ...draft, id: crypto.randomUUID(), isAvailable: true }],
+        : [...products, { ...draft, id: crypto.randomUUID() }],
     );
     this.closeProductDialog();
   }

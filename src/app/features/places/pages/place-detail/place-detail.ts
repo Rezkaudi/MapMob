@@ -10,6 +10,7 @@ import { Toast } from '../../../../shared/ui/toast/toast';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
+import { FormMode } from '../../../../shared/models/form-mode';
 import { PlaceEditSection } from '../../models/place-edit-section';
 import { PlaceProduct } from '../../models/place-product';
 import { ProductDraft } from '../../models/product-draft';
@@ -80,11 +81,15 @@ export class PlaceDetail {
   protected readonly pendingAction = signal<ConfirmAction | null>(null);
   /** The product the dialog is changing, and the one waiting on a delete answer. */
   protected readonly editedProduct = signal<PlaceProduct | null>(null);
+  protected readonly isProductDialogOpen = signal(false);
   protected readonly productToRemove = signal<PlaceProduct | null>(null);
+  protected readonly productDialogMode = computed<FormMode>(() =>
+    this.editedProduct() ? 'edit' : 'create',
+  );
   protected readonly editedProductDraft = computed<ProductDraft>(() => {
     const product = this.editedProduct() ?? EMPTY_PRODUCT_DRAFT;
-    const { name, price, currency, imageUrl, orderUrl } = product;
-    return { name, price, currency, imageUrl, orderUrl };
+    const { name, price, currency, isAvailable, imageUrl, orderUrl } = product;
+    return { name, price, currency, isAvailable, imageUrl, orderUrl };
   });
   protected readonly removeProductCopy = computed(() => {
     const product = this.productToRemove();
@@ -113,20 +118,28 @@ export class PlaceDetail {
     this.router.navigate(['/offers', 'new']);
   }
 
+  protected composeProduct(): void {
+    this.editedProduct.set(null);
+    this.isProductDialogOpen.set(true);
+  }
+
   protected editProduct(product: PlaceProduct): void {
     this.editedProduct.set(product);
+    this.isProductDialogOpen.set(true);
   }
 
   protected closeProductDialog(): void {
+    this.isProductDialogOpen.set(false);
     this.editedProduct.set(null);
   }
 
   protected saveProduct(draft: ProductDraft): void {
     const product = this.editedProduct();
-    if (!product) {
-      return;
+    if (product) {
+      this.store.saveProduct(product.id, draft);
+    } else {
+      this.store.addProduct(draft);
     }
-    this.store.saveProduct(product.id, draft);
     this.closeProductDialog();
   }
 

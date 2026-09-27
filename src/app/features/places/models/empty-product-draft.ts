@@ -5,6 +5,7 @@ export const EMPTY_PRODUCT_DRAFT: ProductDraft = {
   name: '',
   price: 0,
   currency: 'SYP',
+  isAvailable: true,
   imageUrl: '',
   orderUrl: '',
 };

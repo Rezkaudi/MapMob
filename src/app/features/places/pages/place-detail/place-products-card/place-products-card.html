@@ -59,7 +59,7 @@
               </td>
               <td class="px-4 py-[14px]">
                 <app-badge [tone]="product.isAvailable ? 'success' : 'neutral'">
-                  {{ product.isAvailable ? 'متاح' : 'غير متاح' }}
+                  {{ product.isAvailable ? labels.available : labels.unavailable }}
                 </app-badge>
               </td>
               <td class="px-4 py-[14px]">

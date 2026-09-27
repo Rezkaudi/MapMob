@@ -15,9 +15,11 @@ import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-s
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
 import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
 import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
+import { PRODUCT_AVAILABILITY_CHOICES, availabilityValue } from '../../models/product-availability';
 import { ProductDraft } from '../../models/product-draft';
 import { PRODUCT_FORM_COPY } from './product-form-copy';
 
+const AVAILABLE = 'available';
 /** Stands in for a file name when the picture came back from the server. */
 const SAVED_IMAGE_LABEL = 'الصورة الحالية';
 
@@ -35,10 +37,14 @@ export class ProductDialog {
   readonly cancelled = output<void>();
 
   protected readonly copy = computed(() => PRODUCT_FORM_COPY[this.mode()]);
+  protected readonly availabilityChoices = PRODUCT_AVAILABILITY_CHOICES;
   protected readonly name = linkedSignal(() => this.initialDraft().name);
   protected readonly price = linkedSignal(() => priceText(this.initialDraft().price));
   protected readonly currency = linkedSignal(() => this.initialDraft().currency);
   protected readonly orderUrl = linkedSignal(() => this.initialDraft().orderUrl);
+  protected readonly availability = linkedSignal(() =>
+    availabilityValue(this.initialDraft().isAvailable),
+  );
   protected readonly imageUrl = linkedSignal(() => this.initialDraft().imageUrl);
   protected readonly pickedImageName = signal('');
   protected readonly imageName = computed(() => this.pickedImageName() || SAVED_IMAGE_LABEL);
@@ -57,6 +63,10 @@ export class ProductDialog {
 
   protected onCurrencyChange(currency: CurrencyCode): void {
     this.currency.set(currency);
+  }
+
+  protected onAvailabilityChange(event: Event): void {
+    this.availability.set((event.target as HTMLSelectElement).value);
   }
 
   protected onOrderUrlInput(event: Event): void {
@@ -85,6 +95,7 @@ export class ProductDialog {
       name: this.name().trim(),
       price: Number(this.price()),
       currency: this.currency(),
+      isAvailable: this.availability() === AVAILABLE,
       imageUrl: this.imageUrl(),
       orderUrl: this.orderUrl().trim(),
     });

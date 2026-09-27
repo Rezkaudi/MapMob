@@ -73,28 +73,55 @@
         />
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <app-field-label text="السعر" forId="product-price" [isRequired]="true" />
-        <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
-        <div class="relative">
-          <input
-            id="product-price"
-            data-testid="product-price"
-            type="number"
-            min="0"
-            step="0.01"
-            class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-3.5 pl-[92px] text-right font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
-            placeholder="0"
-            [value]="price()"
-            (input)="onPriceInput($event)"
-          />
-          <app-currency-select
-            class="absolute end-3.5 top-1/2 -translate-y-1/2"
-            variant="chip"
-            label="عملة السعر"
-            [currency]="currency()"
-            (currencyChange)="onCurrencyChange($event)"
-          />
+      <!-- RTL: the price keeps the right column and the status sits to its left, as the design pairs them. -->
+      <div class="grid grid-cols-2 gap-5">
+        <div class="flex flex-col gap-1.5">
+          <app-field-label text="السعر" forId="product-price" [isRequired]="true" />
+          <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
+          <div class="relative">
+            <input
+              id="product-price"
+              data-testid="product-price"
+              type="number"
+              min="0"
+              step="0.01"
+              class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-3.5 pl-[92px] text-right font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+              placeholder="0"
+              [value]="price()"
+              (input)="onPriceInput($event)"
+            />
+            <app-currency-select
+              class="absolute end-3.5 top-1/2 -translate-y-1/2"
+              variant="chip"
+              label="عملة السعر"
+              [currency]="currency()"
+              (currencyChange)="onCurrencyChange($event)"
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <app-field-label text="الحالة" forId="product-status" [isRequired]="true" />
+          <div class="relative">
+            <select
+              id="product-status"
+              data-testid="product-status"
+              class="h-11 w-full appearance-none rounded-lg bg-[#f2f4f6] pr-3.5 pl-9 text-right text-[14px] text-text-primary outline-none"
+              [value]="availability()"
+              (change)="onAvailabilityChange($event)"
+            >
+              @for (choice of availabilityChoices; track choice.value) {
+                <option [value]="choice.value" [selected]="choice.value === availability()">
+                  {{ choice.label }}
+                </option>
+              }
+            </select>
+            <app-icon
+              name="chevron-down"
+              [size]="14"
+              class="pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-text-primary"
+            />
+          </div>
         </div>
       </div>
 

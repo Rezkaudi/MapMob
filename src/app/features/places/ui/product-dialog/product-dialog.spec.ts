@@ -24,6 +24,7 @@ describe('ProductDialog', () => {
     expect(text).toContain('الصورة');
     expect(text).toContain('اسم المنتج أو الخدمة');
     expect(text).toContain('السعر');
+    expect(text).toContain('الحالة');
     expect(text).toContain('رابط الطلب');
     expect(text).toContain('يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.');
   });
@@ -57,6 +58,7 @@ describe('ProductDialog', () => {
         name: 'سيروم تحت العين',
         price: 200,
         currency: 'SYP',
+        isAvailable: true,
         imageUrl: '',
         orderUrl: 'https://shop.example.com/serum',
       },
@@ -92,5 +94,48 @@ describe('ProductDialog', () => {
     fixture.nativeElement.querySelector('[data-testid="close-product-dialog"]').click();
 
     expect(cancels).toBe(2);
+  });
+
+  it('starts a new product as متاح and can mark it غير متاح instead', () => {
+    const fixture = build();
+    const drafts: ProductDraft[] = [];
+    fixture.componentInstance.submitted.subscribe((draft) => drafts.push(draft));
+
+    const status: HTMLSelectElement = fixture.nativeElement.querySelector(
+      '[data-testid="product-status"]',
+    );
+    expect(status.value).toBe('available');
+    expect([...status.options].map((option) => option.textContent?.trim())).toEqual([
+      'متاح',
+      'غير متاح',
+    ]);
+
+    typeInto(fixture, 'product-name', 'سيروم');
+    typeInto(fixture, 'product-price', '200');
+    status.value = 'unavailable';
+    status.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="submit-product"]').click();
+
+    expect(drafts[0].isAvailable).toBe(false);
+  });
+
+  it('starts on the status the edited product already has', () => {
+    const fixture = TestBed.createComponent(ProductDialog);
+    fixture.componentRef.setInput('mode', 'edit');
+    fixture.componentRef.setInput('initialDraft', {
+      name: 'سيروم',
+      price: 200,
+      currency: 'SYP',
+      isAvailable: false,
+      imageUrl: '',
+      orderUrl: '',
+    });
+    fixture.detectChanges();
+
+    const status: HTMLSelectElement = fixture.nativeElement.querySelector(
+      '[data-testid="product-status"]',
+    );
+    expect(status.value).toBe('unavailable');
   });
 });
