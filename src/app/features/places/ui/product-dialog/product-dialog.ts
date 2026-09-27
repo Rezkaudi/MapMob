@@ -1,12 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  computed,
+  input,
+  linkedSignal,
+  output,
+  signal,
+} from '@angular/core';
+import { FormMode } from '../../../../shared/models/form-mode';
 import { CurrencyCode } from '../../../../shared/money/currency-code';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-select';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
 import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
+import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { ProductDraft } from '../../models/product-draft';
+import { PRODUCT_FORM_COPY } from './product-form-copy';
 
-const DEFAULT_CURRENCY: CurrencyCode = 'SYP';
+/** Stands in for a file name when the picture came back from the server. */
+const SAVED_IMAGE_LABEL = 'الصورة الحالية';
 
 @Component({
   selector: 'app-product-dialog',
@@ -15,15 +28,20 @@ const DEFAULT_CURRENCY: CurrencyCode = 'SYP';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDialog {
+  readonly mode = input<FormMode>('create');
+  /** What the fields start with. Editing passes the product being changed. */
+  readonly initialDraft = input<ProductDraft>(EMPTY_PRODUCT_DRAFT);
   readonly submitted = output<ProductDraft>();
   readonly cancelled = output<void>();
 
-  protected readonly currency = signal<CurrencyCode>(DEFAULT_CURRENCY);
-  protected readonly name = signal('');
-  protected readonly price = signal('');
-  protected readonly orderUrl = signal('');
-  protected readonly imageUrl = signal('');
-  protected readonly imageName = signal('');
+  protected readonly copy = computed(() => PRODUCT_FORM_COPY[this.mode()]);
+  protected readonly name = linkedSignal(() => this.initialDraft().name);
+  protected readonly price = linkedSignal(() => priceText(this.initialDraft().price));
+  protected readonly currency = linkedSignal(() => this.initialDraft().currency);
+  protected readonly orderUrl = linkedSignal(() => this.initialDraft().orderUrl);
+  protected readonly imageUrl = linkedSignal(() => this.initialDraft().imageUrl);
+  protected readonly pickedImageName = signal('');
+  protected readonly imageName = computed(() => this.pickedImageName() || SAVED_IMAGE_LABEL);
 
   protected readonly isComplete = computed(
     () => this.name().trim().length > 0 && this.price().trim().length > 0,
@@ -50,12 +68,12 @@ export class ProductDialog {
     if (!file) {
       return;
     }
-    this.imageName.set(file.name);
+    this.pickedImageName.set(file.name);
     this.imageUrl.set(URL.createObjectURL(file));
   }
 
   protected removeImage(): void {
-    this.imageName.set('');
+    this.pickedImageName.set('');
     this.imageUrl.set('');
   }
 
@@ -71,4 +89,14 @@ export class ProductDialog {
       orderUrl: this.orderUrl().trim(),
     });
   }
+
+  @HostListener('document:keydown.escape')
+  protected cancelOnEscape(): void {
+    this.cancelled.emit();
+  }
+}
+
+/** An empty box reads better than "0" when a product is being added. */
+function priceText(price: number): string {
+  return price > 0 ? String(price) : '';
 }

@@ -32,6 +32,7 @@ import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
 import { PlaceDetail } from '../../models/place-detail';
+import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { PlaceProduct } from '../../models/place-product';
 import { ProductDraft } from '../../models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
@@ -41,6 +42,8 @@ import { toSavedVideoFiles } from '../../state/place-video-files';
 import { PlaceFormStore } from '../../state/place-form.store';
 import { withSavedOption } from '../../state/with-saved-option';
 import { toWorkingWeek } from '../../state/working-week-from-rows';
+import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
+import { FormMode } from '../../../../shared/models/form-mode';
 import { ProductDialog } from '../../ui/product-dialog/product-dialog';
 import { ProductsEditor } from './products-editor/products-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
@@ -48,6 +51,13 @@ import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor'
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
 const REGIONS = ['المركز', 'الشمال', 'الجنوب', 'الشرق', 'الغرب'];
+
+/** The delete step the design puts in front of removing a product. */
+const REMOVE_PRODUCT_COPY = {
+  title: 'حذف المنتج أو الخدمة',
+  confirmLabel: 'حذف',
+  warning: 'لا يمكن التراجع عن هذا الإجراء.',
+};
 
 const ALL_DAY_OPENS_AT = '00:00';
 const ALL_DAY_CLOSES_AT = '23:59';
@@ -62,6 +72,7 @@ const ALL_DAY_CLOSES_AT = '23:59';
     MediaPicker,
     FormSection,
     PackageQuotaBadge,
+    ConfirmDialog,
     ProductDialog,
     ProductsEditor,
     Skeleton,
@@ -113,6 +124,9 @@ export class PlaceForm {
   protected readonly images = signal<readonly MediaFile[]>([]);
   protected readonly products = signal<readonly PlaceProduct[]>([]);
   protected readonly isAddingProduct = signal(false);
+  /** The product the dialog is changing, or `null` while one is being added. */
+  protected readonly editedProduct = signal<PlaceProduct | null>(null);
+  protected readonly productToRemove = signal<PlaceProduct | null>(null);
   protected readonly videos = signal<readonly MediaFile[]>([]);
 
   /** The control's value only reaches a computed through its value stream. */
@@ -121,6 +135,21 @@ export class PlaceForm {
   });
   protected readonly currentPackage = computed(() => this.selectedPackage());
   protected readonly productLimit = computed(() => PACKAGE_PRODUCT_LIMIT[this.currentPackage()]);
+  protected readonly productDialogMode = computed<FormMode>(() =>
+    this.editedProduct() ? 'edit' : 'create',
+  );
+  protected readonly editedProductDraft = computed<ProductDraft>(() => {
+    const product = this.editedProduct();
+    if (!product) {
+      return EMPTY_PRODUCT_DRAFT;
+    }
+    const { name, price, currency, imageUrl, orderUrl } = product;
+    return { name, price, currency, imageUrl, orderUrl };
+  });
+  protected readonly removeProductCopy = computed(() => ({
+    ...REMOVE_PRODUCT_COPY,
+    message: `هل تريد حذف "${this.productToRemove()?.name ?? ''}" من قائمة المنتجات والخدمات؟`,
+  }));
   protected readonly mediaLimit = computed(() => PACKAGE_MEDIA_LIMIT[this.currentPackage()]);
   protected readonly packageLabel = computed(() => PLACE_PACKAGE_LABEL[this.currentPackage()]);
 
@@ -154,23 +183,45 @@ export class PlaceForm {
   }
 
   protected composeProduct(): void {
+    this.editedProduct.set(null);
+    this.isAddingProduct.set(true);
+  }
+
+  protected editProduct(product: PlaceProduct): void {
+    this.editedProduct.set(product);
     this.isAddingProduct.set(true);
   }
 
   protected closeProductDialog(): void {
     this.isAddingProduct.set(false);
+    this.editedProduct.set(null);
   }
 
-  protected addProduct(draft: ProductDraft): void {
-    this.products.update((products) => [
-      ...products,
-      { ...draft, id: crypto.randomUUID(), isAvailable: true },
-    ]);
+  protected saveProduct(draft: ProductDraft): void {
+    const edited = this.editedProduct();
+    this.products.update((products) =>
+      edited
+        ? products.map((one) => (one.id === edited.id ? { ...one, ...draft } : one))
+        : [...products, { ...draft, id: crypto.randomUUID(), isAvailable: true }],
+    );
     this.closeProductDialog();
   }
 
-  protected removeProduct(product: PlaceProduct): void {
+  protected askToRemoveProduct(product: PlaceProduct): void {
+    this.productToRemove.set(product);
+  }
+
+  protected cancelRemoveProduct(): void {
+    this.productToRemove.set(null);
+  }
+
+  protected confirmRemoveProduct(): void {
+    const product = this.productToRemove();
+    if (!product) {
+      return;
+    }
     this.products.update((products) => products.filter((one) => one.id !== product.id));
+    this.productToRemove.set(null);
   }
 
   protected startPickingOnMap(): void {

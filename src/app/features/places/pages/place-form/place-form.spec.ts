@@ -26,6 +26,18 @@ function fieldValue(fixture: ReturnType<typeof render>, selector: string): strin
   return (fixture.nativeElement.querySelector(selector) as HTMLInputElement).value;
 }
 
+function click(fixture: ReturnType<typeof render>, selector: string): void {
+  (fixture.nativeElement.querySelector(selector) as HTMLElement).click();
+  fixture.detectChanges();
+}
+
+function typeInto(fixture: ReturnType<typeof render>, testId: string, value: string): void {
+  const field: HTMLInputElement = fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
+  field.value = value;
+  field.dispatchEvent(new Event('input'));
+  fixture.detectChanges();
+}
+
 const REQUIRED_VALUES = {
   name: 'صيدلية الحياة',
   ownerPhone: '0955000000',
@@ -224,6 +236,50 @@ describe('PlaceForm', () => {
     expect(fieldValue(fixture, 'select#status')).toBe(detail.status);
   });
 
+  it('opens the dialog filled in when editing a product, and replaces it on save', () => {
+    const fixture = render('place-1');
+    const firstProduct = fixture.componentInstance['products']()[0];
+
+    click(fixture, '[data-testid="edit-product"]');
+
+    expect(fieldValue(fixture, '[data-testid="product-name"]')).toBe(firstProduct.name);
+    expect(fieldValue(fixture, '[data-testid="product-price"]')).toBe(String(firstProduct.price));
+    expect(fixture.nativeElement.textContent).toContain('تعديل منتج أو خدمة');
+
+    typeInto(fixture, 'product-name', 'اسم بعد التعديل');
+    click(fixture, '[data-testid="submit-product"]');
+
+    const names = fixture.componentInstance['products']().map((one) => one.name);
+    expect(names[0]).toBe('اسم بعد التعديل');
+    expect(names).toHaveLength(fixture.componentInstance['products']().length);
+    expect(fixture.nativeElement.querySelector('app-product-dialog')).toBeNull();
+  });
+
+  it('asks before deleting a product, and keeps it when the admin backs out', () => {
+    const fixture = render('place-1');
+    const before = fixture.componentInstance['products']().length;
+
+    click(fixture, '[data-testid="remove-product"]');
+    expect(fixture.nativeElement.querySelector('app-confirm-dialog')).not.toBeNull();
+    expect(fixture.componentInstance['products']()).toHaveLength(before);
+
+    click(fixture, '[data-testid="cancel-confirm"]');
+    expect(fixture.nativeElement.querySelector('app-confirm-dialog')).toBeNull();
+    expect(fixture.componentInstance['products']()).toHaveLength(before);
+  });
+
+  it('deletes the product once the admin confirms', () => {
+    const fixture = render('place-1');
+    const removed = fixture.componentInstance['products']()[0];
+
+    click(fixture, '[data-testid="remove-product"]');
+    click(fixture, '[data-testid="confirm-action"]');
+
+    const ids = fixture.componentInstance['products']().map((one) => one.id);
+    expect(ids).not.toContain(removed.id);
+    expect(fixture.nativeElement.querySelector('app-confirm-dialog')).toBeNull();
+  });
+
   it('shows the saved gallery, videos and products when editing', () => {
     const fixture = render('place-1');
     const detail = createPlaceDetail();
@@ -312,7 +368,9 @@ describe('PlaceForm sections', () => {
 
   it('gives every section the anchor the detail page links to', () => {
     const sections: HTMLElement[] = Array.from(
-      render().nativeElement.querySelectorAll('form > app-form-section, form > app-products-editor'),
+      render().nativeElement.querySelectorAll(
+        'form > app-form-section, form > app-products-editor',
+      ),
     );
 
     expect(sections.map((section) => section.id)).toEqual([

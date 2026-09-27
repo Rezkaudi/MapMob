@@ -365,7 +365,8 @@
       [limit]="productLimit()"
       [packageLabel]="packageLabel()"
       (addProduct)="composeProduct()"
-      (removeProduct)="removeProduct($event)"
+      (editProduct)="editProduct($event)"
+      (removeProduct)="askToRemoveProduct($event)"
     />
 
     <!--
@@ -405,5 +406,22 @@
 }
 
 @if (isAddingProduct()) {
-  <app-product-dialog (submitted)="addProduct($event)" (cancelled)="closeProductDialog()" />
+  <app-product-dialog
+    [mode]="productDialogMode()"
+    [initialDraft]="editedProductDraft()"
+    (submitted)="saveProduct($event)"
+    (cancelled)="closeProductDialog()"
+  />
+}
+
+@if (productToRemove()) {
+  <app-confirm-dialog
+    [title]="removeProductCopy().title"
+    [message]="removeProductCopy().message"
+    [warning]="removeProductCopy().warning"
+    [confirmLabel]="removeProductCopy().confirmLabel"
+    tone="danger"
+    (confirmed)="confirmRemoveProduct()"
+    (cancelled)="cancelRemoveProduct()"
+  />
 }
