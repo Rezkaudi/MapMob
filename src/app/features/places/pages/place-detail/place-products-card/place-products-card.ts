@@ -5,10 +5,11 @@ import { ActionMenu } from '../../../../../shared/ui/action-menu/action-menu';
 import { Badge } from '../../../../../shared/ui/badge/badge';
 import { SectionPanel } from '../../../../../shared/ui/section-panel/section-panel';
 import { PlaceProduct } from '../../../models/place-product';
+import { CurrencySymbolPipe } from '../../../../../shared/pipes/currency-symbol.pipe';
 
 @Component({
   selector: 'app-place-products-card',
-  imports: [AppIcon, ActionMenu, Badge, SectionPanel, DecimalPipe],
+  imports: [AppIcon, ActionMenu, Badge, SectionPanel, DecimalPipe, CurrencySymbolPipe],
   templateUrl: './place-products-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

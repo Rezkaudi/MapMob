@@ -90,12 +90,13 @@
             [value]="price()"
             (input)="onPriceInput($event)"
           />
-          <span
-            class="pointer-events-none absolute end-3.5 top-1/2 flex h-7 -translate-y-1/2 items-center gap-1 rounded bg-[#eceef0] px-2.5 text-[12px] font-bold text-text-primary"
-          >
-            <app-icon name="chevron-down" [size]="14" />
-            <span>{{ currency }}</span>
-          </span>
+          <app-currency-select
+            class="absolute end-3.5 top-1/2 -translate-y-1/2"
+            variant="chip"
+            label="عملة السعر"
+            [currency]="currency()"
+            (currencyChange)="onCurrencyChange($event)"
+          />
         </div>
       </div>
 

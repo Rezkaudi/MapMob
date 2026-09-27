@@ -1,8 +1,9 @@
+import { CURRENCY_SYMBOLS } from '../../../shared/money/currency-symbols';
 import { BillingCycle } from '../models/billing-cycle';
 import { PackagePlan } from '../models/package-plan';
 import { PlanLimitRow, buildPlanLimitRows } from './plan-limit-rows';
 
-/** The price line: a big amount, the currency beside it, then the billing period. */
+/** The price line: a big amount, the currency sign beside it, then the billing period. */
 export interface PlanPriceDisplay {
   readonly amount: string;
   readonly currency: string | null;
@@ -20,9 +21,17 @@ function buildPrice(plan: PackagePlan, cycle: BillingCycle): PlanPriceDisplay {
     return { amount: 'مجاناً', currency: null, period: '/ دائماً' };
   }
   if (cycle === 'yearly' && plan.yearlyPrice !== null) {
-    return { amount: String(plan.yearlyPrice), currency: plan.currency, period: '/ سنوياً' };
+    return {
+      amount: String(plan.yearlyPrice),
+      currency: CURRENCY_SYMBOLS[plan.currency],
+      period: '/ سنوياً',
+    };
   }
-  return { amount: String(plan.monthlyPrice), currency: plan.currency, period: '/ شهرياً' };
+  return {
+    amount: String(plan.monthlyPrice),
+    currency: CURRENCY_SYMBOLS[plan.currency],
+    period: '/ شهرياً',
+  };
 }
 
 function buildSubscriberLine(plan: PackagePlan): string {

@@ -11,7 +11,7 @@ function plan(patch: Partial<PackagePlan> = {}): PackagePlan {
     badge: 'الأكثر مبيعاً',
     monthlyPrice: 20,
     yearlyPrice: 192,
-    currency: 'دولار',
+    currency: 'USD',
     subscriberCount: 620,
     limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5 },
     features: ['كل مزايا الباقة المجانية', 'أولوية متقدمة في نتائج البحث والتصفية'],
@@ -62,7 +62,7 @@ describe('PlanCard', () => {
     const fixture = render();
 
     expect(textOf(fixture, '[data-role="amount"]')).toBe('20');
-    expect(textOf(fixture, '[data-role="currency"]')).toBe('دولار');
+    expect(textOf(fixture, '[data-role="currency"]')).toBe('$');
     expect(textOf(fixture, '[data-role="period"]')).toBe('/ شهرياً');
   });
 

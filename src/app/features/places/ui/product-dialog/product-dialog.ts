@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, output, signal } from '@angular/core';
+import { CurrencyCode } from '../../../../shared/money/currency-code';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-select';
 import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
 import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
 import { ProductDraft } from '../../models/product-draft';
 
-/** Syrian pound, the only currency the design offers. */
-const CURRENCY = 'ل.س';
+const DEFAULT_CURRENCY: CurrencyCode = 'SYP';
 
 @Component({
   selector: 'app-product-dialog',
-  imports: [AppIcon, FieldLabel, FileDropzone],
+  imports: [AppIcon, CurrencySelect, FieldLabel, FileDropzone],
   templateUrl: './product-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -17,7 +18,7 @@ export class ProductDialog {
   readonly submitted = output<ProductDraft>();
   readonly cancelled = output<void>();
 
-  protected readonly currency = CURRENCY;
+  protected readonly currency = signal<CurrencyCode>(DEFAULT_CURRENCY);
   protected readonly name = signal('');
   protected readonly price = signal('');
   protected readonly orderUrl = signal('');
@@ -34,6 +35,10 @@ export class ProductDialog {
 
   protected onPriceInput(event: Event): void {
     this.price.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onCurrencyChange(currency: CurrencyCode): void {
+    this.currency.set(currency);
   }
 
   protected onOrderUrlInput(event: Event): void {
@@ -61,6 +66,7 @@ export class ProductDialog {
     this.submitted.emit({
       name: this.name().trim(),
       price: Number(this.price()),
+      currency: this.currency(),
       imageUrl: this.imageUrl(),
       orderUrl: this.orderUrl().trim(),
     });

@@ -103,4 +103,22 @@ describe('PlanFormDialog', () => {
 
     expect(cancelled).toHaveBeenCalled();
   });
+
+  it('saves the currency picked beside either price, for the whole plan', () => {
+    const fixture = render();
+    let saved: PlanDraft | null = null;
+    fixture.componentInstance.saved.subscribe((draft: PlanDraft) => (saved = draft));
+
+    const pickers = element(fixture).querySelectorAll<HTMLSelectElement>(
+      '[data-testid="currency-select"]',
+    );
+    expect(pickers).toHaveLength(2);
+    pickers[1].value = 'SYP';
+    pickers[1].dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expect(pickers[0].value).toBe('SYP');
+    element(fixture).querySelector('form')?.dispatchEvent(new Event('submit'));
+    expect(saved!.currency).toBe('SYP');
+  });
 });

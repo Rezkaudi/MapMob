@@ -52,7 +52,7 @@
               <span
                 class="shrink-0 rounded-md bg-primary-tint px-2 py-0.5 font-latin text-[13px]/[20px] font-medium text-primary"
               >
-                {{ product.price | number: '1.0-2' }} {{ product.currency }}
+                {{ product.price | number: '1.0-2' }} {{ product.currency | currencySign }}
               </span>
             </div>
           </div>

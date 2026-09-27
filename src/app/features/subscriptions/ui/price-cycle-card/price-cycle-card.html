@@ -13,24 +13,28 @@
     >
   </div>
 
-  <label class="flex flex-col gap-[3px]">
-    <span class="text-[12px]/[16px] text-text-secondary">{{ priceLabel() }}</span>
+  <!-- The caption names the price alone, so it cannot steal a click from the currency list. -->
+  <div class="flex flex-col gap-[3px]">
+    <label [attr.for]="priceFieldId" class="text-[12px]/[16px] text-text-secondary">
+      {{ priceLabel() }}
+    </label>
     <span class="flex h-[42px] items-stretch rounded-lg border border-border bg-surface">
-      <span
-        class="flex items-center gap-1 rounded-s-lg border-e border-border bg-surface-muted px-2 text-[12px]/[16px] font-bold text-text-primary"
-      >
-        <app-icon name="chevron-down-thin" [size]="14" class="text-[#94a3b8]" aria-hidden="true" />
-        <span>{{ currency() }}</span>
-      </span>
+      <app-currency-select
+        class="flex"
+        variant="cap"
+        [label]="priceLabel() + ' — العملة'"
+        [currency]="currency()"
+        (currencyChange)="currencyChange.emit($event)"
+      />
       <input
         type="number"
         min="0"
         dir="ltr"
         class="w-full flex-1 bg-transparent px-3.5 text-right text-[16px]/[24px] font-extrabold text-[#1e293b] outline-none"
-        [attr.aria-label]="priceLabel()"
+        [id]="priceFieldId"
         [value]="control().value"
         (input)="typePrice($event)"
       />
     </span>
-  </label>
+  </div>
 </div>

@@ -1,3 +1,4 @@
+import { CurrencyCode } from '../../../shared/money/currency-code';
 import { PlanLimits } from './plan-limits';
 import { PlanTier } from './plan-tier';
 
@@ -12,7 +13,7 @@ export interface PackagePlan {
   readonly monthlyPrice: number;
   /** The yearly price after the discount, or `null` when the tier has no yearly plan. */
   readonly yearlyPrice: number | null;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly subscriberCount: number;
   readonly limits: PlanLimits;
   readonly features: readonly string[];

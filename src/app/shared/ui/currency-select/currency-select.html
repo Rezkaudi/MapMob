@@ -1,0 +1,23 @@
+<!-- The native select lies invisible over the badge, so the design shows while the browser opens its own list. -->
+<span data-role="currency-box" class="relative flex items-center" [class]="skin().box">
+  <app-icon
+    [name]="skin().icon"
+    [size]="skin().iconSize"
+    [class]="skin().iconColor"
+    aria-hidden="true"
+  />
+  <span [class]="skin().symbol">{{ symbol() }}</span>
+  <select
+    data-testid="currency-select"
+    class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+    [attr.aria-label]="label()"
+    [value]="currency()"
+    (change)="pick($event)"
+  >
+    @for (option of options; track option.code) {
+      <option [value]="option.code" [selected]="option.code === currency()">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+</span>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
-import { formatSyrianPounds } from '../../../../shared/formatting/syrian-pounds';
+import { formatMoney } from '../../../../shared/money/format-money';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { OfferItem } from '../../models/offer-item';
 
@@ -31,7 +31,7 @@ export class OfferItemPicker {
       .filter((item) => !term || item.name.includes(term))
       .map((item) => ({
         item,
-        priceLabel: formatSyrianPounds(item.price),
+        priceLabel: formatMoney(item.price, item.currency),
         isSelected: selected.has(item.id),
       }));
   });

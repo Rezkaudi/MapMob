@@ -1,1 +1,1 @@
-export type CurrencyCode = 'SYP' | 'USD';
+export type { CurrencyCode } from '../../../shared/money/currency-code';

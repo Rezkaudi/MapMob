@@ -147,7 +147,7 @@ function editDraft(): PlanDraft {
     isActive: true,
     monthlyPrice: 20,
     yearlyPrice: 950,
-    currency: 'دولار',
+    currency: 'USD',
     limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30 },
     features: ['كل مزايا الباقة المجانية'],
   };

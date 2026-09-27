@@ -55,7 +55,7 @@
                 </button>
               </td>
               <td class="px-4 py-[14px] font-latin text-[14px] text-text-secondary">
-                {{ product.price | number: '1.0-2' }} {{ product.currency }}
+                {{ product.price | number: '1.0-2' }} {{ product.currency | currencySign }}
               </td>
               <td class="px-4 py-[14px]">
                 <app-badge [tone]="product.isAvailable ? 'success' : 'neutral'">

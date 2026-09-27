@@ -1,4 +1,5 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { CurrencyCode } from '../../../shared/money/currency-code';
 import { PackagePlan } from '../models/package-plan';
 import { PlanDraft } from '../models/plan-draft';
 import { PlanLimits } from '../models/plan-limits';
@@ -36,7 +37,7 @@ export function buildPlanFormGroup(plan: PackagePlan) {
       Validators.min(0),
     ]),
     yearlyPrice: new FormControl<number | null>(plan.yearlyPrice, [Validators.min(0)]),
-    currency: textControl(plan.currency),
+    currency: new FormControl<CurrencyCode>(plan.currency, { nonNullable: true }),
     limits: buildLimitsGroup(plan.limits),
     features: new FormArray(plan.features.map((feature) => textControl(feature))),
   });

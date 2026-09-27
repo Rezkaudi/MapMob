@@ -7,7 +7,7 @@ import { OfferFormStore } from './offer-form.store';
 
 const DETAIL = buildOfferDetail();
 const OPTIONS = { places: [DETAIL.place], categoryNames: ['ألبسة'] };
-const ITEMS = [{ id: 'place-7-item-1', name: 'شامبو 1', price: 200 }];
+const ITEMS = [{ id: 'place-7-item-1', name: 'شامبو 1', price: 200, currency: 'SYP' as const }];
 
 function createStore(overrides: Partial<OfferRepository> = {}) {
   const saved: string[] = [];

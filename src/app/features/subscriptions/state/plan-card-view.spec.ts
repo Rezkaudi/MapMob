@@ -11,7 +11,7 @@ function plan(patch: Partial<PackagePlan> = {}): PackagePlan {
     badge: 'الأكثر مبيعاً',
     monthlyPrice: 20,
     yearlyPrice: 192,
-    currency: 'دولار',
+    currency: 'USD',
     subscriberCount: 620,
     limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5 },
     features: ['كل مزايا الباقة المجانية'],
@@ -24,19 +24,19 @@ describe('buildPlanCardView', () => {
   it('prices a paid plan as amount, currency and period', () => {
     const view = buildPlanCardView(plan());
 
-    expect(view.price).toEqual({ amount: '20', currency: 'دولار', period: '/ شهرياً' });
+    expect(view.price).toEqual({ amount: '20', currency: '$', period: '/ شهرياً' });
   });
 
   it('prices a paid plan by the year when the yearly cycle is picked', () => {
     const view = buildPlanCardView(plan(), 'yearly');
 
-    expect(view.price).toEqual({ amount: '192', currency: 'دولار', period: '/ سنوياً' });
+    expect(view.price).toEqual({ amount: '192', currency: '$', period: '/ سنوياً' });
   });
 
   it('keeps the monthly price when a plan has no yearly one', () => {
     const view = buildPlanCardView(plan({ yearlyPrice: null }), 'yearly');
 
-    expect(view.price).toEqual({ amount: '20', currency: 'دولار', period: '/ شهرياً' });
+    expect(view.price).toEqual({ amount: '20', currency: '$', period: '/ شهرياً' });
   });
 
   it('stays free on the yearly cycle', () => {

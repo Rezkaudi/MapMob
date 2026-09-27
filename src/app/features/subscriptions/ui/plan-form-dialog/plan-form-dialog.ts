@@ -7,6 +7,7 @@ import {
   output,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyCode } from '../../../../shared/money/currency-code';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { PackagePlan } from '../../models/package-plan';
 import { PlanDraft } from '../../models/plan-draft';
@@ -37,6 +38,11 @@ export class PlanFormDialog {
   protected readonly subtitle = computed(
     () => `تعديل تفاصيل وأسعار «${this.plan().name}» في المنصة`,
   );
+
+  /** Both cycle cards share one currency, so either picker sets it for the plan. */
+  protected pickCurrency(currency: CurrencyCode): void {
+    this.form().controls.currency.setValue(currency);
+  }
 
   protected limitControl(field: PlanLimitField): FormControl<number> {
     return this.form().controls.limits.controls[field.key];

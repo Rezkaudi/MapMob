@@ -6,7 +6,7 @@ const PRODUCT: PlaceProduct = {
   id: 'p1',
   name: 'تنظيف بشرة عميق',
   price: 150,
-  currency: 'ل.س',
+  currency: 'SYP',
   imageUrl: '',
   isAvailable: true,
   orderUrl: '',

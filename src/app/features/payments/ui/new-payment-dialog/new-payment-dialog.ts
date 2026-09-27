@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { formatGroupedNumber } from '../../../../shared/formatting/grouped-number';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-select';
 import { DialogFrame } from '../../../../shared/ui/dialog-frame/dialog-frame';
 import { SegmentedChoice } from '../../../../shared/ui/segmented-choice/segmented-choice';
 import { SlashDatePipe } from '../../../../shared/pipes/slash-date.pipe';
-import { PAYMENT_CURRENCY_SYMBOLS } from '../../models/payment-currency';
+import { PaymentCurrency } from '../../models/payment-currency';
 import { PAYMENT_KIND_CHOICES, PaymentKind } from '../../models/payment-kind';
 import { PAYMENT_TERM_CHOICES, PaymentTerm } from '../../models/payment-term';
 import { NewPaymentStore } from '../../state/new-payment.store';
@@ -15,7 +16,14 @@ const CASH_LABEL = 'نقدي';
 
 @Component({
   selector: 'app-new-payment-dialog',
-  imports: [AppIcon, CurrentSubscriptionCard, DialogFrame, SegmentedChoice, SlashDatePipe],
+  imports: [
+    AppIcon,
+    CurrencySelect,
+    CurrentSubscriptionCard,
+    DialogFrame,
+    SegmentedChoice,
+    SlashDatePipe,
+  ],
   templateUrl: './new-payment-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -23,7 +31,6 @@ export class NewPaymentDialog {
   protected readonly store = inject(NewPaymentStore);
   protected readonly kindChoices = PAYMENT_KIND_CHOICES;
   protected readonly termChoices = PAYMENT_TERM_CHOICES;
-  protected readonly currencySymbols = PAYMENT_CURRENCY_SYMBOLS;
   protected readonly cashLabel = CASH_LABEL;
   protected readonly groupedAmount = computed(() => formatGroupedNumber(this.store.amount()));
 
@@ -46,6 +53,10 @@ export class NewPaymentDialog {
   /** The box shows "300,000", so the commas come back out before the number is read. */
   protected onAmountInput(event: Event): void {
     this.store.setAmount(Number((event.target as HTMLInputElement).value.replace(/,/g, '')) || 0);
+  }
+
+  protected onCurrencyChange(currency: PaymentCurrency): void {
+    this.store.setCurrency(currency);
   }
 
   protected onPaidAtInput(event: Event): void {

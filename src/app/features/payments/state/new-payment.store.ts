@@ -26,6 +26,8 @@ interface NewPaymentState {
   readonly term: PaymentTerm;
   /** `null` while the amount still follows the plan's price. */
   readonly typedAmount: number | null;
+  /** `null` while the currency still follows the merchant's own. */
+  readonly pickedCurrency: PaymentCurrency | null;
   readonly paidAt: string;
   readonly notes: string;
   readonly isSaving: boolean;
@@ -33,6 +35,9 @@ interface NewPaymentState {
 }
 
 const EMPTY_OPTIONS: PaymentFormOptions = { merchants: [], plans: [] };
+
+/** Used until a merchant is loaded and before the admin picks another currency. */
+const DEFAULT_CURRENCY: PaymentCurrency = 'SYP';
 
 const initialState: NewPaymentState = {
   isOpen: false,
@@ -42,6 +47,7 @@ const initialState: NewPaymentState = {
   pickedPlanId: null,
   term: 'monthly',
   typedAmount: null,
+  pickedCurrency: null,
   paidAt: '',
   notes: '',
   isSaving: false,
@@ -68,7 +74,9 @@ export const NewPaymentStore = signalStore(
       amount,
       merchants: computed(() => store.options().merchants),
       plans: computed(() => store.options().plans),
-      currency: computed<PaymentCurrency>(() => merchant()?.currency ?? 'SYP'),
+      currency: computed<PaymentCurrency>(
+        () => store.pickedCurrency() ?? merchant()?.currency ?? DEFAULT_CURRENCY,
+      ),
       window: computed(() => buildSubscriptionWindow(store.paidAt(), store.term())),
       currentSubscription: computed<CurrentSubscription | null>(() => {
         const running = merchant();
@@ -84,7 +92,7 @@ export const NewPaymentStore = signalStore(
   }),
   withMethods((store, repository = inject(PaymentRepository), clock = inject(CLOCK)) => ({
     setMerchantId(merchantId: string): void {
-      patchState(store, { merchantId, typedAmount: null });
+      patchState(store, { merchantId, typedAmount: null, pickedCurrency: null });
     },
     setKind(kind: PaymentKind): void {
       patchState(store, { kind, typedAmount: null });
@@ -97,6 +105,9 @@ export const NewPaymentStore = signalStore(
     },
     setAmount(typedAmount: number): void {
       patchState(store, { typedAmount });
+    },
+    setCurrency(pickedCurrency: PaymentCurrency): void {
+      patchState(store, { pickedCurrency });
     },
     setPaidAt(paidAt: string): void {
       patchState(store, { paidAt });
@@ -147,7 +158,10 @@ export const NewPaymentStore = signalStore(
   })),
 );
 
-function listPrice(plan: { monthlyPrice: number; yearlyPrice: number | null } | null, term: PaymentTerm): number {
+function listPrice(
+  plan: { monthlyPrice: number; yearlyPrice: number | null } | null,
+  term: PaymentTerm,
+): number {
   if (!plan) {
     return 0;
   }

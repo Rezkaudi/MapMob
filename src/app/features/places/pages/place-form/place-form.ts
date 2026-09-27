@@ -48,8 +48,6 @@ import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor'
 const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
 const REGIONS = ['المركز', 'الشمال', 'الجنوب', 'الشرق', 'الغرب'];
-/** Syrian pound, the only currency the design offers. */
-const CURRENCY = 'ل.س';
 
 const ALL_DAY_OPENS_AT = '00:00';
 const ALL_DAY_CLOSES_AT = '23:59';
@@ -166,7 +164,7 @@ export class PlaceForm {
   protected addProduct(draft: ProductDraft): void {
     this.products.update((products) => [
       ...products,
-      { ...draft, id: crypto.randomUUID(), currency: CURRENCY, isAvailable: true },
+      { ...draft, id: crypto.randomUUID(), isAvailable: true },
     ]);
     this.closeProductDialog();
   }

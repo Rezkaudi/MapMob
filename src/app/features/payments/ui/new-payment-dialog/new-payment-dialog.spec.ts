@@ -53,7 +53,9 @@ describe('NewPaymentDialog', () => {
     const { element } = await render();
 
     expect(textOf(element)).toContain('إضافة دفعة جديدة');
-    expect(textOf(element)).toContain('سجّل دفعة نقدية تم استلامها من أحد التجار وتفعيل الخدمة فورياً.');
+    expect(textOf(element)).toContain(
+      'سجّل دفعة نقدية تم استلامها من أحد التجار وتفعيل الخدمة فورياً.',
+    );
     const kinds = element.querySelectorAll('[data-testid="payment-kind"] button');
     expect(Array.from(kinds).map((kind) => kind.textContent?.trim())).toEqual([
       'اشتراك جديد',
@@ -97,12 +99,25 @@ describe('NewPaymentDialog', () => {
 
   it('puts the chevron on the right of the currency inside the chip', async () => {
     const { element } = await render();
-    const chip = element.querySelector('[data-testid="payment-currency"]') as HTMLElement;
-    const parts = Array.from(chip.children).map((part) => part.tagName.toLowerCase());
+    const box = element.querySelector('[data-role="currency-box"]') as HTMLElement;
+    const parts = Array.from(box.children).map((part) => part.tagName.toLowerCase());
 
     // RTL renders the first child rightmost, so the icon leads and the currency follows.
-    expect(parts).toEqual(['app-icon', 'span']);
-    expect(chip.children[1].textContent?.trim()).toBe('ل.س');
+    expect(parts).toEqual(['app-icon', 'span', 'select']);
+    expect(box.children[1].textContent?.trim()).toBe('ل.س');
+  });
+
+  it('switches the amount to dollars when the admin picks them', async () => {
+    const { fixture, element, store } = await render();
+    const currency = element.querySelector('[data-testid="currency-select"]') as HTMLSelectElement;
+    expect(currency.value).toBe('SYP');
+
+    currency.value = 'USD';
+    currency.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expect(store.currency()).toBe('USD');
+    expect(textOf(element)).toContain('$');
   });
 
   it('right-aligns each window date under its label, as the design stacks them', async () => {

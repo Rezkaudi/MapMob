@@ -37,7 +37,7 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
       id: `product-${index + 1}`,
       name: 'سيروم تحت العين',
       price: 200,
-      currency: 'ل.س',
+      currency: 'SYP',
       imageUrl: 'assets/images/product-facial.jpg',
       isAvailable: true,
       orderUrl: '',

@@ -117,22 +117,23 @@
           [value]="groupedAmount()"
           (input)="onAmountInput($event)"
         />
-        <!-- RTL puts the first child rightmost, so the chevron leads and "ل.س" lands on its left. -->
-        <span
+        <!-- RTL puts the first child rightmost, so the chevron leads and the sign lands on its left. -->
+        <app-currency-select
           data-testid="payment-currency"
-          class="absolute end-[13px] top-[6.5px] flex h-8 items-center rounded-[2px] bg-[#ECEEF0] px-1 py-0.5"
-        >
-          <app-icon name="chevron-down" [size]="18" aria-hidden="true" />
-          <span class="text-center text-[12px]/[28px] font-medium text-text-primary">
-            {{ currencySymbols[store.currency()] }}
-          </span>
-        </span>
+          class="absolute end-[13px] top-[6.5px]"
+          variant="square"
+          label="عملة المبلغ"
+          [currency]="store.currency()"
+          (currencyChange)="onCurrencyChange($event)"
+        />
       </div>
     </div>
 
     <div class="flex flex-col gap-1">
       <p class="text-[12px]/[16px] font-bold text-[#334155]">طريقة الدفع</p>
-      <p class="flex h-12 items-center rounded-lg bg-[#F2F4F6] px-4 text-[12px]/[18px] text-[#10B981]">
+      <p
+        class="flex h-12 items-center rounded-lg bg-[#F2F4F6] px-4 text-[12px]/[18px] text-[#10B981]"
+      >
         {{ cashLabel }}
       </p>
     </div>

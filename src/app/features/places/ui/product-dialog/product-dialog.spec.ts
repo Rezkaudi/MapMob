@@ -56,10 +56,31 @@ describe('ProductDialog', () => {
       {
         name: 'سيروم تحت العين',
         price: 200,
+        currency: 'SYP',
         imageUrl: '',
         orderUrl: 'https://shop.example.com/serum',
       },
     ]);
+  });
+
+  it('starts on the Syrian pound and lets the admin price in dollars instead', () => {
+    const fixture = build();
+    const drafts: ProductDraft[] = [];
+    fixture.componentInstance.submitted.subscribe((draft) => drafts.push(draft));
+
+    const currency: HTMLSelectElement = fixture.nativeElement.querySelector(
+      '[data-testid="currency-select"]',
+    );
+    expect(currency.value).toBe('SYP');
+
+    typeInto(fixture, 'product-name', 'سيروم تحت العين');
+    typeInto(fixture, 'product-price', '200');
+    currency.value = 'USD';
+    currency.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="submit-product"]').click();
+
+    expect(drafts[0].currency).toBe('USD');
   });
 
   it('cancels from both the footer button and the close icon', () => {

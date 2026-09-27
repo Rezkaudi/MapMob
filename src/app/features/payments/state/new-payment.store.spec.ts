@@ -155,6 +155,29 @@ describe('NewPaymentStore', () => {
     expect(store.isOpen()).toBe(false);
   });
 
+  it('starts on the merchant currency and saves the one the admin picks instead', async () => {
+    const { store, created } = setUp();
+    await store.open();
+    store.setPlanId('basic');
+    expect(store.currency()).toBe('SYP');
+
+    store.setCurrency('USD');
+    expect(store.currency()).toBe('USD');
+
+    await store.submit();
+    expect(created[0].currency).toBe('USD');
+  });
+
+  it('drops a picked currency when the merchant changes, so the new one leads', async () => {
+    const { store } = setUp();
+    await store.open();
+    store.setCurrency('USD');
+
+    store.setMerchantId('place-2');
+
+    expect(store.currency()).toBe('SYP');
+  });
+
   it('stays open and reports why when saving fails', async () => {
     const { store } = setUp({
       createPayment: () => throwError(() => new Error('تعذر تسجيل الدفعة')),

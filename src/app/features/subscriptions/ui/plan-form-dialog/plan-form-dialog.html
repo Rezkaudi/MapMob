@@ -47,9 +47,7 @@
       </p>
 
       <section class="flex flex-col gap-4 rounded-xl border border-border p-5">
-        <h3
-          class="border-b border-[#f1f5f9] pb-3 text-[18px]/[20px] font-medium text-text-primary"
-        >
+        <h3 class="border-b border-[#f1f5f9] pb-3 text-[18px]/[20px] font-medium text-text-primary">
           معلومات الباقة الأساسية وحالة التفعيل
         </h3>
 
@@ -111,6 +109,7 @@
             priceLabel="قيمة الاشتراك الشهري"
             [currency]="form().controls.currency.value"
             [control]="form().controls.monthlyPrice"
+            (currencyChange)="pickCurrency($event)"
           />
           <app-price-cycle-card
             tone="yearly"
@@ -119,6 +118,7 @@
             priceLabel="قيمة الاشتراك السنوي بعد الخصم"
             [currency]="form().controls.currency.value"
             [control]="form().controls.yearlyPrice"
+            (currencyChange)="pickCurrency($event)"
           />
         </div>
       </section>

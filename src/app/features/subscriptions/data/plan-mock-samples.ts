@@ -13,7 +13,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     badge: 'نشطة',
     monthlyPrice: 0,
     yearlyPrice: null,
-    currency: 'دولار',
+    currency: 'USD',
     subscriberCount: 450,
     limits: { adsPerMonth: 1, activeOffers: 2, galleryImages: 5, videos: 0 },
     features: ['التواجد في محرك البحث الجغرافي', 'صفحة متجر كاملة بالبيانات وموقع GPS'],
@@ -27,7 +27,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     badge: 'الأكثر مبيعاً',
     monthlyPrice: 20,
     yearlyPrice: 192,
-    currency: 'دولار',
+    currency: 'USD',
     subscriberCount: 620,
     limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30 },
     features: [
@@ -46,7 +46,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     badge: 'VIP',
     monthlyPrice: 249,
     yearlyPrice: 2390,
-    currency: 'ر.س',
+    currency: 'SYP',
     subscriberCount: 210,
     limits: { adsPerMonth: null, activeOffers: null, galleryImages: 100, videos: 30 },
     features: [

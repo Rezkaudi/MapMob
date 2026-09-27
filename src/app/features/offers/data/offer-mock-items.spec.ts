@@ -6,7 +6,12 @@ describe('buildPlaceItems', () => {
 
     expect(items).toHaveLength(8);
     expect(items).toEqual(buildPlaceItems('place-7'));
-    expect(items[0]).toEqual({ id: 'place-7-item-1', name: 'شامبو 1', price: 200 });
+    expect(items[0]).toEqual({
+      id: 'place-7-item-1',
+      name: 'شامبو 1',
+      price: 200,
+      currency: 'SYP',
+    });
     expect(items.every((item) => item.price > 0)).toBe(true);
   });
 });

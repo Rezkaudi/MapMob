@@ -5,6 +5,7 @@ import { OfferRepository } from '../../data/offer.repository';
 import { OfferDraft } from '../../models/offer-draft';
 import { buildOffer, buildOfferDetail } from '../../testing/offer-fixture';
 import { OfferForm } from './offer-form';
+import { OfferItem } from '../../models/offer-item';
 
 const DETAIL = buildOfferDetail();
 const OPTIONS = {
@@ -14,9 +15,9 @@ const OPTIONS = {
   ],
   categoryNames: ['ألبسة', 'صيدلية'],
 };
-const ITEMS = [
-  { id: 'place-3-item-1', name: 'شامبو 1', price: 200 },
-  { id: 'place-3-item-2', name: 'عطر 2', price: 900 },
+const ITEMS: readonly OfferItem[] = [
+  { id: 'place-3-item-1', name: 'شامبو 1', price: 200, currency: 'SYP' },
+  { id: 'place-3-item-2', name: 'عطر 2', price: 900, currency: 'SYP' },
 ];
 
 function createPage(editingId?: string) {

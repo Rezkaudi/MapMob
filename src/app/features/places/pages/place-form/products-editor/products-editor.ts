@@ -4,10 +4,11 @@ import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { FormSection } from '../../../../../shared/ui/form-section/form-section';
 import { PackageQuotaBadge } from '../../../../../shared/ui/package-quota-badge/package-quota-badge';
 import { PlaceProduct } from '../../../models/place-product';
+import { CurrencySymbolPipe } from '../../../../../shared/pipes/currency-symbol.pipe';
 
 @Component({
   selector: 'app-products-editor',
-  imports: [AppIcon, DecimalPipe, FormSection, PackageQuotaBadge],
+  imports: [AppIcon, DecimalPipe, FormSection, PackageQuotaBadge, CurrencySymbolPipe],
   templateUrl: './products-editor.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

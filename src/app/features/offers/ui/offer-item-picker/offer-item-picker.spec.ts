@@ -3,8 +3,8 @@ import { OfferItem } from '../../models/offer-item';
 import { OfferItemPicker } from './offer-item-picker';
 
 const ITEMS: readonly OfferItem[] = [
-  { id: 'i1', name: 'شامبو 1', price: 200 },
-  { id: 'i2', name: 'عطر 2', price: 1500 },
+  { id: 'i1', name: 'شامبو 1', price: 200, currency: 'SYP' },
+  { id: 'i2', name: 'عطر 2', price: 1500, currency: 'USD' },
 ];
 
 function render(
@@ -32,7 +32,7 @@ describe('OfferItemPicker', () => {
 
     expect(rows.map((row) => row.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
       'شامبو 1 200 ل.س',
-      'عطر 2 1,500 ل.س',
+      'عطر 2 1,500 $',
     ]);
     expect(rows.map((row) => (row.querySelector('input') as HTMLInputElement).checked)).toEqual([
       false,
