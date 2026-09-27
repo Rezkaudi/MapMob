@@ -2,30 +2,41 @@ import { ConfirmActionCopy } from '../../../shared/ui/confirm-action-dialog/conf
 import { Ad } from '../models/ad';
 import { AdConfirmAction } from '../models/ad-confirm-action';
 
+/**
+ * The frame writes "تم تحديد 5 شركات" here, copy left over from a bulk dialog.
+ * One ad is being changed, so the line names that ad instead.
+ */
+function selectionLine(ad: Ad): string {
+  return `تم تحديد إعلان "${ad.title}"`;
+}
+
 export function buildAdConfirmCopy(action: AdConfirmAction, ad: Ad): ConfirmActionCopy {
   if (action === 'pause') {
     return {
       title: 'إيقاف الإعلان',
-      question: `هل تريد إيقاف إعلان "${ad.title}"؟`,
-      detail: 'سيختفي الإعلان من التطبيق حتى تتم إعادة تفعيله.',
+      question: 'هل أنت متأكد من رغبتك في إيقاف هذا الإعلان؟',
+      detail: selectionLine(ad),
       confirmLabel: 'إيقاف الإعلان',
-      tone: 'danger',
+      tone: 'warning',
+      detailAppearance: 'toned',
     };
   }
   if (action === 'resume') {
     return {
       title: 'تفعيل الإعلان',
-      question: `هل تريد تفعيل إعلان "${ad.title}"؟`,
-      detail: 'سيعود الإعلان للظهور في التطبيق حسب تواريخ عرضه.',
+      question: 'هل أنت متأكد من رغبتك في تفعيل هذا الإعلان؟',
+      detail: selectionLine(ad),
       confirmLabel: 'تفعيل الإعلان',
       tone: 'success',
+      detailAppearance: 'toned',
     };
   }
   return {
     title: 'حذف الإعلان',
-    question: `هل أنت متأكد من حذف إعلان "${ad.title}"؟`,
-    detail: 'سيتوقف ظهور الإعلان في التطبيق ويُحذف نهائياً، ولا يمكن التراجع عن ذلك.',
+    question: 'هل أنت متأكد من رغبتك في حذف هذا الإعلان نهائياً؟',
+    detail: 'تنبيه: إجراء نهائي لا يمكن التراجع عنه',
     confirmLabel: 'حذف الإعلان',
-    tone: 'danger',
+    tone: 'critical',
+    detailAppearance: 'callout',
   };
 }

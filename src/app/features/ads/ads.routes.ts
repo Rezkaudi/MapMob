@@ -9,4 +9,8 @@ export const ADS_ROUTES: Routes = [
   },
   { path: 'new', loadComponent: loadAdForm },
   { path: ':id/edit', loadComponent: loadAdForm },
+  {
+    path: ':id',
+    loadComponent: () => import('./pages/ad-detail/ad-detail').then((m) => m.AdDetailPage),
+  },
 ];

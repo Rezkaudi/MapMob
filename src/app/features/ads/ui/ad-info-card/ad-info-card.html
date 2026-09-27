@@ -1,0 +1,51 @@
+<!-- RTL: the first cell of each row lands on the right. -->
+<dl class="grid grid-cols-2 gap-x-6 gap-y-5 text-start">
+  <div class="flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">عنوان الإعلان</dt>
+    <dd class="text-[14px]/[20px] font-bold text-text-primary">{{ detail().ad.title }}</dd>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">المتجر / المكان المرتبط</dt>
+    <dd class="text-[14px]/[20px] font-bold">
+      @if (view().placeLink; as link) {
+        <!-- RTL: the name on the right, the open-in-place arrow on its left. -->
+        <a class="flex w-fit items-center gap-2 text-primary hover:underline" [routerLink]="link">
+          <span>{{ view().placeLabel }}</span>
+          <app-icon name="external-link-outline" [size]="16" aria-hidden="true" />
+        </a>
+      } @else {
+        <span class="text-text-primary">{{ view().placeLabel }}</span>
+      }
+    </dd>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">نوع المحتوى</dt>
+    <dd class="text-[14px]/[20px] font-medium text-[#334155]">{{ view().contentTypeLabel }}</dd>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">مكان الظهور بالتطبيق</dt>
+    <dd class="text-[14px]/[20px] font-medium text-text-primary">{{ view().placementLabel }}</dd>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">الأولوية والترتيب</dt>
+    <dd class="text-[12px]/[16px] font-bold text-[#b45309]">{{ view().priorityLabel }}</dd>
+  </div>
+
+  <div class="flex flex-col gap-0.5">
+    <dt class="text-[12px]/[16px] font-bold text-text-primary">آخر تعديل بواسطة</dt>
+    <dd class="text-[12px]/[16px] font-medium text-[#475569]">{{ view().updatedByLabel }}</dd>
+  </div>
+
+  <div class="col-span-2 flex flex-col gap-1">
+    <dt class="text-[12px]/[16px] font-bold text-text-secondary">الوصف التفصيلي للإعلان</dt>
+    <dd
+      class="rounded-xl border border-[#f1f5f9] bg-[rgba(248,250,252,0.6)] p-3.5 text-[12px]/[19.5px] text-text-primary"
+    >
+      {{ detail().text }}
+    </dd>
+  </div>
+</dl>

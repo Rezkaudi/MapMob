@@ -8,28 +8,27 @@ import { AdDetail } from '../models/ad-detail';
 import { buildAdDetailView } from './ad-detail-view';
 
 interface AdDetailState {
-  readonly openAdId: string | null;
+  readonly adId: string | null;
   readonly detail: AdDetail | null;
 }
 
-const initialState: AdDetailState = { openAdId: null, detail: null };
+const initialState: AdDetailState = { adId: null, detail: null };
 
-/** The ad the side drawer shows, if any. */
+/** The one ad the detail page is showing. */
 export const AdDetailStore = signalStore(
   withState(initialState),
   withRequestStatus(),
-  withComputed(({ openAdId, detail }) => ({
-    isOpen: computed(() => openAdId() !== null),
+  withComputed(({ detail }) => ({
     view: computed(() => {
-      const openDetail = detail();
-      return openDetail ? buildAdDetailView(openDetail) : null;
+      const loaded = detail();
+      return loaded ? buildAdDetailView(loaded) : null;
     }),
   })),
   withMethods((store, repository = inject(AdRepository)) => ({
-    loadDetail: rxMethod<string>(
+    loadAd: rxMethod<string>(
       pipe(
-        tap(() => {
-          patchState(store, { detail: null });
+        tap((id) => {
+          patchState(store, { adId: id, detail: null });
           store.setLoading();
         }),
         switchMap((id) =>
@@ -48,18 +47,11 @@ export const AdDetailStore = signalStore(
     ),
   })),
   withMethods((store) => ({
-    open(id: string): void {
-      patchState(store, { openAdId: id });
-      store.loadDetail(id);
-    },
     reload(): void {
-      const id = store.openAdId();
+      const id = store.adId();
       if (id) {
-        store.loadDetail(id);
+        store.loadAd(id);
       }
-    },
-    close(): void {
-      patchState(store, initialState);
     },
   })),
 );

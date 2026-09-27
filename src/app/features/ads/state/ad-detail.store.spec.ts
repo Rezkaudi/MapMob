@@ -17,22 +17,21 @@ function createStore(overrides: Partial<AdRepository> = {}) {
 }
 
 describe('AdDetailStore', () => {
-  it('opens on one ad, builds its view, then forgets it when closed', () => {
+  it('loads the ad the route names and builds its view', () => {
     const store = createStore();
 
-    store.open('ad-2');
+    store.loadAd('ad-2');
 
-    expect(store.isOpen()).toBe(true);
+    expect(store.isLoading()).toBe(false);
     expect(store.detail()).toEqual(DETAIL);
-    expect(store.view()?.placementLabel).toBe('الصفحة الرئيسية');
-
-    store.close();
-
-    expect(store.isOpen()).toBe(false);
-    expect(store.detail()).toBeNull();
+    expect(store.view()?.placementLabel).toBe('الصفحة الرئيسية - البانر الرئيسي العلوي');
   });
 
-  it('keeps the error and reloads the open ad when asked again', () => {
+  it('reads no view before an ad is loaded', () => {
+    expect(createStore().view()).toBeNull();
+  });
+
+  it('keeps the error and reloads the same ad when asked again', () => {
     let attempts = 0;
     const store = createStore({
       getAdDetail: () => {
@@ -41,7 +40,7 @@ describe('AdDetailStore', () => {
       },
     });
 
-    store.open('ad-2');
+    store.loadAd('ad-2');
     expect(store.error()).toBe('تعذر التحميل');
 
     store.reload();

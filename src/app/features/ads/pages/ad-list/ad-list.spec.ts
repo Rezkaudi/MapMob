@@ -87,15 +87,12 @@ describe('AdList', () => {
     expect(navigateByUrl).toHaveBeenCalledWith('/ads/new');
   });
 
-  it('opens the details drawer from the ad title', () => {
-    const { fixture, element } = createPage();
+  it('opens the detail page from the ad title', () => {
+    const { element, navigateByUrl } = createPage();
 
     (element.querySelector('button[data-role="open-ad"]') as HTMLButtonElement).click();
-    fixture.detectChanges();
 
-    const drawer = element.querySelector('app-ad-detail-drawer') as HTMLElement;
-    expect(drawer.textContent).toContain('تفاصيل الإعلان');
-    expect(drawer.textContent).toContain('البانر الرئيسي العلوي');
+    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1');
   });
 
   it('opens the edit page from the row menu', () => {
@@ -114,7 +111,7 @@ describe('AdList', () => {
     buttonNamed(document, 'تغيير الحالة').click();
     fixture.detectChanges();
     const dialog = element.querySelector('app-confirm-action-dialog') as HTMLElement;
-    expect(dialog.textContent).toContain('هل تريد إيقاف إعلان');
+    expect(dialog.textContent).toContain('هل أنت متأكد من رغبتك في إيقاف هذا الإعلان؟');
     buttonNamed(dialog, 'إيقاف الإعلان').click();
     await fixture.whenStable();
 

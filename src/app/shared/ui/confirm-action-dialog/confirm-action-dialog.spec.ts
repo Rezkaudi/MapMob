@@ -72,3 +72,55 @@ describe('ConfirmActionDialog', () => {
     expect(buttonNamed(element, 'تفعيل المحافظة').disabled).toBe(true);
   });
 });
+
+const PAUSE_COPY: ConfirmActionCopy = {
+  title: 'إيقاف الإعلان',
+  question: 'هل أنت متأكد من رغبتك في إيقاف هذا الإعلان؟',
+  detail: 'تم تحديد 5 شركات',
+  confirmLabel: 'إيقاف الإعلان',
+  tone: 'warning',
+  detailAppearance: 'toned',
+};
+
+const CRITICAL_COPY: ConfirmActionCopy = {
+  title: 'حذف الإعلان',
+  question: 'هل أنت متأكد من رغبتك في حذف هذا الإعلان نهائياً؟',
+  detail: 'تنبيه: إجراء نهائي لا يمكن التراجع عنه',
+  confirmLabel: 'حذف الإعلان',
+  tone: 'critical',
+  detailAppearance: 'callout',
+};
+
+function renderCopy(copy: ConfirmActionCopy) {
+  const fixture = TestBed.createComponent(ConfirmActionDialog);
+  fixture.componentRef.setInput('copy', copy);
+  fixture.detectChanges();
+  return fixture.nativeElement as HTMLElement;
+}
+
+describe('ConfirmActionDialog tones from the ad design', () => {
+  it('paints a pause request amber and writes its detail line in the same colour', () => {
+    const element = renderCopy(PAUSE_COPY);
+
+    expect(buttonNamed(element, 'إيقاف الإعلان').className).toContain('bg-accent');
+    const detail = element.querySelector('[data-role="confirm-detail"]');
+    expect(detail?.textContent?.trim()).toBe('تم تحديد 5 شركات');
+    expect(detail?.className).toContain('text-accent');
+  });
+
+  it('wraps a critical detail in the red warning callout', () => {
+    const element = renderCopy(CRITICAL_COPY);
+
+    const callout = element.querySelector('[data-role="confirm-detail"]');
+    expect(callout?.className).toContain('border-[#fecaca]');
+    expect(callout?.textContent?.trim()).toBe('تنبيه: إجراء نهائي لا يمكن التراجع عنه');
+    expect(buttonNamed(element, 'حذف الإعلان').className).toContain('bg-status-error');
+  });
+
+  it('keeps the plain muted detail line when no appearance is asked for', () => {
+    const element = renderCopy(ACTIVATE_COPY);
+
+    const detail = element.querySelector('[data-role="confirm-detail"]');
+    expect(detail?.className).toContain('text-text-secondary');
+  });
+});

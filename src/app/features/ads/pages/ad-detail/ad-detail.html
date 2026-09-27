@@ -1,0 +1,71 @@
+<app-form-page-heading
+  parentLabel="الإعلانات"
+  parentLink="/ads"
+  title="تفاصيل الإعلان"
+  description="عرض جميع تفاصيل الإعلان و حالته وفترة ظهوره و أداه الإحصائي"
+/>
+
+<div class="mt-10 flex-1">
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="reload()" />
+  } @else if (store.detail(); as detail) {
+    @if (store.view(); as view) {
+      <div class="flex flex-col gap-6">
+        <app-ad-overview-card
+          [detail]="detail"
+          [view]="view"
+          [isBusy]="adsStore.isSaving()"
+          (edit)="editAd()"
+          (statusChange)="askToChangeStatus()"
+          (remove)="askToDelete()"
+        />
+
+        <!-- RTL: the ad's own data on the right, its numbers on the left. -->
+        <div class="grid grid-cols-1 items-start gap-6 xl:grid-cols-[531fr_489fr]">
+          <div class="flex min-w-0 flex-col gap-6">
+            <app-ad-detail-card heading="بيانات ومعلومات الإعلان">
+              <app-ad-info-card [detail]="detail" [view]="view" />
+            </app-ad-detail-card>
+
+            <app-ad-detail-card heading="فترة الظهور والجدولة">
+              <app-ad-schedule-period-card [view]="view" />
+            </app-ad-detail-card>
+          </div>
+
+          <app-ad-detail-card heading="إحصائيات الأداء والتفاعل" spacing="tight">
+            <app-ad-metrics-card [cards]="view.metricCards" />
+          </app-ad-detail-card>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="flex flex-col gap-6" aria-busy="true">
+      <app-skeleton height="160px" />
+      <div class="grid grid-cols-1 items-start gap-6 xl:grid-cols-[531fr_489fr]">
+        <div class="flex flex-col gap-6">
+          <app-skeleton height="443px" />
+          <app-skeleton height="187px" />
+        </div>
+        <app-skeleton height="297px" />
+      </div>
+    </div>
+  }
+</div>
+
+@if (confirmCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="adsStore.isSaving()"
+    (confirmed)="confirmPending()"
+    (cancelled)="cancelPending()"
+  />
+}
+
+@if (adsStore.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="adsStore.clearSaveError()"
+  />
+}

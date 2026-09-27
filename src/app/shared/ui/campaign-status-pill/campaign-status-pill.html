@@ -1,6 +1,10 @@
 <span
-  class="inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px]/[18px] whitespace-nowrap text-white"
-  [class]="background()"
+  class="inline-flex items-center justify-center rounded-full whitespace-nowrap"
+  [class]="skin()"
 >
+  @if (isOutlined()) {
+    <!-- RTL: written first so the dot lands on the right of the word. -->
+    <span data-role="status-dot" class="size-2 rounded-full bg-current" aria-hidden="true"></span>
+  }
   {{ label() }}
 </span>

@@ -18,14 +18,16 @@
     <h2 id="confirm-action-title" class="text-[24px]/[31.2px] font-bold text-[#191c1d]">
       {{ copy().title }}
     </h2>
-    <p class="pb-1 text-[16px]/[24px] text-text-secondary">{{ copy().question }}</p>
-    <p class="pb-1 text-[16px]/[24px] text-text-secondary">{{ copy().detail }}</p>
+    <p class="text-[16px]/[24px] text-text-secondary" [class]="questionClasses()">
+      {{ copy().question }}
+    </p>
+    <p data-role="confirm-detail" [class]="detailClasses()">{{ copy().detail }}</p>
 
     <!-- RTL: the coloured action sits on the right, cancel on the left. -->
-    <div class="mt-[53px] flex w-full items-start gap-4">
+    <div class="flex w-full items-start gap-4" [class]="actionsClasses()">
       <button
         type="button"
-        class="h-10 flex-1 rounded-lg px-6 text-[14px]/[14px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+        class="h-10 flex-1 rounded-lg px-6 text-[14px]/[14px] font-bold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         [class]="skin().confirm"
         [disabled]="isBusy()"
         [attr.aria-busy]="isBusy()"
@@ -35,7 +37,7 @@
       </button>
       <button
         type="button"
-        class="h-10 flex-1 rounded-lg border border-text-secondary bg-[#f8f9fa] px-6 text-[14px]/[14px] text-text-secondary hover:bg-surface-muted"
+        class="h-10 flex-1 rounded-lg border border-border bg-[#f8f9fa] px-6 text-[14px]/[14px] text-text-primary hover:bg-surface-muted"
         (click)="cancelled.emit()"
       >
         إلغاء

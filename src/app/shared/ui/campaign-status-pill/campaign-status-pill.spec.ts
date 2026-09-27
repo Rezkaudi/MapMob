@@ -28,3 +28,29 @@ describe('CampaignStatusPill', () => {
     expect(pillFor('draft').textContent?.trim()).toBe('مسودة');
   });
 });
+
+function outlinedPillFor(status: CampaignStatus): HTMLElement {
+  const fixture = TestBed.createComponent(CampaignStatusPill);
+  fixture.componentRef.setInput('status', status);
+  fixture.componentRef.setInput('appearance', 'outlined');
+  fixture.detectChanges();
+  return (fixture.nativeElement as HTMLElement).querySelector('span') as HTMLElement;
+}
+
+describe('CampaignStatusPill outlined', () => {
+  it('draws the ad detail page pill: tinted, outlined, with a dot on the right', () => {
+    const pill = outlinedPillFor('active');
+
+    expect(pill.className).toContain('bg-[#ecfdf5]');
+    expect(pill.className).toContain('border-status-success');
+    expect(pill.className).toContain('text-status-success');
+    expect(pill.textContent?.trim()).toBe('نشط');
+    // RTL: the first child lands on the right, where the design draws the dot.
+    expect(pill.firstElementChild?.getAttribute('data-role')).toBe('status-dot');
+  });
+
+  it('keeps every status readable in the outlined skin', () => {
+    expect(outlinedPillFor('paused').className).toContain('text-status-error');
+    expect(outlinedPillFor('draft').textContent?.trim()).toBe('مسودة');
+  });
+});

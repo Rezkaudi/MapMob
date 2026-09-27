@@ -5,6 +5,7 @@ import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';
 import { AdContentType } from '../models/ad-content-type';
 import { AdDetail } from '../models/ad-detail';
+import { AdMetrics } from '../models/ad-metrics';
 import { AdPlacement } from '../models/ad-placement';
 import { AdPosition } from '../models/ad-position';
 import { AD_PRIORITIES } from '../models/ad-priority';
@@ -19,6 +20,15 @@ const PAUSED_SHARE = 0.1;
 const ADMIN_SHARE = 0.2;
 const ONGOING_SHARE = 0.1;
 const VIDEO_SHARE = 0.3;
+const SEEDED_UPDATED_BY = 'Admin';
+const CREATED_DAYS_BEFORE_START = 11;
+const UPDATED_DAYS_BEFORE_START = 6;
+const MOST_IMPRESSIONS = 90000;
+const LOWEST_CLICK_RATE = 2;
+const HIGHEST_CLICK_RATE = 12;
+const PERCENT = 100;
+/** Roughly seven in ten of the people who saw it were new to the ad. */
+const UNIQUE_SHARE = 0.7;
 
 const TITLES = [
   'حملة الصيف',
@@ -74,6 +84,20 @@ function buildAdDetail(index: number, today: string): AdDetail {
     position: pickOne(next, POSITIONS),
     text: pickOne(next, TEXTS),
     mediaUrl: null,
+    createdOn: addCalendarDays(startsOn, -CREATED_DAYS_BEFORE_START),
+    updatedOn: addCalendarDays(startsOn, -UPDATED_DAYS_BEFORE_START),
+    updatedBy: SEEDED_UPDATED_BY,
+    metrics: buildMetrics(next),
+  };
+}
+
+function buildMetrics(next: () => number): AdMetrics {
+  const impressions = randomInt(next, 0, MOST_IMPRESSIONS);
+  const clickRate = randomInt(next, LOWEST_CLICK_RATE, HIGHEST_CLICK_RATE);
+  return {
+    impressions,
+    clicks: Math.round((impressions * clickRate) / PERCENT),
+    uniqueUsers: Math.round(impressions * UNIQUE_SHARE),
   };
 }
 

@@ -25,6 +25,10 @@ export function buildAdDetail(overrides: Partial<AdDetail> = {}): AdDetail {
     position: 'topBanner',
     text: 'خصم 25% على جميع منتجات العناية بالبشرة والمستلزمات الصيفية طوال الشهر الحالي في جميع الفروع.',
     mediaUrl: null,
+    createdOn: '2024-01-01',
+    updatedOn: '2024-01-06',
+    updatedBy: 'Admin',
+    metrics: { impressions: 48250, clicks: 3860, uniqueUsers: 34120 },
     ...overrides,
   };
 }

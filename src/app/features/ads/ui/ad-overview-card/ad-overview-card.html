@@ -1,0 +1,56 @@
+<section
+  class="rounded-2xl border border-[rgba(226,232,240,0.9)] bg-white p-6 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+>
+  <!-- RTL: the ad itself on the right, its buttons on the left. -->
+  <div class="flex flex-wrap items-center justify-between gap-6">
+    <div class="flex items-start gap-4">
+      @if (detail().mediaUrl; as url) {
+        <img
+          data-role="ad-thumbnail"
+          class="h-[110px] w-[163px] shrink-0 rounded-2xl object-cover shadow-[inset_0_2px_4px_1px_rgba(0,0,0,0.05)]"
+          [src]="url"
+          [alt]="detail().ad.title"
+        />
+      } @else {
+        <span
+          data-role="ad-thumbnail"
+          class="flex h-[110px] w-[163px] shrink-0 items-center justify-center rounded-2xl bg-surface-muted text-text-secondary shadow-[inset_0_2px_4px_1px_rgba(0,0,0,0.05)]"
+        >
+          <app-icon name="megaphone-filled" [size]="32" aria-hidden="true" />
+        </span>
+      }
+
+      <div class="flex flex-col gap-1.5 text-start">
+        <!-- RTL: the status pill on the right of the creation date. -->
+        <div class="flex items-center gap-3">
+          <app-campaign-status-pill [status]="detail().ad.status" appearance="outlined" />
+          <span class="text-[12px]/[16px] text-text-secondary">{{ view().createdOnLabel }}</span>
+        </div>
+
+        <h2 class="max-w-[425px] text-[20px]/[28px] font-bold text-text-primary">
+          {{ detail().ad.title }}
+        </h2>
+
+        <div class="flex flex-wrap items-center gap-4 text-[12px]/[16px]">
+          <span class="flex items-center gap-1">
+            <span class="font-medium text-text-secondary">المكان:</span>
+            <span class="font-bold text-[#334155]">{{ view().placeLabel }}</span>
+          </span>
+          <span class="font-medium text-[#cbd5e1]" aria-hidden="true">•</span>
+          <span class="flex items-center gap-1">
+            <span class="font-medium text-text-secondary">الموقع في التطبيق:</span>
+            <span class="font-semibold text-[#334155]">{{ view().appPlacementLabel }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <app-ad-detail-actions
+      [pauseAction]="view().pauseAction"
+      [isBusy]="isBusy()"
+      (edit)="edit.emit()"
+      (statusChange)="statusChange.emit()"
+      (remove)="remove.emit()"
+    />
+  </div>
+</section>

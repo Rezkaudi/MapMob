@@ -1,0 +1,11 @@
+<section
+  class="flex flex-col rounded-2xl border border-border bg-white p-6 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  [class]="spacingClasses()"
+>
+  <h2
+    class="border-b border-[#f1f5f9] pb-4 text-start text-[16px]/[24px] font-bold text-text-primary"
+  >
+    {{ heading() }}
+  </h2>
+  <ng-content />
+</section>

@@ -1,0 +1,26 @@
+<!-- RTL: the first card lands top right, so the four read across the grid. -->
+<div class="grid grid-cols-2 gap-3.5 pt-1 text-start">
+  @for (card of cards(); track card.kind) {
+    <div
+      class="flex flex-col gap-1 rounded-xl border border-[#f1f5f9] bg-[rgba(248,250,252,0.8)] p-3.5"
+    >
+      <!-- RTL: the label on the right, its icon tile on the left. -->
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[12px]/[16px] font-medium text-[#64748b]">{{ card.label }}</span>
+        <span
+          class="flex size-[22px] items-center justify-center rounded-lg"
+          [class]="skins[card.kind].tile"
+        >
+          <app-icon [name]="skins[card.kind].icon" [size]="22" aria-hidden="true" />
+        </span>
+      </div>
+      <!-- RTL: the number on the right, its unit beside it. -->
+      <p class="flex items-center gap-1 pt-0.5 text-[20px]/[28px] font-extrabold">
+        <span [class]="skins[card.kind].value">{{ card.value }}</span>
+        @if (card.suffix) {
+          <span class="text-[11px]/[16.5px] font-medium text-[#64748b]">{{ card.suffix }}</span>
+        }
+      </p>
+    </div>
+  }
+</div>

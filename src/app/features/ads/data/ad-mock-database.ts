@@ -3,6 +3,10 @@ import { resolveRunningStatus } from '../../../shared/state/campaign-running-sta
 import { Ad } from '../models/ad';
 import { AdDetail } from '../models/ad-detail';
 import { AdDraft, AdSavedStatus } from '../models/ad-draft';
+import { AdMetrics } from '../models/ad-metrics';
+
+/** The mock has one signed-in admin, so every save is written to that name. */
+const SAVED_BY = 'Admin';
 
 const KEPT_AS_SAVED: readonly AdSavedStatus[] = ['paused', 'draft'];
 
@@ -39,14 +43,24 @@ export class AdMockDatabase {
 
   /** `placeName` is `null` for the app's own ad; `today` is `yyyy-mm-dd`. New ads lead the list. */
   create(draft: AdDraft, placeName: string | null, today: string): Ad {
-    const detail = buildDetail(`ad-new-${this.nextNumber++}`, draft, placeName, today, null);
+    const kept: KeptFields = {
+      mediaUrl: null,
+      createdOn: today,
+      metrics: { impressions: 0, clicks: 0, uniqueUsers: 0 },
+    };
+    const detail = buildDetail(`ad-new-${this.nextNumber++}`, draft, placeName, today, kept);
     this.details = [detail, ...this.details];
     return detail.ad;
   }
 
   update(id: string, draft: AdDraft, placeName: string | null, today: string): Ad {
-    const keptMediaUrl = draft.isMediaRemoved ? null : this.find(id).mediaUrl;
-    const detail = buildDetail(id, draft, placeName, today, keptMediaUrl);
+    const saved = this.find(id);
+    const kept: KeptFields = {
+      mediaUrl: draft.isMediaRemoved ? null : saved.mediaUrl,
+      createdOn: saved.createdOn,
+      metrics: saved.metrics,
+    };
+    const detail = buildDetail(id, draft, placeName, today, kept);
     this.details = this.details.map((current) => (current.ad.id === id ? detail : current));
     return detail.ad;
   }
@@ -68,12 +82,19 @@ function resolveSavedStatus(draft: AdDraft, today: string): CampaignStatus {
   return KEPT_AS_SAVED.includes(draft.status) ? draft.status : resolveRunningStatus(draft, today);
 }
 
+/** What a save carries over from the stored ad instead of reading off the draft. */
+interface KeptFields {
+  readonly mediaUrl: string | null;
+  readonly createdOn: string;
+  readonly metrics: AdMetrics;
+}
+
 function buildDetail(
   id: string,
   draft: AdDraft,
   placeName: string | null,
   today: string,
-  keptMediaUrl: string | null,
+  kept: KeptFields,
 ): AdDetail {
   const isStoreAd = draft.advertiserType === 'place';
   return {
@@ -93,6 +114,10 @@ function buildDetail(
     position: draft.position,
     text: draft.text,
     // The mock has nowhere to upload to, so new media shows only for this session.
-    mediaUrl: draft.media ? URL.createObjectURL(draft.media) : keptMediaUrl,
+    mediaUrl: draft.media ? URL.createObjectURL(draft.media) : kept.mediaUrl,
+    createdOn: kept.createdOn,
+    updatedOn: today,
+    updatedBy: SAVED_BY,
+    metrics: kept.metrics,
   };
 }

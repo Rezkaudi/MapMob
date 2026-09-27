@@ -12,10 +12,8 @@ import { TablePagination } from '../../../../shared/ui/table-pagination/table-pa
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { Ad } from '../../models/ad';
 import { AdConfirmRequest } from '../../models/ad-confirm-request';
-import { AdDetailStore } from '../../state/ad-detail.store';
 import { adPauseActionFor } from '../../state/ad-pause-action';
 import { AdsStore } from '../../state/ads.store';
-import { AdDetailDrawer } from '../../ui/ad-detail-drawer/ad-detail-drawer';
 import { buildAdConfirmCopy } from '../../ui/ad-dialog-copy';
 import { AdTable } from '../../ui/ad-table/ad-table';
 import { AdToolbar } from '../../ui/ad-toolbar/ad-toolbar';
@@ -25,7 +23,6 @@ const NEW_AD_URL = '/ads/new';
 @Component({
   selector: 'app-ad-list',
   imports: [
-    AdDetailDrawer,
     AdTable,
     AdToolbar,
     ConfirmActionDialog,
@@ -37,7 +34,6 @@ const NEW_AD_URL = '/ads/new';
     Toast,
   ],
   templateUrl: './ad-list.html',
-  providers: [AdDetailStore],
   host: { class: 'flex min-h-full flex-col' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,7 +43,6 @@ export class AdList {
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(AdsStore);
-  protected readonly detailStore = inject(AdDetailStore);
   /** View state only: the change waiting to be confirmed. */
   protected readonly pendingConfirm = signal<AdConfirmRequest | null>(null);
   protected readonly confirmCopy = computed(() => {
@@ -62,6 +57,10 @@ export class AdList {
 
   protected addAd(): void {
     this.router.navigateByUrl(NEW_AD_URL);
+  }
+
+  protected viewAd(ad: Ad): void {
+    this.router.navigateByUrl(`/ads/${ad.id}`);
   }
 
   protected editAd(ad: Ad): void {
@@ -83,7 +82,6 @@ export class AdList {
     const request = this.pendingConfirm();
     if (request && (await this.save(request))) {
       this.pendingConfirm.set(null);
-      this.detailStore.close();
     }
   }
 
