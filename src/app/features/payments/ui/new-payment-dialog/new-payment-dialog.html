@@ -14,7 +14,7 @@
         <select
           data-testid="payment-merchant"
           aria-label="التاجر / المكان"
-          class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-center text-[16px] text-text-primary outline-none"
+          class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-right text-[16px] text-text-primary outline-none"
           (change)="onMerchantChange($event)"
         >
           @for (merchant of store.merchants(); track merchant.id) {
@@ -61,7 +61,7 @@
           <select
             data-testid="payment-plan-select"
             [attr.aria-label]="store.planField().label"
-            class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-center text-[16px] text-text-primary outline-none"
+            class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-right text-[16px] text-text-primary outline-none"
             (change)="onPlanChange($event)"
           >
             @for (plan of store.plans(); track plan.id) {
@@ -80,7 +80,7 @@
       } @else {
         <p
           data-testid="payment-plan-text"
-          class="flex h-12 items-center justify-center rounded-lg bg-[#F2F4F6] text-[16px] text-text-primary"
+          class="flex h-12 items-center rounded-lg bg-[#F2F4F6] px-5 text-[16px] text-text-primary"
         >
           {{ store.planField().planName }}
         </p>

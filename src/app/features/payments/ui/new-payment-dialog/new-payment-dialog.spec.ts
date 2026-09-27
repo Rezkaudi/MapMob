@@ -82,6 +82,23 @@ describe('NewPaymentDialog', () => {
     expect(textOf(element)).toContain('الباقة الأساسية');
   });
 
+  it('starts the merchant and plan text on the right, as every other field does', async () => {
+    const { fixture, store, element } = await render();
+    const merchant = element.querySelector('[data-testid="payment-merchant"]') as HTMLElement;
+    const plan = element.querySelector('[data-testid="payment-plan-select"]') as HTMLElement;
+
+    for (const field of [merchant, plan]) {
+      expect(field.className).toContain('text-right');
+      expect(field.className).not.toContain('text-center');
+    }
+
+    store.setKind('renewal');
+    fixture.detectChanges();
+    const planText = element.querySelector('[data-testid="payment-plan-text"]') as HTMLElement;
+
+    expect(planText.className).not.toContain('justify-center');
+  });
+
   it('fills the amount from the plan and shows the merchant currency', async () => {
     const { element } = await render();
     const amount = element.querySelector('[data-testid="payment-amount"]') as HTMLInputElement;
