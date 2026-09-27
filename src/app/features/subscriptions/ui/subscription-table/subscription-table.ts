@@ -11,7 +11,16 @@ import { SubscriptionStatusPill } from '../subscription-status-pill/subscription
  * Column widths as shares of the 1046px design table (87 / 177 / 144 / 144 / 144 / 144 / 122 / 84px),
  * so each value sits under the centre of its header.
  */
-const COLUMN_WIDTHS = ['8.32%', '16.92%', '13.77%', '13.77%', '13.77%', '13.77%', '11.66%', '8.02%'];
+const COLUMN_WIDTHS = [
+  '8.32%',
+  '16.92%',
+  '13.77%',
+  '13.77%',
+  '13.77%',
+  '13.77%',
+  '11.66%',
+  '8.02%',
+];
 const DEFAULT_ROW_COUNT = 4;
 
 @Component({

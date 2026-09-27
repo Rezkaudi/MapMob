@@ -41,6 +41,19 @@ describe('SubscriptionTable', () => {
     ]);
   });
 
+  it('centres the company name under its header, like every other column', () => {
+    const element = render().nativeElement as HTMLElement;
+    const header = element.querySelectorAll('th')[1];
+    const cell = element.querySelectorAll('tbody td')[1];
+
+    expect(cell.textContent?.trim()).toBe('صيدلية الحياة');
+    // Header and value carry the same alignment and the same 43px inset, so they line up.
+    expect(cell.classList).toContain('text-center');
+    expect(cell.classList).toContain('pe-[43px]');
+    expect(header.classList).toContain('text-center');
+    expect(header.classList).toContain('pe-[43px]');
+  });
+
   it('writes the price with its currency symbol after the number', () => {
     const fixture = render();
 

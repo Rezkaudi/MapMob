@@ -47,8 +47,10 @@
                 (change)="rowToggle.emit(entry.id)"
               />
             </td>
-            <td class="pe-[43px]">
-              <span class="block truncate font-bold text-text-primary">{{ entry.companyName }}</span>
+            <td class="pe-[43px] text-center">
+              <span class="block truncate font-bold text-text-primary">{{
+                entry.companyName
+              }}</span>
             </td>
             <td class="text-center">
               <app-plan-pill [name]="entry.planName" [tier]="entry.planTier" />
