@@ -35,6 +35,14 @@ function cellTexts(row: Element): string[] {
   return Array.from(row.querySelectorAll('td'), (cell) => cell.textContent?.trim() ?? '');
 }
 
+const LAYOUT_CLASS = /^(p[sex]?-|text-(right|center|left)$)/;
+
+function layoutClasses(cell: Element): string[] {
+  return Array.from(cell.classList)
+    .filter((name) => LAYOUT_CLASS.test(name))
+    .sort();
+}
+
 describe('UserTable', () => {
   it('draws the design columns in order', () => {
     const headers = Array.from(
@@ -155,5 +163,17 @@ describe('UserTable', () => {
     const fixture = render({ entries: [], hasNoResults: true, emptyMessage: 'لا يوجد مستخدمون' });
 
     expect(fixture.nativeElement.textContent).toContain('لا يوجد مستخدمون');
+  });
+
+  it('lays every body cell out like its header cell', () => {
+    const fixture = render();
+    const headers = Array.from(
+      fixture.nativeElement.querySelectorAll('thead th') as NodeListOf<HTMLElement>,
+    );
+    const cells = Array.from(
+      fixture.nativeElement.querySelectorAll('tbody tr:first-child td') as NodeListOf<HTMLElement>,
+    );
+
+    expect(cells.map(layoutClasses)).toEqual(headers.map(layoutClasses));
   });
 });

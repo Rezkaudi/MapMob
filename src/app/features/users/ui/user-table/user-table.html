@@ -1,4 +1,4 @@
-<!-- Headers sit right-aligned while most row values are centred a little inside them, as the design draws them. -->
+<!-- The name reads from the right; every other column sits centred under its header. -->
 <div class="overflow-x-auto rounded-xl border border-border bg-surface">
   <table class="w-full min-w-[1046px] table-fixed text-right">
     <colgroup>
@@ -10,7 +10,7 @@
       <tr
         class="h-[59px] border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
       >
-        <th class="ps-[31px]">
+        <th class="px-4">
           <input
             type="checkbox"
             aria-label="تحديد الكل"
@@ -19,13 +19,13 @@
             (change)="allToggle.emit()"
           />
         </th>
-        <th class="ps-[17px]">اسم المستخدم</th>
-        <th class="ps-[68px]">البريد/الهاتف</th>
-        <th class="ps-[52px]">نوع الحساب</th>
-        <th class="ps-[46px]">تاريخ التسجيل</th>
-        <th class="ps-[67px]">آخر نشاط</th>
-        <th class="ps-[71px]">الحالة</th>
-        <th class="ps-[25px] text-center">الإجراء</th>
+        <th class="px-4">اسم المستخدم</th>
+        <th class="px-4 text-center">البريد/الهاتف</th>
+        <th class="px-4 text-center">نوع الحساب</th>
+        <th class="px-4 text-center">تاريخ التسجيل</th>
+        <th class="px-4 text-center">آخر نشاط</th>
+        <th class="px-4 text-center">الحالة</th>
+        <th class="px-4 text-center">الإجراء</th>
       </tr>
     </thead>
 
@@ -35,7 +35,7 @@
       <tbody>
         @for (row of rows(); track row.user.id) {
           <tr class="h-[59px] border-b border-border bg-surface text-[14px] last:border-0">
-            <td class="ps-[31px]">
+            <td class="px-4">
               <input
                 type="checkbox"
                 [attr.aria-label]="'تحديد ' + row.user.name"
@@ -44,7 +44,7 @@
                 (change)="rowToggle.emit(row.user.id)"
               />
             </td>
-            <td class="ps-[10px]">
+            <td class="px-4">
               <a
                 class="line-clamp-1 font-bold text-text-primary hover:text-primary"
                 [routerLink]="['/users', row.user.id]"
@@ -52,20 +52,20 @@
                 {{ row.user.name }}
               </a>
             </td>
-            <td class="ps-[42px] text-center whitespace-nowrap text-text-primary">
+            <td class="px-4 text-center whitespace-nowrap text-text-primary">
               <span [class.underline]="row.hasContact">{{ row.contactLabel }}</span>
             </td>
-            <td class="ps-[15px] text-center text-text-secondary">{{ row.accountTypeLabel }}</td>
-            <td class="ps-[28px] text-center whitespace-nowrap text-text-secondary">
+            <td class="px-4 text-center text-text-secondary">{{ row.accountTypeLabel }}</td>
+            <td class="px-4 text-center whitespace-nowrap text-text-secondary">
               {{ row.user.registeredAt | arabicDate }}
             </td>
-            <td class="ps-[65px] text-center whitespace-nowrap text-text-primary">
+            <td class="px-4 text-center whitespace-nowrap text-text-primary">
               {{ row.lastActiveLabel }}
             </td>
-            <td class="ps-[52px]">
+            <td class="px-4 text-center">
               <app-status-pill [status]="row.user.status" [label]="row.statusLabel" />
             </td>
-            <td class="ps-[11px] text-center">
+            <td class="px-4 text-center">
               <app-row-actions-menu
                 primaryAction="view"
                 (view)="view.emit(row.user)"
