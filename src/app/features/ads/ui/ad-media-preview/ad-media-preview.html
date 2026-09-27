@@ -1,0 +1,23 @@
+@if (mediaUrl(); as url) {
+  @if (contentType() === 'video') {
+    <video
+      data-role="ad-media"
+      controls
+      class="h-[180px] w-full rounded-xl bg-black object-contain"
+      [src]="url"
+    ></video>
+  } @else {
+    <img
+      data-role="ad-media"
+      class="h-[180px] w-full rounded-xl bg-surface-muted object-cover"
+      [src]="url"
+      [alt]="title()"
+    />
+  }
+} @else {
+  <p
+    class="flex h-[180px] items-center justify-center rounded-xl border border-dashed border-border bg-surface-muted text-[12px]/[16px] text-text-secondary"
+  >
+    لا توجد وسائط مرفوعة لهذا الإعلان
+  </p>
+}

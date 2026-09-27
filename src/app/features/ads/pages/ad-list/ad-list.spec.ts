@@ -4,11 +4,12 @@ import { Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
 import { FileSaver } from '../../../../shared/files/file-saver';
 import { AdRepository } from '../../data/ad.repository';
-import { buildAd } from '../../testing/ad-fixture';
+import { buildAd, buildAdDetail } from '../../testing/ad-fixture';
 import { AdList } from './ad-list';
 
 function createPage(overrides: Partial<AdRepository> = {}) {
   const deleted: string[] = [];
+  const paused: string[] = [];
   const savedFiles: string[] = [];
   const repository: Partial<AdRepository> = {
     getAds: () => of({ items: [buildAd(), buildAd({ id: 'ad-2' })], totalCount: 100 }),
@@ -18,6 +19,11 @@ function createPage(overrides: Partial<AdRepository> = {}) {
       return of(undefined) as Observable<void>;
     },
     exportAds: () => of(new Blob(['csv'])),
+    getAdDetail: (id) => of(buildAdDetail({ ad: buildAd({ id }) })),
+    pauseAd: (id) => {
+      paused.push(id);
+      return of(buildAd({ id, status: 'paused' }));
+    },
     ...overrides,
   };
   TestBed.configureTestingModule({
@@ -38,6 +44,7 @@ function createPage(overrides: Partial<AdRepository> = {}) {
     fixture,
     element: fixture.nativeElement as HTMLElement,
     deleted,
+    paused,
     savedFiles,
     navigateByUrl,
   };
@@ -47,6 +54,11 @@ function buttonNamed(root: ParentNode, label: string): HTMLButtonElement {
   return Array.from(root.querySelectorAll('button')).find(
     (button) => button.textContent?.trim() === label,
   ) as HTMLButtonElement;
+}
+
+function openRowMenu(fixture: { detectChanges(): void }, element: HTMLElement): void {
+  (element.querySelector('tbody tr app-row-actions-menu button') as HTMLButtonElement).click();
+  fixture.detectChanges();
 }
 
 describe('AdList', () => {
@@ -75,14 +87,44 @@ describe('AdList', () => {
     expect(navigateByUrl).toHaveBeenCalledWith('/ads/new');
   });
 
-  it('opens the edit page of an ad and deletes one after confirming', async () => {
-    const { fixture, element, deleted, navigateByUrl } = createPage();
+  it('opens the details drawer from the ad title', () => {
+    const { fixture, element } = createPage();
 
     (element.querySelector('button[data-role="open-ad"]') as HTMLButtonElement).click();
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1/edit');
-
-    (element.querySelector('tbody tr app-row-actions-menu button') as HTMLButtonElement).click();
     fixture.detectChanges();
+
+    const drawer = element.querySelector('app-ad-detail-drawer') as HTMLElement;
+    expect(drawer.textContent).toContain('تفاصيل الإعلان');
+    expect(drawer.textContent).toContain('البانر الرئيسي العلوي');
+  });
+
+  it('opens the edit page from the row menu', () => {
+    const { fixture, element, navigateByUrl } = createPage();
+
+    openRowMenu(fixture, element);
+    buttonNamed(document, 'تعديل').click();
+
+    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1/edit');
+  });
+
+  it('stops an ad after confirming', async () => {
+    const { fixture, element, paused } = createPage();
+
+    openRowMenu(fixture, element);
+    buttonNamed(document, 'تغيير الحالة').click();
+    fixture.detectChanges();
+    const dialog = element.querySelector('app-confirm-action-dialog') as HTMLElement;
+    expect(dialog.textContent).toContain('هل تريد إيقاف إعلان');
+    buttonNamed(dialog, 'إيقاف الإعلان').click();
+    await fixture.whenStable();
+
+    expect(paused).toEqual(['ad-1']);
+  });
+
+  it('deletes an ad after confirming', async () => {
+    const { fixture, element, deleted } = createPage();
+
+    openRowMenu(fixture, element);
     buttonNamed(document, 'حذف').click();
     fixture.detectChanges();
     buttonNamed(

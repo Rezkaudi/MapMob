@@ -11,6 +11,9 @@ export abstract class AdRepository {
   abstract getAds(query: AdQuery): Observable<PagedResult<Ad>>;
   abstract getSummary(): Observable<CampaignSummary>;
   abstract getAdDetail(id: string): Observable<AdDetail>;
+  abstract pauseAd(id: string): Observable<Ad>;
+  /** The server puts the ad back to scheduled, active or expired, by its days. */
+  abstract resumeAd(id: string): Observable<Ad>;
   abstract getFormOptions(): Observable<AdFormOptions>;
   abstract createAd(draft: AdDraft): Observable<Ad>;
   abstract updateAd(id: string, draft: AdDraft): Observable<Ad>;

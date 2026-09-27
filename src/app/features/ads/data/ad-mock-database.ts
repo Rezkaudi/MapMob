@@ -28,6 +28,15 @@ export class AdMockDatabase {
     return detail;
   }
 
+  pause(id: string): Ad {
+    return this.replaceAd(id, { status: 'paused' });
+  }
+
+  /** `today` is a calendar day, `yyyy-mm-dd`. */
+  resume(id: string, today: string): Ad {
+    return this.replaceAd(id, { status: resolveRunningStatus(this.find(id).ad, today) });
+  }
+
   /** `placeName` is `null` for the app's own ad; `today` is `yyyy-mm-dd`. New ads lead the list. */
   create(draft: AdDraft, placeName: string | null, today: string): Ad {
     const detail = buildDetail(`ad-new-${this.nextNumber++}`, draft, placeName, today, null);
@@ -44,6 +53,14 @@ export class AdMockDatabase {
 
   remove(id: string): void {
     this.details = this.details.filter((detail) => detail.ad.id !== id);
+  }
+
+  private replaceAd(id: string, changes: Partial<Ad>): Ad {
+    const ad = { ...this.find(id).ad, ...changes };
+    this.details = this.details.map((current) =>
+      current.ad.id === id ? { ...current, ad } : current,
+    );
+    return ad;
   }
 }
 

@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, lastValueFrom, of, pipe, switchMap, tap } from 'rxjs';
+import { Observable, catchError, lastValueFrom, of, pipe, switchMap, tap } from 'rxjs';
 import { CampaignSummary } from '../../../shared/models/campaign-summary';
 import { ListSort } from '../../../shared/models/list-sort';
 import { withListTable } from '../../../shared/state/with-list-table';
@@ -101,46 +101,57 @@ export const AdsStore = signalStore(
       ),
     };
   }),
-  withMethods((store, repository = inject(AdRepository)) => ({
-    setSearch(search: string): void {
-      store.applyQuery({ search });
-      store.loadAds();
-    },
-    setSort(sort: ListSort | null): void {
-      store.applyQuery({ sort });
-      store.loadAds();
-    },
-    applyFilters(filters: AdFilters): void {
-      patchState(store, { filters });
-      store.resetToFirstPage();
-      store.loadAds();
-    },
-    changePage(pageIndex: number): void {
-      store.goToPage(pageIndex);
-      store.clearSelection();
-      store.loadAds();
-    },
-    deleteAd(id: string): Promise<boolean> {
-      return store.saveThenRefresh(
-        repository.deleteAd(id),
+  withMethods((store, repository = inject(AdRepository)) => {
+    const saveThenReload = (request: Observable<unknown>, onSaved?: () => void) =>
+      store.saveThenRefresh(
+        request,
         () => {
           store.loadAds();
           store.loadSummary();
         },
-        () => store.forgetRemovedEntry(id),
+        onSaved,
       );
-    },
-    /** Resolves the file to save, or `null` when the export failed and `saveError` says why. */
-    async exportAds(): Promise<Blob | null> {
-      patchState(store, { isExporting: true, saveError: null });
-      try {
-        return await lastValueFrom(repository.exportAds(store.currentAdQuery()));
-      } catch (error) {
-        patchState(store, { saveError: (error as Error).message });
-        return null;
-      } finally {
-        patchState(store, { isExporting: false });
-      }
-    },
-  })),
+
+    return {
+      setSearch(search: string): void {
+        store.applyQuery({ search });
+        store.loadAds();
+      },
+      setSort(sort: ListSort | null): void {
+        store.applyQuery({ sort });
+        store.loadAds();
+      },
+      applyFilters(filters: AdFilters): void {
+        patchState(store, { filters });
+        store.resetToFirstPage();
+        store.loadAds();
+      },
+      changePage(pageIndex: number): void {
+        store.goToPage(pageIndex);
+        store.clearSelection();
+        store.loadAds();
+      },
+      pauseAd(id: string): Promise<boolean> {
+        return saveThenReload(repository.pauseAd(id));
+      },
+      resumeAd(id: string): Promise<boolean> {
+        return saveThenReload(repository.resumeAd(id));
+      },
+      deleteAd(id: string): Promise<boolean> {
+        return saveThenReload(repository.deleteAd(id), () => store.forgetRemovedEntry(id));
+      },
+      /** Resolves the file to save, or `null` when the export failed and `saveError` says why. */
+      async exportAds(): Promise<Blob | null> {
+        patchState(store, { isExporting: true, saveError: null });
+        try {
+          return await lastValueFrom(repository.exportAds(store.currentAdQuery()));
+        } catch (error) {
+          patchState(store, { saveError: (error as Error).message });
+          return null;
+        } finally {
+          patchState(store, { isExporting: false });
+        }
+      },
+    };
+  }),
 );

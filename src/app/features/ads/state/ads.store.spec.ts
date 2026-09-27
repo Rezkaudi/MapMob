@@ -17,6 +17,8 @@ function createStore(overrides: Partial<AdRepository> = {}) {
     },
     getSummary: () => of(SUMMARY),
     deleteAd: () => of(undefined),
+    pauseAd: (id) => of(buildAd({ id, status: 'paused' })),
+    resumeAd: (id) => of(buildAd({ id, status: 'active' })),
     exportAds: () => of(new Blob(['csv'])),
     ...overrides,
   };
@@ -81,5 +83,13 @@ describe('AdsStore', () => {
     expect(await store.exportAds()).toBeNull();
     expect(store.saveError()).toBe('تعذر التصدير');
     expect(store.filters()).toEqual(NO_AD_FILTERS);
+  });
+
+  it('pauses and resumes an ad, reloading the page each time', async () => {
+    const { store, requestedQueries } = createStore();
+
+    expect(await store.pauseAd('ad-1')).toBe(true);
+    expect(await store.resumeAd('ad-1')).toBe(true);
+    expect(requestedQueries).toHaveLength(2);
   });
 });

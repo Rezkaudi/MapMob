@@ -7,6 +7,7 @@ import { Ad } from '../../models/ad';
 import { AD_CONTENT_TYPE_LABEL } from '../../models/ad-content-type';
 import { AD_PLACEMENT_LABEL } from '../../models/ad-placement';
 import { formatAdPeriod } from '../../state/ad-period-label';
+import { adPauseActionFor } from '../../state/ad-pause-action';
 import { formatAdPlace } from '../../state/ad-place-label';
 
 /**
@@ -32,6 +33,8 @@ interface AdTableRow {
   readonly contentTypeLabel: string;
   readonly placementLabel: string;
   readonly periodLabel: string;
+  /** Expired ads and drafts have no status to switch to, so their menu drops that item. */
+  readonly canChangeStatus: boolean;
 }
 
 @Component({
@@ -52,7 +55,9 @@ export class AdTable {
 
   readonly rowToggle = output<string>();
   readonly allToggle = output<void>();
+  readonly view = output<Ad>();
   readonly edit = output<Ad>();
+  readonly statusChange = output<Ad>();
   readonly remove = output<Ad>();
 
   protected readonly columnWidths = COLUMN_WIDTHS;
@@ -64,6 +69,7 @@ export class AdTable {
       contentTypeLabel: AD_CONTENT_TYPE_LABEL[ad.contentType],
       placementLabel: AD_PLACEMENT_LABEL[ad.placement],
       periodLabel: formatAdPeriod(ad.startsOn, ad.endsOn),
+      canChangeStatus: adPauseActionFor(ad.status) !== null,
     })),
   );
 }

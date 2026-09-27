@@ -60,4 +60,15 @@ describe('AdMockDatabase', () => {
     database.update('ad-2', buildAdDraft({ isMediaRemoved: true }), 'صيدلية الحياة', '2026-10-20');
     expect(database.find('ad-2').mediaUrl).toBeNull();
   });
+
+  it('pauses an ad, and gives a resumed one the status its days now say', () => {
+    const database = new AdMockDatabase([
+      buildAdDetail({ ad: buildAd({ id: 'a1', startsOn: '2026-10-15', endsOn: '2026-10-30' }) }),
+    ]);
+
+    expect(database.pause('a1').status).toBe('paused');
+    expect(database.find('a1').ad.status).toBe('paused');
+    expect(database.resume('a1', '2026-10-20').status).toBe('active');
+    expect(database.resume('a1', '2026-10-01').status).toBe('scheduled');
+  });
 });

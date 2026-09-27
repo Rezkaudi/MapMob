@@ -88,4 +88,19 @@ describe('AdHttpRepository', () => {
     expect((await created).id).toBe('ad-1');
     expect((await updated).id).toBe('ad-2');
   });
+
+  it('pauses and resumes an ad', async () => {
+    const paused = buildAd({ status: 'paused' });
+    const resumed = buildAd({ status: 'active' });
+    const pauseResponse = firstValueFrom(repository.pauseAd('ad-4'));
+    const resumeResponse = firstValueFrom(repository.resumeAd('ad-4'));
+
+    const pauseRequest = http.expectOne(`${BASE_URL}/ads/ad-4/pause`);
+    expect(pauseRequest.request.method).toBe('POST');
+    pauseRequest.flush(paused);
+    http.expectOne(`${BASE_URL}/ads/ad-4/resume`).flush(resumed);
+
+    expect(await pauseResponse).toEqual(paused);
+    expect(await resumeResponse).toEqual(resumed);
+  });
 });

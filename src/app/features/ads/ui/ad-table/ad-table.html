@@ -53,7 +53,7 @@
                 type="button"
                 data-role="open-ad"
                 class="line-clamp-2 w-[126px] text-right font-bold text-text-primary hover:text-primary"
-                (click)="edit.emit(row.ad)"
+                (click)="view.emit(row.ad)"
               >
                 {{ row.ad.title }}
               </button>
@@ -75,8 +75,12 @@
             </td>
             <td class="pe-[37px] text-center">
               <app-row-actions-menu
-                [isStatusChangeVisible]="false"
+                primaryAction="view"
+                [isEditVisible]="true"
+                [isStatusChangeVisible]="row.canChangeStatus"
+                (view)="view.emit(row.ad)"
                 (edit)="edit.emit(row.ad)"
+                (statusChange)="statusChange.emit(row.ad)"
                 (remove)="remove.emit(row.ad)"
               />
             </td>

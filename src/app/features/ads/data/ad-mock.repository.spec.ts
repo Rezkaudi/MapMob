@@ -61,4 +61,11 @@ describe('AdMockRepository', () => {
       firstValueFrom(repository.createAd(buildAdDraft({ placeId: 'missing' }))),
     ).rejects.toThrowError('لم يتم العثور على المتجر');
   });
+
+  it('pauses a running ad and resumes a paused one', async () => {
+    const repository = TestBed.inject(AdMockRepository);
+
+    expect((await firstValueFrom(repository.pauseAd('ad-2'))).status).toBe('paused');
+    expect((await firstValueFrom(repository.resumeAd('a3'))).status).toBe('expired');
+  });
 });

@@ -53,8 +53,10 @@
       [rowCount]="store.pageSize()"
       (rowToggle)="store.toggleSelected($event)"
       (allToggle)="store.toggleAllVisible()"
+      (view)="detailStore.open($event.id)"
       (edit)="editAd($event)"
-      (remove)="pendingDeletion.set($event)"
+      (statusChange)="askToChangeStatus($event)"
+      (remove)="askToDelete($event)"
     />
 
     <app-table-pagination
@@ -68,12 +70,27 @@
   }
 </div>
 
-@if (deleteCopy(); as copy) {
+@if (detailStore.isOpen()) {
+  <app-ad-detail-drawer
+    [detail]="detailStore.detail()"
+    [view]="detailStore.view()"
+    [isLoading]="detailStore.isLoading()"
+    [error]="detailStore.error()"
+    [isBusy]="store.isSaving()"
+    (closed)="detailStore.close()"
+    (retry)="detailStore.reload()"
+    (edit)="editAd($event)"
+    (statusChange)="askToChangeStatus($event)"
+    (remove)="askToDelete($event)"
+  />
+}
+
+@if (confirmCopy(); as copy) {
   <app-confirm-action-dialog
     [copy]="copy"
     [isBusy]="store.isSaving()"
-    (confirmed)="confirmDeletion()"
-    (cancelled)="cancelDeletion()"
+    (confirmed)="confirmPending()"
+    (cancelled)="cancelPending()"
   />
 }
 

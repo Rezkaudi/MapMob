@@ -30,6 +30,14 @@ export class AdHttpRepository implements AdRepository {
     return this.httpClient.get<AdDetail>(`${this.adsUrl}/${id}`);
   }
 
+  pauseAd(id: string): Observable<Ad> {
+    return this.httpClient.post<Ad>(`${this.adsUrl}/${id}/pause`, null);
+  }
+
+  resumeAd(id: string): Observable<Ad> {
+    return this.httpClient.post<Ad>(`${this.adsUrl}/${id}/resume`, null);
+  }
+
   getFormOptions(): Observable<AdFormOptions> {
     return this.httpClient.get<AdFormOptions>(`${this.adsUrl}/form-options`);
   }

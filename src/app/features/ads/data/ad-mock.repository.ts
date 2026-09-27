@@ -34,6 +34,14 @@ export class AdMockRepository implements AdRepository {
     return mockRequest(() => this.database.find(id));
   }
 
+  pauseAd(id: string): Observable<Ad> {
+    return mockRequest(() => this.database.pause(id));
+  }
+
+  resumeAd(id: string): Observable<Ad> {
+    return mockRequest(() => this.database.resume(id, this.today()));
+  }
+
   getFormOptions(): Observable<AdFormOptions> {
     return mockRequest(() => ({ places: MOCK_PLACES.map(({ id, name }) => ({ id, name })) }));
   }

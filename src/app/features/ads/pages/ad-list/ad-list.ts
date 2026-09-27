@@ -11,8 +11,12 @@ import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { Ad } from '../../models/ad';
+import { AdConfirmRequest } from '../../models/ad-confirm-request';
+import { AdDetailStore } from '../../state/ad-detail.store';
+import { adPauseActionFor } from '../../state/ad-pause-action';
 import { AdsStore } from '../../state/ads.store';
-import { buildAdDeleteCopy } from '../../ui/ad-dialog-copy';
+import { AdDetailDrawer } from '../../ui/ad-detail-drawer/ad-detail-drawer';
+import { buildAdConfirmCopy } from '../../ui/ad-dialog-copy';
 import { AdTable } from '../../ui/ad-table/ad-table';
 import { AdToolbar } from '../../ui/ad-toolbar/ad-toolbar';
 
@@ -21,6 +25,7 @@ const NEW_AD_URL = '/ads/new';
 @Component({
   selector: 'app-ad-list',
   imports: [
+    AdDetailDrawer,
     AdTable,
     AdToolbar,
     ConfirmActionDialog,
@@ -32,6 +37,7 @@ const NEW_AD_URL = '/ads/new';
     Toast,
   ],
   templateUrl: './ad-list.html',
+  providers: [AdDetailStore],
   host: { class: 'flex min-h-full flex-col' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,11 +47,12 @@ export class AdList {
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(AdsStore);
-  /** View state only: the ad waiting for the delete to be confirmed. */
-  protected readonly pendingDeletion = signal<Ad | null>(null);
-  protected readonly deleteCopy = computed(() => {
-    const ad = this.pendingDeletion();
-    return ad ? buildAdDeleteCopy(ad) : null;
+  protected readonly detailStore = inject(AdDetailStore);
+  /** View state only: the change waiting to be confirmed. */
+  protected readonly pendingConfirm = signal<AdConfirmRequest | null>(null);
+  protected readonly confirmCopy = computed(() => {
+    const request = this.pendingConfirm();
+    return request ? buildAdConfirmCopy(request.action, request.ad) : null;
   });
 
   constructor() {
@@ -61,16 +68,38 @@ export class AdList {
     this.router.navigateByUrl(`/ads/${ad.id}/edit`);
   }
 
-  protected async confirmDeletion(): Promise<void> {
-    const ad = this.pendingDeletion();
-    if (ad && (await this.store.deleteAd(ad.id))) {
-      this.pendingDeletion.set(null);
+  protected askToChangeStatus(ad: Ad): void {
+    const action = adPauseActionFor(ad.status);
+    if (action) {
+      this.pendingConfirm.set({ action, ad });
     }
   }
 
-  protected cancelDeletion(): void {
-    this.pendingDeletion.set(null);
+  protected askToDelete(ad: Ad): void {
+    this.pendingConfirm.set({ action: 'delete', ad });
+  }
+
+  protected async confirmPending(): Promise<void> {
+    const request = this.pendingConfirm();
+    if (request && (await this.save(request))) {
+      this.pendingConfirm.set(null);
+      this.detailStore.close();
+    }
+  }
+
+  protected cancelPending(): void {
+    this.pendingConfirm.set(null);
     this.store.clearSaveError();
+  }
+
+  private save(request: AdConfirmRequest): Promise<boolean> {
+    if (request.action === 'pause') {
+      return this.store.pauseAd(request.ad.id);
+    }
+    if (request.action === 'resume') {
+      return this.store.resumeAd(request.ad.id);
+    }
+    return this.store.deleteAd(request.ad.id);
   }
 
   protected async exportAds(): Promise<void> {
