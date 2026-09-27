@@ -59,7 +59,11 @@
           (addImage)="goToEdit('media')"
         />
 
-        <app-info-card heading="المعلومات الأساسية" [canEdit]="true" (edit)="goToEdit('basic-info')">
+        <app-info-card
+          heading="المعلومات الأساسية"
+          [canEdit]="true"
+          (edit)="goToEdit('basic-info')"
+        >
           <p class="text-[14px]/[24px] text-text-secondary">{{ place.description }}</p>
           <div class="mt-6 grid grid-cols-2 gap-6">
             <div>
@@ -85,7 +89,9 @@
         <app-place-products-card
           [products]="place.products"
           (addProduct)="goToEdit('products')"
-          (editProduct)="goToEdit('products')"
+          (editProduct)="editProduct($event)"
+          (changeStatus)="changeProductAvailability($event)"
+          (removeProduct)="askToRemoveProduct($event)"
         />
 
         <app-place-offers-card
@@ -183,6 +189,23 @@
     [isBusy]="store.isSaving()"
     (confirmed)="confirmAction()"
     (cancelled)="cancelAction()"
+  />
+}
+
+@if (editedProduct()) {
+  <app-product-dialog
+    mode="edit"
+    [initialDraft]="editedProductDraft()"
+    (submitted)="saveProduct($event)"
+    (cancelled)="closeProductDialog()"
+  />
+}
+
+@if (removeProductCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    (confirmed)="confirmRemoveProduct()"
+    (cancelled)="cancelRemoveProduct()"
   />
 }
 

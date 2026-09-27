@@ -7,6 +7,8 @@ import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { withSaveStatus } from '../../../shared/state/with-save-status';
 import { PlaceRepository } from '../data/place.repository';
 import { PlaceDetail } from '../models/place-detail';
+import { PlaceProduct } from '../models/place-product';
+import { ProductDraft } from '../models/product-draft';
 
 interface PlaceDetailState {
   readonly place: PlaceDetail | null;
@@ -54,6 +56,39 @@ export const PlaceDetailStore = signalStore(
       /** The page leaves for the list once this resolves, so there is nothing to reload. */
       deletePlace(id: string): Promise<boolean> {
         return save(repository.deletePlaces([id]), id, false);
+      },
+    };
+  }),
+  /**
+   * Products are changed on the page itself. There is no product endpoint yet, so these
+   * edits live in the loaded place until one exists.
+   */
+  withMethods((store) => {
+    const withProducts = (
+      change: (products: readonly PlaceProduct[]) => readonly PlaceProduct[],
+    ): void => {
+      const place = store.place();
+      if (!place) {
+        return;
+      }
+      patchState(store, { place: { ...place, products: change(place.products) } });
+    };
+
+    return {
+      saveProduct(id: string, draft: ProductDraft): void {
+        withProducts((products) =>
+          products.map((product) => (product.id === id ? { ...product, ...draft } : product)),
+        );
+      },
+      toggleProductAvailability(id: string): void {
+        withProducts((products) =>
+          products.map((product) =>
+            product.id === id ? { ...product, isAvailable: !product.isAvailable } : product,
+          ),
+        );
+      },
+      removeProduct(id: string): void {
+        withProducts((products) => products.filter((product) => product.id !== id));
       },
     };
   }),

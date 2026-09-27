@@ -19,6 +19,89 @@ describe('PlaceDetail', () => {
     return fixture;
   }
 
+  function openProductMenu(fixture: ReturnType<typeof render>, row = 0): HTMLElement {
+    const cards = fixture.nativeElement.querySelectorAll('app-place-products-card app-action-menu');
+    (cards[row].querySelector('button') as HTMLElement).click();
+    fixture.detectChanges();
+    return cards[row].querySelector('[data-testid="action-menu-panel"]') as HTMLElement;
+  }
+
+  function pickFromMenu(fixture: ReturnType<typeof render>, label: string, row = 0): void {
+    const panel = openProductMenu(fixture, row);
+    Array.from(panel.querySelectorAll('button'))
+      .find((button) => button.textContent?.includes(label))!
+      .click();
+    fixture.detectChanges();
+  }
+
+  function productRows(fixture: ReturnType<typeof render>): HTMLElement[] {
+    return Array.from(fixture.nativeElement.querySelectorAll('app-place-products-card tbody tr'));
+  }
+
+  it('edits a product from its menu, filling the dialog and keeping the change', () => {
+    const fixture = render();
+
+    pickFromMenu(fixture, 'تعديل');
+    const name: HTMLInputElement = fixture.nativeElement.querySelector(
+      '[data-testid="product-name"]',
+    );
+    expect(name.value).toBe('سيروم تحت العين');
+
+    name.value = 'سيروم بعد التعديل';
+    name.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('[data-testid="submit-product"]') as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-product-dialog')).toBeNull();
+    expect(productRows(fixture)[0].textContent).toContain('سيروم بعد التعديل');
+  });
+
+  it('flips a product between متاح and غير متاح from its menu', () => {
+    const fixture = render();
+    expect(productRows(fixture)[0].textContent).toContain('متاح');
+
+    pickFromMenu(fixture, 'تغيير الحالة');
+
+    expect(productRows(fixture)[0].textContent).toContain('غير متاح');
+  });
+
+  it('asks before deleting a product, and keeps it when the admin backs out', () => {
+    const fixture = render();
+    const before = productRows(fixture).length;
+
+    pickFromMenu(fixture, 'حذف');
+    expect(fixture.nativeElement.textContent).toContain('حذف المنتج أو الخدمة');
+    expect(productRows(fixture)).toHaveLength(before);
+
+    clickByText(fixture, 'إلغاء');
+
+    expect(productRows(fixture)).toHaveLength(before);
+  });
+
+  it('deletes the product once the admin confirms', () => {
+    const fixture = render();
+    const before = productRows(fixture).length;
+
+    pickFromMenu(fixture, 'حذف');
+    clickByText(fixture, 'حذف', 'app-confirm-action-dialog');
+
+    expect(productRows(fixture)).toHaveLength(before - 1);
+    expect(fixture.nativeElement.querySelector('app-confirm-action-dialog')).toBeNull();
+  });
+
+  function clickByText(
+    fixture: ReturnType<typeof render>,
+    label: string,
+    within = 'app-confirm-action-dialog',
+  ): void {
+    const host = fixture.nativeElement.querySelector(within) as HTMLElement;
+    Array.from(host.querySelectorAll('button'))
+      .find((button) => button.textContent?.trim() === label)!
+      .click();
+    fixture.detectChanges();
+  }
+
   it('shows the name, status and address in the header', () => {
     const text = render().nativeElement.textContent;
 
@@ -248,13 +331,18 @@ describe('PlaceDetail edit links', () => {
     expect(TestBed.inject(Router).url).toBe('/offers/new');
   });
 
-  it('opens the edit page at the products section when a product is edited', async () => {
+  it('opens the product dialog when a product name is clicked', async () => {
     const fixture = render();
 
     (fixture.nativeElement.querySelector('[data-role="open-product"]') as HTMLElement).click();
     await fixture.whenStable();
+    fixture.detectChanges();
 
-    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#products');
+    const name: HTMLInputElement = fixture.nativeElement.querySelector(
+      '[data-testid="product-name"]',
+    );
+    expect(name.value).toBe('سيروم تحت العين');
+    expect(TestBed.inject(Router).url).toBe('/');
   });
 });
 

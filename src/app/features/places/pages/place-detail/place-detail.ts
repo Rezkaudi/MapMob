@@ -11,6 +11,11 @@ import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PlaceEditSection } from '../../models/place-edit-section';
+import { PlaceProduct } from '../../models/place-product';
+import { ProductDraft } from '../../models/product-draft';
+import { ProductDialog } from '../../ui/product-dialog/product-dialog';
+import { buildRemoveProductCopy } from '../../ui/product-confirm-copy';
+import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { PlaceDetailStore } from '../../state/place-detail.store';
 import { PlaceDetailSkeleton } from './place-detail-skeleton/place-detail-skeleton';
 import { PlaceGallery } from './place-gallery/place-gallery';
@@ -50,6 +55,7 @@ const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
     PlaceOffersCard,
     PlaceProductsCard,
     PlaceVideosCard,
+    ProductDialog,
     Toast,
     ArabicDatePipe,
     RouterLink,
@@ -72,6 +78,18 @@ export class PlaceDetail {
   protected readonly place = this.store.place;
   protected readonly isSuspended = computed(() => this.place()?.status === 'suspended');
   protected readonly pendingAction = signal<ConfirmAction | null>(null);
+  /** The product the dialog is changing, and the one waiting on a delete answer. */
+  protected readonly editedProduct = signal<PlaceProduct | null>(null);
+  protected readonly productToRemove = signal<PlaceProduct | null>(null);
+  protected readonly editedProductDraft = computed<ProductDraft>(() => {
+    const product = this.editedProduct() ?? EMPTY_PRODUCT_DRAFT;
+    const { name, price, currency, imageUrl, orderUrl } = product;
+    return { name, price, currency, imageUrl, orderUrl };
+  });
+  protected readonly removeProductCopy = computed(() => {
+    const product = this.productToRemove();
+    return product ? buildRemoveProductCopy(product.name) : null;
+  });
   protected readonly confirmCopy = computed(() => {
     const action = this.pendingAction();
     const place = this.place();
@@ -93,6 +111,44 @@ export class PlaceDetail {
 
   protected goToNewOffer(): void {
     this.router.navigate(['/offers', 'new']);
+  }
+
+  protected editProduct(product: PlaceProduct): void {
+    this.editedProduct.set(product);
+  }
+
+  protected closeProductDialog(): void {
+    this.editedProduct.set(null);
+  }
+
+  protected saveProduct(draft: ProductDraft): void {
+    const product = this.editedProduct();
+    if (!product) {
+      return;
+    }
+    this.store.saveProduct(product.id, draft);
+    this.closeProductDialog();
+  }
+
+  protected changeProductAvailability(product: PlaceProduct): void {
+    this.store.toggleProductAvailability(product.id);
+  }
+
+  protected askToRemoveProduct(product: PlaceProduct): void {
+    this.productToRemove.set(product);
+  }
+
+  protected cancelRemoveProduct(): void {
+    this.productToRemove.set(null);
+  }
+
+  protected confirmRemoveProduct(): void {
+    const product = this.productToRemove();
+    if (!product) {
+      return;
+    }
+    this.store.removeProduct(product.id);
+    this.productToRemove.set(null);
   }
 
   protected askForStatusChange(): void {
