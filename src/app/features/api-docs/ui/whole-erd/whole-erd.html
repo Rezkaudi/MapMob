@@ -1,0 +1,86 @@
+<section [id]="domain().id" class="scroll-mt-32 space-y-3">
+  <div class="flex flex-wrap items-end justify-between gap-3">
+    <div class="space-y-1">
+      <h3 class="text-[19px] font-bold text-text-primary">{{ domain().name }}</h3>
+      <p class="max-w-[76ch] text-[15px] leading-relaxed text-text-secondary">
+        All {{ tableCount() }} tables and every relationship between them, including the links
+        across groups. Fit shows the whole database at once; pick 75% or 100% to read the columns.
+        Each group below repeats its part with a column list.
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 print:hidden">
+      <div
+        class="flex rounded-lg border border-border bg-surface p-0.5"
+        role="group"
+        aria-label="Columns to show"
+      >
+        <button
+          type="button"
+          class="h-9 cursor-pointer rounded-md px-3 text-[13px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none"
+          [class]="
+            isKeysOnly()
+              ? 'text-text-secondary hover:text-text-primary'
+              : 'bg-text-primary text-white'
+          "
+          [attr.aria-pressed]="!isKeysOnly()"
+          (click)="isKeysOnly.set(false)"
+        >
+          All columns
+        </button>
+        <button
+          type="button"
+          data-keys-only
+          class="h-9 cursor-pointer rounded-md px-3 text-[13px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none"
+          [class]="
+            isKeysOnly()
+              ? 'bg-text-primary text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          "
+          [attr.aria-pressed]="isKeysOnly()"
+          (click)="isKeysOnly.set(true)"
+        >
+          Keys only
+        </button>
+      </div>
+      <div
+        class="flex rounded-lg border border-border bg-surface p-0.5"
+        role="group"
+        aria-label="Zoom"
+      >
+        <button
+          type="button"
+          data-zoom="fit"
+          class="h-9 min-w-12 cursor-pointer rounded-md px-2.5 text-[13px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none"
+          [class]="
+            zoomPercent() === fit
+              ? 'bg-primary-soft font-semibold text-primary'
+              : 'text-text-secondary hover:text-text-primary'
+          "
+          [attr.aria-pressed]="zoomPercent() === fit"
+          (click)="zoomPercent.set(fit)"
+        >
+          Fit
+        </button>
+        @for (level of zoomLevels; track level) {
+          <button
+            type="button"
+            [attr.data-zoom]="level"
+            class="h-9 min-w-12 cursor-pointer rounded-md px-2.5 font-code text-[13px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none"
+            [class]="
+              zoomPercent() === level
+                ? 'bg-primary-soft font-semibold text-primary'
+                : 'text-text-secondary hover:text-text-primary'
+            "
+            [attr.aria-pressed]="zoomPercent() === level"
+            (click)="zoomPercent.set(level)"
+          >
+            {{ level }}%
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="max-h-[85vh] overflow-auto rounded-xl print:max-h-none print:overflow-visible">
+    <app-erd-diagram [domain]="drawnDomain()" [zoom]="zoom()" />
+  </div>
+</section>

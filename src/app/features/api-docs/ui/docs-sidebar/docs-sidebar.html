@@ -1,0 +1,33 @@
+<nav aria-label="Reference sections" class="space-y-6">
+  @for (group of groups(); track group.title) {
+    <div>
+      <p class="mb-2 px-3 text-[12px] font-semibold tracking-[0.06em] text-text-primary uppercase">
+        {{ group.title }}
+      </p>
+      <ul class="space-y-0.5 border-s border-border">
+        @for (link of group.links; track link.id) {
+          <li>
+            <a
+              [href]="pagePath() + '#' + link.id"
+              [attr.aria-current]="activeId() === link.id ? 'location' : null"
+              class="-ms-px flex min-h-9 cursor-pointer items-center justify-between gap-2 border-s-2 py-1.5 ps-3 pe-2 text-[14px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary motion-reduce:transition-none"
+              [class]="
+                activeId() === link.id
+                  ? 'border-primary bg-primary-soft font-semibold text-primary'
+                  : 'border-transparent text-text-secondary hover:border-[#CBD5E1] hover:text-text-primary'
+              "
+              (click)="follow($event, link.id)"
+            >
+              <span class="truncate">{{ link.label }}</span>
+              @if (link.count !== undefined) {
+                <span class="font-code text-[12px] tabular-nums text-text-secondary">{{
+                  link.count
+                }}</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</nav>

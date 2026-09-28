@@ -1,0 +1,62 @@
+<div
+  class="flex flex-col gap-3 rounded-xl border border-border bg-surface/95 p-3 shadow-[0_8px_30px_-18px_rgba(15,23,42,0.35)] backdrop-blur lg:flex-row lg:items-center"
+>
+  <label class="relative flex-1">
+    <span class="sr-only">Search endpoints</span>
+    <svg
+      class="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.7" />
+      <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+    </svg>
+    <input
+      type="search"
+      class="h-10 w-full rounded-lg border border-border bg-surface-muted ps-9 pe-3 font-code text-[13px] text-text-primary placeholder:font-latin placeholder:text-placeholder focus:border-primary focus:bg-surface focus:outline-none focus:ring-3 focus:ring-primary/15"
+      placeholder="Search a path, a method or a word — e.g. /places, DELETE, export"
+      [value]="search()"
+      (input)="readSearch($event)"
+    />
+  </label>
+  <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by method">
+    @for (chip of chips; track chip.label) {
+      <button
+        type="button"
+        data-method-chip
+        class="h-9 rounded-full border px-3.5 font-code text-[13px] font-medium transition cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary duration-200 motion-reduce:transition-none"
+        [class]="
+          methodFilter() === chip.value
+            ? 'border-text-primary bg-text-primary text-white'
+            : 'border-border bg-surface text-text-secondary hover:border-[#CBD5E1] hover:text-text-primary'
+        "
+        [attr.aria-pressed]="methodFilter() === chip.value"
+        (click)="methodFilterChange.emit(chip.value)"
+      >
+        {{ chip.label }}
+      </button>
+    }
+  </div>
+  <div class="flex items-center gap-2 lg:ms-2">
+    <span class="text-[13px] whitespace-nowrap text-text-secondary" aria-live="polite"
+      >{{ visibleCount() }} endpoints</span
+    >
+    <button
+      type="button"
+      data-open-all
+      class="h-9 rounded-lg px-3 text-[13px] font-medium text-primary hover:bg-primary-soft cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      (click)="openAll.emit()"
+    >
+      Expand all
+    </button>
+    <button
+      type="button"
+      data-close-all
+      class="h-9 rounded-lg px-3 text-[13px] font-medium text-text-secondary hover:bg-surface-muted cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      (click)="closeAll.emit()"
+    >
+      Collapse
+    </button>
+  </div>
+</div>

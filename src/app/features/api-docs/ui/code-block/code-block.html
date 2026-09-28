@@ -1,0 +1,52 @@
+<div
+  class="overflow-hidden rounded-lg bg-[#0B1220] ring-1 ring-[#1E293B] print:bg-white print:ring-border"
+>
+  <div
+    class="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-1.5 print:border-border"
+  >
+    <span
+      class="font-code text-[12px] tracking-wide text-[#94A3B8] uppercase print:text-text-secondary"
+    >
+      {{ label() }}<span class="ms-2 normal-case text-[#64748B]">{{ language() }}</span>
+    </span>
+    <button
+      type="button"
+      class="inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-[12px] font-medium text-[#CBD5E1] transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none print:hidden"
+      [attr.aria-label]="'Copy ' + (label() || 'code')"
+      (click)="copy()"
+    >
+      @if (isCopied()) {
+        <svg class="size-3.5 text-[#86EFAC]" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path
+            d="M3.5 8.5l3 3 6-7"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      } @else {
+        <svg class="size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect
+            x="5"
+            y="5"
+            width="8.5"
+            height="8.5"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+          />
+          <path
+            d="M10.5 3.5V3A1.5 1.5 0 0 0 9 1.5H3A1.5 1.5 0 0 0 1.5 3v6A1.5 1.5 0 0 0 3 10.5h.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+          />
+        </svg>
+      }
+      <span aria-live="polite">{{ isCopied() ? 'Copied' : 'Copy' }}</span>
+    </button>
+  </div>
+  <pre
+    class="max-h-[460px] overflow-auto px-4 py-3 font-code text-[13px] leading-[1.65] print:max-h-none print:overflow-visible print:text-[12px] print:whitespace-pre-wrap"
+  >@for (token of tokens(); track $index) {<span [attr.data-token]="token.kind" [class]="tokenClasses[token.kind]">@for (run of token.runs; track $index) {@if (run.isArabic) {<span data-script="arabic" class="font-sans">{{ run.text }}</span>} @else {{{ run.text }}}}</span>}</pre>
+</div>

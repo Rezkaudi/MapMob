@@ -1,0 +1,107 @@
+<div class="space-y-6">
+  <p class="text-[14px] leading-relaxed text-text-primary">{{ endpoint().summary }}</p>
+
+  <dl
+    class="grid gap-px overflow-hidden rounded-lg border border-border bg-border text-[13px] sm:grid-cols-3"
+  >
+    <div class="bg-surface px-3 py-2.5">
+      <dt class="text-[12px] text-text-secondary">Request body</dt>
+      <dd class="mt-0.5 font-code break-all text-text-primary">
+        {{ endpoint().body?.contentType ?? 'No body' }}
+      </dd>
+    </div>
+    <div class="bg-surface px-3 py-2.5">
+      <dt class="text-[12px] text-text-secondary">Permission</dt>
+      <dd class="mt-0.5 font-code text-text-primary">{{ permissionText() }}</dd>
+    </div>
+    <div class="bg-surface px-3 py-2.5">
+      <dt class="text-[12px] text-text-secondary">Called from</dt>
+      <dd class="mt-0.5 font-code text-text-primary">{{ feature().screen }}</dd>
+    </div>
+  </dl>
+
+  @if (pathParams().length > 0) {
+    <section>
+      <app-section-label>Path parameters</app-section-label>
+      <app-field-table [fields]="pathParams()" />
+    </section>
+  }
+
+  @if (endpoint().queryParams; as queryParams) {
+    <section>
+      <app-section-label>Query parameters</app-section-label>
+      <app-field-table [fields]="queryParams" />
+    </section>
+  }
+
+  @if (endpoint().body; as body) {
+    <section class="space-y-3">
+      <app-section-label>
+        Request body
+        <span
+          class="rounded bg-surface-muted px-1.5 py-0.5 font-code text-[12px] tracking-normal normal-case"
+          >{{ body.contentType }}</span
+        >
+      </app-section-label>
+      @if (body.fields.length > 0) {
+        <app-field-table [fields]="body.fields" />
+      }
+      <app-code-block
+        [code]="requestJson()"
+        language="json"
+        [label]="body.contentType === 'multipart/form-data' ? 'Form fields' : 'Request example'"
+      />
+    </section>
+  }
+
+  <section class="space-y-3">
+    <app-section-label>Response</app-section-label>
+    <p class="flex flex-wrap items-center gap-2 text-[14px] text-text-primary">
+      <span
+        class="rounded px-1.5 py-0.5 font-code text-[12px] font-bold"
+        [class]="successClasses"
+        >{{ endpoint().response.status }}</span
+      >
+      {{ endpoint().response.description }}
+      @if (endpoint().response.contentType; as contentType) {
+        <span
+          class="rounded bg-surface-muted px-1.5 py-0.5 font-code text-[12px] text-text-secondary"
+          >{{ contentType }}</span
+        >
+      }
+    </p>
+    @if (responseJson(); as json) {
+      <app-code-block [code]="json" language="json" label="Response example" />
+    }
+    @if (endpoint().response.fields; as fields) {
+      <app-field-table [fields]="fields" />
+    }
+  </section>
+
+  @if (errorCases().length > 0) {
+    <section>
+      <app-section-label>Errors</app-section-label>
+      <app-error-table [cases]="errorCases()" />
+    </section>
+  }
+
+  @if (endpoint().notes; as notes) {
+    <section>
+      <app-section-label>Backend notes</app-section-label>
+      <ul
+        class="space-y-1.5 rounded-lg border-s-4 border-warning bg-warning-soft/60 px-4 py-3 text-[15px] leading-relaxed text-text-primary"
+      >
+        @for (note of notes; track note) {
+          <li class="flex gap-2">
+            <span class="text-warning" aria-hidden="true">▸</span>{{ note }}
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section>
+    <app-section-label>Try it</app-section-label>
+    <app-code-block [code]="curl()" language="bash" label="cURL" />
+  </section>
+</div>

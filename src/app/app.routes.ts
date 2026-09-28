@@ -8,6 +8,12 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
+    // Public, so the backend team can read it without a dashboard account.
+    path: 'docs',
+    loadChildren: () =>
+      import('./features/api-docs/api-docs.routes').then((m) => m.API_DOCS_ROUTES),
+  },
+  {
     path: '',
     component: AdminShell,
     canActivate: [signedInGuard],

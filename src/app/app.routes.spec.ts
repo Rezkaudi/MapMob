@@ -94,6 +94,15 @@ describe('app routes', () => {
     expect(TestBed.inject(Location).path()).toBe('/login');
   });
 
+  it('serves the API reference at /docs to a signed-out visitor, outside the admin shell', async () => {
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/docs');
+
+    expect(TestBed.inject(Location).path()).toBe('/docs');
+    expect(harness.fixture.nativeElement.querySelector('app-api-docs')).toBeTruthy();
+    expect(harness.fixture.nativeElement.querySelector('app-sidebar')).toBeNull();
+  });
+
   it('sends the root URL of a signed-out visitor to the login page', async () => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/');

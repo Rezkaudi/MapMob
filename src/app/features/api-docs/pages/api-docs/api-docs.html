@@ -1,0 +1,165 @@
+<div
+  dir="ltr"
+  lang="en"
+  class="h-full overflow-y-auto bg-surface-muted font-docs text-text-primary antialiased print:h-auto print:overflow-visible print:bg-white"
+  (scroll)="trackReading($any($event.target))"
+>
+  <a
+    [href]="contentLink"
+    class="sr-only z-50 rounded-lg bg-text-primary px-4 py-3 text-[15px] font-semibold text-white focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+    >Skip to content</a
+  >
+  <app-docs-hero
+    [title]="reference().title"
+    [updatedOn]="reference().updatedOn"
+    [counts]="store.counts()"
+    [featureCount]="reference().features.length"
+    [tableCount]="store.tableCount()"
+    (jumpToExport)="goToExport()"
+  />
+
+  <div class="mx-auto flex max-w-[1440px] gap-10 px-4 sm:px-6 lg:px-8">
+    <aside
+      class="sticky top-0 hidden h-screen w-[236px] shrink-0 overflow-y-auto py-8 [scrollbar-color:#CBD5E1_transparent] [scrollbar-width:thin] lg:block print:hidden"
+    >
+      <app-docs-sidebar
+        [features]="reference().features"
+        [domains]="reference().domains"
+        [activeId]="store.activeSectionId()"
+        [pagePath]="pagePath"
+        (navigate)="goTo($event)"
+      />
+    </aside>
+
+    <main
+      id="docs-content"
+      tabindex="-1"
+      class="min-w-0 flex-1 space-y-16 py-8 outline-none lg:py-10"
+    >
+      <div
+        class="sticky top-0 z-20 -mx-4 bg-surface-muted/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:hidden print:hidden"
+      >
+        <app-docs-mobile-nav
+          [features]="reference().features"
+          [domains]="reference().domains"
+          [activeId]="store.activeSectionId()"
+          (navigate)="goTo($event)"
+        />
+      </div>
+      <section id="overview" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="01"
+          title="Overview"
+          description="Paths are relative to the API base URL. Every request except sign-in sends the admin's bearer token. Read the conventions once — they apply to every endpoint."
+        />
+        <app-docs-overview />
+      </section>
+
+      <section id="conventions" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="02"
+          title="Conventions"
+          description="The shared rules. Getting these right first saves changing every endpoint later."
+        />
+        <div class="grid gap-4 xl:grid-cols-2">
+          @for (section of reference().conventions; track section.id) {
+            <app-convention-card [section]="section" />
+          }
+        </div>
+      </section>
+
+      <section id="endpoints" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="03"
+          title="Endpoints"
+          description="Grouped by dashboard screen. Open a card for its parameters, request body, expected response, errors, rules and a cURL line."
+        />
+        <div class="z-10 -mx-1 mb-6 px-1 pt-2 pb-1 lg:sticky lg:top-0 print:hidden">
+          <app-docs-toolbar
+            [search]="store.search()"
+            [methodFilter]="store.methodFilter()"
+            [visibleCount]="store.visibleCount()"
+            (searchChange)="store.setSearch($event)"
+            (methodFilterChange)="store.setMethodFilter($event)"
+            (openAll)="store.openAllVisible()"
+            (closeAll)="store.closeAll()"
+          />
+        </div>
+        <div class="space-y-12">
+          @for (feature of store.visibleFeatures(); track feature.id) {
+            <app-endpoint-section
+              [feature]="feature"
+              [openEndpointIds]="store.openEndpointSet()"
+              [isAllOpen]="store.isPrinting()"
+              (toggle)="toggleEndpoint($event)"
+            />
+          } @empty {
+            <div
+              class="rounded-xl border border-dashed border-[#CBD5E1] bg-surface px-6 py-12 text-center"
+            >
+              <p class="text-[15px] font-semibold text-text-primary">No endpoint matches</p>
+              <p class="mt-1 text-[14px] text-text-secondary">
+                Try part of a path such as /places, or clear the status filter.
+              </p>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section id="database" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="04"
+          title="Database design"
+          description="A proposed MySQL schema (Laravel migrations) that serves every endpoint above. Columns are snake_case; the API maps them to camelCase. Lines run from a foreign key (fork end) to the row it points at (bar end); → marks a key into another group; ? marks a nullable column."
+        />
+        <div class="space-y-12">
+          <app-whole-erd [domain]="store.wholeDatabase()" />
+          @for (domain of reference().domains; track domain.id) {
+            <app-database-section [domain]="domain" [isPrinting]="store.isPrinting()" />
+          }
+        </div>
+      </section>
+
+      <section id="build-order" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="05"
+          title="Suggested build order"
+          description="Front-loads the work that unblocks the most screens."
+        />
+        <app-docs-table [table]="reference().buildOrder" />
+      </section>
+
+      <section id="open-questions" class="scroll-mt-8">
+        <app-docs-section-heading
+          number="06"
+          title="Open questions"
+          description="Behaviour the dashboard cannot see. Worth agreeing before building."
+        />
+        <ol class="space-y-2">
+          @for (question of reference().openQuestions; track $index) {
+            <li
+              class="flex gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-[14px] leading-relaxed text-text-primary"
+            >
+              <span class="font-code text-[12px] font-bold text-primary">Q{{ $index + 1 }}</span
+              >{{ question }}
+            </li>
+          }
+        </ol>
+      </section>
+
+      <section id="export" class="scroll-mt-8 print:hidden">
+        <app-docs-section-heading
+          number="07"
+          title="Export"
+          description="Take this reference with you. Both exports are built from the same data as this page, so they never drift apart."
+        />
+        <app-docs-export-panel (downloadReadme)="downloadReadme()" (printPdf)="printPdf()" />
+      </section>
+
+      <footer class="border-t border-border pt-6 pb-4 text-[13px] text-text-secondary">
+        {{ reference().title }} · Updated {{ reference().updatedOn }} · Generated from
+        <code class="font-code">src/app/features/api-docs/data</code>
+      </footer>
+    </main>
+  </div>
+</div>

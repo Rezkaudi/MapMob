@@ -1,0 +1,52 @@
+<div class="grid gap-4 lg:grid-cols-3">
+  <article class="space-y-3 rounded-xl border border-border bg-surface p-5">
+    <h3 class="text-[15px] font-bold text-text-primary">The four rules that touch everything</h3>
+    <ol class="space-y-2.5 text-[15px] leading-relaxed text-text-secondary">
+      <li>
+        <strong class="text-text-primary">1. No wrapper.</strong> Lists return
+        <code class="font-code text-[12px] text-primary">{{ '{' }}items, totalCount{{ '}' }}</code
+        >; one record returns the object.
+      </li>
+      <li><strong class="text-text-primary">2. camelCase</strong> JSON and string ids.</li>
+      <li><strong class="text-text-primary">3. pageIndex starts at 0.</strong></li>
+      <li>
+        <strong class="text-text-primary">4. Real verbs</strong> — PUT, PATCH, DELETE. No
+        <code class="font-code text-[12px]">_method</code>.
+      </li>
+    </ol>
+  </article>
+  <article class="space-y-3 rounded-xl border border-border bg-surface p-5">
+    <h3 class="text-[16px] font-bold text-text-primary">Every request</h3>
+    <dl class="space-y-2.5 text-[14px] leading-relaxed">
+      <div>
+        <dt class="font-semibold text-text-primary">Base URL</dt>
+        <dd class="text-text-secondary">
+          One prefix, e.g.
+          <code class="font-code text-[13px] text-primary">https://api.mapmob.com.co/admin</code>.
+          Paths below are relative to it.
+        </dd>
+      </div>
+      <div>
+        <dt class="font-semibold text-text-primary">Sign-in</dt>
+        <dd class="text-text-secondary">
+          <code class="font-code text-[13px]">Authorization: Bearer &lt;token&gt;</code> on every
+          call except <code class="font-code text-[13px]">POST /auth/login</code>.
+        </dd>
+      </div>
+      <div>
+        <dt class="font-semibold text-text-primary">Language</dt>
+        <dd class="text-text-secondary">Text fields come back in Arabic, as one plain string.</dd>
+      </div>
+    </dl>
+  </article>
+  <article class="space-y-3 rounded-xl border border-border bg-surface p-5">
+    <h3 class="text-[15px] font-bold text-text-primary">Methods</h3>
+    <ul class="space-y-2">
+      @for (item of methods; track item.method) {
+        <li class="flex items-center gap-3 text-[13px] text-text-secondary">
+          <app-method-badge [method]="item.method" />{{ item.meaning }}
+        </li>
+      }
+    </ul>
+  </article>
+</div>

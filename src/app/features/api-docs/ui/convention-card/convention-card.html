@@ -1,0 +1,15 @@
+<article
+  [id]="section().id"
+  class="h-full scroll-mt-32 space-y-3 rounded-xl border border-border bg-surface p-5 print:break-inside-avoid-page"
+>
+  <h3 class="text-[16px] font-bold text-text-primary">{{ section().title }}</h3>
+  @for (paragraph of section().paragraphs; track $index) {
+    <p class="text-[15px] leading-relaxed text-text-secondary">{{ paragraph }}</p>
+  }
+  @if (section().table; as table) {
+    <app-docs-table [table]="table" />
+  }
+  @if (section().code; as code) {
+    <app-code-block [code]="code" language="text" label="Example" />
+  }
+</article>

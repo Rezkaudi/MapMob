@@ -1,0 +1,49 @@
+<article
+  [id]="endpoint().id"
+  class="scroll-mt-32 overflow-hidden rounded-xl border bg-surface transition-shadow print:break-inside-avoid-page print:shadow-none"
+  [class]="
+    isOpen()
+      ? 'border-[#BFDDF8] shadow-[0_6px_24px_-12px_rgba(5,131,236,0.35)]'
+      : 'border-border hover:border-[#CBD5E1]'
+  "
+>
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 px-3 py-3 text-left focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary sm:px-4 cursor-pointer"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="endpoint().id + '-details'"
+    (click)="toggle.emit(endpoint().id)"
+  >
+    <app-method-badge [method]="endpoint().method" />
+    <span class="flex min-w-0 flex-1 flex-col gap-0.5 md:flex-row md:items-center md:gap-3">
+      <code class="font-code text-[14px] font-semibold break-all text-text-primary">{{
+        endpoint().path
+      }}</code>
+      <span class="truncate text-[13px] text-text-secondary">{{ endpoint().summary }}</span>
+    </span>
+    <svg
+      class="size-4 shrink-0 text-text-secondary transition-transform print:hidden"
+      [class.rotate-180]="isOpen()"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 6l4 4 4-4"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+  @if (isOpen()) {
+    <div
+      data-endpoint-details
+      [id]="endpoint().id + '-details'"
+      class="border-t border-border px-4 py-5 sm:px-6"
+    >
+      <app-endpoint-details [feature]="feature()" [endpoint]="endpoint()" />
+    </div>
+  }
+</article>

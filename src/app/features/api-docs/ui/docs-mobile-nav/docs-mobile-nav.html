@@ -1,0 +1,30 @@
+<label class="relative block">
+  <span class="sr-only">Jump to section</span>
+  <select
+    aria-label="Jump to section"
+    class="h-11 w-full cursor-pointer appearance-none rounded-lg border border-border bg-surface ps-3 pe-9 text-[15px] font-medium text-text-primary focus:border-primary focus:ring-3 focus:ring-primary/15 focus:outline-none"
+    (change)="pick($event)"
+  >
+    @for (group of groups(); track group.title) {
+      <optgroup [label]="group.title">
+        @for (link of group.links; track link.id) {
+          <option [value]="link.id" [selected]="activeId() === link.id">{{ link.label }}</option>
+        }
+      </optgroup>
+    }
+  </select>
+  <svg
+    class="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M4 6l4 4 4-4"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</label>

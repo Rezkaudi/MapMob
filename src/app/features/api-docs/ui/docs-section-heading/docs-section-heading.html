@@ -1,0 +1,11 @@
+<div class="mb-6 flex items-start gap-4 border-b border-border pb-4">
+  <span class="mt-1 font-code text-[12px] font-bold text-primary">{{ number() }}</span>
+  <div class="space-y-1">
+    <h2 class="text-[24px] leading-tight font-bold text-text-primary">{{ title() }}</h2>
+    @if (description()) {
+      <p class="max-w-[72ch] text-[14px] leading-relaxed text-text-secondary">
+        {{ description() }}
+      </p>
+    }
+  </div>
+</div>

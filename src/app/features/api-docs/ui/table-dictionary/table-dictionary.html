@@ -1,0 +1,76 @@
+<details
+  class="group rounded-xl border border-border bg-surface open:shadow-[0_6px_24px_-16px_rgba(15,23,42,0.4)]"
+  [attr.open]="isForcedOpen() ? '' : null"
+>
+  <summary
+    class="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden"
+  >
+    <code class="font-code text-[14px] font-bold text-text-primary">{{ table().name }}</code>
+    <span class="hidden flex-1 truncate text-[13px] text-text-secondary sm:block">{{
+      table().description
+    }}</span>
+    <span class="ms-auto rounded bg-surface-muted px-1.5 font-code text-[12px] text-text-secondary"
+      >{{ table().columns.length }} cols</span
+    >
+    <svg
+      class="size-4 text-text-secondary transition-transform group-open:rotate-180 print:hidden"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 6l4 4 4-4"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </summary>
+  <div class="space-y-3 border-t border-border px-4 py-4">
+    <p class="text-[13px] text-text-secondary">
+      {{ table().description }} <span class="text-text-primary">Served as</span>
+      <code class="font-code text-[12px] text-primary">{{ table().servedAs }}</code>
+    </p>
+    <div class="overflow-x-auto rounded-lg border border-border">
+      <table class="w-full min-w-[640px] border-collapse text-left text-[13px]">
+        <thead class="bg-surface-muted text-[12px] tracking-[0.06em] text-text-secondary uppercase">
+          <tr>
+            <th scope="col" class="px-3 py-2 font-semibold">Column</th>
+            <th scope="col" class="px-3 py-2 font-semibold">Type</th>
+            <th scope="col" class="px-3 py-2 font-semibold">Null</th>
+            <th scope="col" class="px-3 py-2 font-semibold">Key</th>
+            <th scope="col" class="px-3 py-2 font-semibold">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (column of table().columns; track column.name) {
+            <tr class="border-t border-border align-top">
+              <td class="px-3 py-1.5 font-code font-semibold text-text-primary">
+                {{ column.name }}
+              </td>
+              <td class="px-3 py-1.5 font-code break-all text-[#6D28D9]">{{ column.type }}</td>
+              <td class="px-3 py-1.5 text-text-secondary">
+                {{ column.isNullable ? 'yes' : 'no' }}
+              </td>
+              <td class="px-3 py-1.5 font-code whitespace-nowrap text-primary">
+                {{ keyOf(column) }}
+              </td>
+              <td class="px-3 py-1.5 text-text-secondary">{{ column.note ?? '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (table().indexes; as indexes) {
+      <p class="flex flex-wrap gap-1.5 text-[12px] text-text-secondary">
+        Indexes:
+        @for (index of indexes; track index) {
+          <code class="rounded bg-surface-muted px-1.5 font-code text-text-primary">{{
+            index
+          }}</code>
+        }
+      </p>
+    }
+  </div>
+</details>

@@ -1,0 +1,49 @@
+<header
+  class="relative overflow-hidden bg-[#0B1220] text-white print:bg-white print:text-text-primary"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_24rem_at_85%_-10%,rgba(5,131,236,0.35),transparent),radial-gradient(40rem_20rem_at_0%_120%,rgba(16,185,129,0.12),transparent)] print:hidden"
+    aria-hidden="true"
+  ></div>
+  <div class="relative mx-auto max-w-[1440px] px-4 pt-8 pb-10 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/mapmob-logo-white.svg" alt="" class="h-8 w-auto print:hidden" />
+        <span class="text-[18px] font-bold">MapMob</span>
+        <span
+          class="rounded-full border border-white/15 px-2.5 py-0.5 font-code text-[12px] text-[#94A3B8] print:border-border"
+          >v1 · admin API</span
+        >
+      </div>
+      <button
+        type="button"
+        class="rounded-lg border border-white/15 px-3 py-1.5 text-[13px] font-medium text-white transition hover:bg-white/10 print:hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary duration-200 motion-reduce:transition-none"
+        (click)="jumpToExport.emit()"
+      >
+        Export README / PDF ↓
+      </button>
+    </div>
+    <div class="mt-8 max-w-[860px] space-y-3">
+      <p
+        class="font-code text-[12px] tracking-[0.12em] text-[#7DD3FC] uppercase print:text-primary"
+      >
+        For the backend team
+      </p>
+      <h1 class="text-[32px] leading-[1.15] font-bold sm:text-[40px]">{{ title() }}</h1>
+      <p class="text-[15px] leading-relaxed text-[#CBD5E1] print:text-text-secondary">
+        Every endpoint the admin dashboard calls, with its parameters, request body, a real
+        response, errors and the permission it needs — plus a database design that serves them all.
+        Built from the dashboard's own code and models. Updated
+        <span class="whitespace-nowrap">{{ updatedOn() }}</span
+        >.
+      </p>
+    </div>
+    <div class="mt-8 print:hidden">
+      <app-docs-summary
+        [counts]="counts()"
+        [featureCount]="featureCount()"
+        [tableCount]="tableCount()"
+      />
+    </div>
+  </div>
+</header>

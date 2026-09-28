@@ -1,0 +1,170 @@
+<div
+  class="overflow-x-auto rounded-xl border border-border bg-[radial-gradient(circle,#E2E8F0_1px,transparent_1px)] bg-[length:18px_18px] print:overflow-visible print:bg-none"
+>
+  <svg
+    role="img"
+    class="block font-code print:h-auto print:max-w-full"
+    [attr.aria-label]="'Entity relationship diagram: ' + domain().name"
+    [attr.width]="drawnWidth()"
+    [attr.height]="drawnHeight()"
+    [attr.viewBox]="'0 0 ' + size().width + ' ' + size().height"
+  >
+    <defs>
+      <marker
+        [attr.id]="markerId() + '-many'"
+        viewBox="0 0 10 10"
+        refX="10"
+        refY="5"
+        markerWidth="12"
+        markerHeight="12"
+        orient="auto-start-reverse"
+        markerUnits="userSpaceOnUse"
+      >
+        <path
+          d="M0 5 L10 0 M0 5 L10 5 M0 5 L10 10"
+          stroke="#0583EC"
+          stroke-width="1.3"
+          fill="none"
+        />
+      </marker>
+      <marker
+        [attr.id]="markerId() + '-one'"
+        viewBox="0 0 10 10"
+        refX="10"
+        refY="5"
+        markerWidth="12"
+        markerHeight="12"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path
+          d="M0 5 L10 5 M5 0 L5 10 M8 0 L8 10"
+          stroke="#0583EC"
+          stroke-width="1.3"
+          fill="none"
+        />
+      </marker>
+    </defs>
+
+    @for (link of links(); track link.id) {
+      <path
+        data-erd-link
+        [attr.d]="link.path"
+        fill="none"
+        stroke="#0583EC"
+        stroke-opacity="0.55"
+        stroke-width="1.5"
+        [attr.marker-start]="'url(#' + markerId() + '-many)'"
+        [attr.marker-end]="'url(#' + markerId() + '-one)'"
+      >
+        <title>{{ link.id }}</title>
+      </path>
+    }
+
+    @for (card of cards(); track card.table.name) {
+      <g data-erd-table [attr.aria-label]="card.table.name">
+        <rect
+          [attr.x]="card.x"
+          [attr.y]="card.y"
+          [attr.width]="card.width"
+          [attr.height]="card.height"
+          rx="10"
+          fill="#FFFFFF"
+          stroke="#CBD5E1"
+        />
+        <path
+          [attr.d]="
+            'M' +
+            card.x +
+            ' ' +
+            (card.y + headerHeight) +
+            ' V' +
+            (card.y + 10) +
+            ' Q' +
+            card.x +
+            ' ' +
+            card.y +
+            ' ' +
+            (card.x + 10) +
+            ' ' +
+            card.y +
+            ' H' +
+            (card.x + card.width - 10) +
+            ' Q' +
+            (card.x + card.width) +
+            ' ' +
+            card.y +
+            ' ' +
+            (card.x + card.width) +
+            ' ' +
+            (card.y + 10) +
+            ' V' +
+            (card.y + headerHeight) +
+            ' Z'
+          "
+          fill="#0F172A"
+        />
+        <text
+          [attr.x]="card.x + 14"
+          [attr.y]="card.y + headerHeight / 2 + 4.5"
+          fill="#FFFFFF"
+          font-size="13"
+          font-weight="700"
+        >
+          {{ card.table.name }}
+        </text>
+        @for (row of rowsOf(card); track row.column.name; let odd = $odd) {
+          @if (odd) {
+            <rect
+              [attr.x]="card.x + 1"
+              [attr.y]="row.y - rowHeight / 2"
+              [attr.width]="card.width - 2"
+              [attr.height]="rowHeight"
+              fill="#F8FAFC"
+            />
+          }
+          @if (row.keyLabel) {
+            <text
+              [attr.x]="card.x + 12"
+              [attr.y]="row.y + 3.5"
+              font-size="9"
+              font-weight="700"
+              [attr.fill]="
+                row.keyLabel === 'PK' ? '#B45309' : row.keyLabel === 'FK' ? '#0583EC' : '#7C3AED'
+              "
+            >
+              {{ row.keyLabel }}
+            </text>
+          }
+          <text
+            [attr.x]="card.x + 36"
+            [attr.y]="row.y + 4"
+            font-size="11.5"
+            [attr.fill]="row.column.isNullable ? '#64748B' : '#0F172A'"
+            [attr.font-weight]="row.keyLabel === 'PK' ? 700 : 500"
+          >
+            {{ row.column.name }}{{ row.column.isNullable ? '?' : '' }}
+          </text>
+          <text
+            [attr.x]="card.x + card.width - 12"
+            [attr.y]="row.y + 4"
+            font-size="10.5"
+            text-anchor="end"
+            [attr.fill]="row.isExternalReference ? '#0583EC' : '#7C3AED'"
+          >
+            {{ row.typeLabel }}
+          </text>
+        }
+        <rect
+          [attr.x]="card.x"
+          [attr.y]="card.y"
+          [attr.width]="card.width"
+          [attr.height]="card.height"
+          rx="10"
+          fill="none"
+          stroke="#CBD5E1"
+        />
+      </g>
+    }
+  </svg>
+</div>

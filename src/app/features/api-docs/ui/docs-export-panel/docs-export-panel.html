@@ -1,0 +1,43 @@
+<div class="grid gap-4 md:grid-cols-2">
+  <button
+    type="button"
+    data-export="readme"
+    class="group flex items-start gap-4 rounded-xl border border-border bg-surface p-5 text-left transition hover:border-primary hover:shadow-[0_10px_30px_-18px_rgba(5,131,236,0.6)] focus-visible:outline-2 focus-visible:outline-primary cursor-pointer duration-200 motion-reduce:transition-none"
+    (click)="downloadReadme.emit()"
+  >
+    <span
+      class="grid size-11 shrink-0 place-items-center rounded-lg bg-[#0F172A] font-code text-[13px] font-bold text-white"
+      aria-hidden="true"
+      >MD</span
+    >
+    <span class="space-y-1">
+      <span class="block text-[15px] font-bold text-text-primary group-hover:text-primary"
+        >Download README (.md)</span
+      >
+      <span class="block text-[13px] leading-relaxed text-text-secondary">
+        The whole reference as one Markdown file. The database diagrams are Mermaid, so GitHub and
+        GitLab draw them.
+      </span>
+    </span>
+  </button>
+  <button
+    type="button"
+    data-export="pdf"
+    class="group flex items-start gap-4 rounded-xl border border-border bg-surface p-5 text-left transition hover:border-primary hover:shadow-[0_10px_30px_-18px_rgba(5,131,236,0.6)] focus-visible:outline-2 focus-visible:outline-primary cursor-pointer duration-200 motion-reduce:transition-none"
+    (click)="printPdf.emit()"
+  >
+    <span
+      class="grid size-11 shrink-0 place-items-center rounded-lg bg-error font-code text-[13px] font-bold text-white"
+      aria-hidden="true"
+      >PDF</span
+    >
+    <span class="space-y-1">
+      <span class="block text-[15px] font-bold text-text-primary group-hover:text-primary"
+        >Save as PDF</span
+      >
+      <span class="block text-[13px] leading-relaxed text-text-secondary">
+        Opens the print dialog with every endpoint expanded. Pick "Save as PDF" as the printer.
+      </span>
+    </span>
+  </button>
+</div>
