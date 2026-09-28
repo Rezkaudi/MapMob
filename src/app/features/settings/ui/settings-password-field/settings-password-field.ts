@@ -1,30 +1,26 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PasswordVisibilityToggle } from '../../../../shared/ui/password-visibility-toggle/password-visibility-toggle';
-import {
-  AUTH_FIELD_BOX_CLASSES,
-  AUTH_FIELD_INPUT_CLASSES,
-  AUTH_FIELD_LABEL_CLASSES,
-} from '../auth-field-classes';
+import { SETTINGS_PASSWORD_INPUT_CLASSES } from '../settings-control-classes';
+import { SettingsField } from '../settings-field/settings-field';
 
-const PASSWORD_PLACEHOLDER = '12345678';
+const PASSWORD_PLACEHOLDER = '••••••••••••';
 
 @Component({
-  selector: 'app-auth-password-field',
-  imports: [PasswordVisibilityToggle, ReactiveFormsModule],
-  templateUrl: './auth-password-field.html',
+  selector: 'app-settings-password-field',
+  imports: [PasswordVisibilityToggle, ReactiveFormsModule, SettingsField],
+  templateUrl: './settings-password-field.html',
+  host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthPasswordField {
+export class SettingsPasswordField {
   readonly label = input.required<string>();
-  readonly inputId = input.required<string>();
+  readonly fieldId = input.required<string>();
   readonly control = input.required<FormControl<string>>();
   readonly autocomplete = input<'current-password' | 'new-password'>('current-password');
+  readonly error = input<string | null>(null);
 
   protected readonly placeholder = PASSWORD_PLACEHOLDER;
-  protected readonly boxClasses = AUTH_FIELD_BOX_CLASSES;
-  protected readonly inputClasses = AUTH_FIELD_INPUT_CLASSES;
-  protected readonly labelClasses = AUTH_FIELD_LABEL_CLASSES;
-
+  protected readonly inputClasses = SETTINGS_PASSWORD_INPUT_CLASSES;
   protected readonly isPasswordVisible = signal(false);
 }

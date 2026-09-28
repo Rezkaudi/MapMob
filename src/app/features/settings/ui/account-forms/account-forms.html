@@ -65,57 +65,27 @@
 <form novalidate [formGroup]="passwordForm" (ngSubmit)="changePassword()">
   <app-settings-card title="تغيير كلمة المرور">
     <div class="grid grid-cols-3 gap-4">
-      <app-settings-field
+      <app-settings-password-field
         label="كلمة المرور الحالية"
         fieldId="current-password"
+        autocomplete="current-password"
+        [control]="passwordForm.controls.currentPassword"
         [error]="currentPasswordError"
-      >
-        <input
-          id="current-password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="••••••••••••"
-          formControlName="currentPassword"
-          dir="ltr"
-          class="text-left font-inter"
-          [class]="inputClasses"
-          [attr.aria-invalid]="currentPasswordError !== null"
-        />
-      </app-settings-field>
-      <app-settings-field
+      />
+      <app-settings-password-field
         label="كلمة المرور الجديدة"
         fieldId="new-password"
+        autocomplete="new-password"
+        [control]="passwordForm.controls.newPassword"
         [error]="newPasswordError"
-      >
-        <input
-          id="new-password"
-          type="password"
-          autocomplete="new-password"
-          placeholder="••••••••••••"
-          formControlName="newPassword"
-          dir="ltr"
-          class="text-left font-inter"
-          [class]="inputClasses"
-          [attr.aria-invalid]="newPasswordError !== null"
-        />
-      </app-settings-field>
-      <app-settings-field
+      />
+      <app-settings-password-field
         label="تأكيد كلمة المرور الجديدة"
         fieldId="confirm-password"
+        autocomplete="new-password"
+        [control]="passwordForm.controls.confirmPassword"
         [error]="confirmPasswordError"
-      >
-        <input
-          id="confirm-password"
-          type="password"
-          autocomplete="new-password"
-          placeholder="••••••••••••"
-          formControlName="confirmPassword"
-          dir="ltr"
-          class="text-left font-inter"
-          [class]="inputClasses"
-          [attr.aria-invalid]="confirmPasswordError !== null"
-        />
-      </app-settings-field>
+      />
     </div>
 
     <div class="flex justify-end pt-1">

@@ -1,8 +1,13 @@
-const FILLED_CONTROL_BASE =
-  'block h-9 w-full rounded bg-[#f2f4f6] ps-4 text-[14px]/[20px] text-text-primary outline-none placeholder:text-[#9ca3af] focus:ring-2 focus:ring-primary/40 aria-invalid:ring-1 aria-invalid:ring-closed disabled:cursor-not-allowed disabled:opacity-60';
+const FILLED_CONTROL_SURFACE =
+  'block h-9 w-full rounded bg-[#f2f4f6] text-[14px]/[20px] text-text-primary outline-none placeholder:text-[#9ca3af] focus:ring-2 focus:ring-primary/40 aria-invalid:ring-1 aria-invalid:ring-closed disabled:cursor-not-allowed disabled:opacity-60';
+
+const FILLED_CONTROL_BASE = `${FILLED_CONTROL_SURFACE} ps-4`;
 
 /** The grey 36px box every settings field draws. */
 export const SETTINGS_INPUT_CLASSES = `${FILLED_CONTROL_BASE} pe-4`;
+
+/** A left-to-right password box, with room on the left for the eye toggle. */
+export const SETTINGS_PASSWORD_INPUT_CLASSES = `${FILLED_CONTROL_SURFACE} pl-10 pr-4 text-left font-inter`;
 
 /** Leaves room on the left for the 16px icon the field draws at 12px from the edge. */
 export const SETTINGS_INPUT_WITH_ICON_CLASSES = `${FILLED_CONTROL_BASE} pe-10`;

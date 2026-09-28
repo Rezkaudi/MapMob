@@ -16,11 +16,11 @@ import {
 } from '../../state/password-change-form-group';
 import { SettingsCard } from '../settings-card/settings-card';
 import {
-  SETTINGS_INPUT_CLASSES,
   SETTINGS_INPUT_WITH_ICON_CLASSES,
   SETTINGS_SUBMIT_BUTTON_CLASSES,
 } from '../settings-control-classes';
 import { SettingsField } from '../settings-field/settings-field';
+import { SettingsPasswordField } from '../settings-password-field/settings-password-field';
 import { SignOutPanel } from '../sign-out-panel/sign-out-panel';
 import {
   ACCOUNT_FAILED_TITLES,
@@ -31,7 +31,15 @@ import {
 /** The personal card, the password card and the sign-out strip that the admin and merchant share. */
 @Component({
   selector: 'app-account-forms',
-  imports: [ErrorState, ReactiveFormsModule, SettingsCard, SettingsField, SignOutPanel, Toast],
+  imports: [
+    ErrorState,
+    ReactiveFormsModule,
+    SettingsCard,
+    SettingsField,
+    SettingsPasswordField,
+    SignOutPanel,
+    Toast,
+  ],
   templateUrl: './account-forms.html',
   providers: [AccountSettingsStore],
   host: { class: 'flex flex-col gap-6' },
@@ -48,7 +56,6 @@ export class AccountForms {
 
   protected readonly profileForm = createAccountProfileFormGroup();
   protected readonly passwordForm = createPasswordChangeFormGroup();
-  protected readonly inputClasses = SETTINGS_INPUT_CLASSES;
   protected readonly inputWithIconClasses = SETTINGS_INPUT_WITH_ICON_CLASSES;
   protected readonly submitButtonClasses = SETTINGS_SUBMIT_BUTTON_CLASSES;
   protected readonly messages = ACCOUNT_FIELD_MESSAGES;

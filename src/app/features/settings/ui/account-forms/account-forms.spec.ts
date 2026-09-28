@@ -52,6 +52,22 @@ describe('AccountForms', () => {
     );
   });
 
+  it('gives every password input an eye button that shows and hides it', () => {
+    const { element } = render(buildAccountProfile());
+    const passwordIds = ['current-password', 'new-password', 'confirm-password'];
+
+    for (const id of passwordIds) {
+      const input = element.querySelector(`#${id}`) as HTMLInputElement;
+      expect(input.type).toBe('password');
+      input.parentElement!.querySelector<HTMLButtonElement>('button[aria-pressed]')!.click();
+    }
+    TestBed.tick();
+
+    expect(
+      passwordIds.map((id) => (element.querySelector(`#${id}`) as HTMLInputElement).type),
+    ).toEqual(['text', 'text', 'text']);
+  });
+
   it('passes the sign-out description on only when one is given', () => {
     const plain = render(buildAccountProfile()).element;
 
