@@ -1,0 +1,59 @@
+<app-filter-popover
+  panelId="merchant-offer-filter-panel"
+  heading="تصفية العروض"
+  headerAppearance="plain"
+  [canApply]="canApply()"
+  (applied)="apply()"
+  (reset)="reset()"
+  (closed)="closed.emit()"
+>
+  <div class="flex flex-col gap-1.5">
+    <span class="text-[12px]/[16px] font-bold text-text-primary">الحالة</span>
+    <app-choice-chips
+      label="الحالة"
+      layout="fill"
+      [options]="statusChoices"
+      [selected]="draft().status"
+      (selectedChange)="pickStatus($event)"
+    />
+  </div>
+
+  <!-- The frame gives the scope label 5.5px above and 8.5px below, and writes it at 500. -->
+  <div class="flex flex-col gap-[8.5px] pt-[5.5px]">
+    <label
+      for="merchant-offer-scope-filter"
+      class="text-start text-[12px]/[16px] font-medium text-text-primary"
+    >
+      النطاق
+    </label>
+    <div class="relative">
+      <select
+        id="merchant-offer-scope-filter"
+        class="block h-9 w-full appearance-none rounded border border-text-secondary bg-white ps-3 pe-8 text-start text-[12px]/[16px] font-medium text-[#1e293b] outline-none focus:border-primary"
+        (change)="pickScope($event)"
+      >
+        @for (choice of scopeChoices; track choice.value) {
+          <option [value]="choice.value" [selected]="choice.value === (draft().scope ?? '')">
+            {{ choice.label }}
+          </option>
+        }
+      </select>
+      <!-- RTL: the chevron sits 10px in from the left edge. -->
+      <app-icon
+        name="chevron-down-thin"
+        [size]="16"
+        class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-[#94a3b8]"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+
+  <app-date-period-filter
+    heading="الفترة الزمنية"
+    [hasFixedWidthFields]="true"
+    [period]="draft().period"
+    [customRange]="draft().customRange"
+    (periodChange)="pickPeriod($event)"
+    (customRangeChange)="changeCustomRange($event)"
+  />
+</app-filter-popover>

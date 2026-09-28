@@ -8,7 +8,7 @@ import { OfferRepository } from '../data/offer.repository';
 import { OfferDetail } from '../models/offer-detail';
 import { OfferDraft } from '../models/offer-draft';
 import { OfferFormOptions } from '../models/offer-form-options';
-import { OfferItem } from '../models/offer-item';
+import { OfferItem } from '../../../shared/models/offer-item';
 
 interface OfferFormState {
   readonly editingId: string | null;

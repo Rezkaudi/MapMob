@@ -1,4 +1,4 @@
-import type { OfferItem } from '../../../offers/models/offer-item';
+import type { OfferItem } from '../../../../shared/models/offer-item';
 import type { PlaceStatusCounts } from '../../../places/models/place-status-counts';
 
 const STORAGE = 'https://api.mapmob.com.co/storage';

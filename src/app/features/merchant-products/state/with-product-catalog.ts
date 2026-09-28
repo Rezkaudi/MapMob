@@ -42,7 +42,7 @@ export function withProductCatalog() {
         rows: computed(() =>
           visibleProducts().map((product) => toProductTableRow(product, clock())),
         ),
-        counts: computed(() => countProducts(products())),
+        countTiles: computed(() => countProducts(products())),
         planName: computed(() => catalog()?.plan.name ?? ''),
         quota: computed(() => {
           const loaded = catalog();

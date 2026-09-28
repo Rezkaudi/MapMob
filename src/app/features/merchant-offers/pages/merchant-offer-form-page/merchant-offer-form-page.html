@@ -1,0 +1,41 @@
+<app-form-page-heading
+  parentLabel="العروض"
+  [parentLink]="offersUrl"
+  [title]="copy().title"
+  [description]="copy().description"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-12" [message]="error" (retry)="store.retry()" />
+} @else if (!store.isReady()) {
+  <app-skeleton class="mt-12 block" height="640px" />
+} @else {
+  <!-- The card starts 48px under the heading; the action bar follows the card. -->
+  <form class="mt-12 flex flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-form-section heading="المعلومات الأساسية للعرض" icon="info" appearance="compact">
+      <app-offer-form-fields
+        [form]="form"
+        [items]="store.items()"
+        [image]="image()"
+        (imageChange)="image.set($event)"
+      />
+    </app-form-section>
+
+    <app-form-action-bar
+      class="mt-[83px]"
+      saveLabel="حفظ العرض"
+      [cancelLink]="offersUrl"
+      [isBusy]="store.isSaving()"
+      (saveDraft)="saveDraft()"
+    />
+  </form>
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ العرض"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

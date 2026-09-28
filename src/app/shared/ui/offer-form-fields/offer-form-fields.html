@@ -1,0 +1,92 @@
+<!-- RTL: the first field of each pair lands in the right column, 24px apart, rows 32px apart. -->
+<div data-role="offer-fields" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
+  <app-form-field
+    label="اسم العرض"
+    forId="offer-title"
+    [isRequired]="true"
+    [error]="errors().title"
+  >
+    <input
+      id="offer-title"
+      type="text"
+      placeholder="خصم 30% على جميع المنتجات"
+      [formControl]="form().controls.title"
+      [class]="controlClasses.text"
+      [attr.aria-invalid]="errors().title !== null"
+    />
+  </app-form-field>
+
+  <app-form-field
+    label="قيمة الخصم"
+    forId="offer-discount"
+    [isRequired]="true"
+    [error]="errors().discountPercent"
+  >
+    <input
+      id="offer-discount"
+      type="number"
+      min="1"
+      max="100"
+      inputmode="numeric"
+      placeholder="30%"
+      [formControl]="form().controls.discountPercent"
+      [class]="controlClasses.text"
+      [attr.aria-invalid]="errors().discountPercent !== null"
+    />
+  </app-form-field>
+
+  <ng-content />
+
+  <!-- The frame gives this row 80px, against 64px for the rows above. -->
+  <app-form-field class="min-h-20" label="مدة العرض" [isRequired]="true" [error]="errors().period">
+    <app-offer-period-fields [range]="period()" (rangeChange)="changePeriod($event)" />
+  </app-form-field>
+
+  <app-form-field label="حالة العرض" forId="offer-status" [isRequired]="true">
+    <div class="relative">
+      <select
+        id="offer-status"
+        [formControl]="form().controls.status"
+        [class]="controlClasses.select"
+      >
+        <option value="active">نشط</option>
+        <option value="paused">متوقف</option>
+      </select>
+      <app-icon
+        name="chevron-down-filled"
+        [size]="12"
+        class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#717784]"
+      />
+    </div>
+  </app-form-field>
+
+  <app-form-field class="md:col-span-2" label="وصف العرض" forId="offer-description">
+    <textarea
+      id="offer-description"
+      placeholder="اكتب وصفاً موجزاً عن العرض ..."
+      class="h-[100px] py-3"
+      [formControl]="form().controls.description"
+      [class]="controlClasses.textarea"
+    ></textarea>
+  </app-form-field>
+
+  <app-form-field class="py-2 md:col-span-2 [&>div]:gap-3" label="نطاق العرض" [isRequired]="true">
+    <app-offer-scope-picker
+      [scope]="scope()"
+      [items]="items()"
+      [selectedItemIds]="selectedItemIds()"
+      [isItemsLoading]="isItemsLoading()"
+      [itemsError]="errors().itemIds"
+      (scopeChange)="changeScope($event)"
+      (selectedItemIdsChange)="changeItems($event)"
+    />
+  </app-form-field>
+
+  <app-form-field class="pt-4 md:col-span-2" label="صورة العرض">
+    <app-image-upload-field
+      [rules]="pictureRules"
+      [image]="image()"
+      (imageChange)="imageChange.emit($event)"
+    />
+  </app-form-field>
+</div>

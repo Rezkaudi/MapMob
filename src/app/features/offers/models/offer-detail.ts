@@ -1,6 +1,6 @@
 import { Offer } from './offer';
 import { OfferPlace } from './offer-place';
-import { OfferScope } from './offer-scope';
+import { OfferScope } from '../../../shared/models/offer-scope';
 
 export interface OfferDetail {
   readonly offer: Offer;

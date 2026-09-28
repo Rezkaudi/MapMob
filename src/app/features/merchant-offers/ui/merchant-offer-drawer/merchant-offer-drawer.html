@@ -1,0 +1,36 @@
+<!-- The frame keeps the rose dot beside the title on every offer. -->
+<app-side-drawer
+  title="تفاصيل العرض"
+  [hasAlertDot]="true"
+  footerTone="muted"
+  (closed)="closed.emit()"
+>
+  <!-- 40px from the top, 24px from the sides and 48px at the bottom; blocks 24px apart. -->
+  <div class="flex flex-col gap-6 px-6 pt-10 pb-12">
+    <app-offer-summary-card
+      [title]="detail().offer.title"
+      [description]="detail().offer.description"
+      [imageUrl]="detail().offer.imageUrl"
+    />
+    <p
+      data-role="scope"
+      class="rounded-lg border border-[#f1f5f9] bg-surface-muted p-4 text-start text-[12px]/[16px] text-black"
+    >
+      <strong class="font-bold">النطاق:</strong> {{ detail().scopeText }}
+    </p>
+    <app-offer-validity-card
+      [startsOn]="detail().offer.startsOn"
+      [endsOn]="detail().offer.endsOn"
+    />
+  </div>
+
+  <app-merchant-offer-actions
+    drawerFooter
+    [pauseAction]="detail().pauseAction"
+    [isBusy]="isBusy()"
+    (edit)="edit.emit()"
+    (pause)="pause.emit()"
+    (resume)="resume.emit()"
+    (remove)="remove.emit()"
+  />
+</app-side-drawer>

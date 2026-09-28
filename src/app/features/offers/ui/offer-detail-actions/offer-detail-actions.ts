@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { OfferPauseAction } from '../../state/offer-detail-view';
+import { CampaignPauseAction } from '../../../../shared/models/campaign-pause-action';
 
 @Component({
   selector: 'app-offer-detail-actions',
@@ -10,7 +10,7 @@ import { OfferPauseAction } from '../../state/offer-detail-view';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfferDetailActions {
-  readonly pauseAction = input<OfferPauseAction | null>(null);
+  readonly pauseAction = input<CampaignPauseAction | null>(null);
   readonly isBusy = input<boolean>(false);
   readonly edit = output<void>();
   readonly pause = output<void>();

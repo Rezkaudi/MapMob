@@ -1,0 +1,106 @@
+<!--
+  The outline is drawn inside the box, like the frame's stroke, so the table stays 59px + 76px rows.
+  Scope and days are centred under their headers; status and actions sit in fixed boxes at the start.
+-->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[15px]">العرض</th>
+        <th class="text-center">النطاق</th>
+        <th class="text-center">تاريخ البدء</th>
+        <th class="text-center">تاريخ الانتهاء</th>
+        <th class="ps-2"><span class="block w-14 text-center">الحالة</span></th>
+        <th class="ps-1"><span class="block w-[59px] text-center">الإجراء</span></th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="skeletonRowCount"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.offer.id) {
+          <tr class="h-[76px] border-b border-border bg-surface text-[14px]/[17px] last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد العرض ' + row.offer.title"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.offer.id)"
+                (change)="rowToggle.emit(row.offer.id)"
+              />
+            </td>
+            <td class="ps-2">
+              <!-- RTL: the tile on the right, the title 6px to its left. -->
+              <div class="flex items-center gap-1.5">
+                @if (row.offer.imageUrl; as imageUrl) {
+                  <img
+                    data-role="offer-initial"
+                    [src]="imageUrl"
+                    alt=""
+                    class="size-12 shrink-0 rounded-2xl object-cover"
+                  />
+                } @else {
+                  <span
+                    data-role="offer-initial"
+                    class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent text-[16px]/[32px] font-bold tracking-[-0.24px] text-white"
+                    aria-hidden="true"
+                    >{{ row.initial }}</span
+                  >
+                }
+                <button
+                  type="button"
+                  data-role="open-offer"
+                  class="line-clamp-2 w-[126px] text-right font-bold text-text-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                  (click)="view.emit(row.offer)"
+                >
+                  {{ row.offer.title }}
+                </button>
+              </div>
+            </td>
+            <td class="text-center text-text-primary">{{ row.scopeText }}</td>
+            <td class="text-center whitespace-nowrap text-text-secondary">{{ row.startsText }}</td>
+            <td class="text-center whitespace-nowrap text-text-secondary">{{ row.endsText }}</td>
+            <td class="ps-2">
+              <span class="flex w-14 justify-center">
+                <app-campaign-status-pill [status]="row.offer.status" />
+              </span>
+            </td>
+            <td class="ps-1">
+              <div class="flex w-[59px] justify-center">
+                <app-row-actions-menu
+                  primaryAction="view"
+                  [isEditVisible]="true"
+                  [isStatusChangeVisible]="false"
+                  (view)="view.emit(row.offer)"
+                  (edit)="edit.emit(row.offer)"
+                  (remove)="remove.emit(row.offer)"
+                />
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoRows()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

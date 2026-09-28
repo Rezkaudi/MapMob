@@ -6,7 +6,8 @@
 >
   <!-- RTL: the badge and heading on the right, the cross on the left. -->
   <header
-    class="flex items-center justify-between border-b border-[#f1f5f9] bg-surface-muted/70 px-5 py-4"
+    class="flex items-center justify-between border-b border-[#f1f5f9]"
+    [class]="headerClasses()"
   >
     <div class="flex items-center gap-2">
       <span class="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">

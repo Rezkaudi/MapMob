@@ -7,8 +7,8 @@ import { OfferDetail } from '../../models/offer-detail';
 import { OfferDetailView } from '../../state/offer-detail-view';
 import { OfferDetailActions } from '../offer-detail-actions/offer-detail-actions';
 import { OfferPublisher } from '../offer-publisher/offer-publisher';
-import { OfferSummaryCard } from '../offer-summary-card/offer-summary-card';
-import { OfferValidityCard } from '../offer-validity-card/offer-validity-card';
+import { OfferSummaryCard } from '../../../../shared/ui/offer-summary-card/offer-summary-card';
+import { OfferValidityCard } from '../../../../shared/ui/offer-validity-card/offer-validity-card';
 
 @Component({
   selector: 'app-offer-detail-drawer',

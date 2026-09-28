@@ -1,7 +1,7 @@
 import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
 import { addCalendarDays, toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { OfferDetail } from '../models/offer-detail';
-import { OfferScope } from '../models/offer-scope';
+import { OfferScope } from '../../../shared/models/offer-scope';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';
 import { buildPlaceItems } from './offer-mock-items';

@@ -10,6 +10,7 @@ import { FilterPopover } from './filter-popover';
       heading="تصفية الإعلانات"
       [canApply]="canApply()"
       [footerSize]="footerSize()"
+      [headerAppearance]="headerAppearance()"
       (applied)="log.push('apply')"
       (reset)="log.push('reset')"
       (closed)="log.push('close')"
@@ -21,6 +22,7 @@ import { FilterPopover } from './filter-popover';
 class HostComponent {
   readonly canApply = signal(true);
   readonly footerSize = signal<'regular' | 'compact'>('regular');
+  readonly headerAppearance = signal<'tinted' | 'plain'>('tinted');
   readonly log: string[] = [];
 }
 
@@ -74,5 +76,18 @@ describe('FilterPopover', () => {
 
     expect(footer().classList).toContain('h-[49px]');
     expect(footer().classList).not.toContain('h-[65px]');
+  });
+
+  it("draws the tinted 16px header, or the owner offers frame's plain 12px one", () => {
+    const fixture = render();
+    const header = () =>
+      (fixture.nativeElement as HTMLElement).querySelector('header') as HTMLElement;
+    expect(header().classList).toContain('bg-surface-muted/70');
+
+    fixture.componentInstance.headerAppearance.set('plain');
+    fixture.detectChanges();
+
+    expect(header().classList).not.toContain('bg-surface-muted/70');
+    expect([...header().classList]).toEqual(expect.arrayContaining(['px-3', 'pb-3']));
   });
 });

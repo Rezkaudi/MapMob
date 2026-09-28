@@ -5,7 +5,7 @@ import { OfferRepository } from '../../data/offer.repository';
 import { OfferDraft } from '../../models/offer-draft';
 import { buildOffer, buildOfferDetail } from '../../testing/offer-fixture';
 import { OfferForm } from './offer-form';
-import { OfferItem } from '../../models/offer-item';
+import { OfferItem } from '../../../../shared/models/offer-item';
 
 const DETAIL = buildOfferDetail();
 const OPTIONS = {

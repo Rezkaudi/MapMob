@@ -3,9 +3,9 @@ import { AdDetail } from '../models/ad-detail';
 import { AD_CONTENT_TYPE_LABEL } from '../models/ad-content-type';
 import { AD_PLACEMENT_LABEL } from '../models/ad-placement';
 import { AD_POSITION_LABEL } from '../models/ad-position';
-import { AdPauseAction } from '../models/ad-pause-action';
+import { CampaignPauseAction } from '../../../shared/models/campaign-pause-action';
 import { AdMetricCard, buildAdMetricCards } from './ad-metric-cards';
-import { adPauseActionFor } from './ad-pause-action';
+import { campaignPauseActionFor } from '../../../shared/state/campaign-pause-action';
 import { adPriorityRankLabel } from './ad-priority-rank-label';
 import { formatAdPlace } from './ad-place-label';
 
@@ -13,7 +13,7 @@ const NO_END_LABEL = 'غير محدد';
 
 /** Everything the detail page reads, already named in Arabic. */
 export interface AdDetailView {
-  readonly pauseAction: AdPauseAction | null;
+  readonly pauseAction: CampaignPauseAction | null;
   readonly createdOnLabel: string;
   readonly placeLabel: string;
   /** `null` for an ad the app's own team runs: there is no store page to open. */
@@ -34,7 +34,7 @@ export function buildAdDetailView(detail: AdDetail): AdDetailView {
   const placement = AD_PLACEMENT_LABEL[ad.placement];
   const position = AD_POSITION_LABEL[detail.position];
   return {
-    pauseAction: adPauseActionFor(ad.status),
+    pauseAction: campaignPauseActionFor(ad.status),
     createdOnLabel: `تاريخ الإنشاء: ${formatLatinDigitDate(detail.createdOn)}`,
     placeLabel: formatAdPlace(ad),
     placeLink: detail.placeId === null ? null : `/admin/places/${detail.placeId}`,

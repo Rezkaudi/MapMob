@@ -22,12 +22,13 @@
     class="mt-10 grid auto-rows-[minmax(172px,auto)] grid-cols-12 items-start gap-2"
   >
     @if (store.quota(); as quota) {
-      <app-product-usage-card
+      <app-plan-usage-card
         class="col-span-12 xl:col-span-7"
+        title="المنتجات المستخدمة"
         [planName]="store.planName()"
         [quota]="quota"
       />
-      <app-product-count-tiles class="col-span-12 xl:col-span-5" [counts]="store.counts()" />
+      <app-count-tiles class="col-span-12 xl:col-span-5" [tiles]="store.countTiles()" />
     }
   </div>
 

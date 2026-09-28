@@ -1,0 +1,89 @@
+<!-- Header, the quota cards 40px below, the toolbar 32px below them and the table 30px under that. -->
+<app-page-header
+  title="العروض"
+  description="إدارة العروض الترويجية لمتجرك ."
+  [isAddVisible]="false"
+>
+  <app-add-button
+    pageHeaderAction
+    class="[&>button]:w-[200px]"
+    label="إضافة عرض جديد"
+    [isDisabled]="!!store.quota()?.isFull"
+    (pressed)="addOffer()"
+  />
+</app-page-header>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+} @else {
+  <!-- RTL grid: the 7-column usage card comes first, so it takes the right-hand side. -->
+  <div
+    data-role="quota-grid"
+    class="mt-10 grid auto-rows-[minmax(172px,auto)] grid-cols-12 items-start gap-2"
+  >
+    @if (store.quota(); as quota) {
+      <app-plan-usage-card
+        class="col-span-12 xl:col-span-7"
+        title="العروض المستخدمة"
+        [planName]="store.planName()"
+        [quota]="quota"
+      />
+      <app-count-tiles class="col-span-12 xl:col-span-5" [tiles]="store.countTiles()" />
+    }
+  </div>
+
+  <app-merchant-offer-toolbar
+    class="mt-8"
+    [filters]="store.filters()"
+    [activeFilterCount]="store.activeFilterCount()"
+    (searchChange)="store.setSearch($event)"
+    (sortChange)="store.setSort($event)"
+    (filtersApply)="store.applyFilters($event)"
+  />
+
+  <app-merchant-offer-table
+    class="mt-[30px]"
+    [rows]="store.rows()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoRows]="store.hasNoRows()"
+    [emptyMessage]="store.emptyMessage()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (view)="store.openDetails($event.id)"
+    (edit)="editOffer($event)"
+    (remove)="store.openDelete($event)"
+  />
+}
+
+@if (store.detail(); as detail) {
+  <app-merchant-offer-drawer
+    [detail]="detail"
+    [isBusy]="store.isSaving()"
+    (closed)="store.closeDialog()"
+    (edit)="editOffer(detail.offer)"
+    (pause)="store.pauseOpenOffer()"
+    (resume)="store.resumeOpenOffer()"
+    (remove)="store.openDelete(detail.offer)"
+  />
+}
+
+<!-- Written after the drawer so the question sits above it. -->
+@if (store.deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDelete()"
+    (cancelled)="store.closeDialog()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

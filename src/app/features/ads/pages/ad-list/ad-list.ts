@@ -12,7 +12,7 @@ import { TablePagination } from '../../../../shared/ui/table-pagination/table-pa
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { Ad } from '../../models/ad';
 import { AdConfirmRequest } from '../../models/ad-confirm-request';
-import { adPauseActionFor } from '../../state/ad-pause-action';
+import { campaignPauseActionFor } from '../../../../shared/state/campaign-pause-action';
 import { AdsStore } from '../../state/ads.store';
 import { buildAdConfirmCopy } from '../../ui/ad-dialog-copy';
 import { AdTable } from '../../ui/ad-table/ad-table';
@@ -68,7 +68,7 @@ export class AdList {
   }
 
   protected askToChangeStatus(ad: Ad): void {
-    const action = adPauseActionFor(ad.status);
+    const action = campaignPauseActionFor(ad.status);
     if (action) {
       this.pendingConfirm.set({ action, ad });
     }

@@ -79,7 +79,7 @@ describe('MerchantProductsPage', () => {
       [...host.querySelector('[data-role="quota-grid"]')!.children].map((child) =>
         child.tagName.toLowerCase(),
       ),
-    ).toEqual(['app-product-usage-card', 'app-product-count-tiles']);
+    ).toEqual(['app-plan-usage-card', 'app-count-tiles']);
     expect(rowNames(host)).toEqual(['مرطب dove', 'سيروم']);
   });
 

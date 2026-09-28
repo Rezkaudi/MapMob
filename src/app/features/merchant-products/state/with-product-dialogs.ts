@@ -11,7 +11,7 @@ import { tap } from 'rxjs';
 import { EMPTY_PRODUCT_DRAFT } from '../../../shared/models/empty-product-draft';
 import { FormMode } from '../../../shared/models/form-mode';
 import { ProductDraft } from '../../../shared/models/product-draft';
-import { ProductQuota } from '../models/product-quota';
+import { PlanQuota } from '../../../shared/models/plan-quota';
 import { withSaveStatus } from '../../../shared/state/with-save-status';
 import { buildRemoveProductCopy } from '../../../shared/ui/product-dialog/product-confirm-copy';
 import { MerchantProductRepository } from '../data/merchant-product.repository';
@@ -25,7 +25,7 @@ interface ProductFormDialog {
 }
 
 /** What the dialogs need from the catalog feature they sit on. */
-type CatalogQuota = { quota: Signal<ProductQuota | null> };
+type CatalogQuota = { quota: Signal<PlanQuota | null> };
 type CatalogEditing = {
   addToCatalog(product: MerchantProduct): void;
   replaceInCatalog(product: MerchantProduct): void;

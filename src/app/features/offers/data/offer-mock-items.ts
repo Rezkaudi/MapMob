@@ -1,6 +1,6 @@
 import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
 import { CurrencyCode } from '../../../shared/money/currency-code';
-import { OfferItem } from '../models/offer-item';
+import { OfferItem } from '../../../shared/models/offer-item';
 
 const ITEM_COUNT = 8;
 const PRICE_STEP = 50;

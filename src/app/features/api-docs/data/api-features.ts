@@ -9,6 +9,7 @@ import { INBOX_FEATURE } from './endpoints/inbox-endpoints';
 import { NOTIFICATIONS_FEATURE } from './endpoints/notification-endpoints';
 import { OFFERS_FEATURE } from './endpoints/offer-endpoints';
 import { OWNER_AUTH_FEATURE } from './endpoints/owner-auth-endpoints';
+import { OWNER_OFFERS_FEATURE } from './endpoints/owner-offer-endpoints';
 import { OWNER_OVERVIEW_FEATURE } from './endpoints/owner-overview-endpoints';
 import { OWNER_PLACE_FEATURE } from './endpoints/owner-place-endpoints';
 import { OWNER_PRODUCTS_FEATURE } from './endpoints/owner-product-endpoints';
@@ -44,4 +45,5 @@ export const API_FEATURES: readonly ApiFeature[] = [
   OWNER_OVERVIEW_FEATURE,
   OWNER_PLACE_FEATURE,
   OWNER_PRODUCTS_FEATURE,
+  OWNER_OFFERS_FEATURE,
 ];

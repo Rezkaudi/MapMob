@@ -9,7 +9,7 @@ import { Offer } from '../models/offer';
 import { OfferDetail } from '../models/offer-detail';
 import { OfferDraft } from '../models/offer-draft';
 import { OfferFormOptions } from '../models/offer-form-options';
-import { OfferItem } from '../models/offer-item';
+import { OfferItem } from '../../../shared/models/offer-item';
 import { OfferPlace } from '../models/offer-place';
 import { OfferQuery } from '../models/offer-query';
 import { CampaignSummary } from '../../../shared/models/campaign-summary';

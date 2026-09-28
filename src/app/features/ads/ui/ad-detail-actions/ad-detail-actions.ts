@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { AdPauseAction } from '../../models/ad-pause-action';
+import { CampaignPauseAction } from '../../../../shared/models/campaign-pause-action';
 
 @Component({
   selector: 'app-ad-detail-actions',
@@ -10,7 +10,7 @@ import { AdPauseAction } from '../../models/ad-pause-action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdDetailActions {
-  readonly pauseAction = input<AdPauseAction | null>(null);
+  readonly pauseAction = input<CampaignPauseAction | null>(null);
   readonly isBusy = input<boolean>(false);
   readonly edit = output<void>();
   readonly statusChange = output<void>();

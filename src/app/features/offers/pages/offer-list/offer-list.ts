@@ -14,7 +14,7 @@ import { Offer } from '../../models/offer';
 import { OfferDetailStore } from '../../state/offer-detail.store';
 import { OffersStore } from '../../state/offers.store';
 import { OfferDetailDrawer } from '../../ui/offer-detail-drawer/offer-detail-drawer';
-import { buildOfferDeleteCopy } from '../../ui/offer-dialog-copy';
+import { buildOfferDeleteCopy } from '../../../../shared/ui/confirm-action-dialog/offer-delete-copy';
 import { OfferTable } from '../../ui/offer-table/offer-table';
 import { OfferToolbar } from '../../ui/offer-toolbar/offer-toolbar';
 
@@ -50,7 +50,7 @@ export class OfferList {
   protected readonly pendingDeletion = signal<Offer | null>(null);
   protected readonly deleteCopy = computed(() => {
     const offer = this.pendingDeletion();
-    return offer ? buildOfferDeleteCopy(offer) : null;
+    return offer ? buildOfferDeleteCopy(offer.title) : null;
   });
 
   constructor() {

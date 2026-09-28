@@ -24,11 +24,15 @@ export const CAMPAIGN_DOMAIN: DbDomain = {
     {
       name: 'offers',
       description: 'A discount at one place.',
-      servedAs: '/offers',
+      servedAs: '/offers and /owner/offers',
       columns: [
         ID,
         foreignKey('place_id', 'places.id'),
-        foreignKey('category_id', 'categories.id', 'The form sends categoryName: look it up.'),
+        foreignKey(
+          'category_id',
+          'categories.id',
+          "The admin form sends categoryName: look it up. An owner offer takes its place's main category.",
+        ),
         { name: 'title', type: 'varchar(120)' },
         { name: 'description', type: 'text' },
         { name: 'discount_percent', type: 'tinyint unsigned', note: '1-100.' },
@@ -37,7 +41,7 @@ export const CAMPAIGN_DOMAIN: DbDomain = {
         { name: 'ends_on', type: 'date' },
         ...STATUS_FLAGS,
         { name: 'image_path', type: 'varchar(255)', isNullable: true },
-        adminReference('created_by_admin_id', ''),
+        adminReference('created_by_admin_id', 'null when the place owner added it.'),
         ...TIMESTAMPS,
       ],
       indexes: ['INDEX (starts_on, ends_on)'],
@@ -45,7 +49,7 @@ export const CAMPAIGN_DOMAIN: DbDomain = {
     {
       name: 'offer_products',
       description: 'The picked products when scope is selectedItems.',
-      servedAs: 'itemIds on /offers/{id}',
+      servedAs: 'itemIds on /offers/{id} and /owner/offers',
       columns: [
         { ...foreignKey('offer_id', 'offers.id', 'Cascade on delete.'), key: 'pk' },
         { ...foreignKey('product_id', 'products.id', 'Cascade on delete.'), key: 'pk' },

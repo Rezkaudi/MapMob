@@ -7,7 +7,7 @@ import { Ad } from '../../models/ad';
 import { AD_CONTENT_TYPE_LABEL } from '../../models/ad-content-type';
 import { AD_PLACEMENT_LABEL } from '../../models/ad-placement';
 import { formatAdPeriod } from '../../state/ad-period-label';
-import { adPauseActionFor } from '../../state/ad-pause-action';
+import { campaignPauseActionFor } from '../../../../shared/state/campaign-pause-action';
 import { formatAdPlace } from '../../state/ad-place-label';
 
 /**
@@ -69,7 +69,7 @@ export class AdTable {
       contentTypeLabel: AD_CONTENT_TYPE_LABEL[ad.contentType],
       placementLabel: AD_PLACEMENT_LABEL[ad.placement],
       periodLabel: formatAdPeriod(ad.startsOn, ad.endsOn),
-      canChangeStatus: adPauseActionFor(ad.status) !== null,
+      canChangeStatus: campaignPauseActionFor(ad.status) !== null,
     })),
   );
 }

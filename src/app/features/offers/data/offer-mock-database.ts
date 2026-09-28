@@ -1,6 +1,7 @@
 import { Offer } from '../models/offer';
 import { OfferDetail } from '../models/offer-detail';
-import { OfferDraft, OfferSavedStatus } from '../models/offer-draft';
+import { OfferDraft } from '../models/offer-draft';
+import { OfferSavedStatus } from '../../../shared/models/offer-saved-status';
 import { OfferPlace } from '../models/offer-place';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';

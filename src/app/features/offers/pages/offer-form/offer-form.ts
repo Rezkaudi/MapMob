@@ -10,8 +10,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PICTURE_RULES } from '../../../../shared/files/picture-rules';
-import { DateRange } from '../../../../shared/models/date-range';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { FormActionBar } from '../../../../shared/ui/form-action-bar/form-action-bar';
@@ -19,20 +17,17 @@ import { FORM_CONTROL_CLASSES } from '../../../../shared/ui/form-field/form-cont
 import { FormField } from '../../../../shared/ui/form-field/form-field';
 import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
-import { ImageUploadField } from '../../../../shared/ui/image-upload-field/image-upload-field';
 import { UploadedImage } from '../../../../shared/ui/image-upload-field/uploaded-image';
 import { toUploadedImage } from '../../../../shared/ui/image-upload-field/uploaded-image-from-url';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
-import { OfferSavedStatus } from '../../models/offer-draft';
-import { OfferScope } from '../../models/offer-scope';
+import { OfferSavedStatus } from '../../../../shared/models/offer-saved-status';
 import { toOfferDraft, toOfferFormValue } from '../../state/offer-draft-mapping';
 import { OfferFormErrors, buildOfferFormErrors } from '../../state/offer-form-errors';
 import { createOfferFormGroup } from '../../state/offer-form-group';
 import { OfferFormStore } from '../../state/offer-form.store';
-import { OfferPeriodFields } from '../../ui/offer-period-fields/offer-period-fields';
-import { OfferScopePicker } from '../../ui/offer-scope-picker/offer-scope-picker';
-import { OFFER_FORM_COPY } from './offer-form-copy';
+import { OfferFormFields } from '../../../../shared/ui/offer-form-fields/offer-form-fields';
+import { OFFER_FORM_COPY } from '../../../../shared/forms/offer-form-copy';
 
 const OFFERS_URL = '/admin/offers';
 
@@ -45,9 +40,7 @@ const OFFERS_URL = '/admin/offers';
     FormField,
     FormPageHeading,
     FormSection,
-    ImageUploadField,
-    OfferPeriodFields,
-    OfferScopePicker,
+    OfferFormFields,
     ReactiveFormsModule,
     Skeleton,
     Toast,
@@ -65,7 +58,6 @@ export class OfferForm {
   protected readonly store = inject(OfferFormStore);
   protected readonly form = createOfferFormGroup(inject(FormBuilder));
   protected readonly controlClasses = FORM_CONTROL_CLASSES;
-  protected readonly pictureRules = PICTURE_RULES;
   protected readonly offersUrl = OFFERS_URL;
   /** View state only: the picture picked or kept in the form. */
   protected readonly image = signal<UploadedImage | null>(null);
@@ -85,31 +77,12 @@ export class OfferForm {
     return buildOfferFormErrors(this.form);
   }
 
-  protected get period(): DateRange {
-    return { from: this.form.controls.startsOn.value, to: this.form.controls.endsOn.value };
-  }
-
   protected pickPlace(event: Event): void {
     const placeId = (event.target as HTMLSelectElement).value;
     const place = this.store.options()?.places.find((candidate) => candidate.id === placeId);
     this.form.patchValue({ placeId, categoryName: place?.categoryName ?? '', itemIds: [] });
     this.form.controls.placeId.markAsTouched();
     this.store.loadItems(placeId);
-  }
-
-  protected changePeriod(range: DateRange): void {
-    this.form.patchValue({ startsOn: range.from, endsOn: range.to });
-    this.form.controls.startsOn.markAsTouched();
-    this.form.controls.endsOn.markAsTouched();
-  }
-
-  protected changeScope(scope: OfferScope): void {
-    this.form.controls.scope.setValue(scope);
-  }
-
-  protected changeItems(itemIds: readonly string[]): void {
-    this.form.controls.itemIds.setValue(itemIds);
-    this.form.controls.itemIds.markAsTouched();
   }
 
   protected publish(): void {

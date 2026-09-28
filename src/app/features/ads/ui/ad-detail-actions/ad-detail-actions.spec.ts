@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { AdPauseAction } from '../../models/ad-pause-action';
+import { CampaignPauseAction } from '../../../../shared/models/campaign-pause-action';
 import { AdDetailActions } from './ad-detail-actions';
 
-function render(pauseAction: AdPauseAction | null, isBusy = false) {
+function render(pauseAction: CampaignPauseAction | null, isBusy = false) {
   const fixture = TestBed.createComponent(AdDetailActions);
   fixture.componentRef.setInput('pauseAction', pauseAction);
   fixture.componentRef.setInput('isBusy', isBusy);

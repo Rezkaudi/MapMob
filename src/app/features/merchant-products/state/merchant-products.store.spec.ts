@@ -64,7 +64,7 @@ describe('MerchantProductsStore', () => {
     const { store } = setUp();
 
     expect(store.rows().map((row) => row.product.id)).toEqual(['1', '2']);
-    expect(store.counts()).toEqual({ total: 2, available: 1, unavailable: 1 });
+    expect(store.countTiles().map((tile) => tile.count)).toEqual([2, 1, 1]);
     expect(store.planName()).toBe('الباقة المجانية');
     expect(store.quota()?.limitText).toBe('/ 5 منتجات');
     expect(store.rows()[0].updatedText).toBe('منذ أسبوع');
@@ -81,7 +81,7 @@ describe('MerchantProductsStore', () => {
 
     store.setSearch('سير');
     expect(store.rows().map((row) => row.product.id)).toEqual(['2']);
-    expect(store.counts().total).toBe(2);
+    expect(store.countTiles()[0].count).toBe(2);
 
     store.setSearch('');
     store.setSort('name');
