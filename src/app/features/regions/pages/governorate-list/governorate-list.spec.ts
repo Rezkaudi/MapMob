@@ -41,7 +41,7 @@ describe('GovernorateList', () => {
     );
     expect(element.textContent).toContain('عرض 1- 1 من 1 محافظة');
     expect(element.querySelector('tbody a')?.getAttribute('href')).toBe(
-      '/regions/governorate-1/areas',
+      '/admin/regions/governorate-1/areas',
     );
   });
 

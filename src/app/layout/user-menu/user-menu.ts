@@ -11,9 +11,9 @@ import { Router, RouterLink } from '@angular/router';
 import { AppIcon } from '../../shared/ui/app-icon/app-icon';
 import { Avatar } from '../../shared/ui/avatar/avatar';
 import { AuthStore } from '../../features/auth/state/auth.store';
+import { UserMenuItem } from './user-menu-item';
 import { USER_MENU_ITEMS } from './user-menu-items';
-
-const LOGIN_ROUTE = '/login';
+import { ADMIN_LOGIN_URL } from '../../features/auth/models/login-role';
 
 @Component({
   selector: 'app-user-menu',
@@ -23,14 +23,15 @@ const LOGIN_ROUTE = '/login';
 })
 export class UserMenu {
   readonly userName = input.required<string>();
-  readonly userRole = input.required<string>();
+  readonly userRole = input<string>('');
   readonly avatarUrl = input<string | null>(null);
+  readonly items = input<readonly UserMenuItem[]>(USER_MENU_ITEMS);
+  readonly loginRoute = input<string>(ADMIN_LOGIN_URL);
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly router = inject(Router);
   private readonly store = inject(AuthStore);
 
-  protected readonly items = USER_MENU_ITEMS;
   protected readonly isOpen = signal(false);
 
   protected toggle(): void {
@@ -44,7 +45,7 @@ export class UserMenu {
   protected signOut(): void {
     this.close();
     this.store.signOut();
-    this.router.navigateByUrl(LOGIN_ROUTE);
+    this.router.navigateByUrl(this.loginRoute());
   }
 
   @HostListener('document:click', ['$event.target'])

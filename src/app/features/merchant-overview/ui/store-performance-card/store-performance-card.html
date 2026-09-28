@@ -1,0 +1,56 @@
+<section
+  class="flex flex-col gap-6 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_4px_20px_0_rgba(238,238,238,0.8)]"
+>
+  <app-chart-panel
+    title="أداء المتجر والمشاهدات"
+    appearance="embedded"
+    [isCalendarVisible]="false"
+    [periods]="periods"
+    [activePeriod]="activePeriod()"
+    [isLoading]="isLoading()"
+    [chartHeight]="placeholderHeight"
+    (periodChange)="periodChange.emit($event)"
+  >
+    <!-- The frame runs the wave edge to edge, past the header's 20px inset. -->
+    <div class="-mx-5">
+      <apx-chart
+        [chart]="chartOptions().chart"
+        [series]="chartOptions().series"
+        [xaxis]="chartOptions().xaxis"
+        [yaxis]="chartOptions().yaxis"
+        [grid]="chartOptions().grid"
+        [legend]="chartOptions().legend"
+        [stroke]="chartOptions().stroke"
+        [fill]="chartOptions().fill"
+        [markers]="chartOptions().markers"
+        [colors]="chartOptions().colors"
+        [dataLabels]="chartOptions().dataLabels"
+        [tooltip]="chartOptions().tooltip"
+      />
+    </div>
+  </app-chart-panel>
+
+  <!-- RTL: the busiest day is written first so it sits right, the daily average left. -->
+  <footer class="flex flex-wrap justify-center gap-4 rounded-b-2xl bg-border p-4">
+    <div class="flex w-[263px] items-center gap-3">
+      <span
+        class="flex size-9 shrink-0 items-center justify-center rounded bg-status-success text-white"
+      >
+        <app-icon name="trending-up-small" [size]="20" />
+      </span>
+      <div class="flex flex-col items-start gap-0.5 text-right">
+        <span class="text-[12px]/[14px] text-text-secondary">أعلى يوم تفاعل</span>
+        <span class="text-[14px]/[20px] text-text-primary">{{ peakDayText() }}</span>
+      </div>
+    </div>
+    <div class="flex w-[263px] items-center gap-3">
+      <span class="flex size-9 shrink-0 items-center justify-center rounded bg-accent text-white">
+        <app-icon name="eye-small-feather" [size]="14" />
+      </span>
+      <div class="flex flex-col items-start gap-0.5 text-right">
+        <span class="text-[12px]/[14px] text-text-secondary">متوسط المشاهدات اليومية</span>
+        <span class="text-[14px]/[20px] text-text-primary">{{ dailyAverageText() }}</span>
+      </div>
+    </div>
+  </footer>
+</section>

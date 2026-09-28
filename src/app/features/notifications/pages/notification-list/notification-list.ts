@@ -18,7 +18,7 @@ import { buildNotificationDeleteCopy } from '../../ui/notification-dialog-copy';
 import { NotificationTable } from '../../ui/notification-table/notification-table';
 import { NotificationToolbar } from '../../ui/notification-toolbar/notification-toolbar';
 
-const NOTIFICATIONS_URL = '/notifications';
+const NOTIFICATIONS_URL = '/admin/notifications';
 
 @Component({
   selector: 'app-notification-list',

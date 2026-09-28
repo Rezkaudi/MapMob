@@ -21,7 +21,7 @@ describe('nav items', () => {
   it('links content management to its own page with its own icon', () => {
     expect(NAV_ITEMS.at(-1)).toEqual({
       label: 'إدارة المحتوى',
-      route: '/content',
+      route: '/admin/content',
       icon: 'content',
     });
   });

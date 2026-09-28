@@ -5,7 +5,7 @@ const BELL_ICON_SIZE = 20;
 const LABEL_CLASSES = 'text-[12px]/[20px]';
 const ADMIN_LABEL_CLASSES = 'text-[14px]/[20px]';
 
-export const SETTINGS_URL = '/settings';
+export const SETTINGS_URL = '/admin/settings';
 
 export const SETTINGS_SECTIONS: readonly SettingsSection[] = [
   {

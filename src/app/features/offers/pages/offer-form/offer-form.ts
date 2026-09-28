@@ -34,7 +34,7 @@ import { OfferPeriodFields } from '../../ui/offer-period-fields/offer-period-fie
 import { OfferScopePicker } from '../../ui/offer-scope-picker/offer-scope-picker';
 import { OFFER_FORM_COPY } from './offer-form-copy';
 
-const OFFERS_URL = '/offers';
+const OFFERS_URL = '/admin/offers';
 
 @Component({
   selector: 'app-offer-form',

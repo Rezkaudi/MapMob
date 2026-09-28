@@ -6,7 +6,7 @@
   <div class="flex items-center justify-center gap-[60px] pt-10">
     @if (!isCollapsed()) {
       <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
-      <a routerLink="/dashboard" class="flex items-center gap-1 text-primary" dir="ltr">
+      <a [routerLink]="homeRoute()" class="flex items-center gap-1 text-primary" dir="ltr">
         <img src="assets/mapmob-logo-primary.svg" alt="" class="h-8 w-8 object-contain" />
         <span class="font-brand text-[32px] leading-none font-bold">MapMob</span>
       </a>
@@ -34,7 +34,7 @@
     class="mt-[52px] flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto px-[7px] pb-6"
   >
     <ul class="flex flex-col gap-2">
-      @for (item of navItems; track item.route) {
+      @for (item of navItems(); track item.route) {
         <li>
           <a
             [routerLink]="item.route"
@@ -55,7 +55,7 @@
     <hr class="border-border" />
 
     <ul class="flex flex-col gap-3">
-      @for (item of secondaryNavItems; track item.route) {
+      @for (item of secondaryNavItems(); track item.route) {
         <li>
           <a
             [routerLink]="item.route"

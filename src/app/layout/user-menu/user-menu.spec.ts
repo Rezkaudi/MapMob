@@ -14,6 +14,16 @@ const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: nul
 })
 class HostComponent {}
 
+@Component({
+  imports: [UserMenu],
+  template: `<app-user-menu userName="أحمد" loginRoute="/merchant/login" [items]="items" />`,
+})
+class MerchantHostComponent {
+  protected readonly items = [
+    { label: 'الإعدادات', icon: 'settings', route: '/merchant/settings' },
+  ];
+}
+
 function trigger(fixture: { nativeElement: HTMLElement }): HTMLButtonElement {
   return fixture.nativeElement.querySelector('button[aria-haspopup="menu"]')!;
 }
@@ -134,7 +144,7 @@ describe('UserMenu', () => {
     fixture.detectChanges();
 
     expect(store.isSignedIn()).toBe(false);
-    expect(navigate).toHaveBeenCalledWith('/login');
+    expect(navigate).toHaveBeenCalledWith('/login?role=admin');
     expect(menu(fixture)).toBeNull();
   });
 
@@ -146,6 +156,29 @@ describe('UserMenu', () => {
     fixture.detectChanges();
 
     const link: HTMLAnchorElement = menu(fixture)!.querySelector('a[role="menuitem"]')!;
-    expect(link.getAttribute('href')).toBe('/settings/account');
+    expect(link.getAttribute('href')).toBe('/admin/settings/account');
+  });
+
+  it('shows only the name when there is no role, as the merchant frame draws it', () => {
+    const fixture = TestBed.createComponent(MerchantHostComponent);
+    fixture.detectChanges();
+
+    const names: HTMLElement = trigger(fixture).querySelector('span.flex-col')!;
+    expect(names.children.length).toBe(1);
+    expect(names.textContent!.trim()).toBe('أحمد');
+  });
+
+  it('lists the links it is given and signs out to the login route it is given', () => {
+    const fixture = TestBed.createComponent(MerchantHostComponent);
+    fixture.detectChanges();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    trigger(fixture).click();
+    fixture.detectChanges();
+    const links = [...menu(fixture)!.querySelectorAll('a')];
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/merchant/settings']);
+
+    [...menu(fixture)!.querySelectorAll('button')].at(-1)!.click();
+    expect(navigate).toHaveBeenCalledWith('/merchant/login');
   });
 });

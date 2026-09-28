@@ -25,7 +25,7 @@ describe('RouteProgress', () => {
   it('shows the bar while a page is loading', () => {
     const fixture = createFixture();
 
-    events.next(new NavigationStart(1, '/places'));
+    events.next(new NavigationStart(1, '/admin/places'));
     fixture.detectChanges();
 
     const bar: HTMLElement = fixture.nativeElement.querySelector('[data-role="bar"]');
@@ -36,8 +36,8 @@ describe('RouteProgress', () => {
   it('hides the bar once the page has loaded', () => {
     const fixture = createFixture();
 
-    events.next(new NavigationStart(1, '/places'));
-    events.next(new NavigationEnd(1, '/places', '/places'));
+    events.next(new NavigationStart(1, '/admin/places'));
+    events.next(new NavigationEnd(1, '/admin/places', '/admin/places'));
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('[data-role="bar"]')).toBeNull();
@@ -46,8 +46,8 @@ describe('RouteProgress', () => {
   it('hides the bar when a navigation is cancelled', () => {
     const fixture = createFixture();
 
-    events.next(new NavigationStart(1, '/places'));
-    events.next(new NavigationCancel(1, '/places', ''));
+    events.next(new NavigationStart(1, '/admin/places'));
+    events.next(new NavigationCancel(1, '/admin/places', ''));
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('[data-role="bar"]')).toBeNull();

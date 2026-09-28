@@ -1,0 +1,21 @@
+<a
+  [routerLink]="action().route"
+  class="flex h-[188px] flex-col rounded-lg p-6 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  [class]="cardClass()"
+>
+  <!-- RTL: the icon tile is written first so it sits right, the arrow on the left. -->
+  <div class="flex items-start justify-between">
+    <span
+      class="flex size-12 shrink-0 items-center justify-center rounded-lg"
+      [class]="action().tileClass"
+    >
+      <app-icon [name]="action().icon" [size]="20" />
+    </span>
+    <app-icon name="arrow-right-small" [size]="13" [class]="arrowClass()" />
+  </div>
+
+  <div class="flex flex-col gap-1 pt-6 text-right">
+    <h3 class="text-[18px]/[28px] font-medium" [class]="titleClass()">{{ action().title }}</h3>
+    <p [class]="descriptionClass()">{{ action().description }}</p>
+  </div>
+</a>

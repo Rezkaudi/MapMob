@@ -43,7 +43,7 @@ describe('RecentPlacesTable', () => {
 
     const viewAll: HTMLAnchorElement =
       fixture.nativeElement.querySelector('[data-role="view-all"]');
-    expect(viewAll.getAttribute('href')).toBe('/places');
+    expect(viewAll.getAttribute('href')).toBe('/admin/places');
   });
 
   // A CSS filter makes the card the frame for fixed children, so the row menu would open far from its button.
@@ -67,7 +67,7 @@ describe('RecentPlacesTable', () => {
     const detail: HTMLAnchorElement = fixture.nativeElement.querySelector(
       '[data-role="row-detail"]',
     );
-    expect(detail.getAttribute('href')).toBe('/places/place-1');
+    expect(detail.getAttribute('href')).toBe('/admin/places/place-1');
   });
 
   it('lists every column the design asks for', () => {
@@ -147,6 +147,6 @@ describe('RecentPlacesTable name', () => {
       '[data-role="open-place"]',
     );
 
-    expect(name?.getAttribute('href')).toBe('/places/place-1');
+    expect(name?.getAttribute('href')).toBe('/admin/places/place-1');
   });
 });

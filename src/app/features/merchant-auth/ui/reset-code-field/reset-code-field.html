@@ -1,0 +1,22 @@
+<!-- A code is read like a number, left to right, even on an RTL page. -->
+<div
+  role="group"
+  dir="ltr"
+  class="flex w-full items-end justify-between"
+  [attr.aria-labelledby]="labelId()"
+>
+  @for (digit of digits(); track $index) {
+    <input
+      #box
+      type="text"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      class="h-[50px] w-[45px] rounded-lg border border-text-primary bg-white text-center text-[18px] font-bold text-text-primary outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+      [value]="digit"
+      [attr.aria-label]="'الرقم ' + ($index + 1)"
+      (input)="onType($index, box)"
+      (keydown)="onKeydown($index, $event)"
+      (focus)="selectDigit(box)"
+    />
+  }
+</div>

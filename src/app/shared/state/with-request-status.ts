@@ -23,6 +23,9 @@ export function withRequestStatus() {
       setError(error: string): void {
         patchState(store, { isLoading: false, error });
       },
+      clearError(): void {
+        patchState(store, { error: null });
+      },
     })),
   );
 }

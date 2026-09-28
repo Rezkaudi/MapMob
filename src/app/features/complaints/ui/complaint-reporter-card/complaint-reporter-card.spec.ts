@@ -7,7 +7,7 @@ function render() {
   TestBed.configureTestingModule({ providers: [provideRouter([])] });
   const fixture = TestBed.createComponent(ComplaintReporterCard);
   fixture.componentRef.setInput('reporter', buildComplaintDetail().reporter);
-  fixture.componentRef.setInput('profileLink', '/users/user-1');
+  fixture.componentRef.setInput('profileLink', '/admin/users/user-1');
   fixture.detectChanges();
   return fixture.nativeElement as HTMLElement;
 }
@@ -30,6 +30,6 @@ describe('ComplaintReporterCard', () => {
     const link = render().querySelector('a') as HTMLAnchorElement;
 
     expect(link.textContent?.trim()).toBe('عرض الملف الشخصي للمستخدم');
-    expect(link.getAttribute('href')).toBe('/users/user-1');
+    expect(link.getAttribute('href')).toBe('/admin/users/user-1');
   });
 });

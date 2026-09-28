@@ -54,7 +54,7 @@ const ALREADY_SENT = {
 export const NOTIFICATIONS_FEATURE: ApiFeature = {
   id: 'notifications',
   name: 'Push notifications',
-  screen: '/notifications',
+  screen: '/admin/notifications',
   permissionModule: 'notifications',
   intro:
     'Push notifications for app users or places: target everyone, a location or picked recipients; send now or schedule; duplicate, reschedule and resend.',

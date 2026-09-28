@@ -39,6 +39,6 @@ describe('ReportedPlaceCard', () => {
     const link = render().querySelector('a') as HTMLAnchorElement;
 
     expect(link.textContent?.trim()).toBe('معاينة صفحة المكان');
-    expect(link.getAttribute('href')).toBe('/places/place-4');
+    expect(link.getAttribute('href')).toBe('/admin/places/place-4');
   });
 });

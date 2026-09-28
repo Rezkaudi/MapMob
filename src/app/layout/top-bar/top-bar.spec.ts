@@ -19,6 +19,12 @@ class HostComponent {
   readonly unreadNotificationCount = signal(0);
 }
 
+@Component({
+  imports: [TopBar],
+  template: `<app-top-bar userName="أحمد" inboxRoute="/merchant/notifications" />`,
+})
+class MerchantHostComponent {}
+
 describe('TopBar', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -61,7 +67,7 @@ describe('TopBar', () => {
     fixture.detectChanges();
 
     const bell: HTMLAnchorElement = fixture.nativeElement.querySelector('a[data-role="inbox"]');
-    expect(bell.getAttribute('href')).toBe('/inbox');
+    expect(bell.getAttribute('href')).toBe('/admin/inbox');
     expect(bell.getAttribute('aria-label')).toBe('الإشعارات الواردة');
   });
 
@@ -96,5 +102,13 @@ describe('TopBar', () => {
     const header: HTMLElement = fixture.nativeElement.querySelector('header');
     expect(header.classList.contains('relative')).toBe(true);
     expect(header.classList.contains('z-30')).toBe(true);
+  });
+
+  it('sends the bell to the inbox route it is given', () => {
+    const fixture = TestBed.createComponent(MerchantHostComponent);
+    fixture.detectChanges();
+
+    const bell: HTMLAnchorElement = fixture.nativeElement.querySelector('a[data-role="inbox"]');
+    expect(bell.getAttribute('href')).toBe('/merchant/notifications');
   });
 });

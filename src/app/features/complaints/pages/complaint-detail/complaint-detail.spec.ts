@@ -38,7 +38,7 @@ describe('ComplaintDetail page', () => {
     const { element } = render();
     const crumb = element.querySelector('nav[aria-label="مسار الصفحة"]') as HTMLElement;
 
-    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/complaints');
+    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/admin/complaints');
     expect(crumb.textContent).toContain('تفاصيل البلاغ');
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('تفاصيل البلاغ');
   });

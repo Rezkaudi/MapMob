@@ -15,7 +15,8 @@ describe('signedInGuard', () => {
       providers: [
         provideRouter([
           { path: 'login', children: [] },
-          { path: 'dashboard', canActivate: [signedInGuard], children: [] },
+          { path: 'merchant/dashboard', children: [] },
+          { path: 'admin/dashboard', canActivate: [signedInGuard], children: [] },
         ]),
         { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
       ],
@@ -23,16 +24,24 @@ describe('signedInGuard', () => {
   });
 
   it('sends a signed-out visitor to the login page', async () => {
-    await TestBed.inject(Router).navigateByUrl('/dashboard');
+    await TestBed.inject(Router).navigateByUrl('/admin/dashboard');
 
-    expect(TestBed.inject(Location).path()).toBe('/login');
+    expect(TestBed.inject(Location).path()).toBe('/login?role=admin');
   });
 
   it('lets a signed-in user through', async () => {
     TestBed.inject(AuthStore).signIn({ email: 'admin@admin.com', password: 'admin' });
 
-    await TestBed.inject(Router).navigateByUrl('/dashboard');
+    await TestBed.inject(Router).navigateByUrl('/admin/dashboard');
 
-    expect(TestBed.inject(Location).path()).toBe('/dashboard');
+    expect(TestBed.inject(Location).path()).toBe('/admin/dashboard');
+  });
+
+  it('sends a signed-in merchant to the merchant dashboard instead', async () => {
+    TestBed.inject(AuthStore).startSession({ ...USER, role: 'owner' });
+
+    await TestBed.inject(Router).navigateByUrl('/admin/dashboard');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/dashboard');
   });
 });

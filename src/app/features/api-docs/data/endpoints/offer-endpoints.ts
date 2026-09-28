@@ -67,7 +67,7 @@ const OFFER_FORM_FIELDS = [
 export const OFFERS_FEATURE: ApiFeature = {
   id: 'offers',
   name: 'Offers',
-  screen: '/offers',
+  screen: '/admin/offers',
   permissionModule: 'offers',
   intro:
     'Discounts tied to a place, on everything it sells or only on picked products: list, summary, detail, create, edit, pause/resume, delete and CSV export.',

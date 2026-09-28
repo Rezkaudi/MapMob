@@ -1,0 +1,41 @@
+<section
+  class="flex h-full min-h-[325px] flex-col rounded-2xl border border-border bg-surface p-6 shadow-[0_4px_20px_0_rgba(238,238,238,0.9)]"
+  [attr.aria-busy]="isLoading() ? 'true' : null"
+>
+  <div class="pb-4">
+    <app-overview-card-heading
+      title="آخر التقييمات"
+      icon="star-feather"
+      iconTileClass="bg-accent"
+      [viewAllRoute]="reviewsRoute"
+    />
+  </div>
+
+  @if (isLoading()) {
+    <div class="flex flex-col gap-4">
+      @for (row of placeholderRows; track row) {
+        <app-skeleton height="89px" />
+      }
+    </div>
+  } @else {
+    <ul class="flex flex-col gap-4">
+      @for (review of reviews(); track review.id) {
+        <li class="flex flex-col gap-1 border-b border-[#e6e8ea]/60 pb-3">
+          <!-- RTL: the reviewer is written first so the name sits right and the stars left. -->
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col items-start gap-1 pb-0.5 text-right">
+              <span class="text-[12px]/[16px] font-medium text-text-primary">{{
+                review.authorName
+              }}</span>
+              <span class="text-[11px]/[14px] text-status-success">{{ review.ageText }}</span>
+            </div>
+            <app-star-rating [rating]="review.rating" starStyle="rounded" />
+          </div>
+          <p class="text-right text-[12px]/[18px] text-text-secondary">{{ review.comment }}</p>
+        </li>
+      } @empty {
+        <li class="py-10 text-center text-[14px] text-text-secondary">لا توجد تقييمات بعد</li>
+      }
+    </ul>
+  }
+</section>

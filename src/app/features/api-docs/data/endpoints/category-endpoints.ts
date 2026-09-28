@@ -48,7 +48,7 @@ const CATEGORY_DRAFT_FIELDS = [
 export const CATEGORIES_FEATURE: ApiFeature = {
   id: 'categories',
   name: 'Categories',
-  screen: '/categories',
+  screen: '/admin/categories',
   permissionModule: 'categories',
   intro:
     'A two-level tree: main categories and their sub categories. Each has a Lucide icon name and a colour from a fixed palette.',

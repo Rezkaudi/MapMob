@@ -60,7 +60,7 @@ const NEW_PAYMENT_FIELDS = [
 export const PAYMENTS_FEATURE: ApiFeature = {
   id: 'payments',
   name: 'Payments',
-  screen: '/payments',
+  screen: '/admin/payments',
   permissionModule: 'payments',
   intro: 'Money received, and a dialog to record a cash payment.',
   endpoints: [

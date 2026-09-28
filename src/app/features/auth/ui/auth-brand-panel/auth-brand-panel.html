@@ -1,0 +1,27 @@
+<!-- 860px gradient column pinned to the page's right edge, as in the design. -->
+<div
+  aria-hidden="true"
+  class="relative hidden h-full w-[860px] shrink-0 overflow-hidden lg:block"
+  style="background: linear-gradient(180deg, #0583ec 0%, #0030a8 84.788%, #001e8f 100%)"
+>
+  <div class="absolute top-[322px] left-1/2 flex -translate-x-1/2 flex-col items-start gap-4">
+    <!-- The wordmark lockup keeps its Latin reading order: pin first, then MapMob. -->
+    <div class="flex items-center gap-1" dir="ltr">
+      <img src="assets/mapmob-logo-white.svg" alt="" class="h-10 w-10 -rotate-4 object-contain" />
+      <span class="font-brand text-[40px] leading-none font-bold text-white">MapMob</span>
+    </div>
+    <p class="w-[399px] text-right text-[18px] font-medium text-white">
+      منصة متكاملة لإدارة الأماكن والخدمات والمستخدمين
+    </p>
+  </div>
+
+  <!-- Figma places a rotated node by its top-left corner, so each ring turns about that corner. -->
+  <span
+    data-role="ring"
+    class="pointer-events-none absolute top-[792.21px] left-[432px] h-[437.35px] w-[464.84px] origin-top-left -rotate-[13.985deg] rounded-full border border-[#0575e6]"
+  ></span>
+  <span
+    data-role="ring"
+    class="pointer-events-none absolute top-[786.86px] left-[361px] h-[437.35px] w-[464.84px] origin-top-left -rotate-[13.985deg] rounded-full border border-[#0575e6]"
+  ></span>
+</div>

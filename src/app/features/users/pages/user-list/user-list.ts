@@ -50,7 +50,7 @@ export class UserList {
   }
 
   protected openDetail(user: AppUser): void {
-    this.router.navigate(['/users', user.id]);
+    this.router.navigate(['/admin/users', user.id]);
   }
 
   protected async exportUsers(): Promise<void> {

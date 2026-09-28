@@ -150,6 +150,6 @@ describe('AccountSettings', () => {
     buttonNamed(element, 'تسجيل الخروج').click();
 
     expect(signOut).toHaveBeenCalledOnce();
-    expect(navigate).toHaveBeenCalledWith('/login');
+    expect(navigate).toHaveBeenCalledWith('/login?role=admin');
   });
 });

@@ -1,10 +1,32 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { NavItem } from './nav-item';
 import { Sidebar } from './sidebar';
 
 @Component({ imports: [Sidebar], template: `<app-sidebar />` })
 class HostComponent {}
+
+const MERCHANT_ITEMS: readonly NavItem[] = [
+  { label: 'الرئيسية', route: '/merchant/dashboard', icon: 'home' },
+  { label: 'المنتجات', route: '/merchant/products', icon: 'package' },
+];
+const MERCHANT_SECONDARY_ITEMS: readonly NavItem[] = [
+  { label: 'الإعدادات', route: '/merchant/settings', icon: 'settings' },
+];
+
+@Component({
+  imports: [Sidebar],
+  template: `<app-sidebar
+    homeRoute="/merchant/dashboard"
+    [navItems]="items"
+    [secondaryNavItems]="secondaryItems"
+  />`,
+})
+class MerchantHostComponent {
+  protected readonly items = MERCHANT_ITEMS;
+  protected readonly secondaryItems = MERCHANT_SECONDARY_ITEMS;
+}
 
 function collapseButton(fixture: { nativeElement: HTMLElement }): HTMLButtonElement {
   return fixture.nativeElement.querySelector('button[aria-controls="sidebar-nav"]')!;
@@ -94,5 +116,16 @@ describe('Sidebar', () => {
 
     const firstLink: HTMLAnchorElement = fixture.nativeElement.querySelector('nav a');
     expect(firstLink.getAttribute('title')).toBe('الرئيسية');
+  });
+
+  it('draws the nav it is given and links the wordmark to the given home', () => {
+    const fixture = TestBed.createComponent(MerchantHostComponent);
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(
+      [...element.querySelectorAll('nav a')].map((link) => link.getAttribute('title')),
+    ).toEqual(['الرئيسية', 'المنتجات', 'الإعدادات']);
+    expect(element.querySelector('a[dir="ltr"]')!.getAttribute('href')).toBe('/merchant/dashboard');
   });
 });

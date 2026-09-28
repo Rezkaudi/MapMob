@@ -36,7 +36,22 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call the dashboard makes, the three the place form needs, and me/logout', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(137);
+    expect(countEndpoints(API_FEATURES).total).toBe(143);
+  });
+
+  it('lists the six calls of the place owner area', () => {
+    const ownerPaths = endpoints
+      .filter((endpoint) => endpoint.path.startsWith('/owner/'))
+      .map((endpoint) => `${endpoint.method} ${endpoint.path}`);
+
+    expect(ownerPaths).toEqual([
+      'POST /owner/auth/login',
+      'POST /owner/auth/password/forgot',
+      'POST /owner/auth/password/verify-code',
+      'POST /owner/auth/password/reset',
+      'GET /owner/overview',
+      'GET /owner/overview/performance',
+    ]);
   });
 
   it('gives every endpoint and feature its own anchor', () => {
@@ -141,7 +156,10 @@ describe('the API reference data', () => {
   });
 
   it('describes only what to build, never the old backend', () => {
-    const text = JSON.stringify(MAPMOB_API_REFERENCE);
+    // Screens are frontend routes, and the admin ones really live under /admin.
+    const text = JSON.stringify(MAPMOB_API_REFERENCE, (key, value) =>
+      key === 'screen' ? undefined : value,
+    );
 
     expect(text).not.toMatch(
       /None of|not built|neither built|Postman|[^a-z]_method|live API|[Ll]ive name|[Ll]ive today|exists today|existingRoute|admin\/stores|admin\/regions|admin\/cities|admin\/reports/,
@@ -172,7 +190,10 @@ describe('the API reference data', () => {
   });
 
   it('calls a business a place and the top tier featured, everywhere', () => {
-    const text = JSON.stringify([API_FEATURES, DATABASE_DOMAINS]);
+    // A screen is a frontend route: the owner area really lives under /merchant.
+    const text = JSON.stringify([API_FEATURES, DATABASE_DOMAINS], (key, value) =>
+      key === 'screen' ? undefined : value,
+    );
 
     expect(text.match(/.{40}(company|merchant|premium).{20}/i)?.[0] ?? null).toBeNull();
   });

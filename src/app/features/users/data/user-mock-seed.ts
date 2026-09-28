@@ -30,7 +30,7 @@ const PEOPLE: readonly PersonSeed[] = [
 const SAMPLE_REGISTRATION_DAYS = 13;
 const SAMPLE_IDLE_MINUTES = 10;
 
-/** The person the design's detail frame shows, so `/users/user-1` reads like the frame. */
+/** The person the design's detail frame shows, so `/admin/users/user-1` reads like the frame. */
 function buildDesignSampleUser(now: Date): AppUser {
   return {
     id: 'user-1',

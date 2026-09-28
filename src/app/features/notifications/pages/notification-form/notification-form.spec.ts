@@ -159,7 +159,7 @@ describe('NotificationForm', () => {
       sendAt: null,
       intent: 'publish',
     });
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/notifications');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications');
   });
 
   it('opens a notification for editing filled in, and saves it as a draft', async () => {

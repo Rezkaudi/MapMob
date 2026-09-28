@@ -32,7 +32,7 @@ const STILL_IN_USE = {
 export const REGIONS_FEATURE: ApiFeature = {
   id: 'regions',
   name: 'Governorates and areas',
-  screen: '/regions',
+  screen: '/admin/regions',
   permissionModule: 'regions',
   intro:
     'Governorates and the areas inside them: two levels, each with its own list, create, edit, status toggle and delete.',

@@ -1,0 +1,21 @@
+<!-- The page is RTL, so the first flex child lands on the right: the sidebar, as in the design. -->
+<div class="flex h-dvh overflow-hidden">
+  <app-sidebar
+    [homeRoute]="homeRoute"
+    [navItems]="navItems"
+    [secondaryNavItems]="secondaryNavItems"
+  />
+  <div class="flex min-h-0 min-w-0 flex-1 flex-col">
+    <app-route-progress />
+    <app-top-bar
+      [userName]="userName()"
+      [avatarUrl]="avatarUrl()"
+      [inboxRoute]="notificationsRoute"
+      [loginRoute]="loginRoute"
+      [userMenuItems]="userMenuItems"
+    />
+    <main appScrollGutter class="flex-1 overflow-y-auto p-8 [scrollbar-gutter:stable]">
+      <router-outlet />
+    </main>
+  </div>
+</div>

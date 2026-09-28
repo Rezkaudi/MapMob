@@ -20,7 +20,7 @@ export function buildComplaintDetailView(detail: ComplaintDetail): ComplaintDeta
     ratingLabel: detail.place.rating.toFixed(RATING_DECIMALS),
     // The design keeps a space before the closing bracket.
     reviewCountLabel: `(${detail.place.reviewCount} تقييماً )`,
-    reporterProfileLink: `/users/${detail.reporter.id}`,
-    placeLink: `/places/${detail.place.id}`,
+    reporterProfileLink: `/admin/users/${detail.reporter.id}`,
+    placeLink: `/admin/places/${detail.place.id}`,
   };
 }

@@ -61,7 +61,7 @@ describe('OfferDetailDrawer', () => {
     ) as HTMLAnchorElement;
 
     expect(link.textContent?.trim()).toBe('عرض تفاصيل المتجر');
-    expect(link.getAttribute('href')).toBe('/places/place-7');
+    expect(link.getAttribute('href')).toBe('/admin/places/place-7');
   });
 
   it('sends edit, pause and delete for the open offer from the footer', () => {

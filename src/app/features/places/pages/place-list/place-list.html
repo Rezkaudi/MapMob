@@ -8,7 +8,7 @@
     @if (!store.hasNoResults() || store.search()) {
       <div class="flex items-center gap-3">
         <a
-          routerLink="/places/new"
+          routerLink="/admin/places/new"
           class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white"
         >
           <span>إضافة مكان جديد</span>
@@ -36,7 +36,7 @@
       description="أضف أول مكان إلى المنصة للبدء بإدارة الشركات والمتاجر."
     >
       <a
-        routerLink="/places/new"
+        routerLink="/admin/places/new"
         class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white"
       >
         <span>إضافة مكان جديد</span>
@@ -120,7 +120,7 @@
                       <a
                         data-role="open-place"
                         class="text-[14px]/[17px] font-bold text-text-primary hover:text-primary"
-                        [routerLink]="['/places', place.id]"
+                        [routerLink]="['/admin/places', place.id]"
                       >
                         {{ place.name }}
                       </a>
@@ -149,14 +149,14 @@
                 <td class="px-4 text-center">
                   <app-action-menu>
                     <a
-                      [routerLink]="['/places', place.id]"
+                      [routerLink]="['/admin/places', place.id]"
                       class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
                     >
                       <span>عرض التفاصيل</span>
                       <app-icon name="eye" [size]="16" class="text-text-secondary" />
                     </a>
                     <a
-                      [routerLink]="['/places', place.id, 'edit']"
+                      [routerLink]="['/admin/places', place.id, 'edit']"
                       class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
                     >
                       <span>تعديل</span>

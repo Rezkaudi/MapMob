@@ -16,6 +16,7 @@ const SECTION_CLASSES: Record<ChartPanelAppearance, string> = {
   'raised-short-shadow': `${RAISED_CARD} shadow-[0_4px_20px_0_rgba(238,238,238,0.8)]`,
   outlined:
     'gap-6 rounded-lg border border-border bg-surface p-[23px] shadow-[0_4px_30px_0_rgba(238,238,238,0.08)]',
+  embedded: 'h-[320px] gap-[7px] px-5 pt-4',
 };
 
 const TITLE_CLASSES: Record<ChartPanelAppearance, string> = {
@@ -23,6 +24,7 @@ const TITLE_CLASSES: Record<ChartPanelAppearance, string> = {
   raised: '',
   'raised-short-shadow': '',
   outlined: 'max-w-[229px]',
+  embedded: '',
 };
 
 /** A chart card: title on the start side, period tabs and a calendar button on the end side. */
@@ -40,6 +42,7 @@ export class ChartPanel {
   /** Height of the placeholder drawn while the chart loads. */
   readonly chartHeight = input<string>(DEFAULT_CHART_HEIGHT);
   readonly appearance = input<ChartPanelAppearance>('panel');
+  readonly isCalendarVisible = input<boolean>(true);
   readonly periodChange = output<string>();
 
   protected readonly sectionClasses = computed(() => SECTION_CLASSES[this.appearance()]);

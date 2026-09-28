@@ -14,5 +14,5 @@ export class OfferPublisher {
   readonly place = input.required<OfferPlace>();
   readonly initial = input.required<string>();
 
-  protected readonly placeLink = computed(() => ['/places', this.place().id]);
+  protected readonly placeLink = computed(() => ['/admin/places', this.place().id]);
 }

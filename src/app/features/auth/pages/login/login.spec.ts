@@ -1,120 +1,164 @@
+import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { NEVER, of } from 'rxjs';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { of } from 'rxjs';
+import { MERCHANT_SUPPORT_URL } from '../../../../core/config/merchant-support-url';
+import { MerchantAuthRepository } from '../../../merchant-auth/data/merchant-auth.repository';
 import { AuthRepository } from '../../data/auth.repository';
+import { AuthStore } from '../../state/auth.store';
 import { Login } from './login';
 
-const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
+const ADMIN = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 't' };
+const MERCHANT = { ...ADMIN, id: 'm-1', role: 'owner' };
+
+async function open(url: string) {
+  localStorage.clear();
+  TestBed.configureTestingModule({
+    providers: [
+      provideRouter(
+        [
+          { path: 'login', component: Login },
+          { path: 'admin/dashboard', children: [] },
+          { path: 'merchant/dashboard', children: [] },
+        ],
+        withComponentInputBinding(),
+      ),
+      { provide: AuthRepository, useValue: { signIn: () => of(ADMIN) } },
+      { provide: MerchantAuthRepository, useValue: { signIn: () => of(MERCHANT) } },
+      { provide: MERCHANT_SUPPORT_URL, useValue: 'mailto:help@example.com' },
+    ],
+  });
+  const harness = await RouterTestingHarness.create();
+  await harness.navigateByUrl(url);
+  const element = harness.fixture.nativeElement as HTMLElement;
+  return {
+    harness,
+    element,
+    path: () => TestBed.inject(Location).path(),
+    tab: (label: string) =>
+      [...element.querySelectorAll<HTMLButtonElement>('[role="radio"]')].find(
+        (button) => button.textContent!.trim() === label,
+      )!,
+  };
+}
+
+async function signIn(page: Awaited<ReturnType<typeof open>>, email: string) {
+  const type = (selector: string, value: string) => {
+    const input = page.element.querySelector<HTMLInputElement>(selector)!;
+    input.value = value;
+    input.dispatchEvent(new Event('input'));
+  };
+  type('#email', email);
+  type('#password', 'secret');
+  page.element.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
+  await page.harness.fixture.whenStable();
+}
 
 describe('Login', () => {
-  beforeEach(() => {
+  it('opens the admin tab on a bare /login', async () => {
+    const page = await open('/login');
+
+    expect(page.tab('حساب الإدارة').getAttribute('aria-checked')).toBe('true');
+    expect(page.element.querySelector('app-admin-sign-in-form')).toBeTruthy();
+    expect(page.element.querySelector('app-merchant-sign-in-form')).toBeNull();
+  });
+
+  it('opens the merchant tab from ?role=merchant', async () => {
+    const page = await open('/login?role=merchant');
+
+    expect(page.tab('حساب المتجر').getAttribute('aria-checked')).toBe('true');
+    expect(page.element.querySelector('app-merchant-sign-in-form')).toBeTruthy();
+  });
+
+  it('puts the tab in the URL, so a reload or a shared link keeps it', async () => {
+    const page = await open('/login');
+
+    page.tab('حساب المتجر').click();
+    await page.harness.fixture.whenStable();
+    page.harness.detectChanges();
+
+    expect(page.path()).toBe('/login?role=merchant');
+    expect(page.element.querySelector('app-merchant-sign-in-form')).toBeTruthy();
+  });
+
+  it('draws the tabs above the heading, in the 382px form column', async () => {
+    const page = await open('/login');
+
+    const tabs = page.element.querySelector('app-segmented-choice')!;
+    expect(tabs.nextElementSibling!.tagName).toBe('APP-ADMIN-SIGN-IN-FORM');
+  });
+
+  it('opens the admin dashboard once an admin signs in', async () => {
+    const page = await open('/login');
+
+    await signIn(page, 'admin@admin.com');
+
+    expect(page.path()).toBe('/admin/dashboard');
+  });
+
+  it('opens the merchant dashboard once a merchant signs in', async () => {
+    const page = await open('/login?role=merchant');
+
+    await signIn(page, 'merchant@merchant.com');
+
+    expect(page.path()).toBe('/merchant/dashboard');
+  });
+
+  it('sends a merchant who is already signed in straight to their dashboard', async () => {
+    localStorage.clear();
+    localStorage.setItem('mapmob.auth.user', JSON.stringify(MERCHANT));
     TestBed.configureTestingModule({
       providers: [
-        provideRouter([]),
-        { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+        provideRouter(
+          [
+            { path: 'login', component: Login },
+            { path: 'merchant/dashboard', children: [] },
+          ],
+          withComponentInputBinding(),
+        ),
+        { provide: AuthRepository, useValue: {} },
+        { provide: MerchantAuthRepository, useValue: {} },
+        { provide: MERCHANT_SUPPORT_URL, useValue: 'mailto:help@example.com' },
       ],
     });
+    TestBed.inject(AuthStore);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/login');
+    await harness.fixture.whenStable();
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/dashboard');
   });
 
-  it('renders the brand panel and the sign-in copy from the design', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
+  it('keeps one height for both tabs, so the tabs do not jump when switched', async () => {
+    const page = await open('/login');
 
-    const text = fixture.nativeElement.textContent;
-    expect(text).toContain('MapMob');
-    expect(text).toContain('منصة متكاملة لإدارة الأماكن والخدمات والمستخدمين');
-    expect(text).toContain('أهلاً بعودتك');
-    expect(text).toContain('البريد الالكتروني');
-    expect(text).toContain('كلمة المرور');
-    expect(text).toContain('تسجيل دخول');
+    const column = page.element.querySelector('app-segmented-choice')!.parentElement!;
+    expect(column.classList).toContain('min-h-[607px]');
   });
 
-  it('aligns the brand lockup with the tagline edge, so RTL keeps it on the right', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
+  it('writes ?role=admin into a bare /login, since admin is the default tab', async () => {
+    const page = await open('/login');
+    await page.harness.fixture.whenStable();
 
-    const wordmark: HTMLElement = fixture.nativeElement.querySelector('img[src*="mapmob-logo"]')
-      .parentElement;
-    const column = wordmark.parentElement!;
-    expect(column.classList).toContain('items-start');
-    expect(column.classList).not.toContain('items-end');
+    expect(page.path()).toBe('/login?role=admin');
+    expect(page.tab('حساب الإدارة').getAttribute('aria-checked')).toBe('true');
   });
 
-  it('does not offer a forgotten-password link', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
+  it('treats an unknown role as the admin tab and says so in the URL', async () => {
+    const page = await open('/login?role=owner');
+    await page.harness.fixture.whenStable();
 
-    expect(fixture.nativeElement.textContent).not.toContain('نسيت كلمة المرور؟');
+    expect(page.path()).toBe('/login?role=admin');
+    expect(page.element.querySelector('app-admin-sign-in-form')).toBeTruthy();
   });
 
-  it('starts each field label at the reading start, so RTL puts it on the right', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
+  it('writes ?role=admin when the admin tab is picked', async () => {
+    const page = await open('/login?role=merchant');
 
-    const labels: HTMLLabelElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('label'),
-    );
-    expect(labels.length).toBe(2);
-    for (const label of labels) {
-      expect(label.parentElement!.classList).toContain('items-start');
-      expect(label.parentElement!.classList).not.toContain('items-end');
-    }
-  });
+    page.tab('حساب الإدارة').click();
+    await page.harness.fixture.whenStable();
 
-  it('puts the eye toggle after the password input, so it lands on the left in RTL', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
-
-    const field: HTMLElement = fixture.nativeElement.querySelector('#password').parentElement;
-    const children = Array.from(field.children);
-    expect(children.findIndex((child) => child.id === 'password')).toBeLessThan(
-      children.findIndex((child) => child.tagName === 'BUTTON'),
-    );
-  });
-
-  it('toggles the password field between hidden and visible', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
-
-    const passwordInput = () =>
-      fixture.nativeElement.querySelector('#password') as HTMLInputElement;
-    expect(passwordInput().type).toBe('password');
-
-    fixture.nativeElement.querySelector('#password ~ button').click();
-    fixture.detectChanges();
-
-    expect(passwordInput().type).toBe('text');
-  });
-});
-
-describe('Login while signing in', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: AuthRepository, useValue: { signIn: () => NEVER } },
-      ],
-    });
-  });
-
-  it('spins inside the submit button and blocks a second submit', () => {
-    const fixture = TestBed.createComponent(Login);
-    fixture.detectChanges();
-
-    const email: HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    const password: HTMLInputElement = fixture.nativeElement.querySelector('#password');
-    email.value = 'admin@mapmob.com';
-    email.dispatchEvent(new Event('input'));
-    password.value = '12345678';
-    password.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    const submit: HTMLButtonElement = fixture.nativeElement.querySelector('button[type="submit"]');
-    submit.click();
-    fixture.detectChanges();
-
-    expect(submit.disabled).toBe(true);
-    expect(submit.getAttribute('aria-busy')).toBe('true');
-    expect(submit.querySelector('app-spinner')).toBeTruthy();
+    expect(page.path()).toBe('/login?role=admin');
   });
 });

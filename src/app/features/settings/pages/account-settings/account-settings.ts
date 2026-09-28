@@ -28,8 +28,7 @@ import {
   ACCOUNT_FIELD_MESSAGES,
   ACCOUNT_SAVED_COPY,
 } from './account-settings-copy';
-
-const LOGIN_URL = '/login';
+import { ADMIN_LOGIN_URL } from '../../../auth/models/login-role';
 
 @Component({
   selector: 'app-account-settings',
@@ -130,6 +129,6 @@ export class AccountSettings {
 
   protected signOut(): void {
     this.authStore.signOut();
-    void this.router.navigateByUrl(LOGIN_URL);
+    void this.router.navigateByUrl(ADMIN_LOGIN_URL);
   }
 }

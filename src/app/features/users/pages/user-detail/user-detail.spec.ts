@@ -26,7 +26,7 @@ describe('UserDetail page', () => {
       .nativeElement as HTMLElement;
     const breadcrumb = element.querySelector('nav[aria-label="مسار التنقل"]') as HTMLElement;
 
-    expect(breadcrumb.querySelector('a')?.getAttribute('href')).toBe('/users');
+    expect(breadcrumb.querySelector('a')?.getAttribute('href')).toBe('/admin/users');
     expect(breadcrumb.textContent).toContain('تفاصيل المستخدم');
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('تفاصيل المستخدم');
     for (const words of [

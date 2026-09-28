@@ -24,10 +24,10 @@ const PLACEHOLDER_ROWS = [0, 1, 2, 3];
 
 /** The page that clears each queue. An id with no page here loses its review button. */
 const REVIEW_ROUTES: Record<string, string> = {
-  complaints: '/complaints',
-  'reported-reviews': '/reviews',
-  'pending-places': '/places',
-  'expiring-subscriptions': '/subscriptions',
+  complaints: '/admin/complaints',
+  'reported-reviews': '/admin/reviews',
+  'pending-places': '/admin/places',
+  'expiring-subscriptions': '/admin/subscriptions',
 };
 
 const ICON_NAMES: Record<ActionItemTone, string> = {

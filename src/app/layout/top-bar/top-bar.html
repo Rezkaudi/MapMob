@@ -9,13 +9,19 @@
          dot is baked into the asset, so an empty inbox swaps in the plain bell instead. -->
     <a
       data-role="inbox"
-      routerLink="/inbox"
+      [routerLink]="inboxRoute()"
       [attr.aria-label]="bellLabel()"
       class="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
     >
       <img [src]="bellIcon()" alt="" class="h-6 w-6" />
     </a>
 
-    <app-user-menu [userName]="userName()" [userRole]="userRole()" [avatarUrl]="avatarUrl()" />
+    <app-user-menu
+      [userName]="userName()"
+      [userRole]="userRole()"
+      [avatarUrl]="avatarUrl()"
+      [items]="userMenuItems()"
+      [loginRoute]="loginRoute()"
+    />
   </div>
 </header>

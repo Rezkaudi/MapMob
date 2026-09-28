@@ -12,7 +12,7 @@ async function renderAt(url: string) {
     providers: [
       provideRouter([
         {
-          path: 'settings',
+          path: 'admin/settings',
           component: SettingsNav,
           children: [{ path: '**', component: EmptyPage }],
         },
@@ -25,16 +25,16 @@ async function renderAt(url: string) {
 
 describe('SettingsNav', () => {
   it('links each tab to its settings page, with its label', async () => {
-    const element = await renderAt('/settings/account');
+    const element = await renderAt('/admin/settings/account');
 
     const links = Array.from(element.querySelectorAll('a'));
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      '/settings/account',
-      '/settings/platform',
-      '/settings/notifications',
-      '/settings/payments',
-      '/settings/admins',
-      '/settings/roles',
+      '/admin/settings/account',
+      '/admin/settings/platform',
+      '/admin/settings/notifications',
+      '/admin/settings/payments',
+      '/admin/settings/admins',
+      '/admin/settings/roles',
     ]);
     expect(
       links.map((link) => link.querySelector('[data-role="tab-label"]')?.textContent?.trim()),
@@ -49,10 +49,10 @@ describe('SettingsNav', () => {
   });
 
   it('marks only the open tab as the current page', async () => {
-    const element = await renderAt('/settings/payments');
+    const element = await renderAt('/admin/settings/payments');
 
     const current = element.querySelectorAll('a[aria-current="page"]');
     expect(current).toHaveLength(1);
-    expect(current[0].getAttribute('href')).toBe('/settings/payments');
+    expect(current[0].getAttribute('href')).toBe('/admin/settings/payments');
   });
 });

@@ -13,14 +13,14 @@ describe('SettingsLayout', () => {
       providers: [
         provideRouter([
           {
-            path: 'settings',
+            path: 'admin/settings',
             component: SettingsLayout,
             children: [{ path: 'account', component: FakeSection }],
           },
         ]),
       ],
     });
-    const harness = await RouterTestingHarness.create('/settings/account');
+    const harness = await RouterTestingHarness.create('/admin/settings/account');
     return harness.fixture.nativeElement as HTMLElement;
   }
 

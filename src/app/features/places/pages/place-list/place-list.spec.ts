@@ -175,7 +175,7 @@ describe('PlaceList name', () => {
       '[data-role="open-place"]',
     );
 
-    expect(name?.getAttribute('href')).toBe('/places/place-7');
+    expect(name?.getAttribute('href')).toBe('/admin/places/place-7');
   });
 });
 

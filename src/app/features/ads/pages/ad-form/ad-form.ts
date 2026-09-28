@@ -29,7 +29,7 @@ import { AdPlacementCard } from '../../ui/ad-placement-card/ad-placement-card';
 import { AdScheduleCard } from '../../ui/ad-schedule-card/ad-schedule-card';
 import { AD_FORM_COPY } from './ad-form-copy';
 
-const ADS_URL = '/ads';
+const ADS_URL = '/admin/ads';
 
 @Component({
   selector: 'app-ad-form',

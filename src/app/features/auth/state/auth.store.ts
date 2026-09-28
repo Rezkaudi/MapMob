@@ -14,6 +14,7 @@ import { AuthRepository } from '../data/auth.repository';
 import { AuthStorage } from '../data/auth-storage';
 import { AuthenticatedUser } from '../models/authenticated-user';
 import { Credentials } from '../models/credentials';
+import { MERCHANT_ROLE } from '../models/merchant-role';
 
 interface AuthState {
   readonly user: AuthenticatedUser | null;
@@ -27,21 +28,31 @@ export const AuthStore = signalStore(
   withRequestStatus(),
   withComputed(({ user }) => ({
     isSignedIn: computed(() => user() !== null),
+    isMerchant: computed(() => user()?.role === MERCHANT_ROLE),
   })),
   withHooks({
     onInit(store, storage = inject(AuthStorage)) {
       patchState(store, { user: storage.read() });
     },
   }),
-  withMethods((store, repository = inject(AuthRepository), storage = inject(AuthStorage)) => ({
+  withMethods((store, storage = inject(AuthStorage)) => ({
+    startSession(user: AuthenticatedUser): void {
+      storage.save(user);
+      patchState(store, { user });
+    },
+    signOut(): void {
+      storage.clear();
+      patchState(store, { user: null });
+    },
+  })),
+  withMethods((store, repository = inject(AuthRepository)) => ({
     signIn: rxMethod<Credentials>(
       pipe(
         tap(() => store.setLoading()),
         switchMap((credentials) =>
           repository.signIn(credentials).pipe(
             tap((user) => {
-              storage.save(user);
-              patchState(store, { user });
+              store.startSession(user);
               store.setLoaded();
             }),
             catchError((error: Error) => {
@@ -52,9 +63,5 @@ export const AuthStore = signalStore(
         ),
       ),
     ),
-    signOut(): void {
-      storage.clear();
-      patchState(store, { user: null });
-    },
   })),
 );

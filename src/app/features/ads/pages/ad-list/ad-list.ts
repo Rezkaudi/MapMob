@@ -18,7 +18,7 @@ import { buildAdConfirmCopy } from '../../ui/ad-dialog-copy';
 import { AdTable } from '../../ui/ad-table/ad-table';
 import { AdToolbar } from '../../ui/ad-toolbar/ad-toolbar';
 
-const NEW_AD_URL = '/ads/new';
+const NEW_AD_URL = '/admin/ads/new';
 
 @Component({
   selector: 'app-ad-list',
@@ -60,11 +60,11 @@ export class AdList {
   }
 
   protected viewAd(ad: Ad): void {
-    this.router.navigateByUrl(`/ads/${ad.id}`);
+    this.router.navigateByUrl(`/admin/ads/${ad.id}`);
   }
 
   protected editAd(ad: Ad): void {
-    this.router.navigateByUrl(`/ads/${ad.id}/edit`);
+    this.router.navigateByUrl(`/admin/ads/${ad.id}/edit`);
   }
 
   protected askToChangeStatus(ad: Ad): void {

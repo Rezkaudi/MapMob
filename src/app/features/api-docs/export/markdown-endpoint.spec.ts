@@ -28,7 +28,7 @@ describe('endpointMarkdown', () => {
 
   it('states the permission and the screen that calls it', () => {
     expect(markdown).toContain('**Permission:** `places:edit`');
-    expect(markdown).toContain('**Called from:** `/places`');
+    expect(markdown).toContain('**Called from:** `/admin/places`');
     expect(markdown).not.toContain('**Status:**');
   });
 

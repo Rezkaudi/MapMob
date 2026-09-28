@@ -6,7 +6,7 @@ function render(isBusy = false) {
   TestBed.configureTestingModule({ providers: [provideRouter([])] });
   const fixture = TestBed.createComponent(FormActionBar);
   fixture.componentRef.setInput('saveLabel', 'حفظ العرض');
-  fixture.componentRef.setInput('cancelLink', '/offers');
+  fixture.componentRef.setInput('cancelLink', '/admin/offers');
   fixture.componentRef.setInput('isBusy', isBusy);
   fixture.detectChanges();
   return fixture;
@@ -20,7 +20,7 @@ describe('FormActionBar', () => {
     );
 
     expect(labels).toEqual(['حفظ العرض', 'حفظ كمسودة', 'إلغاء']);
-    expect(element.querySelector('a')?.getAttribute('href')).toBe('/offers');
+    expect(element.querySelector('a')?.getAttribute('href')).toBe('/admin/offers');
     expect(element.querySelector('button[type="submit"]')?.textContent?.trim()).toBe('حفظ العرض');
   });
 

@@ -37,6 +37,18 @@ class HostComponent {
 })
 class HostLoadingComponent {}
 
+@Component({
+  imports: [ChartPanel],
+  template: `<app-chart-panel
+    title="أداء المتجر والمشاهدات"
+    [periods]="[]"
+    activePeriod="monthly"
+    appearance="embedded"
+    [isCalendarVisible]="false"
+  />`,
+})
+class HostWithoutCalendarComponent {}
+
 describe('ChartPanel', () => {
   it('renders the title and one button per period', () => {
     const fixture = TestBed.createComponent(HostComponent);
@@ -132,5 +144,22 @@ describe('ChartPanel appearance', () => {
 
     expect(section.className).toContain('p-[23px]');
     expect(title.className).toContain('max-w-[229px]');
+  });
+
+  it('can leave out the calendar button, as the merchant chart does', () => {
+    const fixture = TestBed.createComponent(HostWithoutCalendarComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-icon[name="calendar"]')).toBeNull();
+  });
+
+  it('draws no frame of its own when embedded in a bigger card', () => {
+    const fixture = TestBed.createComponent(HostWithoutCalendarComponent);
+    fixture.detectChanges();
+
+    const section: HTMLElement = fixture.nativeElement.querySelector('section');
+    expect(section.classList).toContain('h-[320px]');
+    expect(section.classList).not.toContain('border');
+    expect(section.classList).not.toContain('rounded-xl');
   });
 });

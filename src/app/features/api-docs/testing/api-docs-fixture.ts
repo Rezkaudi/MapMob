@@ -16,7 +16,7 @@ export function buildFeature(overrides: Partial<ApiFeature> = {}): ApiFeature {
   return {
     id: 'places',
     name: 'Places',
-    screen: '/places',
+    screen: '/admin/places',
     permissionModule: 'places',
     intro: 'The core entity.',
     endpoints: [buildEndpoint()],

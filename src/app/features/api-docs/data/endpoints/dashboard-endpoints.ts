@@ -12,7 +12,7 @@ import { PLACE_ROW_FIELDS } from './place-fields';
 export const DASHBOARD_FEATURE: ApiFeature = {
   id: 'dashboard',
   name: 'Dashboard (home)',
-  screen: '/dashboard',
+  screen: '/admin/dashboard',
   permissionModule: 'home',
   intro:
     'The landing screen: six headline numbers, a "needs your attention" list, the newest places and two charts. All read-only.',

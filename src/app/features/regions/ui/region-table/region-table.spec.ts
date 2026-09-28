@@ -60,11 +60,11 @@ describe('RegionTable', () => {
 
   it('links each name when a link is given', () => {
     const fixture = render({
-      entryLink: (entry: { id: string }) => ['/regions', entry.id, 'areas'],
+      entryLink: (entry: { id: string }) => ['/admin/regions', entry.id, 'areas'],
     });
 
     const link = rowsOf(fixture.nativeElement)[0].querySelector('a') as HTMLAnchorElement;
-    expect(link.getAttribute('href')).toBe('/regions/a/areas');
+    expect(link.getAttribute('href')).toBe('/admin/regions/a/areas');
   });
 
   it('shows plain names without a link', () => {

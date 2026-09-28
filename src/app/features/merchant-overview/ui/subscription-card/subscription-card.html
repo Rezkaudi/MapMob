@@ -1,0 +1,58 @@
+<section
+  class="flex h-full min-h-[325px] flex-col justify-between rounded-2xl border border-border bg-surface p-6 shadow-[0_4px_20px_0_rgba(238,238,238,0.9)]"
+>
+  <div class="flex flex-col gap-4 pb-4">
+    <app-overview-card-heading
+      [title]="subscription().plan.name"
+      icon="award-feather"
+      iconTileClass="bg-status-success"
+    />
+
+    <div class="flex flex-col gap-2 rounded bg-[#f2f4f6] p-4">
+      <!-- RTL: each label is written first, so it reads on the right. -->
+      <div data-role="period" class="flex items-center justify-between gap-4 text-[14px]/[18px]">
+        <span class="text-text-secondary">فترة الاشتراك:</span>
+        <span class="text-text-primary">{{ progress().periodText }}</span>
+      </div>
+      <!-- A block child starts on the right in RTL, so the used share fills from the right. -->
+      <div
+        role="progressbar"
+        aria-label="استهلاك الباقة"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        class="h-2 overflow-hidden rounded-xl bg-[#e0e3e5]"
+        [attr.aria-valuenow]="progress().consumedPercent"
+      >
+        <div
+          class="h-full rounded-xl bg-primary"
+          [style.width.%]="progress().consumedPercent"
+        ></div>
+      </div>
+      <div data-role="usage" class="flex items-center justify-between gap-4 text-[12px]/[16px]">
+        <span class="text-text-primary">{{ progress().consumedText }}</span>
+        <span class="text-status-success">{{ progress().remainingText }}</span>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <p class="text-right text-[12px]/[16px] text-[#191c1e]">المزايا المفعلة حالياً:</p>
+      <ul class="grid grid-cols-2 gap-1">
+        @for (feature of subscription().features; track feature) {
+          <li class="flex items-center gap-1 text-[13px]/[18px] text-text-secondary">
+            <app-icon name="check-circle-mini" [size]="13" class="text-status-success" />
+            {{ feature }}
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <!-- `justify-start` is the reading start, so RTL keeps the button on the right. -->
+  <div class="flex justify-start pt-2">
+    <a
+      [routerLink]="subscriptionRoute"
+      class="rounded bg-primary px-4 py-2 text-[12px]/[16px] text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >ترقية الباقة أو التجديد</a
+    >
+  </div>
+</section>

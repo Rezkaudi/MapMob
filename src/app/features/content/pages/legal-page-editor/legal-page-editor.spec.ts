@@ -42,7 +42,7 @@ describe('LegalPageEditor page', () => {
     const { element } = render('terms');
     const crumb = element.querySelector('nav[aria-label="مسار الصفحة"]') as HTMLElement;
 
-    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/content');
+    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/admin/content');
     expect(crumb.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe('تعديل صفحة');
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('الشروط والأحكام');
     expect(element.textContent).toContain('تعديل المحتوى الذي يظهر للمستخدمين داخل تطبيق MapMob.');

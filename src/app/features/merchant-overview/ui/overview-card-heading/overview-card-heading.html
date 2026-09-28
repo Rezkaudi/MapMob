@@ -1,0 +1,21 @@
+<!-- RTL: the tile and title sit on the right, "عرض الكل" on the far left. -->
+<div class="flex items-center justify-between gap-4">
+  <div class="flex items-center gap-3">
+    @if (icon(); as iconName) {
+      <span
+        class="flex size-10 shrink-0 items-center justify-center rounded-lg text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+        [class]="iconTileClass()"
+      >
+        <app-icon [name]="iconName" [size]="20" />
+      </span>
+    }
+    <h2 class="text-[18px]/[28px] font-bold text-[#191c1e]">{{ title() }}</h2>
+  </div>
+  @if (viewAllRoute(); as route) {
+    <a
+      [routerLink]="route"
+      class="shrink-0 rounded text-[14px]/[24px] font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+      >عرض الكل</a
+    >
+  }
+</div>

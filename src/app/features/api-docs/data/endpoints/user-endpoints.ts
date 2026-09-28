@@ -34,7 +34,7 @@ const USER_ROW_FIELDS = [
 export const USERS_FEATURE: ApiFeature = {
   id: 'users',
   name: 'App users',
-  screen: '/users',
+  screen: '/admin/users',
   permissionModule: 'users',
   intro:
     'People using the mobile app, registered or visitors: list, summary, detail page, suspend, delete and CSV export.',

@@ -6,6 +6,7 @@ import localeAr from '@angular/common/locales/ar';
 
 import { routes } from './app.routes';
 import { provideApiBaseUrl } from './core/config/api-base-url';
+import { provideMerchantSupportUrl } from './core/config/merchant-support-url';
 import { provideUseMockApi } from './core/config/use-mock-api';
 import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
@@ -14,6 +15,8 @@ import { provideComplaintsFeature } from './features/complaints/complaints.provi
 import { provideContentFeature } from './features/content/content.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
 import { provideInboxFeature } from './features/inbox/inbox.providers';
+import { provideMerchantAuthFeature } from './features/merchant-auth/merchant-auth.providers';
+import { provideMerchantOverviewFeature } from './features/merchant-overview/merchant-overview.providers';
 import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
 import { providePaymentsFeature } from './features/payments/payments.providers';
@@ -35,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'ar' },
     provideApiBaseUrl(),
     provideUseMockApi(),
+    provideMerchantSupportUrl(),
     provideAdsFeature(),
     provideComplaintsFeature(),
     provideContentFeature(),
@@ -52,5 +56,7 @@ export const appConfig: ApplicationConfig = {
     provideCategoriesFeature(),
     providePlacesFeature(),
     provideAuthFeature(),
+    provideMerchantAuthFeature(),
+    provideMerchantOverviewFeature(),
   ],
 };

@@ -5,7 +5,7 @@
 } @else if (place(); as place) {
   <div class="flex flex-col gap-6">
     <nav class="flex items-center gap-2 text-[12px] text-text-secondary">
-      <a routerLink="/places" class="hover:text-primary">الشركات و المتاجر</a>
+      <a routerLink="/admin/places" class="hover:text-primary">الشركات و المتاجر</a>
       <app-icon name="chevron-left" [size]="8" />
       <span class="text-text-primary">{{ place.name }}</span>
     </nav>
@@ -27,7 +27,7 @@
 
       <div class="flex items-center gap-3">
         <a
-          [routerLink]="['/places', place.id, 'edit']"
+          [routerLink]="['/admin/places', place.id, 'edit']"
           class="flex h-11 w-32 items-center justify-center gap-2 rounded-xl bg-primary text-[14px] font-medium text-white"
         >
           <app-icon name="edit" [size]="14" />

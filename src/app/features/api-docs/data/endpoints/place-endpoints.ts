@@ -43,7 +43,7 @@ const PLACE_FILTER_FIELDS = [
 export const PLACES_FEATURE: ApiFeature = {
   id: 'places',
   name: 'Places',
-  screen: '/places',
+  screen: '/admin/places',
   permissionModule: 'places',
   intro:
     'The core entity: a business on the map. List, status counts, detail page, bulk status and delete, CSV export, and the seven-part create/edit form saved in one request.',

@@ -16,7 +16,7 @@ import { buildComplaintDeleteCopy } from '../../ui/complaint-dialog-copy';
 import { ComplaintTable } from '../../ui/complaint-table/complaint-table';
 import { ComplaintToolbar } from '../../ui/complaint-toolbar/complaint-toolbar';
 
-const COMPLAINTS_URL = '/complaints';
+const COMPLAINTS_URL = '/admin/complaints';
 
 @Component({
   selector: 'app-complaint-list',

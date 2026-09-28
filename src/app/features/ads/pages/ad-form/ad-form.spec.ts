@@ -134,7 +134,7 @@ describe('AdForm', () => {
       status: 'active',
     });
     expect(page.created[1].status).toBe('draft');
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/ads');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/ads');
   });
 
   it('opens an ad for editing with its saved values, and updates it', async () => {

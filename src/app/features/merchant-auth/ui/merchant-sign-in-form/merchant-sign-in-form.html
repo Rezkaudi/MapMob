@@ -1,0 +1,64 @@
+<div class="flex flex-col items-center gap-12">
+  <div class="flex w-full flex-col gap-8">
+    <app-auth-heading
+      title="أهلاً بعودتك"
+      description="أدخل بيانات حسابك المعتمدة من إدارة MapMob للوصول للوحة إدارة متجرك"
+      [hasSpacedDescription]="true"
+    />
+
+    <!-- The frames reserve 283px for every form, so the blocks centre at the same height. -->
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      novalidate
+      class="flex min-h-[283px] w-full flex-col gap-6 pb-4"
+    >
+      <app-auth-text-field
+        label="البريد الالكتروني"
+        inputId="email"
+        placeholder="name@gmail.com"
+        [control]="form.controls.email"
+      />
+
+      <div class="flex w-full flex-col gap-2">
+        <app-auth-password-field
+          label="كلمة المرور"
+          inputId="password"
+          [control]="form.controls.password"
+        />
+        <a
+          [routerLink]="routes.forgotPassword"
+          class="w-full rounded text-right text-[11px]/[16.5px] text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+          >نسيت كلمة المرور؟</a
+        >
+      </div>
+
+      <app-auth-form-error [message]="errorMessage()" />
+
+      <app-auth-submit-button
+        label="تسجيل دخول"
+        busyLabel="جاري تسجيل الدخول"
+        [isBusy]="store.isLoading()"
+      />
+    </form>
+  </div>
+
+  <div class="flex w-[340px] max-w-full flex-col items-center gap-1 text-center">
+    <!-- RTL: the question is written first so it reads on the right, the link on its left. -->
+    <p class="flex flex-wrap items-center justify-center gap-1">
+      <span class="text-[14px]/[24px] text-black">ليس لديك بيانات الدخول؟</span>
+      <a
+        [href]="supportUrl"
+        target="_blank"
+        rel="noopener"
+        class="flex items-start gap-1 rounded text-[14px]/[21px] font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        تواصل مع إدارة MapMob
+        <app-icon name="external-link-feather" [size]="16" />
+      </a>
+    </p>
+    <p class="w-[314px] max-w-full text-[12px]/[24px] text-text-secondary">
+      يتم تزويد بيانات الدخول حصرياً عن طريق مشرف المنصة بعد اعتماد النشاط
+    </p>
+  </div>
+</div>

@@ -18,7 +18,7 @@ import { buildOfferDeleteCopy } from '../../ui/offer-dialog-copy';
 import { OfferTable } from '../../ui/offer-table/offer-table';
 import { OfferToolbar } from '../../ui/offer-toolbar/offer-toolbar';
 
-const NEW_OFFER_URL = '/offers/new';
+const NEW_OFFER_URL = '/admin/offers/new';
 
 @Component({
   selector: 'app-offer-list',
@@ -63,7 +63,7 @@ export class OfferList {
   }
 
   protected editOffer(offer: Offer): void {
-    this.router.navigateByUrl(`/offers/${offer.id}/edit`);
+    this.router.navigateByUrl(`/admin/offers/${offer.id}/edit`);
   }
 
   protected pauseOffer(offer: Offer): void {

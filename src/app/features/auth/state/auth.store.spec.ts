@@ -5,6 +5,7 @@ import { AuthStorage } from '../data/auth-storage';
 import { AuthStore } from './auth.store';
 
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
+const MERCHANT = { ...USER, id: 'merchant-1', role: 'owner' };
 
 function createStore(repository: Partial<AuthRepository>) {
   TestBed.configureTestingModule({
@@ -40,6 +41,25 @@ describe('AuthStore', () => {
 
     expect(store.isSignedIn()).toBe(false);
     expect(store.error()).toBe('بيانات غير صحيحة');
+  });
+
+  it('startSession stores and saves a user signed in elsewhere, such as the merchant login', () => {
+    const store = createStore({});
+
+    store.startSession(MERCHANT);
+
+    expect(store.user()).toEqual(MERCHANT);
+    expect(TestBed.inject(AuthStorage).read()).toEqual(MERCHANT);
+  });
+
+  it('tells a merchant apart from an admin by role', () => {
+    const store = createStore({});
+
+    store.startSession(USER);
+    expect(store.isMerchant()).toBe(false);
+
+    store.startSession(MERCHANT);
+    expect(store.isMerchant()).toBe(true);
   });
 
   it('signOut clears the user', () => {

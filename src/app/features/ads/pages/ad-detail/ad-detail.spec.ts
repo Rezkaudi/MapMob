@@ -104,7 +104,7 @@ describe('AdDetailPage', () => {
     expect(info.textContent).toContain('الصفحة الرئيسية - البانر الرئيسي العلوي');
     expect(info.textContent).toContain('أعلى أولوية ( 5)');
     expect(info.textContent).toContain('Admin - 20 يناير 2026');
-    expect(info.querySelector('a')?.getAttribute('href')).toBe('/places/place-1');
+    expect(info.querySelector('a')?.getAttribute('href')).toBe('/admin/places/place-1');
 
     const schedule = element.querySelector('app-ad-schedule-period-card') as HTMLElement;
     expect(schedule.textContent).toContain('26 يناير 2026');
@@ -122,7 +122,7 @@ describe('AdDetailPage', () => {
 
     buttonNamed(element, 'تعديل الإعلان').click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1/edit');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/ads/ad-1/edit');
   });
 
   it('stops the ad after confirming, then reloads it', async () => {
@@ -153,7 +153,7 @@ describe('AdDetailPage', () => {
     await fixture.whenStable();
 
     expect(deleted).toEqual(['ad-1']);
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/ads');
   });
 
   it('offers to try again when the ad cannot be loaded', () => {

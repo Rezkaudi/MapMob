@@ -15,7 +15,7 @@ import { AdMetricsCard } from '../../ui/ad-metrics-card/ad-metrics-card';
 import { AdOverviewCard } from '../../ui/ad-overview-card/ad-overview-card';
 import { AdSchedulePeriodCard } from '../../ui/ad-schedule-period-card/ad-schedule-period-card';
 
-const ADS_URL = '/ads';
+const ADS_URL = '/admin/ads';
 
 @Component({
   selector: 'app-ad-detail',

@@ -1,6 +1,11 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { signedInGuard } from './features/auth/guards/signed-in.guard';
+import { AuthStore } from './features/auth/state/auth.store';
 import { AdminShell } from './layout/admin-shell/admin-shell';
+
+const ADMIN_HOME_ROUTE = '/admin/dashboard';
+const MERCHANT_HOME_ROUTE = '/merchant/dashboard';
 
 export const routes: Routes = [
   {
@@ -14,7 +19,17 @@ export const routes: Routes = [
       import('./features/api-docs/api-docs.routes').then((m) => m.API_DOCS_ROUTES),
   },
   {
+    path: 'merchant',
+    loadChildren: () => import('./merchant.routes').then((m) => m.MERCHANT_ROUTES),
+  },
+  {
+    // The root opens the dashboard of whoever is signed in; the guards handle everyone else.
     path: '',
+    pathMatch: 'full',
+    redirectTo: () => (inject(AuthStore).isMerchant() ? MERCHANT_HOME_ROUTE : ADMIN_HOME_ROUTE),
+  },
+  {
+    path: 'admin',
     component: AdminShell,
     canActivate: [signedInGuard],
     children: [
@@ -105,5 +120,10 @@ export const routes: Routes = [
       // Nav links without a feature behind them land here instead of a blank page.
       { path: '**', redirectTo: 'not-found' },
     ],
+  },
+  {
+    // Admin pages lived at the root before the /admin prefix, so old bookmarks move over.
+    path: '**',
+    redirectTo: ({ url }) => `/admin/${url.map((segment) => segment.path).join('/')}`,
   },
 ];

@@ -1,0 +1,45 @@
+<app-auth-form-frame>
+  <div class="flex w-full flex-col gap-8">
+    <app-auth-heading
+      title="رمز التحقق"
+      description="أرسلنا رمز تحقق مكونًا من 6 أرقام إلى بريدك الإلكتروني."
+      [backRoute]="routes.login"
+    />
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      novalidate
+      class="flex min-h-[283px] w-full flex-col gap-6 pb-4"
+    >
+      <!-- `items-start` is the reading start, so RTL puts the label on the right edge. -->
+      <div class="flex w-full flex-col items-start gap-2">
+        <span
+          id="reset-code-label"
+          class="text-right text-[14px]/[20px] font-medium tracking-[0.7px] text-text-primary"
+          >أدخل الرمز</span
+        >
+        <app-reset-code-field labelId="reset-code-label" [control]="form.controls.code" />
+        <p class="w-full text-right text-[11px]/[16.5px] text-text-primary">
+          لم يتم إرسال الرمز؟
+          <button
+            type="button"
+            class="rounded font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-60"
+            [disabled]="store.isLoading()"
+            (click)="resend()"
+          >
+            إعادة إرسال
+          </button>
+        </p>
+      </div>
+
+      <app-auth-form-error [message]="errorMessage()" />
+
+      <app-auth-submit-button
+        label="تأكيد الرمز"
+        busyLabel="جاري التحقق من الرمز"
+        [isBusy]="store.isLoading()"
+      />
+    </form>
+  </div>
+</app-auth-form-frame>

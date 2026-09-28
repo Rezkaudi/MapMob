@@ -50,7 +50,7 @@ describe('ContentPageTable', () => {
       'منشورة ومتاحة',
     );
     const edit = cells[4].querySelector('a') as HTMLAnchorElement;
-    expect(edit.getAttribute('href')).toBe('/content/about');
+    expect(edit.getAttribute('href')).toBe('/admin/content/about');
     expect(edit.getAttribute('aria-label')).toBe('تعديل عن التطبيق');
   });
 
@@ -92,8 +92,8 @@ describe('ContentPageTable title', () => {
     const titles = element.querySelectorAll<HTMLAnchorElement>('[data-role="open-page"]');
 
     expect(Array.from(titles, (title) => title.getAttribute('href'))).toEqual([
-      '/content/about',
-      '/content/faq',
+      '/admin/content/about',
+      '/admin/content/faq',
     ]);
   });
 });

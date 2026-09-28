@@ -20,8 +20,19 @@ describe('NotFound', () => {
     const fixture = TestBed.createComponent(NotFound);
     fixture.detectChanges();
 
-    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('a[href="/dashboard"]');
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector(
+      'a[href="/admin/dashboard"]',
+    );
     expect(link).toBeTruthy();
     expect(link.textContent!.trim()).toBe('العودة إلى الرئيسية');
+  });
+
+  it('links home to the route it is given, so the merchant area stays in its own dashboard', () => {
+    const fixture = TestBed.createComponent(NotFound);
+    fixture.componentRef.setInput('homeRoute', '/merchant/dashboard');
+    fixture.detectChanges();
+
+    const home: HTMLAnchorElement = fixture.nativeElement.querySelector('a');
+    expect(home.getAttribute('href')).toBe('/merchant/dashboard');
   });
 });

@@ -115,8 +115,8 @@ describe('NotificationList', () => {
     buttonNamed(page.element.querySelector('app-page-header')!, 'إنشاء إشعار جديد').click();
     pickRowMenuItem(page, 0, 'تعديل');
 
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/notifications/new');
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/notifications/n1/edit');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/new');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/n1/edit');
   });
 
   it('copies a notification from its row menu', async () => {
@@ -170,7 +170,7 @@ describe('NotificationList', () => {
       'تعديل الإشعار',
     ).click();
 
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/notifications/n2/edit');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/n2/edit');
   });
 
   it('deletes from the details dialog and closes it', async () => {

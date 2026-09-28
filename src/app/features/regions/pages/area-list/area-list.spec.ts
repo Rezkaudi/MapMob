@@ -39,7 +39,7 @@ describe('AreaList', () => {
 
     const crumb = element.querySelector('nav a') as HTMLAnchorElement;
     expect(crumb.textContent?.trim()).toBe('المحافظات و المناطق');
-    expect(crumb.getAttribute('href')).toBe('/regions');
+    expect(crumb.getAttribute('href')).toBe('/admin/regions');
     expect(element.querySelector('nav')?.textContent).toContain('المناطق');
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('مناطق طرطوس');
     expect(element.textContent).toContain('إدارة المناطق التابعة لمحافظة طرطوس .');

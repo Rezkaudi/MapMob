@@ -31,6 +31,18 @@ class HostLoadingComponent {}
 })
 class HostWithAlertComponent {}
 
+@Component({
+  imports: [StatCard],
+  template: `<app-stat-card
+    icon="heart-feather"
+    label="المفضلة"
+    value="73 مستخدم"
+    valueDirection="rtl"
+    caption="آخر 30 يوماً"
+  />`,
+})
+class HostWithCaptionComponent {}
+
 describe('StatCard', () => {
   it('renders the label and value', () => {
     const fixture = TestBed.createComponent(HostComponent);
@@ -156,5 +168,44 @@ describe('StatCard dot', () => {
 
     expect(fixture.nativeElement.querySelector('[data-role="dot"]')).toBeNull();
     expect(fixture.nativeElement.querySelector('app-icon')).toBeTruthy();
+  });
+
+  it('adds the caption as a third line and grows to the 100px card the merchant frame draws', () => {
+    const fixture = TestBed.createComponent(HostWithCaptionComponent);
+    fixture.detectChanges();
+
+    const caption: HTMLElement = fixture.nativeElement.querySelector('[data-role="caption"]');
+    expect(caption.textContent!.trim()).toBe('آخر 30 يوماً');
+    expect(caption.classList).toContain('text-[10px]/[15px]');
+    expect(fixture.nativeElement.firstElementChild.firstElementChild.classList).toContain(
+      'h-[100px]',
+    );
+  });
+
+  it('keeps the 82px card and no caption line by default', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-role="caption"]')).toBeNull();
+    expect(fixture.nativeElement.firstElementChild.firstElementChild.classList).toContain(
+      'h-[82px]',
+    );
+  });
+
+  it('lets a worded value read right to left, so "73 مستخدم" keeps the number on the right', () => {
+    const fixture = TestBed.createComponent(HostWithCaptionComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-role="value"]').getAttribute('dir')).toBe(
+      'rtl',
+    );
+  });
+
+  it('isolates the delta label, so a sign-only "%14+" keeps the order the design reads', () => {
+    const fixture = TestBed.createComponent(HostWithDeltaComponent);
+    fixture.detectChanges();
+
+    const label: HTMLElement = fixture.nativeElement.querySelector('[data-role="delta"] bdi');
+    expect(label.textContent!.trim()).toBe('320 جديد');
   });
 });

@@ -23,6 +23,12 @@ export const WEEK_WORDS: CountWords = {
   many: 'أسبوعاً',
 };
 export const MONTH_WORDS: CountWords = { one: 'شهر', two: 'شهرين', few: 'أشهر', many: 'شهراً' };
+export const VIEW_WORDS: CountWords = {
+  one: 'مشاهدة واحدة',
+  two: 'مشاهدتين',
+  few: 'مشاهدات',
+  many: 'مشاهدة',
+};
 export const YEAR_WORDS: CountWords = { one: 'سنة', two: 'سنتين', few: 'سنوات', many: 'سنة' };
 
 export function formatArabicCount(count: number, words: CountWords): string {

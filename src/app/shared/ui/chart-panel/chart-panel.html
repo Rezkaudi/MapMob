@@ -25,12 +25,14 @@
           {{ period.label }}
         </button>
       }
-      <span
-        aria-hidden="true"
-        class="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#94a3b8]/10 text-text-secondary"
-      >
-        <app-icon name="calendar" [size]="18" />
-      </span>
+      @if (isCalendarVisible()) {
+        <span
+          aria-hidden="true"
+          class="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#94a3b8]/10 text-text-secondary"
+        >
+          <app-icon name="calendar" [size]="18" />
+        </span>
+      }
     </div>
   </header>
 

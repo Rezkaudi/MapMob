@@ -99,7 +99,7 @@ describe('OfferList', () => {
     expect(element.querySelector('app-offer-table')).toBeNull();
 
     buttonNamed(element, 'إضافة عرض جديد').click();
-    expect(navigateByUrl).toHaveBeenCalledWith('/offers/new');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/offers/new');
   });
 
   it('goes to the add page from the header button', () => {
@@ -107,7 +107,7 @@ describe('OfferList', () => {
 
     buttonNamed(element.querySelector('app-page-header') as HTMLElement, 'إضافة عرض جديد').click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/offers/new');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/offers/new');
   });
 
   it('deletes an offer once the dialog is confirmed', async () => {
@@ -165,7 +165,7 @@ describe('OfferList', () => {
       'تعديل العرض',
     ).click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/offers/offer-2/edit');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/offers/offer-2/edit');
   });
 
   it('deletes the open offer from the drawer and closes it', async () => {

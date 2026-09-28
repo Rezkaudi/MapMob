@@ -186,7 +186,7 @@ describe('PlaceDetail actions', () => {
   function render(repository: Partial<PlaceRepository>) {
     TestBed.configureTestingModule({
       providers: [
-        provideRouter([{ path: 'places', children: [] }]),
+        provideRouter([{ path: 'admin/places', children: [] }]),
         {
           provide: PlaceRepository,
           useValue: { getPlace: () => of(createPlaceDetail()), ...repository },
@@ -241,7 +241,7 @@ describe('PlaceDetail actions', () => {
     await fixture.whenStable();
 
     expect(deletedIds).toEqual(['place-1']);
-    expect(TestBed.inject(Router).url).toBe('/places');
+    expect(TestBed.inject(Router).url).toBe('/admin/places');
   });
 });
 
@@ -251,9 +251,9 @@ describe('PlaceDetail edit links', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([
-          { path: 'places/:id/edit', children: [] },
-          { path: 'places', children: [] },
-          { path: 'offers/new', children: [] },
+          { path: 'admin/places/:id/edit', children: [] },
+          { path: 'admin/places', children: [] },
+          { path: 'admin/offers/new', children: [] },
         ]),
         { provide: PlaceRepository, useValue: { getPlace: () => of(createPlaceDetail()) } },
       ],
@@ -287,7 +287,7 @@ describe('PlaceDetail edit links', () => {
       editButtonOfCard(fixture.nativeElement, heading).click();
       await fixture.whenStable();
 
-      expect(TestBed.inject(Router).url).toBe(`/places/place-1/edit#${section}`);
+      expect(TestBed.inject(Router).url).toBe(`/admin/places/place-1/edit#${section}`);
     });
   }
 
@@ -297,7 +297,7 @@ describe('PlaceDetail edit links', () => {
     (fixture.nativeElement.querySelector('[data-testid="add-image"]') as HTMLElement).click();
     await fixture.whenStable();
 
-    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#media');
+    expect(TestBed.inject(Router).url).toBe('/admin/places/place-1/edit#media');
   });
 
   it('opens the edit page at the media section from the videos card', async () => {
@@ -306,7 +306,7 @@ describe('PlaceDetail edit links', () => {
     buttonNamedIn(fixture.nativeElement, 'إضافة فيديو').click();
     await fixture.whenStable();
 
-    expect(TestBed.inject(Router).url).toBe('/places/place-1/edit#media');
+    expect(TestBed.inject(Router).url).toBe('/admin/places/place-1/edit#media');
   });
 
   it('adds a product through the dialog, without leaving the page', async () => {
@@ -345,7 +345,7 @@ describe('PlaceDetail edit links', () => {
     buttonNamedIn(fixture.nativeElement, 'إضافة عرض').click();
     await fixture.whenStable();
 
-    expect(TestBed.inject(Router).url).toBe('/offers/new');
+    expect(TestBed.inject(Router).url).toBe('/admin/offers/new');
   });
 
   it('opens the product dialog when a product name is clicked', async () => {

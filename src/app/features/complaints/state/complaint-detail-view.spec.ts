@@ -22,8 +22,8 @@ describe('buildComplaintDetailView', () => {
   it('links to the reporter profile and the place page', () => {
     const view = buildComplaintDetailView(buildComplaintDetail());
 
-    expect(view.reporterProfileLink).toBe('/users/user-1');
-    expect(view.placeLink).toBe('/places/place-4');
+    expect(view.reporterProfileLink).toBe('/admin/users/user-1');
+    expect(view.placeLink).toBe('/admin/places/place-4');
   });
 
   it('names the status for the pill', () => {

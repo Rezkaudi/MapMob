@@ -1,0 +1,76 @@
+<div class="flex flex-col">
+  <header class="flex flex-col items-start gap-1 text-right">
+    <h1 class="text-[28px]/[34px] font-bold text-text-primary">الرئيسية</h1>
+    @if (store.greeting(); as greeting) {
+      <p class="text-[16px]/[19px] text-text-secondary">{{ greeting }}</p>
+    } @else {
+      <app-skeleton width="400px" height="19px" shape="text" />
+    }
+  </header>
+
+  @if (store.error(); as error) {
+    <app-error-state class="mt-10" [message]="error" (retry)="store.loadOverview()" />
+  } @else {
+    <!-- RTL puts the first card on the right: views, then search, favourites, rating. -->
+    <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      @if (store.isLoading() && store.statCards().length === 0) {
+        @for (placeholder of statPlaceholders; track placeholder) {
+          <app-stat-card label="" value="" caption=" " [isLoading]="true" />
+        }
+      } @else {
+        @for (card of store.statCards(); track card.label) {
+          <app-stat-card
+            [icon]="card.icon"
+            [label]="card.label"
+            [value]="card.value"
+            [valueDirection]="card.valueDirection"
+            [caption]="card.caption"
+            [delta]="card.delta"
+          />
+        }
+      }
+    </div>
+
+    <section class="mt-10 flex flex-col gap-3" aria-labelledby="quick-actions-title">
+      <div class="flex flex-col items-start gap-0.5 text-right">
+        <h2 id="quick-actions-title" class="text-[18px]/[28px] font-bold text-[#191c1e]">
+          إجراءات سريعة
+        </h2>
+        <p class="text-[12px]/[18px] text-text-secondary">
+          أنجز المهام الأكثر استخداماً وإدارة متجرك مباشرة من هنا
+        </p>
+      </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        @for (action of quickActions; track action.route) {
+          <app-quick-action-card [action]="action" />
+        }
+      </div>
+    </section>
+
+    <!-- RTL: the chart takes the wide right column, the activity list the left. -->
+    <!-- Side by side only from 1280px: below that the 384px activity column is too narrow. -->
+    <div
+      class="mt-10 grid grid-cols-1 items-start gap-[26px] xl:grid-cols-[minmax(0,634fr)_minmax(0,384fr)]"
+    >
+      <app-store-performance-card
+        [chartOptions]="store.chartOptions()"
+        [activePeriod]="store.performancePeriod()"
+        [isLoading]="store.isChartLoading()"
+        [dailyAverageText]="store.dailyAverageText()"
+        [peakDayText]="store.peakDayText()"
+        (periodChange)="onPeriodChange($event)"
+      />
+      <app-recent-activity-card [rows]="store.activityRows()" [isLoading]="store.isLoading()" />
+    </div>
+
+    <!-- RTL: the package card sits right, the latest reviews left. -->
+    <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+      @if (store.subscription(); as subscription) {
+        @if (store.subscriptionProgress(); as progress) {
+          <app-subscription-card [subscription]="subscription" [progress]="progress" />
+        }
+      }
+      <app-latest-reviews-card [reviews]="store.reviewItems()" [isLoading]="store.isLoading()" />
+    </div>
+  }
+</div>

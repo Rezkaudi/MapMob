@@ -7,7 +7,7 @@ function render() {
   TestBed.configureTestingModule({ providers: [provideRouter([])] });
   const fixture = TestBed.createComponent(FormPageHeading);
   fixture.componentRef.setInput('parentLabel', 'العروض');
-  fixture.componentRef.setInput('parentLink', '/offers');
+  fixture.componentRef.setInput('parentLink', '/admin/offers');
   fixture.componentRef.setInput('title', 'إضافة عرض جديد');
   fixture.componentRef.setInput(
     'description',
@@ -22,7 +22,7 @@ describe('FormPageHeading', () => {
     const element = render();
     const crumb = element.querySelector('nav[aria-label="مسار الصفحة"]') as HTMLElement;
 
-    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/offers');
+    expect(crumb.querySelector('a')?.getAttribute('href')).toBe('/admin/offers');
     expect(crumb.querySelector('a')?.textContent?.trim()).toBe('العروض');
     expect(crumb.querySelector('[aria-current="page"]')?.textContent?.trim()).toBe(
       'إضافة عرض جديد',
@@ -37,7 +37,7 @@ describe('FormPageHeading without a description', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(FormPageHeading);
     fixture.componentRef.setInput('parentLabel', 'البلاغات');
-    fixture.componentRef.setInput('parentLink', '/complaints');
+    fixture.componentRef.setInput('parentLink', '/admin/complaints');
     fixture.componentRef.setInput('title', 'تفاصيل البلاغ');
     fixture.detectChanges();
 
@@ -52,7 +52,7 @@ describe('FormPageHeading without a description', () => {
   template: `
     <app-form-page-heading
       parentLabel="إدارة المحتوى"
-      parentLink="/content"
+      parentLink="/admin/content"
       currentLabel="تعديل صفحة"
       title="الأسئلة الشائعة"
       description="تعديل المحتوى الذي يظهر للمستخدمين داخل تطبيق MapMob."

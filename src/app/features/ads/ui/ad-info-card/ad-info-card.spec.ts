@@ -34,7 +34,7 @@ describe('AdInfoCard', () => {
   it('links the linked store, with the name before the arrow', () => {
     const link = render(buildAdDetail({ placeId: 'place-3' })).querySelector('a') as HTMLElement;
 
-    expect(link.getAttribute('href')).toBe('/places/place-3');
+    expect(link.getAttribute('href')).toBe('/admin/places/place-3');
     expect(link.firstElementChild?.textContent?.trim()).toBe('صيدلية الحياة');
     expect(link.lastElementChild?.tagName.toLowerCase()).toBe('app-icon');
   });

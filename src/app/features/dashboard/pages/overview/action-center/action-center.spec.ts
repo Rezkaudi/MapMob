@@ -43,7 +43,7 @@ describe('ActionCenter', () => {
       'header [data-role="view-all"]',
     );
     expect(link.textContent?.trim()).toBe('عرض الكل');
-    expect(link.getAttribute('href')).toBe('/inbox');
+    expect(link.getAttribute('href')).toBe('/admin/inbox');
   });
 
   it('reads each row as a count followed by its label', () => {
@@ -72,7 +72,10 @@ describe('ActionCenter', () => {
     const links: HTMLAnchorElement[] = Array.from(
       fixture.nativeElement.querySelectorAll('li [data-role="review"]'),
     );
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/complaints', '/places']);
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/admin/complaints',
+      '/admin/places',
+    ]);
   });
 
   it('leaves the review button out for an item with no page behind it', () => {

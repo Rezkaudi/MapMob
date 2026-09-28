@@ -1,0 +1,15 @@
+<!-- `items-start` is the reading start, so RTL puts the label on the right edge. -->
+<div class="flex w-full flex-col items-start gap-2">
+  <label [for]="inputId()" [class]="labelClasses">{{ label() }}</label>
+  <div [class]="boxClasses">
+    <input
+      dir="ltr"
+      [id]="inputId()"
+      [type]="type()"
+      [formControl]="control()"
+      [placeholder]="placeholder()"
+      [attr.autocomplete]="autocomplete()"
+      [class]="inputClasses"
+    />
+  </div>
+</div>

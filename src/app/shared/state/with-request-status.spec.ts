@@ -42,4 +42,14 @@ describe('withRequestStatus', () => {
     expect(store.isLoading()).toBe(false);
     expect(store.error()).toBe('Network error');
   });
+
+  it('clearError forgets an old error without touching loading', () => {
+    const store = createStore();
+    store.setError('خطأ');
+
+    store.clearError();
+
+    expect(store.error()).toBeNull();
+    expect(store.isLoading()).toBe(false);
+  });
 });

@@ -50,7 +50,7 @@ import { NotificationRecipientPicker } from '../../ui/notification-recipient-pic
 import { NotificationSendTiming } from '../../ui/notification-send-timing/notification-send-timing';
 import { NOTIFICATION_FORM_COPY } from './notification-form-copy';
 
-const NOTIFICATIONS_URL = '/notifications';
+const NOTIFICATIONS_URL = '/admin/notifications';
 
 @Component({
   selector: 'app-notification-form',

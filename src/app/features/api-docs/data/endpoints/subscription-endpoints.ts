@@ -57,7 +57,7 @@ const PLAN_DRAFT_FIELDS = [
 export const SUBSCRIPTIONS_FEATURE: ApiFeature = {
   id: 'subscriptions',
   name: 'Plans and subscriptions',
-  screen: '/subscriptions',
+  screen: '/admin/subscriptions',
   permissionModule: 'subscriptions',
   intro:
     'The plans the platform sells, and which place is on which plan for which period. Two tabs on one page.',

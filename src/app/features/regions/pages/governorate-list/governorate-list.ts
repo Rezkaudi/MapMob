@@ -13,7 +13,7 @@ import { RegionEmptyState } from '../../ui/region-empty-state/region-empty-state
 import { RegionEntryLink, RegionTable } from '../../ui/region-table/region-table';
 import { RegionToolbar } from '../../ui/region-toolbar/region-toolbar';
 
-const areasLinkOf: RegionEntryLink = (entry: RegionEntry) => ['/regions', entry.id, 'areas'];
+const areasLinkOf: RegionEntryLink = (entry: RegionEntry) => ['/admin/regions', entry.id, 'areas'];
 
 @Component({
   selector: 'app-governorate-list',

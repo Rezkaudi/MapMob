@@ -37,7 +37,7 @@ export function buildAdDetailView(detail: AdDetail): AdDetailView {
     pauseAction: adPauseActionFor(ad.status),
     createdOnLabel: `تاريخ الإنشاء: ${formatLatinDigitDate(detail.createdOn)}`,
     placeLabel: formatAdPlace(ad),
-    placeLink: detail.placeId === null ? null : `/places/${detail.placeId}`,
+    placeLink: detail.placeId === null ? null : `/admin/places/${detail.placeId}`,
     appPlacementLabel: `${placement} (${position})`,
     contentTypeLabel: AD_CONTENT_TYPE_LABEL[ad.contentType],
     placementLabel: `${placement} - ${position}`,

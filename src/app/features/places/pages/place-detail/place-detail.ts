@@ -111,11 +111,11 @@ export class PlaceDetail {
 
   /** Every edit on this page opens the form, scrolled to the matching section. */
   protected goToEdit(section: PlaceEditSection): void {
-    this.router.navigate(['/places', this.id(), 'edit'], { fragment: section });
+    this.router.navigate(['/admin/places', this.id(), 'edit'], { fragment: section });
   }
 
   protected goToNewOffer(): void {
-    this.router.navigate(['/offers', 'new']);
+    this.router.navigate(['/admin/offers', 'new']);
   }
 
   protected composeProduct(): void {
@@ -195,7 +195,7 @@ export class PlaceDetail {
   private async deleteThenLeave(id: string): Promise<void> {
     if (await this.store.deletePlace(id)) {
       this.pendingAction.set(null);
-      await this.router.navigate(['/places']);
+      await this.router.navigate(['/admin/places']);
     }
   }
 }

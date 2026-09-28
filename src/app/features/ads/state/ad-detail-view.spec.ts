@@ -15,7 +15,7 @@ describe('buildAdDetailView', () => {
       pauseAction: 'resume',
       createdOnLabel: 'تاريخ الإنشاء: 01 يناير 2024',
       placeLabel: 'ألبسة الفاخر',
-      placeLink: '/places/place-7',
+      placeLink: '/admin/places/place-7',
       appPlacementLabel: 'الصفحة الرئيسية (بانر منتصف الصفحة)',
       contentTypeLabel: 'صورة',
       placementLabel: 'الصفحة الرئيسية - بانر منتصف الصفحة',

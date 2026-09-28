@@ -179,7 +179,7 @@ describe('OfferForm', () => {
       scope: 'selectedItems',
       itemIds: ['place-3-item-1'],
     });
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/offers');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/offers');
   });
 
   it('saves a draft from "حفظ كمسودة"', async () => {
@@ -207,6 +207,6 @@ describe('OfferForm', () => {
 
     expect(page.updated.map(([id]) => id)).toEqual(['offer-2']);
     expect(page.updated[0][1].itemIds).toEqual(['place-7-item-1', 'place-7-item-2']);
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/offers');
+    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/offers');
   });
 });

@@ -1,0 +1,11 @@
+<button
+  type="submit"
+  class="flex h-12 w-full items-center justify-center gap-2.5 rounded-lg bg-primary px-5 py-3 text-[16px]/[24px] font-bold tracking-[0.5px] text-white hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
+  [disabled]="isBusy()"
+  [attr.aria-busy]="isBusy() ? 'true' : null"
+>
+  @if (isBusy()) {
+    <app-spinner [size]="20" [label]="busyLabel()" />
+  }
+  <span>{{ label() }}</span>
+</button>

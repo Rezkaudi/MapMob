@@ -1,4 +1,4 @@
-import { DAY_WORDS, WEEK_WORDS, formatArabicCount } from './arabic-count';
+import { DAY_WORDS, WEEK_WORDS, formatArabicCount, VIEW_WORDS } from './arabic-count';
 
 describe('formatArabicCount', () => {
   it('uses the word alone for one and two, and a number before it from three', () => {
@@ -12,5 +12,12 @@ describe('formatArabicCount', () => {
     expect(formatArabicCount(1, WEEK_WORDS)).toBe('أسبوع');
     expect(formatArabicCount(2, WEEK_WORDS)).toBe('أسبوعين');
     expect(formatArabicCount(3, WEEK_WORDS)).toBe('3 أسابيع');
+  });
+
+  it('counts views the way the merchant overview writes them', () => {
+    expect(formatArabicCount(1, VIEW_WORDS)).toBe('مشاهدة واحدة');
+    expect(formatArabicCount(5, VIEW_WORDS)).toBe('5 مشاهدات');
+    expect(formatArabicCount(42, VIEW_WORDS)).toBe('42 مشاهدة');
+    expect(formatArabicCount(142, VIEW_WORDS)).toBe('142 مشاهدة');
   });
 });

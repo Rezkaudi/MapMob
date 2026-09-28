@@ -84,7 +84,7 @@ describe('AdList', () => {
     expect(element.querySelector('h2')?.textContent?.trim()).toBe('لا توجد إعلانات مضافة حتى الآن');
     buttonNamed(element, 'إضافة إعلان جديد').click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads/new');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/ads/new');
   });
 
   it('opens the detail page from the ad title', () => {
@@ -92,7 +92,7 @@ describe('AdList', () => {
 
     (element.querySelector('button[data-role="open-ad"]') as HTMLButtonElement).click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/ads/ad-1');
   });
 
   it('opens the edit page from the row menu', () => {
@@ -101,7 +101,7 @@ describe('AdList', () => {
     openRowMenu(fixture, element);
     buttonNamed(document, 'تعديل').click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/ads/ad-1/edit');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/ads/ad-1/edit');
   });
 
   it('stops an ad after confirming', async () => {

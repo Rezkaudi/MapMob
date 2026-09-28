@@ -12,7 +12,9 @@
       <span class="text-[16px]/[24px] font-medium whitespace-nowrap text-text-navy">
         {{ userName() }}
       </span>
-      <span class="text-[14px]/[20px] text-text-muted">{{ userRole() }}</span>
+      @if (userRole(); as role) {
+        <span class="text-[14px]/[20px] text-text-muted">{{ role }}</span>
+      }
     </span>
     <app-icon name="chevron-down-bold" [size]="16" class="text-text-navy" />
   </button>
@@ -22,7 +24,7 @@
       role="menu"
       class="absolute end-0 top-full z-20 mt-2 w-56 rounded-xl border border-border bg-surface py-2 shadow-panel"
     >
-      @for (item of items; track item.route) {
+      @for (item of items(); track item.route) {
         <a
           role="menuitem"
           [routerLink]="item.route"

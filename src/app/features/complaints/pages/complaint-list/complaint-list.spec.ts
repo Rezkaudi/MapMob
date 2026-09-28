@@ -82,7 +82,7 @@ describe('ComplaintList page', () => {
 
     (element.querySelector('app-complaint-table tbody tr') as HTMLElement).click();
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/complaints/complaint-1');
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/complaints/complaint-1');
   });
 
   it('swaps everything under the title for the message when nothing was reported', () => {

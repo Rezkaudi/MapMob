@@ -41,8 +41,13 @@ export class StatCard {
   readonly badgeTone = input<StatBadgeTone>('success');
   /** Replaces the icon tile with a dot, as the complaints status cards draw it. */
   readonly dotTone = input<StatDotTone | null>(null);
+  /** A small third line, as the merchant cards draw "آخر 30 يوماً"; the card grows to fit it. */
+  readonly caption = input<string | null>(null);
+  /** `rtl` for a worded value such as "73 مستخدم", so the number stays on the right. */
+  readonly valueDirection = input<'ltr' | 'rtl'>('ltr');
   readonly isLoading = input<boolean>(false);
 
+  protected readonly heightClass = computed(() => (this.caption() ? 'h-[100px]' : 'h-[82px]'));
   protected readonly badgeClasses = computed(() => BADGE_TONE_CLASSES[this.badgeTone()]);
   protected readonly dotClasses = computed(() => {
     const tone = this.dotTone();

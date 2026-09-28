@@ -109,7 +109,7 @@ describe('UserTable', () => {
   it('links each name to the user detail page', () => {
     const link = render().nativeElement.querySelector('tbody a') as HTMLAnchorElement;
 
-    expect(link.getAttribute('href')).toBe('/users/user-1');
+    expect(link.getAttribute('href')).toBe('/admin/users/user-1');
   });
 
   it('reports ticks, and marks the ticked rows', () => {
