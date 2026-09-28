@@ -45,6 +45,33 @@ pull request: `npm ci`, `npm test`, then `npm run build`. Keep the build green.
 Set the repository variable `NG_APP_API_BASE_URL` in GitHub if the build needs a
 real URL; without it the workflow falls back to `.env.example`.
 
+## Backend API reference (/docs)
+
+`/docs` is the reference the backend team builds from. Its data lives in
+`src/app/features/api-docs/data/`. Keep it in step with the frontend.
+
+After every change, check: **does this change what the frontend sends to or
+reads from the backend?**
+
+- **Yes**, update the reference in the same change:
+  - New or changed call in a `*-http.repository.ts` → edit that feature's file in
+    `data/endpoints/` and its sample in `data/examples/`.
+  - New or changed query param, body field or response field → update its field
+    list and example.
+  - New feature with backend calls → add a new `data/endpoints/<feature>-endpoints.ts`
+    and list it in `data/api-features.ts`.
+  - New or changed table or column → edit `data/database/`, and add any new table
+    to `data/whole-erd-layout.ts` too.
+  - Run `npm test`. `data/api-reference.spec.ts` checks the endpoint count and
+    the API rules.
+- **No** (styles, layout, mock data, tests, UI-only logic), leave the reference
+  alone.
+
+Follow the rules on `/docs#conventions` (`{ id, name }` references, `null` not
+`""`, `…At` = ISO moment, `…On` = `yyyy-mm-dd`, `…Percent` = 0–100, money as
+`{ amount, currency }`, arrays as `name[]`). Describe only what the backend must
+build. Never compare with an old backend or a Postman file.
+
 ## How to work in this repo
 
 Follow these rules on every change. They are not optional.
