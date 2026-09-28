@@ -21,6 +21,13 @@ export const MERCHANT_ROUTES: Routes = [
           ),
       },
       {
+        path: 'store',
+        loadComponent: () =>
+          import('./features/merchant-store/pages/store-profile-page/store-profile-page').then(
+            (m) => m.StoreProfilePage,
+          ),
+      },
+      {
         path: 'not-found',
         data: { homeRoute: MERCHANT_HOME_ROUTE },
         loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),

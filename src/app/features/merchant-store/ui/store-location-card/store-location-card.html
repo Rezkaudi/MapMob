@@ -1,0 +1,69 @@
+<section
+  appStoreCard
+  class="flex flex-col gap-4 rounded-[32px] p-6"
+  aria-labelledby="store-location-title"
+>
+  <!-- The frame gives the 14px title a 15px box and 16px below it. -->
+  <h2
+    id="store-location-title"
+    class="flex h-[31px] items-start pb-4 text-[14px]/[15px] font-bold text-text-primary"
+  >
+    الموقع
+  </h2>
+
+  <div class="flex flex-col gap-2">
+    <div class="grid grid-cols-2 gap-3 rounded-lg bg-[#f2f4f6] p-3">
+      @for (place of lockedPlaces(); track place.label) {
+        <div data-role="locked-place" class="flex min-w-0 flex-col gap-1">
+          <p class="text-start text-[12px]/[14px] text-text-secondary">{{ place.label }}</p>
+          <!-- RTL: the lock leads, so it sits on the right of the name. -->
+          <p class="flex items-center gap-1 text-[14px]/[20px] text-text-primary">
+            <app-icon
+              name="lock-small"
+              [size]="14"
+              class="text-text-secondary"
+              aria-hidden="true"
+            />
+            <span class="truncate">{{ place.value }}</span>
+          </p>
+        </div>
+      }
+    </div>
+
+    <app-store-field label="العنوان التفصيلي" forId="store-address" [error]="errors().address">
+      <input
+        appStoreInput
+        id="store-address"
+        class="h-11 px-4 py-3 leading-5"
+        autocomplete="street-address"
+        aria-required="true"
+        [formControl]="form().controls.address"
+      />
+    </app-store-field>
+  </div>
+
+  <div class="relative h-[469px] min-h-[200px] overflow-hidden rounded-3xl bg-[#f1f5f9]">
+    <app-icon
+      name="map-fold"
+      [size]="48"
+      class="absolute top-1/2 left-1/2 -translate-1/2 text-text-secondary"
+      aria-hidden="true"
+    />
+    <app-map-picker
+      class="absolute! inset-0"
+      attributionPosition="topright"
+      [latitude]="form().controls.latitude.value"
+      [longitude]="form().controls.longitude.value"
+      (locationPicked)="movePin($event)"
+    />
+    <div
+      data-role="map-summary"
+      class="absolute inset-x-4 bottom-4 z-[500] flex flex-col rounded-2xl border border-[rgba(226,232,240,0.5)] bg-white/90 p-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] backdrop-blur-[6px]"
+    >
+      <p class="truncate text-start text-[14px]/[28px] font-medium text-text-primary">
+        {{ governorate().name }}
+      </p>
+      <p class="truncate text-start text-[14px]/[28px] text-text-secondary">{{ summary() }}</p>
+    </div>
+  </div>
+</section>

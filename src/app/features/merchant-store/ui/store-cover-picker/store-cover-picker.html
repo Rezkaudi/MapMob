@@ -1,0 +1,46 @@
+<div class="flex flex-col gap-4">
+  <p id="store-cover-label" class="text-start text-[12px]/[16px] text-text-primary">
+    صورة الغلاف (الرئيسية)
+  </p>
+
+  <div
+    class="relative h-[176px] overflow-hidden rounded-lg bg-[#eceef0] shadow-[inset_0_2px_4px_0_rgba(0,0,0,0.05)]"
+  >
+    @if (previewUrl() ?? imageUrl(); as shownUrl) {
+      <img
+        class="absolute inset-0 size-full object-cover"
+        [src]="shownUrl"
+        alt="صورة غلاف المتجر"
+      />
+    }
+    <!-- RTL: justify-end parks the button on the bottom-left corner, as the frame draws it. -->
+    <div
+      class="absolute inset-0 flex items-end justify-end bg-linear-to-t from-black/60 via-black/0 via-50% to-black/0 p-4"
+    >
+      <!-- RTL: the camera leads, so it sits on the right of the text. -->
+      <button
+        type="button"
+        class="flex items-center gap-1 rounded bg-white px-3 py-1 text-[12px]/[14px] text-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] backdrop-blur-[6px] hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        aria-describedby="store-cover-label"
+        (click)="openPicker()"
+      >
+        <app-icon name="camera-small" [size]="12" aria-hidden="true" />
+        <span>تغيير صورة الغلاف</span>
+      </button>
+    </div>
+  </div>
+
+  @if (error(); as message) {
+    <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+  }
+
+  <input
+    #fileInput
+    type="file"
+    class="sr-only"
+    tabindex="-1"
+    aria-hidden="true"
+    [accept]="accept"
+    (change)="pickFromInput($event)"
+  />
+</div>

@@ -1,0 +1,35 @@
+<section
+  appStoreCard
+  class="flex flex-col gap-4 rounded-2xl p-6"
+  aria-labelledby="store-hours-title"
+>
+  <!-- RTL: the title on the right, the 24-hour switch on the left. -->
+  <div class="flex items-center justify-between gap-2">
+    <h2 id="store-hours-title" class="text-[18px]/[28px] font-bold text-[#191c1e]">
+      أوقات وساعات العمل
+    </h2>
+    <!-- The switch leads, so it sits on the right of its text; the label passes clicks to it. -->
+    <label class="flex items-center gap-1 rounded px-2 py-1 text-[12px]/[14px] text-text-primary">
+      <app-toggle-switch
+        size="small"
+        label="مفتوح 24 ساعة"
+        [isOn]="isOpen24Hours()"
+        (toggled)="allDayToggled.emit($event)"
+      />
+      <span aria-hidden="true">مفتوح 24 ساعة</span>
+    </label>
+  </div>
+
+  <ul class="flex flex-col gap-1 pt-1">
+    @for (row of rows(); track row.day) {
+      <li
+        app-working-day-row
+        [row]="row"
+        [isOpen24Hours]="isOpen24Hours()"
+        (opened)="dayOpened.emit(row.day)"
+        (closed)="dayClosed.emit(row.day)"
+        (timeChanged)="timeChanged.emit({ day: row.day, field: $event.field, time: $event.time })"
+      ></li>
+    }
+  </ul>
+</section>

@@ -13,6 +13,8 @@ import {
   MERCHANT_OVERVIEW_SEED,
   buildStorePerformanceSeed,
 } from './features/merchant-overview/data/merchant-overview-mock-seed';
+import { StoreProfileRepository } from './features/merchant-store/data/store-profile.repository';
+import { buildStoreProfile } from './features/merchant-store/testing/store-profile-fixture';
 
 describe('merchant routes', () => {
   const MERCHANT = { id: 'm-1', name: 'أحمد', role: 'owner', avatarUrl: null, token: 't' };
@@ -31,6 +33,10 @@ describe('merchant routes', () => {
             getOverview: () => of(MERCHANT_OVERVIEW_SEED),
             getPerformance: () => of(buildStorePerformanceSeed('monthly')),
           },
+        },
+        {
+          provide: StoreProfileRepository,
+          useValue: { getProfile: () => of(buildStoreProfile()), saveProfile: () => of() },
         },
       ],
     });
@@ -76,6 +82,16 @@ describe('merchant routes', () => {
 
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelector('app-merchant-shell app-merchant-home')).toBeTruthy();
+  });
+
+  it('opens the store data page at /merchant/store, inside the merchant shell', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/store');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/store');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-merchant-shell app-store-profile-page')).toBeTruthy();
   });
 
   it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {

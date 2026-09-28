@@ -1,0 +1,43 @@
+<!-- RTL: the day on the right, the hours in the middle, the status button on the left. -->
+<span
+  class="pe-4 text-[14px]/[20px]"
+  [class]="row().isOpen ? 'text-text-primary' : 'text-text-secondary'"
+  >{{ row().label }}</span
+>
+
+@if (!row().isOpen) {
+  <span class="pe-4 text-[14px]/[20px] text-text-secondary">عطلة أسبوعية</span>
+} @else if (isOpen24Hours()) {
+  <span class="text-[14px]/[20px] text-text-secondary">على مدار 24 ساعة</span>
+} @else {
+  <!-- RTL: the opening time comes first, so it sits on the right of "إلى". -->
+  <div class="flex shrink-0 items-center gap-1">
+    <app-time-chip
+      [time]="row().openTime"
+      [text]="row().openTimeText"
+      [label]="'وقت الفتح يوم ' + row().label"
+      (timeChange)="timeChanged.emit({ field: 'openTime', time: $event })"
+    />
+    <span class="shrink-0 text-[11px]/[14px] text-text-secondary">إلى</span>
+    <app-time-chip
+      [time]="row().closeTime"
+      [text]="row().closeTimeText"
+      [label]="'وقت الإغلاق يوم ' + row().label"
+      (timeChange)="timeChanged.emit({ field: 'closeTime', time: $event })"
+    />
+  </div>
+}
+
+<button
+  type="button"
+  class="relative shrink-0 rounded-md px-3 py-1 whitespace-nowrap text-[11px]/[14px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  [class]="
+    row().isOpen
+      ? 'bg-status-success text-white hover:bg-success'
+      : 'bg-border text-text-primary hover:bg-[#cbd5e1]'
+  "
+  [attr.aria-pressed]="row().isOpen"
+  (click)="toggleDay()"
+>
+  <span class="sr-only">{{ row().label }}: </span>{{ row().isOpen ? 'مفتوح' : 'تفعيل اليوم' }}
+</button>

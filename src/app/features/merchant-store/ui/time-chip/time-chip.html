@@ -1,0 +1,17 @@
+<button
+  type="button"
+  class="rounded-md bg-white px-3 py-1 whitespace-nowrap text-[11px]/[14px] text-text-primary transition-colors hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-primary"
+  [attr.aria-label]="label() + ': ' + text()"
+  (click)="openPicker()"
+>
+  {{ text() }}
+</button>
+<input
+  #timeInput
+  type="time"
+  class="sr-only bottom-0 left-0"
+  tabindex="-1"
+  aria-hidden="true"
+  [value]="time()"
+  (change)="pickFromInput($event)"
+/>

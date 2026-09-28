@@ -1,0 +1,53 @@
+<!-- The frame pads this card 16px and its fields another 16px inside, unlike the 24px cards. -->
+<section
+  appStoreCard
+  class="flex flex-col gap-4 rounded-xl p-4"
+  aria-labelledby="store-basic-info-title"
+>
+  <h2 id="store-basic-info-title" class="text-start text-[16px]/[24px] font-bold text-text-primary">
+    معلومات المتجر الأساسية
+  </h2>
+
+  <div class="flex flex-col gap-6 px-4 pb-4">
+    <app-store-cover-picker [imageUrl]="coverImageUrl()" (picked)="coverPicked.emit($event)" />
+
+    <div class="flex flex-col gap-4">
+      <app-store-field
+        label="اسم المتجر التجاري"
+        forId="store-name"
+        icon="store-badge"
+        [iconSize]="nameIconSize"
+        [isIconMuted]="true"
+        [isRequired]="true"
+        [error]="errors().name"
+      >
+        <!-- RTL: 40px on the right clears the icon, 16px on the left. -->
+        <input
+          appStoreInput
+          id="store-name"
+          class="h-11 py-3 ps-10 pe-4 leading-5 text-[#191c1e]!"
+          autocomplete="organization"
+          aria-required="true"
+          [formControl]="form().controls.name"
+        />
+      </app-store-field>
+
+      <app-store-field
+        label="وصف المتجر ونبذة التعريف"
+        forId="store-description"
+        [isRequired]="true"
+        [counter]="descriptionCounter()"
+        [error]="errors().description"
+      >
+        <textarea
+          appStoreInput
+          isMuted
+          id="store-description"
+          class="h-[145px] resize-none px-4 pt-[15px] pb-3 leading-[22.75px]"
+          aria-required="true"
+          [formControl]="form().controls.description"
+        ></textarea>
+      </app-store-field>
+    </div>
+  </div>
+</section>

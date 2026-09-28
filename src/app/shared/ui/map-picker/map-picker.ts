@@ -39,6 +39,8 @@ export class MapPicker {
   readonly latitude = input.required<number>();
   readonly longitude = input.required<number>();
   readonly zoom = input<number>(DEFAULT_ZOOM);
+  /** Where the OSM credit sits; move it when an overlay covers the bottom-right corner. */
+  readonly attributionPosition = input<L.ControlPosition>('bottomright');
   readonly locationPicked = output<MapPoint>();
 
   private readonly canvas = viewChild.required<ElementRef<HTMLElement>>('canvas');
@@ -47,6 +49,7 @@ export class MapPicker {
   protected readonly isMapReady = this.mapReady.asReadonly();
   private map: L.Map | null = null;
   private marker: L.Marker | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   constructor() {
     afterNextRender(() => this.createMap());
@@ -57,6 +60,7 @@ export class MapPicker {
     });
 
     inject(DestroyRef).onDestroy(() => {
+      this.resizeObserver?.disconnect();
       this.map?.remove();
       this.map = null;
     });
@@ -75,13 +79,23 @@ export class MapPicker {
     this.map?.panTo(position);
   }
 
+  /** Leaflet measures its box once; a box that grows later would keep grey, tileless edges. */
+  private redrawOnResize(): void {
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    this.resizeObserver = new ResizeObserver(() => this.map?.invalidateSize());
+    this.resizeObserver.observe(this.canvas().nativeElement);
+  }
+
   private createMap(): void {
     const position: L.LatLngExpression = [this.latitude(), this.longitude()];
     this.map = L.map(this.canvas().nativeElement, {
       center: position,
       zoom: this.zoom(),
-      attributionControl: true,
+      attributionControl: false,
     });
+    L.control.attribution({ position: this.attributionPosition() }).addTo(this.map);
     L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: TILE_ATTRIBUTION }).addTo(this.map);
     this.marker = L.marker(position, { icon: PIN_ICON, draggable: true }).addTo(this.map);
 
@@ -89,6 +103,7 @@ export class MapPicker {
       this.pickPoint({ latitude: event.latlng.lat, longitude: event.latlng.lng });
     });
     this.map.whenReady(() => this.mapReady.set(true));
+    this.redrawOnResize();
     this.marker.on('dragend', () => {
       const moved = this.marker?.getLatLng();
       if (moved) {

@@ -1,0 +1,119 @@
+<section
+  appStoreCard
+  class="flex flex-col gap-6 rounded-xl p-6"
+  aria-labelledby="store-contact-title"
+>
+  <h2 id="store-contact-title" class="text-start text-[18px]/[28px] font-bold text-text-primary">
+    معلومات التواصل
+  </h2>
+
+  <!--
+    RTL: each pair fills the right column first. The values are Latin, so the inputs are LTR and
+    use physical padding: 40px on the right clears the icon, 16px on the left.
+    Phone and email are drawn in Inter at 44px, the page links in Tajawal at 42px.
+  -->
+  <div class="grid auto-rows-[minmax(64px,auto)] grid-cols-1 gap-4 sm:grid-cols-2">
+    <app-store-field
+      label="رقم الهاتف الأساسي"
+      forId="store-phone"
+      icon="phone-feather"
+      [error]="errors().phone"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-phone"
+        type="tel"
+        class="h-11 py-3 pr-10 pl-4 font-inter leading-5 text-[#191c1e]!"
+        autocomplete="tel"
+        aria-required="true"
+        [formControl]="form().controls.phone"
+      />
+    </app-store-field>
+
+    <app-store-field
+      label="البريد الإلكتروني التجاري"
+      forId="store-email"
+      icon="mail-rounded"
+      [error]="errors().email"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-email"
+        type="email"
+        class="h-11 py-3 pr-10 pl-4 font-inter leading-5 text-[#191c1e]!"
+        autocomplete="email"
+        [formControl]="form().controls.email"
+      />
+    </app-store-field>
+
+    <app-store-field
+      label="رقم الواتساب"
+      forId="store-whatsapp"
+      icon="whatsapp-fill"
+      [error]="errors().whatsapp"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-whatsapp"
+        type="tel"
+        class="h-11 py-3 pr-10 pl-4 font-inter leading-5 text-[#191c1e]!"
+        autocomplete="tel"
+        [formControl]="form().controls.whatsapp"
+      />
+    </app-store-field>
+
+    <app-store-field
+      label="رابط صفحة فيسبوك"
+      forId="store-facebook"
+      icon="facebook-feather"
+      [error]="errors().facebook"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-facebook"
+        type="url"
+        class="h-[42px] py-3 pr-10 pl-4 leading-[18px]"
+        autocomplete="url"
+        [formControl]="form().controls.facebook"
+      />
+    </app-store-field>
+
+    <app-store-field
+      label="رابط صفحة الانستاغرام"
+      forId="store-instagram"
+      icon="instagram-fill"
+      [error]="errors().instagram"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-instagram"
+        type="url"
+        class="h-[42px] py-3 pr-10 pl-4 leading-[18px]"
+        autocomplete="url"
+        [formControl]="form().controls.instagram"
+      />
+    </app-store-field>
+
+    <app-store-field
+      label="رابط صفحة التلغرام"
+      forId="store-telegram"
+      icon="telegram-outline"
+      [error]="errors().telegram"
+    >
+      <input
+        appStoreInput
+        isLatin
+        id="store-telegram"
+        type="url"
+        class="h-[42px] py-3 pr-10 pl-4 leading-[18px]"
+        autocomplete="url"
+        [formControl]="form().controls.telegram"
+      />
+    </app-store-field>
+  </div>
+</section>

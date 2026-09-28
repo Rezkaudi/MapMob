@@ -1,0 +1,38 @@
+<div class="flex flex-col gap-1">
+  <!-- RTL: the label starts on the right, the counter sits at the far left. -->
+  <div class="flex items-center justify-between gap-2">
+    <label
+      class="flex items-center gap-1 text-start text-[12px]/[16px] text-text-primary"
+      [attr.for]="forId() || null"
+    >
+      <span>{{ label() }}</span>
+      @if (isRequired()) {
+        <span class="font-inter text-[12px]/[16px] font-semibold text-closed" aria-hidden="true"
+          >*</span
+        >
+      }
+    </label>
+    @if (counter()) {
+      <span data-role="counter" dir="ltr" class="text-[11px]/[14px] text-[#404753]">{{
+        counter()
+      }}</span>
+    }
+  </div>
+
+  <div class="relative flex items-center">
+    <ng-content />
+    @if (icon(); as iconName) {
+      <app-icon
+        class="pointer-events-none absolute start-3"
+        [class]="isIconMuted() ? 'text-text-secondary' : 'text-text-primary'"
+        [name]="iconName"
+        [size]="iconSize()"
+        aria-hidden="true"
+      />
+    }
+  </div>
+
+  @if (error(); as message) {
+    <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+  }
+</div>

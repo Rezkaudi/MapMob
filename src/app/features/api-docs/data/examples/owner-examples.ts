@@ -5,6 +5,7 @@ import type { PasswordResetGrant } from '../../../merchant-auth/models/password-
 import type { ResetCodeCheck } from '../../../merchant-auth/models/reset-code-check';
 import type { MerchantOverview } from '../../../merchant-overview/models/merchant-overview';
 import type { StorePerformance } from '../../../merchant-overview/models/store-performance';
+import type { StoreProfile } from '../../../merchant-store/models/store-profile';
 
 export const OWNER_SIGN_IN_REQUEST = {
   email: 'rawabi@gmail.com',
@@ -86,3 +87,57 @@ export const OWNER_PERFORMANCE = {
   dailyAverageViewCount: 42,
   peakDay: { on: '2026-07-23', viewCount: 142 },
 } satisfies StorePerformance;
+
+export const OWNER_PLACE = {
+  name: 'صيدلية الحياة',
+  description: 'صيدلية تقدم الأدوية والمستلزمات الطبية ومنتجات العناية الشخصية.',
+  coverImageUrl: 'https://cdn.mapmob.sy/places/12/cover.jpg',
+  mainCategory: { id: '3', name: 'صيدليات' },
+  subCategory: { id: '14', name: 'صيدليات ومراكز صحية' },
+  contact: {
+    phone: '+963 944 123 456',
+    email: 'contact@alhayat-pharmacy.sy',
+    whatsapp: '+963 944 123 456',
+    facebook: 'https://facebook.com/alhayatpharmacy',
+    instagram: null,
+    telegram: 'https://t.me/alhayatpharmacy',
+  },
+  location: {
+    governorate: { id: '6', name: 'طرطوس' },
+    area: { id: '41', name: 'طرطوس المدينة' },
+    address: 'شارع الثورة، بجانب المركز الثقافي، بناء رقم 12',
+    latitude: 34.8959,
+    longitude: 35.8866,
+  },
+  isOpen24Hours: false,
+  workingHours: [
+    { day: 'saturday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'sunday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'monday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'tuesday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'wednesday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'thursday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
+    { day: 'friday', isOpen: false, openTime: null, closeTime: null },
+  ],
+} satisfies StoreProfile;
+
+export const OWNER_PLACE_UPDATE_FORM = {
+  name: 'صيدلية الحياة',
+  description: 'صيدلية تقدم الأدوية والمستلزمات الطبية ومنتجات العناية الشخصية.',
+  phone: '+963 944 123 456',
+  email: 'contact@alhayat-pharmacy.sy',
+  whatsapp: '+963 944 123 456',
+  facebook: 'https://facebook.com/alhayatpharmacy',
+  telegram: 'https://t.me/alhayatpharmacy',
+  address: 'شارع الثورة، بجانب المركز الثقافي، بناء رقم 12',
+  latitude: 34.8959,
+  longitude: 35.8866,
+  isOpen24Hours: false,
+  'workingHours[0][day]': 'saturday',
+  'workingHours[0][isOpen]': true,
+  'workingHours[0][openTime]': '09:00',
+  'workingHours[0][closeTime]': '23:00',
+  'workingHours[6][day]': 'friday',
+  'workingHours[6][isOpen]': false,
+  cover: '@cover.jpg',
+};

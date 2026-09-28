@@ -1,0 +1,52 @@
+<section
+  appStoreCard
+  class="flex flex-col gap-4 rounded-xl p-6"
+  aria-labelledby="store-classification-title"
+>
+  <h2
+    id="store-classification-title"
+    class="text-start text-[18px]/[28px] font-bold text-[#191c1e]"
+  >
+    تصنيف المتجر التجاري
+  </h2>
+
+  <div class="flex flex-col items-start gap-4 sm:flex-row">
+    @for (category of categories(); track category.label) {
+      <div
+        data-role="category"
+        class="flex w-full min-w-0 flex-1 flex-col gap-1 rounded-lg bg-[#f2f4f6] p-4"
+      >
+        <!-- RTL: the label on the right, the lock on the left. -->
+        <div class="flex items-center justify-between gap-2">
+          <p class="text-[12px]/[16px] text-text-secondary">{{ category.label }}</p>
+          <app-icon name="lock" [size]="16" class="text-text-secondary" aria-hidden="true" />
+        </div>
+        <p class="text-start text-[14px]/[20px] font-medium text-text-primary">
+          {{ category.value }}
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- RTL: the info icon on the right, the note, then the request link on the far left. -->
+  <div class="flex items-start gap-4 rounded-lg bg-[#f2f4f6] p-4">
+    <app-icon
+      name="info-circle-filled"
+      [size]="17"
+      class="mt-0.5 text-primary"
+      aria-hidden="true"
+    />
+    <div class="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3">
+      <p class="max-w-[371px] text-start text-[13px]/[18px] text-text-primary">
+        لا يمكن تعديل التصنيف من لوحة التاجر لطلب تعديل التصنيف تواصل مع المشرف
+      </p>
+      <a
+        class="flex shrink-0 items-center gap-1 rounded text-[12px]/[16px] font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        [href]="supportUrl()"
+      >
+        <span>طلب تغيير التصنيف</span>
+        <app-icon name="arrow-left-short" [size]="9" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</section>

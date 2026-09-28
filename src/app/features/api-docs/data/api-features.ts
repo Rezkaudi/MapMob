@@ -10,6 +10,7 @@ import { NOTIFICATIONS_FEATURE } from './endpoints/notification-endpoints';
 import { OFFERS_FEATURE } from './endpoints/offer-endpoints';
 import { OWNER_AUTH_FEATURE } from './endpoints/owner-auth-endpoints';
 import { OWNER_OVERVIEW_FEATURE } from './endpoints/owner-overview-endpoints';
+import { OWNER_PLACE_FEATURE } from './endpoints/owner-place-endpoints';
 import { PAYMENTS_FEATURE } from './endpoints/payment-endpoints';
 import { PLACES_FEATURE } from './endpoints/place-endpoints';
 import { REGIONS_FEATURE } from './endpoints/region-endpoints';
@@ -40,4 +41,5 @@ export const API_FEATURES: readonly ApiFeature[] = [
   SETTINGS_FEATURE,
   OWNER_AUTH_FEATURE,
   OWNER_OVERVIEW_FEATURE,
+  OWNER_PLACE_FEATURE,
 ];

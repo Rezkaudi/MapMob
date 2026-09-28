@@ -1,0 +1,84 @@
+<form class="flex flex-col gap-10" [formGroup]="form" (ngSubmit)="save()">
+  <!-- RTL: the title block on the right, the save button on the left. -->
+  <header class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col items-start gap-1 text-right">
+      <h1 class="text-[28px]/[34px] font-bold text-text-primary">بيانات المتجر</h1>
+      <p class="text-[16px]/[19px] text-text-secondary">حدث معلومات المتجر لتعزيز ظهورك المحلي.</p>
+    </div>
+    <button
+      data-role="save"
+      type="submit"
+      class="flex h-11 w-32 shrink-0 items-center justify-center gap-2 rounded bg-primary text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="!store.profile() || store.isSaving()"
+      [attr.aria-busy]="store.isSaving() || null"
+    >
+      @if (store.isSaving()) {
+        <app-spinner [size]="16" label="جاري الحفظ" />
+      }
+      حفظ التغييرات
+    </button>
+  </header>
+
+  @if (store.error(); as error) {
+    <app-error-state [message]="error" (retry)="store.load()" />
+  } @else if (store.profile(); as profile) {
+    <!-- RTL: the wide column of the store's details sits right, the map and hours left. -->
+    <div
+      class="grid grid-cols-1 items-start gap-[22px] xl:grid-cols-[minmax(0,671fr)_minmax(0,353fr)]"
+    >
+      <div data-role="column" class="flex min-w-0 flex-col gap-4">
+        <app-store-basic-info-card
+          [form]="form"
+          [coverImageUrl]="profile.coverImageUrl"
+          [errors]="fieldErrors()"
+          [descriptionCounter]="descriptionCounter()"
+          (coverPicked)="pickCover($event)"
+        />
+        <app-store-classification-card
+          [mainCategory]="profile.mainCategory"
+          [subCategory]="profile.subCategory"
+          [supportUrl]="supportUrl"
+        />
+        <app-store-contact-card [form]="form" [errors]="fieldErrors()" />
+      </div>
+
+      <div data-role="column" class="flex min-w-0 flex-col gap-4">
+        <app-store-location-card
+          [form]="form"
+          [governorate]="profile.location.governorate"
+          [area]="profile.location.area"
+          [errors]="fieldErrors()"
+          [summary]="locationSummary()"
+        />
+        <app-store-hours-card
+          [rows]="workingDayRows()"
+          [isOpen24Hours]="isOpen24Hours()"
+          (allDayToggled)="setOpen24Hours($event)"
+          (dayOpened)="openDay($event)"
+          (dayClosed)="closeDay($event)"
+          (timeChanged)="changeTime($event)"
+        />
+      </div>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 gap-[22px] xl:grid-cols-[minmax(0,671fr)_minmax(0,353fr)]">
+      <app-skeleton height="566px" />
+      <app-skeleton height="716px" />
+    </div>
+  }
+</form>
+
+@if (store.hasSaved()) {
+  <app-toast
+    title="تم حفظ التغييرات"
+    message="تم تحديث بيانات متجرك بنجاح."
+    (dismissed)="store.dismissSaveResult()"
+  />
+} @else if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.dismissSaveResult()"
+  />
+}

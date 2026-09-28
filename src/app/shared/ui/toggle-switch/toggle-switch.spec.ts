@@ -30,4 +30,19 @@ describe('ToggleSwitch', () => {
 
     expect(fixture.nativeElement.querySelector('button').disabled).toBe(true);
   });
+  it('draws the regular 44×24 switch unless asked for the small one', () => {
+    const fixture = TestBed.createComponent(ToggleSwitch);
+    fixture.componentRef.setInput('isOn', false);
+    fixture.detectChanges();
+    const button = () => fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+
+    expect(button().classList).toContain('w-11');
+
+    fixture.componentRef.setInput('size', 'small');
+    fixture.detectChanges();
+
+    expect(button().classList).toContain('w-9');
+    expect(button().classList).toContain('h-5');
+    expect(button().classList).toContain('bg-[#d8dadc]');
+  });
 });

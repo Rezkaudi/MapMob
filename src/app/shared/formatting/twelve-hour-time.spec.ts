@@ -1,4 +1,4 @@
-import { formatTwelveHourTime } from './twelve-hour-time';
+import { formatArabicTwelveHourTime, formatTwelveHourTime } from './twelve-hour-time';
 
 describe('formatTwelveHourTime', () => {
   it('writes a 24-hour time on a 12-hour clock', () => {
@@ -6,5 +6,14 @@ describe('formatTwelveHourTime', () => {
     expect(formatTwelveHourTime('04:30')).toBe('04:30 AM');
     expect(formatTwelveHourTime('00:15')).toBe('12:15 AM');
     expect(formatTwelveHourTime('12:05')).toBe('12:05 PM');
+  });
+});
+
+describe('formatArabicTwelveHourTime', () => {
+  it('marks the morning with ص and the evening with م', () => {
+    expect(formatArabicTwelveHourTime('09:00')).toBe('09:00 ص');
+    expect(formatArabicTwelveHourTime('23:00')).toBe('11:00 م');
+    expect(formatArabicTwelveHourTime('00:15')).toBe('12:15 ص');
+    expect(formatArabicTwelveHourTime('12:05')).toBe('12:05 م');
   });
 });
