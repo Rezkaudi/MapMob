@@ -15,6 +15,8 @@ import {
 } from './features/merchant-overview/data/merchant-overview-mock-seed';
 import { StoreProfileRepository } from './features/merchant-store/data/store-profile.repository';
 import { buildStoreProfile } from './features/merchant-store/testing/store-profile-fixture';
+import { MerchantProductRepository } from './features/merchant-products/data/merchant-product.repository';
+import { buildMerchantProductCatalog } from './features/merchant-products/testing/merchant-product-fixture';
 
 describe('merchant routes', () => {
   const MERCHANT = { id: 'm-1', name: 'أحمد', role: 'owner', avatarUrl: null, token: 't' };
@@ -37,6 +39,10 @@ describe('merchant routes', () => {
         {
           provide: StoreProfileRepository,
           useValue: { getProfile: () => of(buildStoreProfile()), saveProfile: () => of() },
+        },
+        {
+          provide: MerchantProductRepository,
+          useValue: { getCatalog: () => of(buildMerchantProductCatalog()) },
         },
       ],
     });
@@ -94,10 +100,20 @@ describe('merchant routes', () => {
     expect(element.querySelector('app-merchant-shell app-store-profile-page')).toBeTruthy();
   });
 
-  it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {
+  it('opens the products page at /merchant/products, inside the merchant shell', async () => {
     TestBed.inject(AuthStore).startSession(MERCHANT);
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/merchant/products');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/products');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-merchant-shell app-merchant-products-page')).toBeTruthy();
+  });
+
+  it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/offers');
 
     expect(TestBed.inject(Location).path()).toBe('/merchant/not-found');
     const element = harness.fixture.nativeElement as HTMLElement;

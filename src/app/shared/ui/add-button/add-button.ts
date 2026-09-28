@@ -9,5 +9,6 @@ import { AppIcon } from '../app-icon/app-icon';
 })
 export class AddButton {
   readonly label = input.required<string>();
+  readonly isDisabled = input<boolean>(false);
   readonly pressed = output<void>();
 }

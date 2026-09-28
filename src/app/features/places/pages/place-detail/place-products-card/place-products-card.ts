@@ -6,7 +6,7 @@ import { Badge } from '../../../../../shared/ui/badge/badge';
 import { SectionPanel } from '../../../../../shared/ui/section-panel/section-panel';
 import { PlaceProduct } from '../../../models/place-product';
 import { CurrencySymbolPipe } from '../../../../../shared/pipes/currency-symbol.pipe';
-import { PRODUCT_AVAILABILITY_LABELS } from '../../../models/product-availability';
+import { PRODUCT_AVAILABILITY_LABELS } from '../../../../../shared/models/product-availability';
 
 @Component({
   selector: 'app-place-products-card',

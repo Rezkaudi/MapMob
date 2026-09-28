@@ -7,5 +7,6 @@ export const EMPTY_PRODUCT_DRAFT: ProductDraft = {
   currency: 'SYP',
   isAvailable: true,
   imageUrl: '',
+  imageFile: null,
   orderUrl: '',
 };

@@ -8,7 +8,7 @@ import { withSaveStatus } from '../../../shared/state/with-save-status';
 import { PlaceRepository } from '../data/place.repository';
 import { PlaceDetail } from '../models/place-detail';
 import { PlaceProduct } from '../models/place-product';
-import { ProductDraft } from '../models/product-draft';
+import { ProductDraft } from '../../../shared/models/product-draft';
 
 interface PlaceDetailState {
   readonly place: PlaceDetail | null;

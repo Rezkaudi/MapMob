@@ -8,12 +8,12 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { FormMode } from '../../../../shared/models/form-mode';
-import { CurrencyCode } from '../../../../shared/money/currency-code';
-import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-select';
-import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
-import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
+import { FormMode } from '../../models/form-mode';
+import { CurrencyCode } from '../../money/currency-code';
+import { AppIcon } from '../app-icon/app-icon';
+import { CurrencySelect } from '../currency-select/currency-select';
+import { FieldLabel } from '../field-label/field-label';
+import { FileDropzone } from '../file-dropzone/file-dropzone';
 import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { PRODUCT_AVAILABILITY_CHOICES, availabilityValue } from '../../models/product-availability';
 import { ProductDraft } from '../../models/product-draft';
@@ -33,6 +33,8 @@ export class ProductDialog {
   readonly mode = input<FormMode>('create');
   /** What the fields start with. Editing passes the product being changed. */
   readonly initialDraft = input<ProductDraft>(EMPTY_PRODUCT_DRAFT);
+  /** The merchant frame drops the line under the order link. */
+  readonly isOrderUrlHintVisible = input<boolean>(true);
   readonly submitted = output<ProductDraft>();
   readonly cancelled = output<void>();
 
@@ -47,6 +49,7 @@ export class ProductDialog {
   );
   protected readonly imageUrl = linkedSignal(() => this.initialDraft().imageUrl);
   protected readonly pickedImageName = signal('');
+  private readonly pickedImageFile = signal<File | null>(null);
   protected readonly imageName = computed(() => this.pickedImageName() || SAVED_IMAGE_LABEL);
 
   protected readonly isComplete = computed(
@@ -79,11 +82,13 @@ export class ProductDialog {
       return;
     }
     this.pickedImageName.set(file.name);
+    this.pickedImageFile.set(file);
     this.imageUrl.set(URL.createObjectURL(file));
   }
 
   protected removeImage(): void {
     this.pickedImageName.set('');
+    this.pickedImageFile.set(null);
     this.imageUrl.set('');
   }
 
@@ -97,6 +102,7 @@ export class ProductDialog {
       currency: this.currency(),
       isAvailable: this.availability() === AVAILABLE,
       imageUrl: this.imageUrl(),
+      imageFile: this.pickedImageFile(),
       orderUrl: this.orderUrl().trim(),
     });
   }

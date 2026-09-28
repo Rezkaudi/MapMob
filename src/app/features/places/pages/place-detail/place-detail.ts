@@ -13,10 +13,10 @@ import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { FormMode } from '../../../../shared/models/form-mode';
 import { PlaceEditSection } from '../../models/place-edit-section';
 import { PlaceProduct } from '../../models/place-product';
-import { ProductDraft } from '../../models/product-draft';
-import { ProductDialog } from '../../ui/product-dialog/product-dialog';
-import { buildRemoveProductCopy } from '../../ui/product-confirm-copy';
-import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
+import { ProductDraft } from '../../../../shared/models/product-draft';
+import { ProductDialog } from '../../../../shared/ui/product-dialog/product-dialog';
+import { buildRemoveProductCopy } from '../../../../shared/ui/product-dialog/product-confirm-copy';
+import { EMPTY_PRODUCT_DRAFT } from '../../../../shared/models/empty-product-draft';
 import { PlaceDetailStore } from '../../state/place-detail.store';
 import { PlaceDetailSkeleton } from './place-detail-skeleton/place-detail-skeleton';
 import { PlaceGallery } from './place-gallery/place-gallery';
@@ -89,7 +89,7 @@ export class PlaceDetail {
   protected readonly editedProductDraft = computed<ProductDraft>(() => {
     const product = this.editedProduct() ?? EMPTY_PRODUCT_DRAFT;
     const { name, price, currency, isAvailable, imageUrl, orderUrl } = product;
-    return { name, price, currency, isAvailable, imageUrl, orderUrl };
+    return { name, price, currency, isAvailable, imageUrl, imageFile: null, orderUrl };
   });
   protected readonly removeProductCopy = computed(() => {
     const product = this.productToRemove();

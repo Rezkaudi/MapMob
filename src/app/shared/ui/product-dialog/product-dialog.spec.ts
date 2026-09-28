@@ -60,6 +60,7 @@ describe('ProductDialog', () => {
         currency: 'SYP',
         isAvailable: true,
         imageUrl: '',
+        imageFile: null,
         orderUrl: 'https://shop.example.com/serum',
       },
     ]);
@@ -129,6 +130,7 @@ describe('ProductDialog', () => {
       currency: 'SYP',
       isAvailable: false,
       imageUrl: '',
+      imageFile: null,
       orderUrl: '',
     });
     fixture.detectChanges();
@@ -137,5 +139,90 @@ describe('ProductDialog', () => {
       '[data-testid="product-status"]',
     );
     expect(status.value).toBe('unavailable');
+  });
+
+  it('draws the dashed drop zone, reading "drag here" first and the browse link last', () => {
+    const fixture = build();
+    const prompt: HTMLElement = fixture.nativeElement.querySelector(
+      'app-file-dropzone [data-role="prompt"]',
+    );
+
+    expect(prompt.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'اسحب وأفلت الصور هنا أو استعرض الملفات',
+    );
+  });
+
+  it('sends the picked picture file with the draft, so it can be uploaded', () => {
+    const fixture = build();
+    const drafts: ProductDraft[] = [];
+    fixture.componentInstance.submitted.subscribe((draft) => drafts.push(draft));
+    const picture = new File(['x'], 'serum.png', { type: 'image/png' });
+
+    const fileInput: HTMLInputElement = fixture.nativeElement.querySelector('input[type="file"]');
+    Object.defineProperty(fileInput, 'files', { value: [picture] });
+    fileInput.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    typeInto(fixture, 'product-name', 'سيروم');
+    typeInto(fixture, 'product-price', '200');
+    fixture.nativeElement.querySelector('[data-testid="submit-product"]').click();
+
+    expect(drafts[0].imageFile).toBe(picture);
+    expect(drafts[0].imageUrl).not.toBe('');
+  });
+
+  it('forgets the picked file once the picture is removed', () => {
+    const fixture = build();
+    const drafts: ProductDraft[] = [];
+    fixture.componentInstance.submitted.subscribe((draft) => drafts.push(draft));
+    const fileInput: HTMLInputElement = fixture.nativeElement.querySelector('input[type="file"]');
+    Object.defineProperty(fileInput, 'files', { value: [new File(['x'], 'a.png')] });
+    fileInput.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[data-testid="remove-product-image"]').click();
+    fixture.detectChanges();
+    typeInto(fixture, 'product-name', 'سيروم');
+    typeInto(fixture, 'product-price', '200');
+    fixture.nativeElement.querySelector('[data-testid="submit-product"]').click();
+
+    expect(drafts[0].imageFile).toBeNull();
+    expect(drafts[0].imageUrl).toBe('');
+  });
+
+  it('can leave out the order link hint, as the merchant frame does', () => {
+    const fixture = TestBed.createComponent(ProductDialog);
+    fixture.componentRef.setInput('isOrderUrlHintVisible', false);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).not.toContain('يستخدم لنقل المستخدم');
+  });
+
+  it('draws the cancel button as tall as the submit button (44px)', () => {
+    const cancel: HTMLElement = build().nativeElement.querySelector(
+      '[data-testid="cancel-product"]',
+    );
+
+    expect(cancel.classList).toContain('h-11');
+  });
+
+  it('uses the compact 12/16 labels, the 4px footer margin and an 8px-inset currency chip', () => {
+    const host: HTMLElement = build().nativeElement;
+
+    const labels = [...host.querySelectorAll('app-field-label label')];
+    expect(labels).toHaveLength(5);
+    expect(labels.every((label) => label.classList.contains('text-[12px]/[16px]'))).toBe(true);
+    expect(host.querySelector('footer')?.classList).toContain('mt-1');
+    expect(host.querySelector('app-currency-select')?.classList).toContain('end-2');
+  });
+
+  it('writes the plus before the submit label, so RTL puts it on the right as the frame does', () => {
+    const submit: HTMLElement = build().nativeElement.querySelector(
+      '[data-testid="submit-product"]',
+    );
+
+    expect([...submit.children].map((child) => child.tagName.toLowerCase())).toEqual([
+      'app-icon',
+      'span',
+    ]);
   });
 });

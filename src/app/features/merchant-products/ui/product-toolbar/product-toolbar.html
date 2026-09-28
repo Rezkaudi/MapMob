@@ -1,0 +1,11 @@
+<!-- 15px padding plus the 1px border keeps the frame's 72px card. -->
+<div class="rounded-xl border border-border bg-surface p-[15px]">
+  <div data-role="toolbar-row" class="flex items-center justify-between gap-4">
+    <app-list-search-field
+      class="w-[390px] min-w-0"
+      placeholder="ابحث عن منتج / خدمة بالاسم.."
+      (searchChange)="searchChange.emit($event)"
+    />
+    <app-sort-select (sortChange)="sortChange.emit($event)" />
+  </div>
+</div>

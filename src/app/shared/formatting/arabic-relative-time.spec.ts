@@ -35,4 +35,18 @@ describe('formatArabicRelativeTime', () => {
     expect(formatArabicRelativeTime(ago(400 * DAY_MS), NOW)).toBe('منذ سنة');
     expect(formatArabicRelativeTime(ago(3 * 365 * DAY_MS), NOW)).toBe('منذ 3 سنوات');
   });
+
+  it('keeps counting days up to a month unless weeks are asked for', () => {
+    expect(formatArabicRelativeTime(ago(7 * DAY_MS), NOW)).toBe('منذ 7 أيام');
+  });
+
+  it('counts whole weeks from 7 days to a month when weeks are asked for', () => {
+    const withWeeks = { isWeekCounted: true };
+
+    expect(formatArabicRelativeTime(ago(6 * DAY_MS), NOW, withWeeks)).toBe('منذ 6 أيام');
+    expect(formatArabicRelativeTime(ago(7 * DAY_MS), NOW, withWeeks)).toBe('منذ أسبوع');
+    expect(formatArabicRelativeTime(ago(15 * DAY_MS), NOW, withWeeks)).toBe('منذ أسبوعين');
+    expect(formatArabicRelativeTime(ago(29 * DAY_MS), NOW, withWeeks)).toBe('منذ 4 أسابيع');
+    expect(formatArabicRelativeTime(ago(30 * DAY_MS), NOW, withWeeks)).toBe('منذ شهر');
+  });
 });

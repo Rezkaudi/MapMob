@@ -32,9 +32,9 @@ import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
 import { PlaceDetail } from '../../models/place-detail';
-import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
+import { EMPTY_PRODUCT_DRAFT } from '../../../../shared/models/empty-product-draft';
 import { PlaceProduct } from '../../models/place-product';
-import { ProductDraft } from '../../models/product-draft';
+import { ProductDraft } from '../../../../shared/models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
 import { createPlaceFormGroup } from '../../state/place-form-group';
 import { toPlaceFormValue } from '../../state/place-form-mapping';
@@ -44,7 +44,7 @@ import { withSavedOption } from '../../state/with-saved-option';
 import { toWorkingWeek } from '../../state/working-week-from-rows';
 import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
 import { FormMode } from '../../../../shared/models/form-mode';
-import { ProductDialog } from '../../ui/product-dialog/product-dialog';
+import { ProductDialog } from '../../../../shared/ui/product-dialog/product-dialog';
 import { ProductsEditor } from './products-editor/products-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
 
@@ -144,7 +144,7 @@ export class PlaceForm {
       return EMPTY_PRODUCT_DRAFT;
     }
     const { name, price, currency, isAvailable, imageUrl, orderUrl } = product;
-    return { name, price, currency, isAvailable, imageUrl, orderUrl };
+    return { name, price, currency, isAvailable, imageUrl, imageFile: null, orderUrl };
   });
   protected readonly removeProductCopy = computed(() => ({
     ...REMOVE_PRODUCT_COPY,

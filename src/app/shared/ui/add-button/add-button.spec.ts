@@ -15,4 +15,15 @@ describe('AddButton', () => {
     expect(button.textContent?.trim()).toBe('إضافة محافظة');
     expect(pressed).toHaveBeenCalledOnce();
   });
+
+  it('can be turned off, for a plan that allows no more', () => {
+    const fixture = TestBed.createComponent(AddButton);
+    fixture.componentRef.setInput('label', 'إضافة خدمة أو منتج');
+    fixture.componentRef.setInput('isDisabled', true);
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+
+    expect(button.disabled).toBe(true);
+  });
 });

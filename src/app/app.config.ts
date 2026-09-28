@@ -17,6 +17,7 @@ import { provideDashboardFeature } from './features/dashboard/dashboard.provider
 import { provideInboxFeature } from './features/inbox/inbox.providers';
 import { provideMerchantAuthFeature } from './features/merchant-auth/merchant-auth.providers';
 import { provideMerchantOverviewFeature } from './features/merchant-overview/merchant-overview.providers';
+import { provideMerchantProductsFeature } from './features/merchant-products/merchant-products.providers';
 import { provideMerchantStoreFeature } from './features/merchant-store/merchant-store.providers';
 import { provideNotificationsFeature } from './features/notifications/notifications.providers';
 import { provideOffersFeature } from './features/offers/offers.providers';
@@ -60,5 +61,6 @@ export const appConfig: ApplicationConfig = {
     provideMerchantAuthFeature(),
     provideMerchantOverviewFeature(),
     provideMerchantStoreFeature(),
+    provideMerchantProductsFeature(),
   ],
 };

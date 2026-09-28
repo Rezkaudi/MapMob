@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+/** `compact` is the product dialog's 12/16 label; `regular` the place form's 13/14 one. */
+export type FieldLabelSize = 'regular' | 'compact';
+
 @Component({
   selector: 'app-field-label',
   templateUrl: './field-label.html',
@@ -12,4 +15,5 @@ export class FieldLabel {
   readonly isRequired = input<boolean>(false);
   /** Adds the design's "(اختياري)" note for fields that may be left empty. */
   readonly isOptional = input<boolean>(false);
+  readonly size = input<FieldLabelSize>('regular');
 }

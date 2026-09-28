@@ -1,9 +1,25 @@
-<label [attr.for]="forId() || null" class="block text-right text-[13px]/[14px] text-text-primary">
-  {{ text() }}
-  @if (isRequired()) {
-    <span class="text-error">*</span>
-  }
-  @if (isOptional()) {
-    <span class="text-[11px] font-normal text-text-secondary">(اختياري)</span>
-  }
-</label>
+@if (size() === 'compact') {
+  <!-- RTL: the text reads first on the right; the star sits 4px and "(اختياري)" 6px to its left. -->
+  <label
+    [attr.for]="forId() || null"
+    class="flex items-center gap-1 text-[12px]/[16px] font-medium text-text-primary"
+  >
+    <span>{{ text() }}</span>
+    @if (isRequired()) {
+      <span class="font-latin text-[12px]/[16px] font-bold text-[#ba1a1a]">*</span>
+    }
+    @if (isOptional()) {
+      <span class="ms-0.5 text-[11px]/[14px] font-normal text-text-secondary">(اختياري)</span>
+    }
+  </label>
+} @else {
+  <label [attr.for]="forId() || null" class="block text-right text-[13px]/[14px] text-text-primary">
+    {{ text() }}
+    @if (isRequired()) {
+      <span class="text-error">*</span>
+    }
+    @if (isOptional()) {
+      <span class="text-[11px] font-normal text-text-secondary">(اختياري)</span>
+    }
+  </label>
+}

@@ -1,0 +1,79 @@
+<!-- Header, the quota cards 40px below, the toolbar 32px below them and the table 32px under that. -->
+<app-page-header
+  title="الخدمات و المنتجات"
+  description="إدارة الخدمات و المنتجات التي تظهر في صفحة مكانك ."
+  [isAddVisible]="false"
+>
+  <app-add-button
+    pageHeaderAction
+    class="[&>button]:w-[243px]"
+    label="إضافة خدمة أو منتج"
+    [isDisabled]="!!store.quota()?.isFull"
+    (pressed)="store.openCreate()"
+  />
+</app-page-header>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+} @else {
+  <!-- RTL grid: the 7-column usage card comes first, so it takes the right-hand side. -->
+  <div
+    data-role="quota-grid"
+    class="mt-10 grid auto-rows-[minmax(172px,auto)] grid-cols-12 items-start gap-2"
+  >
+    @if (store.quota(); as quota) {
+      <app-product-usage-card
+        class="col-span-12 xl:col-span-7"
+        [planName]="store.planName()"
+        [quota]="quota"
+      />
+      <app-product-count-tiles class="col-span-12 xl:col-span-5" [counts]="store.counts()" />
+    }
+  </div>
+
+  <app-product-toolbar
+    class="mt-8"
+    (searchChange)="store.setSearch($event)"
+    (sortChange)="store.setSort($event)"
+  />
+
+  <app-product-table
+    class="mt-8"
+    [rows]="store.rows()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoRows]="store.hasNoRows()"
+    [emptyMessage]="store.emptyMessage()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (edit)="store.openEdit($event)"
+    (remove)="store.openDelete($event)"
+  />
+}
+
+@if (store.formDialog(); as form) {
+  <app-product-dialog
+    [mode]="form.mode"
+    [initialDraft]="form.draft"
+    [isOrderUrlHintVisible]="false"
+    (submitted)="store.submitDraft($event)"
+    (cancelled)="store.closeDialog()"
+  />
+} @else if (store.deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDelete()"
+    (cancelled)="store.closeDialog()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

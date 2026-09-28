@@ -1,0 +1,92 @@
+<!-- Each header is centred over the same box as the values under it, so the two line up. -->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
+      >
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-2"><span class="block w-12 text-center">الصورة</span></th>
+        <th class="px-2 text-center">اسم المنتج / الخدمة</th>
+        <th class="text-center">السعر</th>
+        <th class="text-center">آخر تحديث</th>
+        <th class="ps-2"><span class="block w-14 text-center">الحالة</span></th>
+        <th><span class="block w-[59px] text-center">الإجراء</span></th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="skeletonRowCount"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.product.id) {
+          <tr class="h-[76px] border-b border-border bg-surface last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد ' + row.product.name"
+                class="size-[18px] rounded border border-[#94a3b8] bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.product.id)"
+                (change)="rowToggle.emit(row.product.id)"
+              />
+            </td>
+            <td class="ps-2">
+              @if (row.product.imageUrl; as imageUrl) {
+                <img
+                  [src]="imageUrl"
+                  [alt]="row.product.name"
+                  class="size-12 rounded-2xl object-cover"
+                />
+              } @else {
+                <span
+                  data-role="product-initial"
+                  class="flex size-12 items-center justify-center rounded-2xl bg-accent text-[16px]/[32px] font-bold tracking-[-0.24px] text-white"
+                  aria-hidden="true"
+                  >{{ row.initial }}</span
+                >
+              }
+            </td>
+            <td class="px-2 text-center text-[14px]/[17px] text-text-primary">
+              <span class="line-clamp-2">{{ row.product.name }}</span>
+            </td>
+            <td class="text-center text-[14px]/[17px] text-text-secondary">{{ row.priceText }}</td>
+            <td class="text-center text-[14px]/[17px] text-text-secondary">
+              {{ row.updatedText }}
+            </td>
+            <td class="ps-2">
+              <span class="flex w-14 justify-center">
+                <app-status-pill [status]="row.status" [label]="row.statusLabel" />
+              </span>
+            </td>
+            <td>
+              <div class="flex w-[59px] justify-center">
+                <app-row-actions-menu
+                  [isStatusChangeVisible]="false"
+                  (edit)="edit.emit(row.product)"
+                  (remove)="remove.emit(row.product)"
+                />
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoRows()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

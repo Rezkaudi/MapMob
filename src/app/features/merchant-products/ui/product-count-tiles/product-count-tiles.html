@@ -1,0 +1,23 @@
+<!-- The frame's 24px padding and 12px top margin, less the 1px border. -->
+<section
+  class="h-full min-h-[168px] rounded-lg border border-border bg-surface p-[23px] pt-[35px] shadow-[0_2px_30px_0_rgba(0,0,0,0.05)]"
+>
+  <div class="flex gap-2">
+    @for (tile of tiles(); track tile.label) {
+      <!-- The frame pads 12px on the right; labels may run into the wider left padding. -->
+      <div
+        data-role="count-tile"
+        class="flex h-[100px] min-w-0 flex-1 items-center rounded bg-[#f2f4f6] py-3 ps-3 pe-1.5"
+      >
+        <div class="flex w-[103px] max-w-full flex-col">
+          <span data-role="count" class="text-[18px]/[28px] font-bold text-[#191c1e]">{{
+            tile.count
+          }}</span>
+          <span data-role="label" class="h-7 text-[10px]/[14px] text-text-primary">{{
+            tile.label
+          }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</section>

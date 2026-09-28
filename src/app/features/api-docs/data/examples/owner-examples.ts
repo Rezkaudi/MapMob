@@ -6,6 +6,8 @@ import type { ResetCodeCheck } from '../../../merchant-auth/models/reset-code-ch
 import type { MerchantOverview } from '../../../merchant-overview/models/merchant-overview';
 import type { StorePerformance } from '../../../merchant-overview/models/store-performance';
 import type { StoreProfile } from '../../../merchant-store/models/store-profile';
+import type { MerchantProduct } from '../../../merchant-products/models/merchant-product';
+import type { MerchantProductCatalog } from '../../../merchant-products/models/merchant-product-catalog';
 
 export const OWNER_SIGN_IN_REQUEST = {
   email: 'rawabi@gmail.com',
@@ -140,4 +142,50 @@ export const OWNER_PLACE_UPDATE_FORM = {
   'workingHours[6][day]': 'friday',
   'workingHours[6][isOpen]': false,
   cover: '@cover.jpg',
+};
+
+export const OWNER_PRODUCT = {
+  id: '5',
+  name: 'مرطب dove',
+  price: 200,
+  currency: 'SYP',
+  imageUrl: 'https://cdn.mapmob.sy/storage/products/5.png',
+  isAvailable: true,
+  orderUrl: null,
+  updatedAt: '2026-09-21T10:15:00Z',
+} satisfies MerchantProduct;
+
+export const OWNER_PRODUCT_CATALOG = {
+  plan: { id: '1', name: 'الباقة المجانية' },
+  productLimit: 3,
+  items: [
+    OWNER_PRODUCT,
+    {
+      id: '6',
+      name: 'سيروم فيتامين C',
+      price: 350,
+      currency: 'SYP',
+      imageUrl: null,
+      isAvailable: false,
+      orderUrl: 'https://shop.example.com/serum',
+      updatedAt: '2026-09-14T08:00:00Z',
+    },
+  ],
+} satisfies MerchantProductCatalog;
+
+export const OWNER_PRODUCT_FORM = {
+  name: 'مرطب dove',
+  price: 200,
+  currency: 'SYP',
+  isAvailable: true,
+  image: '@product.png',
+};
+
+export const OWNER_PRODUCT_UPDATE_FORM = {
+  name: 'مرطب dove',
+  price: 250,
+  currency: 'SYP',
+  isAvailable: true,
+  orderUrl: 'https://shop.example.com/dove',
+  isImageRemoved: false,
 };

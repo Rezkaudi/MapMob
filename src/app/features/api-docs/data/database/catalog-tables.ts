@@ -122,7 +122,7 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'products',
       description: 'What a place sells.',
-      servedAs: 'products on /places/{id}, /places/{id}/offer-items',
+      servedAs: 'products on /places/{id}, /places/{id}/offer-items, /owner/products',
       columns: [
         ID,
         foreignKey('place_id', 'places.id', 'Cascade on delete.'),

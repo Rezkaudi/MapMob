@@ -1,4 +1,4 @@
-import { FormMode } from '../../../../shared/models/form-mode';
+import { FormMode } from '../../models/form-mode';
 
 export interface ProductFormCopy {
   readonly heading: string;

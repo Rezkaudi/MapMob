@@ -1,4 +1,4 @@
-import { ConfirmActionCopy } from '../../../shared/ui/confirm-action-dialog/confirm-action-copy';
+import { ConfirmActionCopy } from '../confirm-action-dialog/confirm-action-copy';
 
 export function buildRemoveProductCopy(productName: string): ConfirmActionCopy {
   return {

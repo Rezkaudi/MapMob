@@ -34,7 +34,7 @@
 
     <div class="flex flex-col gap-5 overflow-y-auto px-6 py-4">
       <div class="flex flex-col gap-2">
-        <app-field-label text="الصورة" [isOptional]="true" />
+        <app-field-label size="compact" text="الصورة" [isOptional]="true" />
         @if (imageUrl()) {
           <div class="flex items-center gap-3 rounded-lg bg-[#f2f4f6] p-3">
             <img [src]="imageUrl()" [alt]="imageName()" class="size-16 rounded-lg object-cover" />
@@ -43,6 +43,7 @@
             </span>
             <button
               type="button"
+              data-testid="remove-product-image"
               class="text-[13px] font-medium text-error"
               (click)="removeImage()"
             >
@@ -51,7 +52,7 @@
           </div>
         } @else {
           <app-file-dropzone
-            class="[&_label]:border-2 [&_label]:border-[#c0c7d5] [&_label]:py-8"
+            appearance="dashed"
             prompt="اسحب وأفلت الصور هنا"
             hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
             accept="image/jpeg,image/png"
@@ -61,7 +62,12 @@
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <app-field-label text="اسم المنتج أو الخدمة" forId="product-name" [isRequired]="true" />
+        <app-field-label
+          size="compact"
+          text="اسم المنتج أو الخدمة"
+          forId="product-name"
+          [isRequired]="true"
+        />
         <input
           id="product-name"
           data-testid="product-name"
@@ -76,7 +82,7 @@
       <!-- RTL: the price keeps the right column and the status sits to its left, as the design pairs them. -->
       <div class="grid grid-cols-2 gap-5">
         <div class="flex flex-col gap-1.5">
-          <app-field-label text="السعر" forId="product-price" [isRequired]="true" />
+          <app-field-label size="compact" text="السعر" forId="product-price" [isRequired]="true" />
           <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
           <div class="relative">
             <input
@@ -91,7 +97,7 @@
               (input)="onPriceInput($event)"
             />
             <app-currency-select
-              class="absolute end-3.5 top-1/2 -translate-y-1/2"
+              class="absolute end-2 top-1/2 -translate-y-1/2"
               variant="chip"
               label="عملة السعر"
               [currency]="currency()"
@@ -101,7 +107,12 @@
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <app-field-label text="الحالة" forId="product-status" [isRequired]="true" />
+          <app-field-label
+            size="compact"
+            text="الحالة"
+            forId="product-status"
+            [isRequired]="true"
+          />
           <div class="relative">
             <select
               id="product-status"
@@ -126,7 +137,12 @@
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <app-field-label text="رابط الطلب" forId="product-order-url" [isOptional]="true" />
+        <app-field-label
+          size="compact"
+          text="رابط الطلب"
+          forId="product-order-url"
+          [isOptional]="true"
+        />
         <div class="relative">
           <input
             id="product-order-url"
@@ -144,18 +160,20 @@
             class="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-placeholder"
           />
         </div>
-        <p class="text-start text-[11px]/[14px] font-medium text-text-secondary">
-          يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.
-        </p>
+        @if (isOrderUrlHintVisible()) {
+          <p class="text-start text-[11px]/[14px] font-medium text-text-secondary">
+            يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.
+          </p>
+        }
       </div>
     </div>
 
-    <!-- RTL: `justify-end` packs the pair against the left edge, so the blue action lands leftmost. -->
-    <footer class="flex items-center justify-end gap-3 bg-[rgba(242,244,246,0.5)] px-6 py-4">
+    <!-- RTL: `justify-end` packs the pair against the left edge, so the blue action lands leftmost; its icon is written first to sit on the right. -->
+    <footer class="mt-1 flex items-center justify-end gap-3 bg-[rgba(242,244,246,0.5)] px-6 py-4">
       <button
         type="button"
         data-testid="cancel-product"
-        class="h-9 rounded-lg border border-border bg-surface px-5 text-[12px] text-text-primary"
+        class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary"
         (click)="cancelled.emit()"
       >
         إلغاء
@@ -167,8 +185,8 @@
         [disabled]="!isComplete()"
         (click)="submit()"
       >
-        <span>{{ copy().submitLabel }}</span>
         <app-icon [name]="copy().submitIcon" [size]="20" />
+        <span>{{ copy().submitLabel }}</span>
       </button>
     </footer>
   </div>
