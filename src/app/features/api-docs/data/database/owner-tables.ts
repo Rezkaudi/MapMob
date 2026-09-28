@@ -47,15 +47,27 @@ export const OWNER_DOMAIN: DbDomain = {
     },
     {
       name: 'owner_inbox_items',
-      description: 'Events worth telling the owner about: reviews, offer milestones, warnings.',
-      servedAs: 'activities on /owner/overview',
+      description:
+        'Events worth telling the owner about: subscription changes, reviews, offer decisions, platform news.',
+      servedAs: 'GET /owner/notifications, and activities on /owner/overview',
       columns: [
         ID,
         foreignKey('place_id', 'places.id'),
-        { name: 'kind', type: "enum('review','offer','alert')" },
-        { name: 'message', type: 'varchar(255)', note: 'Arabic, shown as is.' },
-        { name: 'read_at', type: 'timestamp', isNullable: true },
-        { name: 'created_at', type: 'timestamp', note: 'Served as occurredAt.' },
+        {
+          name: 'category',
+          type: "enum('subscriptions','reviews','offers','system')",
+          note: 'The overview serves reviews as kind review, offers as offer, the rest as alert.',
+        },
+        { name: 'title', type: 'varchar(150)', note: 'Arabic, shown as is. The overview message.' },
+        { name: 'body', type: 'varchar(500)', note: 'Arabic, shown as is.' },
+        {
+          name: 'subject_id',
+          type: 'bigint unsigned',
+          isNullable: true,
+          note: 'offers.id or reviews.id, by category; null otherwise.',
+        },
+        { name: 'read_at', type: 'timestamp', isNullable: true, note: 'Served as isRead.' },
+        { name: 'created_at', type: 'timestamp', note: 'Served as receivedAt / occurredAt.' },
       ],
       indexes: ['INDEX (place_id, created_at)'],
     },

@@ -44,6 +44,16 @@ describe('InboxStore', () => {
     expect(store.visibleNotifications()).toEqual([READ]);
   });
 
+  it('words the visible notifications as cards', () => {
+    const store = loadedStore();
+
+    store.setTab('unread');
+
+    expect(store.visibleCards().map((card) => [card.id, card.categoryLabel])).toEqual([
+      ['a', 'البلاغات'],
+    ]);
+  });
+
   it('reports an empty feed for the tab, not for the whole inbox', () => {
     const store = loadedStore([READ]);
 

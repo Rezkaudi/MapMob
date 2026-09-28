@@ -3,14 +3,13 @@
      other three to keep the content where the frame puts it. -->
 <article
   class="flex items-start gap-4 rounded-xl border-s-8 bg-surface p-4 ps-2 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
-  [class]="edgeColour()"
+  [class]="edgeClasses()"
 >
   <div class="flex flex-1 flex-col gap-1 px-2">
     <div class="flex items-center justify-between">
       <div data-role="title-group" class="flex items-center gap-2">
         @if (!notification().isRead) {
-          <!-- The dot is the only control the design draws, so it keeps its exact 14px box
-               and widens its hit area with an overlay instead of padding. -->
+          <!-- The dot keeps its exact 14px box and widens its hit area with an overlay instead of padding. -->
           <button
             type="button"
             data-role="unread-dot"
@@ -21,7 +20,7 @@
         }
         <h3 class="text-[16px]/[24px] font-bold text-[#1e293b]">{{ notification().title }}</h3>
         <span data-role="category" class="rounded px-2 py-0.5 text-[11px]/[17px] text-[#1e293b]">
-          {{ categoryLabel() }}
+          {{ notification().categoryLabel }}
         </span>
       </div>
 
@@ -29,5 +28,20 @@
     </div>
 
     <p data-role="body" class="text-[16px]/[24px] text-[#1e293b]">{{ notification().body }}</p>
+
+    @if (notification().action; as action) {
+      <!-- RTL: the words lead on the right and the arrow follows on their left. -->
+      <div class="flex pt-1.5">
+        <a
+          data-role="action"
+          class="flex items-center gap-1 rounded text-[16px]/[24px] text-[#1e293b] hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+          [routerLink]="action.route"
+          (click)="followAction()"
+        >
+          <span>{{ action.label }}</span>
+          <app-icon name="arrow-left-link" [size]="11" aria-hidden="true" />
+        </a>
+      </div>
+    }
   </div>
 </article>

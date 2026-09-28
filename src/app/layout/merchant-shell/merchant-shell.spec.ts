@@ -1,7 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { provideRouter } from '@angular/router';
 import { AuthRepository } from '../../features/auth/data/auth.repository';
 import { AuthStore } from '../../features/auth/state/auth.store';
+import { OwnerNotificationsRepository } from '../../features/merchant-notifications/data/owner-notifications.repository';
+import { buildOwnerNotification } from '../../features/merchant-notifications/testing/owner-notification-fixture';
 import { MerchantShell } from './merchant-shell';
 
 const MERCHANT = { id: 'm-1', name: 'أحمد', role: 'owner', avatarUrl: null, token: 't' };
@@ -10,7 +13,14 @@ describe('MerchantShell', () => {
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: AuthRepository, useValue: {} }],
+      providers: [
+        provideRouter([]),
+        { provide: AuthRepository, useValue: {} },
+        {
+          provide: OwnerNotificationsRepository,
+          useValue: { getNotifications: () => of([buildOwnerNotification()]) },
+        },
+      ],
     });
     TestBed.inject(AuthStore).startSession(MERCHANT);
   });
@@ -41,6 +51,14 @@ describe('MerchantShell', () => {
 
     const bell: HTMLAnchorElement = fixture.nativeElement.querySelector('a[data-role="inbox"]');
     expect(bell.getAttribute('href')).toBe('/merchant/notifications');
+  });
+
+  it('rings the bell with its red dot while a notification is unread, as the frame draws it', () => {
+    const fixture = TestBed.createComponent(MerchantShell);
+    fixture.detectChanges();
+
+    const bell: HTMLImageElement = fixture.nativeElement.querySelector('a[data-role="inbox"] img');
+    expect(bell.getAttribute('src')).toBe('assets/icons/notification.svg');
   });
 
   it('keeps room for the scrollbar like the admin shell, and renders a router outlet', () => {

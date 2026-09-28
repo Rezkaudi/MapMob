@@ -8,6 +8,8 @@ import type { StorePerformance } from '../../../merchant-overview/models/store-p
 import type { StoreProfile } from '../../../merchant-store/models/store-profile';
 import type { MerchantProduct } from '../../../merchant-products/models/merchant-product';
 import type { MerchantProductCatalog } from '../../../merchant-products/models/merchant-product-catalog';
+import type { OwnerNotification } from '../../../merchant-notifications/models/owner-notification';
+import type { AccountProfileDraft } from '../../../settings/models/account-profile-draft';
 
 export const OWNER_SIGN_IN_REQUEST = {
   email: 'rawabi@gmail.com',
@@ -189,3 +191,18 @@ export const OWNER_PRODUCT_UPDATE_FORM = {
   orderUrl: 'https://shop.example.com/dove',
   isImageRemoved: false,
 };
+
+export const OWNER_NOTIFICATION = {
+  id: 'owner-notification-1',
+  category: 'offers',
+  title: 'لم تتم الموافقة على العرض الترويجي',
+  body: 'لم تتم الموافقة على العرض لمخالفته شروط الوصف الواضح للمنتجات المشمولة. يرجى تعديل الشروط وإعادة الإرسال.',
+  receivedAt: '2026-09-10T09:00:00Z',
+  isRead: false,
+  subjectId: 'offer-1',
+} satisfies OwnerNotification;
+
+export const OWNER_ACCOUNT = {
+  fullName: 'محمد احمد',
+  email: 'rawabi@gmail.com',
+} satisfies AccountProfileDraft;

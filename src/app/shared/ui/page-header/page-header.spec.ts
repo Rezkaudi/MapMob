@@ -64,6 +64,15 @@ describe('PageHeader', () => {
     expect(small.className).not.toContain('text-[16px]');
   });
 
+  it('draws the description at 12px for the merchant settings frame', () => {
+    const fixture = render(true);
+    fixture.componentRef.setInput('descriptionSize', 'caption');
+    fixture.detectChanges();
+    const caption = fixture.nativeElement.querySelector('p') as HTMLElement;
+
+    expect(caption.className).toContain('text-[12px]/[18px]');
+  });
+
   it('shows a page-specific action in place of the add button', () => {
     const fixture = TestBed.createComponent(HostWithActionComponent);
     fixture.detectChanges();

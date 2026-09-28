@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MERCHANT_AUTH_PAGE_ROUTES } from './features/merchant-auth/merchant-auth.routes';
 import { merchantSignedInGuard } from './features/merchant-auth/guards/merchant-signed-in.guard';
+import { OWNER_ACCOUNT_ROUTE_PROVIDERS } from './features/merchant-settings/merchant-settings.providers';
 import { MERCHANT_HOME_ROUTE } from './layout/merchant-shell/merchant-nav-items';
 
 const loadMerchantOfferForm = () =>
@@ -48,6 +49,21 @@ export const MERCHANT_ROUTES: Routes = [
       },
       { path: 'offers/new', loadComponent: loadMerchantOfferForm },
       { path: 'offers/:id/edit', loadComponent: loadMerchantOfferForm },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/merchant-notifications/pages/merchant-notifications-page/merchant-notifications-page').then(
+            (m) => m.MerchantNotificationsPage,
+          ),
+      },
+      {
+        path: 'settings',
+        providers: OWNER_ACCOUNT_ROUTE_PROVIDERS,
+        loadComponent: () =>
+          import('./features/merchant-settings/pages/merchant-settings-page/merchant-settings-page').then(
+            (m) => m.MerchantSettingsPage,
+          ),
+      },
       {
         path: 'not-found',
         data: { homeRoute: MERCHANT_HOME_ROUTE },

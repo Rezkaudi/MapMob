@@ -19,6 +19,9 @@ import { MerchantProductRepository } from './features/merchant-products/data/mer
 import { buildMerchantProductCatalog } from './features/merchant-products/testing/merchant-product-fixture';
 import { MerchantOfferRepository } from './features/merchant-offers/data/merchant-offer.repository';
 import { FakeMerchantOfferRepository } from './features/merchant-offers/testing/fake-merchant-offer-repository';
+import { OwnerAccountRepository } from './features/merchant-settings/data/owner-account.repository';
+import { OwnerNotificationsRepository } from './features/merchant-notifications/data/owner-notifications.repository';
+import { buildOwnerNotification } from './features/merchant-notifications/testing/owner-notification-fixture';
 
 describe('merchant routes', () => {
   const MERCHANT = { id: 'm-1', name: 'أحمد', role: 'owner', avatarUrl: null, token: 't' };
@@ -47,6 +50,17 @@ describe('merchant routes', () => {
           useValue: { getCatalog: () => of(buildMerchantProductCatalog()) },
         },
         { provide: MerchantOfferRepository, useValue: new FakeMerchantOfferRepository() },
+        {
+          provide: OwnerNotificationsRepository,
+          useValue: { getNotifications: () => of([buildOwnerNotification()]) },
+        },
+        {
+          provide: OwnerAccountRepository,
+          useValue: {
+            getProfile: () =>
+              of({ fullName: 'محمد احمد', email: 'owner@example.com', roleName: null }),
+          },
+        },
       ],
     });
   });
@@ -137,6 +151,33 @@ describe('merchant routes', () => {
     harness.detectChanges();
     expect(element.querySelector('app-merchant-offer-form-page h1')?.textContent?.trim()).toBe(
       'تعديل العرض',
+    );
+  });
+
+  it('opens the notifications at /merchant/notifications, inside the merchant shell', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/notifications');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/notifications');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(
+      element.querySelector(
+        'app-merchant-shell app-merchant-notifications-page app-notification-card',
+      ),
+    ).toBeTruthy();
+  });
+
+  it('opens the account settings at /merchant/settings, on the owner account', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/settings');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/settings');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-merchant-shell app-merchant-settings-page')).toBeTruthy();
+    expect((element.querySelector('#account-email') as HTMLInputElement).value).toBe(
+      'owner@example.com',
     );
   });
 

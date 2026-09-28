@@ -1,0 +1,12 @@
+<app-page-header
+  title="إعدادات الحساب"
+  description="إدارة بيانات حسابك ."
+  descriptionSize="caption"
+  [isAddVisible]="false"
+/>
+
+<!-- The merchant frame fixes the personal card at 233px, 8px taller than its content. -->
+<app-account-forms
+  class="mt-[26px] [&>form:first-of-type_section]:min-h-[233px]"
+  [signOutUrl]="signOutUrl"
+/>

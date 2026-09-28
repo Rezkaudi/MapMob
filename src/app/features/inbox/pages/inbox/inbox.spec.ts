@@ -57,7 +57,7 @@ describe('InboxPage', () => {
   it('draws one card per notification, in a list', () => {
     const page = elementOf(createPage().fixture);
 
-    expect(page.querySelectorAll('ul > li app-inbox-notification-card').length).toBe(2);
+    expect(page.querySelectorAll('ul > li app-notification-card').length).toBe(2);
   });
 
   it('shows the unread count on the tab and filters when it is picked', () => {
@@ -70,7 +70,7 @@ describe('InboxPage', () => {
     unreadTab.click();
     fixture.detectChanges();
 
-    expect(page.querySelectorAll('app-inbox-notification-card').length).toBe(1);
+    expect(page.querySelectorAll('app-notification-card').length).toBe(1);
   });
 
   it('marks a notification read when its dot is pressed', () => {
@@ -106,7 +106,7 @@ describe('InboxPage', () => {
   it('keeps the tabs above the empty message', () => {
     const page = elementOf(createPage({ getNotifications: () => of([]) }).fixture);
 
-    expect(page.querySelector('app-inbox-tabs')).not.toBeNull();
+    expect(page.querySelector('app-notification-tabs')).not.toBeNull();
   });
 
   it('offers a retry when the inbox fails to load', () => {

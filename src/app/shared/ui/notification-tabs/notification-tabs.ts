@@ -1,30 +1,34 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { INBOX_TABS, INBOX_TAB_LABELS, InboxTab } from '../../models/inbox-tab';
+import {
+  NOTIFICATION_TABS,
+  NOTIFICATION_TAB_LABELS,
+  NotificationTab,
+} from '../../models/notification-tab';
 
 const ACTIVE_CLASSES = 'border-primary font-bold text-primary';
 const IDLE_CLASSES = 'border-transparent font-medium text-text-secondary';
 
 @Component({
-  selector: 'app-inbox-tabs',
-  templateUrl: './inbox-tabs.html',
+  selector: 'app-notification-tabs',
+  templateUrl: './notification-tabs.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InboxTabs {
-  readonly selected = input.required<InboxTab>();
+export class NotificationTabs {
+  readonly selected = input.required<NotificationTab>();
   readonly unreadCount = input.required<number>();
-  readonly selectTab = output<InboxTab>();
+  readonly selectTab = output<NotificationTab>();
 
   protected readonly tabs = computed(() =>
-    INBOX_TABS.map((value) => ({ value, label: this.labelFor(value) })),
+    NOTIFICATION_TABS.map((value) => ({ value, label: this.labelFor(value) })),
   );
 
   protected readonly activeClasses = ACTIVE_CLASSES;
   protected readonly idleClasses = IDLE_CLASSES;
 
   /** Only غير مقروءة carries a number, the way the design writes it. */
-  private labelFor(tab: InboxTab): string {
-    const label = INBOX_TAB_LABELS[tab];
+  private labelFor(tab: NotificationTab): string {
+    const label = NOTIFICATION_TAB_LABELS[tab];
     return tab === 'unread' ? `${label} (${this.unreadCount()})` : label;
   }
 }

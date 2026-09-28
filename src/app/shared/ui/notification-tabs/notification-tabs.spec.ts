@@ -1,21 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { ComponentFixture } from '@angular/core/testing';
-import { InboxTab } from '../../models/inbox-tab';
-import { InboxTabs } from './inbox-tabs';
+import { NotificationTab } from '../../models/notification-tab';
+import { NotificationTabs } from './notification-tabs';
 
-function render(selected: InboxTab, unreadCount = 1): ComponentFixture<InboxTabs> {
-  const fixture = TestBed.createComponent(InboxTabs);
+function render(selected: NotificationTab, unreadCount = 1): ComponentFixture<NotificationTabs> {
+  const fixture = TestBed.createComponent(NotificationTabs);
   fixture.componentRef.setInput('selected', selected);
   fixture.componentRef.setInput('unreadCount', unreadCount);
   fixture.detectChanges();
   return fixture;
 }
 
-function tabsOf(fixture: ComponentFixture<InboxTabs>): HTMLButtonElement[] {
+function tabsOf(fixture: ComponentFixture<NotificationTabs>): HTMLButtonElement[] {
   return [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')];
 }
 
-describe('InboxTabs', () => {
+describe('NotificationTabs', () => {
   it('lists the three tabs, الكل first so RTL puts it on the right', () => {
     expect(tabsOf(render('all')).map((tab) => tab.textContent?.trim())).toEqual([
       'الكل',
@@ -48,9 +48,9 @@ describe('InboxTabs', () => {
     expect(tabs[1].getAttribute('aria-selected')).toBe('true');
   });
 
-  it('reports the tab the admin picked', () => {
+  it('reports the tab the reader picked', () => {
     const fixture = render('all');
-    const picked: InboxTab[] = [];
+    const picked: NotificationTab[] = [];
     fixture.componentInstance.selectTab.subscribe((tab) => picked.push(tab));
 
     tabsOf(fixture)[2].click();

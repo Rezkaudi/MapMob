@@ -1,14 +1,13 @@
-import { buildInboxNotification } from '../testing/inbox-fixture';
-import { InboxMockDatabase } from './inbox-mock-database';
+import { NotificationMockDatabase } from './notification-mock-database';
 
-function database(): InboxMockDatabase {
-  return new InboxMockDatabase([
-    buildInboxNotification({ id: 'a', receivedAt: '2026-09-20T08:00:00.000Z' }),
-    buildInboxNotification({ id: 'b', receivedAt: '2026-09-20T09:00:00.000Z', isRead: true }),
+function database() {
+  return new NotificationMockDatabase([
+    { id: 'a', receivedAt: '2026-09-20T08:00:00.000Z', isRead: false },
+    { id: 'b', receivedAt: '2026-09-20T09:00:00.000Z', isRead: true },
   ]);
 }
 
-describe('InboxMockDatabase', () => {
+describe('NotificationMockDatabase', () => {
   it('lists the newest notification first', () => {
     expect(
       database()

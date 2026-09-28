@@ -6,9 +6,9 @@
     </span>
     <div class="flex flex-col text-start">
       <p class="text-[12px]/[16px] font-medium text-[#191c1e]">تسجيل الخروج من الجلسة الحالية</p>
-      <p class="text-[12px]/[18px] text-text-secondary">
-        سيتم إنهاء الجلسة والعودة لشاشة الدخول الرئيسية للمشرفين.
-      </p>
+      @if (description(); as description) {
+        <p class="text-[12px]/[18px] text-text-secondary">{{ description }}</p>
+      }
     </div>
   </div>
   <button

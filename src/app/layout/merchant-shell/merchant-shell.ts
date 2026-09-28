@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterOutlet } from '@angular/router';
 import { AuthStore } from '../../features/auth/state/auth.store';
 import { MERCHANT_AUTH_ROUTES } from '../../features/merchant-auth/merchant-auth-paths';
+import { MerchantNotificationsStore } from '../../features/merchant-notifications/state/merchant-notifications.store';
 import { ScrollGutter } from '../admin-shell/scroll-gutter';
 import { RouteProgress } from '../route-progress/route-progress';
 import { Sidebar } from '../sidebar/sidebar';
@@ -25,6 +26,10 @@ const FALLBACK_AVATAR_URL = 'assets/admin-avatar.jpg';
 })
 export class MerchantShell {
   private readonly store = inject(AuthStore);
+  private readonly notificationsStore = inject(MerchantNotificationsStore);
+
+  /** The bell shows its red dot from here, so the shell warms the feed once. */
+  protected readonly unreadNotificationCount = this.notificationsStore.unreadCount;
 
   protected readonly homeRoute = MERCHANT_HOME_ROUTE;
   protected readonly navItems = MERCHANT_NAV_ITEMS;
@@ -37,4 +42,8 @@ export class MerchantShell {
   protected readonly avatarUrl = computed(
     () => this.store.user()?.avatarUrl ?? FALLBACK_AVATAR_URL,
   );
+
+  constructor() {
+    this.notificationsStore.loadOnce();
+  }
 }

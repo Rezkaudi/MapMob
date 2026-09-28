@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, defer, from, switchMap } from 'rxjs';
 import { mockRequest } from '../../../../mock/mock-delay';
-import { InboxMockDatabase } from './inbox-mock-database';
+import { NotificationMockDatabase } from '../../../../mock/notification-mock-database';
+import { InboxNotification } from '../models/inbox-notification';
+
+type InboxMockDatabase = NotificationMockDatabase<InboxNotification>;
 
 /** Loads the mock copy on the first request, so it stays out of the start-up bundle. */
 @Injectable()
@@ -16,7 +19,7 @@ export class InboxMockDatabaseLoader {
 
   private loadDatabase(): Promise<InboxMockDatabase> {
     this.database ??= import('./inbox-mock-seed').then(
-      ({ buildInboxSeed }) => new InboxMockDatabase(buildInboxSeed(new Date())),
+      ({ buildInboxSeed }) => new NotificationMockDatabase(buildInboxSeed(new Date())),
     );
     return this.database;
   }

@@ -6,7 +6,7 @@
     [isAddVisible]="false"
   />
 
-  <app-inbox-tabs
+  <app-notification-tabs
     class="mt-10"
     [selected]="store.tab()"
     [unreadCount]="store.unreadCount()"
@@ -30,9 +30,9 @@
     />
   } @else {
     <ul class="mt-6 flex flex-col gap-[18px]">
-      @for (notification of store.visibleNotifications(); track notification.id) {
+      @for (notification of store.visibleCards(); track notification.id) {
         <li>
-          <app-inbox-notification-card
+          <app-notification-card
             [notification]="notification"
             (markRead)="store.markAsRead(notification.id)"
           />
