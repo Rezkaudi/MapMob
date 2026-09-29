@@ -1,0 +1,101 @@
+<!-- Header text and row values sit a few pixels apart in some columns, as the frame draws them. -->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[1046px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
+      >
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="size-[18px] rounded border border-placeholder bg-white align-middle accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[11px]">المنصة</th>
+        <th class="ps-[2px]">عدد المتاجر المرتبطة</th>
+        <th class="ps-[46px]">رابط المنصة العامة</th>
+        <th class="ps-[47px]">التحويلات</th>
+        <th class="ps-[28px]">تاريخ الإضافة</th>
+        <th class="ps-[62px]">الحالة</th>
+        <th>
+          <span class="ms-[14px] block w-[38px] text-center">الإجراء</span>
+        </th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.platform.id) {
+          <tr class="h-[60px] border-b border-border bg-surface text-[14px] last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد ' + row.platform.name"
+                class="size-[18px] rounded border border-placeholder bg-white align-middle accent-primary"
+                [checked]="selectedIdSet().has(row.platform.id)"
+                (change)="rowToggle.emit(row.platform.id)"
+              />
+            </td>
+            <td class="ps-1">
+              <!-- RTL: the 32px logo leads on the right, 6px before the name. -->
+              <div class="flex items-center gap-1.5 pe-2">
+                <app-brand-logo [name]="row.platform.latinName" [imageUrl]="row.platform.logoUrl" />
+                <button
+                  type="button"
+                  data-role="open-platform"
+                  class="line-clamp-1 text-right font-bold text-text-primary hover:text-primary"
+                  (click)="viewStores.emit(row.platform)"
+                >
+                  {{ row.platform.latinName }}
+                </button>
+              </div>
+            </td>
+            <td class="ps-[30px] text-text-primary">{{ row.storeCountLabel }}</td>
+            <td class="px-2 text-center">
+              <a
+                dir="ltr"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block truncate text-text-secondary hover:text-primary hover:underline"
+                [href]="row.platform.websiteUrl"
+                >{{ row.platform.websiteUrl }}</a
+              >
+            </td>
+            <td class="text-center text-text-secondary">{{ row.referralLabel }}</td>
+            <td class="text-center whitespace-nowrap text-text-secondary">
+              {{ row.platform.createdAt | arabicDate }}
+            </td>
+            <td class="ps-[56px]">
+              <app-status-pill [status]="row.platform.status" [label]="row.statusLabel" />
+            </td>
+            <td>
+              <div class="ms-[14px] flex w-[38px] justify-center">
+                <app-row-actions-menu
+                  viewLabel="عرض المتاجر المرتبطة"
+                  (edit)="edit.emit(row.platform)"
+                  (view)="viewStores.emit(row.platform)"
+                  (statusChange)="statusChange.emit(row.platform)"
+                  (remove)="remove.emit(row.platform)"
+                />
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

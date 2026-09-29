@@ -5,6 +5,7 @@ import { CATEGORIES_FEATURE } from './endpoints/category-endpoints';
 import { COMPLAINTS_FEATURE } from './endpoints/complaint-endpoints';
 import { CONTENT_FEATURE } from './endpoints/content-endpoints';
 import { DASHBOARD_FEATURE } from './endpoints/dashboard-endpoints';
+import { DELIVERY_PLATFORMS_FEATURE } from './endpoints/delivery-platform-endpoints';
 import { INBOX_FEATURE } from './endpoints/inbox-endpoints';
 import { NOTIFICATIONS_FEATURE } from './endpoints/notification-endpoints';
 import { OFFERS_FEATURE } from './endpoints/offer-endpoints';
@@ -40,6 +41,7 @@ export const API_FEATURES: readonly ApiFeature[] = [
   ADS_FEATURE,
   SUBSCRIPTIONS_FEATURE,
   PAYMENTS_FEATURE,
+  DELIVERY_PLATFORMS_FEATURE,
   REPORTS_FEATURE,
   CONTENT_FEATURE,
   NOTIFICATIONS_FEATURE,

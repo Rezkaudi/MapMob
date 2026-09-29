@@ -1,0 +1,11 @@
+<!-- Four 246px cards 20px apart at 1440; RTL puts the first on the right. -->
+<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  @for (card of cards(); track card.label) {
+    <app-stat-card
+      [isLoading]="isLoading()"
+      [icon]="card.icon"
+      [label]="card.label"
+      [value]="card.value"
+    />
+  }
+</div>

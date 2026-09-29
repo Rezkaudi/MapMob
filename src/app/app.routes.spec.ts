@@ -9,6 +9,7 @@ import { InboxRepository } from './features/inbox/data/inbox.repository';
 import { AuthStore } from './features/auth/state/auth.store';
 import { ComplaintRepository } from './features/complaints/data/complaint.repository';
 import { DashboardRepository } from './features/dashboard/data/dashboard.repository';
+import { DeliveryPlatformRepository } from './features/delivery-platforms/data/delivery-platform.repository';
 import { ContentPageRepository } from './features/content/data/content-page.repository';
 import { NotificationRepository } from './features/notifications/data/notification.repository';
 import { PaymentRepository } from './features/payments/data/payment.repository';
@@ -44,6 +45,20 @@ describe('app routes', () => {
         { provide: PlanMockDatabase, useFactory: () => new PlanMockDatabase(MOCK_PLANS) },
         { provide: SubscriptionMockDatabase, useFactory: () => new SubscriptionMockDatabase([]) },
         { provide: SubscriptionRepository, useClass: SubscriptionMockRepository },
+        {
+          provide: DeliveryPlatformRepository,
+          useValue: {
+            getPlatforms: () => of({ items: [], totalCount: 0 }),
+            getSummary: () =>
+              of({
+                referralCount: 0,
+                mostUsedPlatform: null,
+                linkedStoreCount: 0,
+                activeCount: 0,
+                platformCount: 0,
+              }),
+          },
+        },
         {
           provide: PaymentRepository,
           useValue: {
@@ -164,6 +179,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/admin/payments');
     expect(harness.fixture.nativeElement.querySelector('app-payment-list')).toBeTruthy();
+  });
+
+  it('serves the delivery platforms page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/admin/delivery-platforms');
+
+    expect(TestBed.inject(Location).path()).toBe('/admin/delivery-platforms');
+    expect(harness.fixture.nativeElement.querySelector('app-delivery-platform-list')).toBeTruthy();
   });
 
   it('serves the reports page behind its nav link', async () => {

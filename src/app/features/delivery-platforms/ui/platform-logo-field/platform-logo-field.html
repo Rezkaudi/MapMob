@@ -1,0 +1,28 @@
+@if (previewUrl(); as url) {
+  <div class="flex items-center gap-3 rounded-lg bg-[#f2f4f6] p-3">
+    <img [src]="url" [alt]="previewName()" class="size-16 rounded-lg bg-white object-contain" />
+    <span class="flex-1 truncate text-start text-[13px] text-text-primary">{{
+      previewName()
+    }}</span>
+    <button
+      type="button"
+      data-testid="remove-platform-logo"
+      class="text-[13px] font-medium text-error"
+      (click)="remove()"
+    >
+      حذف
+    </button>
+  </div>
+} @else {
+  <app-file-dropzone
+    appearance="dashed"
+    prompt="اسحب وأفلت الصور هنا"
+    hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+    [accept]="accept"
+    [isMultiple]="false"
+    (filesPicked)="pick($event)"
+  />
+}
+@if (error(); as message) {
+  <p role="alert" class="mt-2 text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { NamedReference } from '../../models/named-reference';
+import { NamedReference } from '../../../../shared/models/named-reference';
 import { StoreCard } from '../store-card/store-card';
 
 const NO_SUB_CATEGORY = '—';

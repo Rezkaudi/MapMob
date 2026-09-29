@@ -1,0 +1,151 @@
+<app-form-dialog-frame
+  [heading]="copy().heading"
+  [subheading]="copy().subheading"
+  (closed)="cancelled.emit()"
+>
+  <!-- RTL: the Arabic name keeps the right column, the English one sits to its left. -->
+  <div class="grid grid-cols-2 gap-5">
+    <div class="flex flex-col gap-1.5">
+      <app-field-label
+        size="compact"
+        text="اسم المنصة بالعربي"
+        forId="platform-name"
+        [isRequired]="true"
+      />
+      <input
+        id="platform-name"
+        data-testid="platform-name"
+        type="text"
+        autocomplete="off"
+        class="h-10 w-full rounded border border-text-secondary bg-white px-4 text-right text-[14px]/[20px] font-medium text-text-primary outline-none placeholder:text-placeholder focus-visible:border-primary"
+        placeholder="مثال:طلبات"
+        [formControl]="form().controls.name"
+      />
+      @if (errors().name; as message) {
+        <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-field-label
+        size="compact"
+        text="اسم المنصة بالانجليزية"
+        forId="platform-latin-name"
+        [isRequired]="true"
+      />
+      <input
+        id="platform-latin-name"
+        data-testid="platform-latin-name"
+        type="text"
+        autocomplete="off"
+        class="h-10 w-full rounded border border-text-secondary bg-white px-4 text-right text-[14px]/[20px] font-medium text-text-primary outline-none placeholder:text-placeholder focus-visible:border-primary"
+        placeholder="مثال: talabat"
+        [formControl]="form().controls.latinName"
+      />
+      @if (errors().latinName; as message) {
+        <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <app-field-label size="compact" text="شعار المنصة(logo)" [isOptional]="true" />
+    <app-platform-logo-field
+      [savedUrl]="logoUrl()"
+      (picked)="onLogoPicked($event)"
+      (removed)="onLogoRemoved()"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <app-field-label
+      size="compact"
+      text="رابط المنصة الرئيسي"
+      forId="platform-website"
+      [isRequired]="true"
+    />
+    <!-- The frame left-aligns the Latin address. -->
+    <input
+      id="platform-website"
+      data-testid="platform-website"
+      type="url"
+      dir="ltr"
+      autocomplete="off"
+      class="h-10 w-full rounded border border-text-secondary bg-white px-4 text-left text-[14px]/[20px] font-medium text-text-primary outline-none placeholder:text-placeholder focus-visible:border-primary"
+      placeholder="https://www.website.com"
+      [formControl]="form().controls.websiteUrl"
+    />
+    @if (errors().websiteUrl; as message) {
+      <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+    }
+  </div>
+
+  <!-- RTL: the position keeps the right column, the status sits to its left, 3px lower as drawn. -->
+  <div class="grid grid-cols-2 items-center gap-5">
+    <div class="flex flex-col gap-1.5">
+      <app-field-label size="compact" text="ترتيب الظهور في القوائم" forId="platform-sort-order" />
+      <input
+        id="platform-sort-order"
+        data-testid="platform-sort-order"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        class="h-10 w-full rounded border border-text-secondary bg-white px-4 text-right text-[14px]/[20px] font-medium text-text-primary outline-none placeholder:text-placeholder focus-visible:border-primary"
+        [placeholder]="suggestedSortOrder()"
+        [formControl]="form().controls.sortOrder"
+      />
+      @if (errors().sortOrder; as message) {
+        <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-field-label
+        size="compact"
+        text="حالة المنصة الفورية"
+        forId="platform-status"
+        [isRequired]="true"
+      />
+      <div class="relative pt-[3px]">
+        <select
+          id="platform-status"
+          data-testid="platform-status"
+          class="h-[46px] w-full appearance-none rounded border border-text-secondary bg-white pr-4 pl-10 text-right text-[14px]/[20px] font-medium text-[#1e293b] outline-none focus-visible:border-primary"
+          [formControl]="form().controls.status"
+        >
+          @for (choice of statusChoices; track choice.value) {
+            <option [value]="choice.value">{{ choice.label }}</option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down"
+          [size]="16"
+          class="pointer-events-none absolute end-3 top-[calc(50%+1.5px)] -translate-y-1/2 text-text-secondary"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- RTL: cancel is written first so it sits on the right; the blue action lands leftmost. -->
+  <button
+    formDialogFooter
+    type="button"
+    data-testid="cancel-platform"
+    class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary hover:bg-surface-muted"
+    (click)="cancelled.emit()"
+  >
+    إلغاء
+  </button>
+  <button
+    formDialogFooter
+    type="button"
+    data-testid="submit-platform"
+    class="flex h-11 items-center gap-2.5 rounded-lg border border-primary bg-primary px-5 text-[14px]/[14px] font-bold tracking-[0.5px] text-[#f8fafc] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+    [disabled]="isBusy()"
+    [attr.aria-busy]="isBusy()"
+    (click)="submit()"
+  >
+    <app-icon [name]="copy().submitIcon" [size]="20" />
+    <span>{{ copy().submitLabel }}</span>
+  </button>
+</app-form-dialog-frame>

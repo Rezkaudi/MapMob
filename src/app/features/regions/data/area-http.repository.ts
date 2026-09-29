@@ -8,7 +8,7 @@ import { AreaQuery } from '../models/area-query';
 import { RegionDraft } from '../models/region-draft';
 import { RegionStatus } from '../models/region-status';
 import { AreaRepository } from './area.repository';
-import { toRegionQueryParams } from './region-query-params';
+import { toListQueryParams } from '../../../shared/data/list-query-params';
 
 @Injectable()
 export class AreaHttpRepository implements AreaRepository {
@@ -17,7 +17,7 @@ export class AreaHttpRepository implements AreaRepository {
 
   getAreas(query: AreaQuery): Observable<PagedResult<Area>> {
     return this.httpClient.get<PagedResult<Area>>(this.governorateAreasUrl(query.governorateId), {
-      params: toRegionQueryParams(query),
+      params: toListQueryParams(query),
     });
   }
 

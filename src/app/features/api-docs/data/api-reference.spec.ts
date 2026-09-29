@@ -36,7 +36,23 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call the dashboard makes, the three the place form needs, and me/logout', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(170);
+    expect(countEndpoints(API_FEATURES).total).toBe(177);
+  });
+
+  it('lists the seven calls of the delivery platforms screen', () => {
+    const platformPaths = endpoints
+      .filter((endpoint) => endpoint.path.startsWith('/delivery-platforms'))
+      .map((endpoint) => `${endpoint.method} ${endpoint.path}`);
+
+    expect(platformPaths).toEqual([
+      'GET /delivery-platforms',
+      'GET /delivery-platforms/summary',
+      'POST /delivery-platforms',
+      'PUT /delivery-platforms/{id}',
+      'PATCH /delivery-platforms/{id}/status',
+      'DELETE /delivery-platforms/{id}',
+      'GET /delivery-platforms/{id}/stores',
+    ]);
   });
 
   it('lists the thirty-three calls of the place owner area', () => {

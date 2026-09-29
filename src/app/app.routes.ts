@@ -83,6 +83,13 @@ export const routes: Routes = [
           import('./features/payments/payments.routes').then((m) => m.PAYMENTS_ROUTES),
       },
       {
+        path: 'delivery-platforms',
+        loadChildren: () =>
+          import('./features/delivery-platforms/delivery-platforms.routes').then(
+            (m) => m.DELIVERY_PLATFORMS_ROUTES,
+          ),
+      },
+      {
         path: 'reports',
         loadChildren: () =>
           import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),

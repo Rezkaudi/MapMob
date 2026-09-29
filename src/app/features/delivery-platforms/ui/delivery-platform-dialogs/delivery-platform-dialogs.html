@@ -1,0 +1,17 @@
+@if (form(); as form) {
+  <app-delivery-platform-form-dialog
+    [mode]="form.mode"
+    [initialDraft]="form.draft"
+    [suggestedSortOrder]="suggestedSortOrder()"
+    [isBusy]="isBusy()"
+    (submitted)="draftSubmitted.emit($event)"
+    (cancelled)="closed.emit()"
+  />
+} @else if (confirmCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="isBusy()"
+    (confirmed)="confirmed.emit()"
+    (cancelled)="closed.emit()"
+  />
+}

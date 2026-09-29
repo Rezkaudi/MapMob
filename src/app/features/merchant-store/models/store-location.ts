@@ -1,4 +1,4 @@
-import { NamedReference } from './named-reference';
+import { NamedReference } from '../../../shared/models/named-reference';
 
 /** The governorate and area are set by an admin; the owner edits the rest. */
 export interface StoreLocation {

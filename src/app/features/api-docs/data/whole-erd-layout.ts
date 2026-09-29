@@ -9,6 +9,7 @@ export const WHOLE_ERD_LAYOUT: DbDomain['layout'] = [
   [
     'delivery_platforms',
     'place_delivery_links',
+    'delivery_referrals',
     'place_working_hours',
     'place_media',
     'products',

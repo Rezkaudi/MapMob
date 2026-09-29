@@ -13,6 +13,7 @@ describe('nav items', () => {
       'الإعلانات',
       'الاشتراكات والباقات',
       'المدفوعات',
+      'منصات الطلبات و التوصيل',
       'الإحصائيات و التقارير',
       'إدارة المحتوى',
     ]);
@@ -23,6 +24,14 @@ describe('nav items', () => {
       label: 'إدارة المحتوى',
       route: '/admin/content',
       icon: 'content',
+    });
+  });
+
+  it('links the delivery platforms to their page with the truck icon', () => {
+    expect(NAV_ITEMS.find((item) => item.route === '/admin/delivery-platforms')).toEqual({
+      label: 'منصات الطلبات و التوصيل',
+      route: '/admin/delivery-platforms',
+      icon: 'delivery',
     });
   });
 

@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
 import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
-import { NamedReference } from '../../models/named-reference';
+import { NamedReference } from '../../../../shared/models/named-reference';
 import { StoreFieldErrors } from '../../state/store-field-errors';
 import { StoreProfileFormGroup } from '../../state/store-profile-form-group';
 import { StoreCard } from '../store-card/store-card';

@@ -1,0 +1,17 @@
+<span
+  data-role="brand-logo"
+  class="flex size-8 items-center justify-center overflow-clip rounded-lg bg-primary-soft text-[14px] font-bold text-primary"
+>
+  @if (imageUrl(); as url) {
+    <app-lazy-image
+      [src]="url"
+      [alt]="name()"
+      imageClass="size-full object-cover"
+      class="size-full"
+    >
+      <span class="flex size-full items-center justify-center">{{ initial() }}</span>
+    </app-lazy-image>
+  } @else {
+    <span aria-hidden="true">{{ initial() }}</span>
+  }
+</span>

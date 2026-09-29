@@ -8,7 +8,7 @@ import { GovernorateQuery } from '../models/governorate-query';
 import { RegionDraft } from '../models/region-draft';
 import { RegionStatus } from '../models/region-status';
 import { GovernorateRepository } from './governorate.repository';
-import { toRegionQueryParams } from './region-query-params';
+import { toListQueryParams } from '../../../shared/data/list-query-params';
 
 @Injectable()
 export class GovernorateHttpRepository implements GovernorateRepository {
@@ -17,7 +17,7 @@ export class GovernorateHttpRepository implements GovernorateRepository {
 
   getGovernorates(query: GovernorateQuery): Observable<PagedResult<Governorate>> {
     return this.httpClient.get<PagedResult<Governorate>>(this.governoratesUrl, {
-      params: toRegionQueryParams(query),
+      params: toListQueryParams(query),
     });
   }
 

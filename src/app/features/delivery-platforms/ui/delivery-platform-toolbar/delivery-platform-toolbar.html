@@ -1,0 +1,11 @@
+<!-- RTL: the 390px search on the right, the 139px sort on the left. The 72px bar counts its border. -->
+<div
+  class="flex items-center justify-between gap-4 rounded-xl border border-border bg-surface px-4 py-[15px]"
+>
+  <app-list-search-field
+    class="w-full max-w-[390px]"
+    placeholder="ابحث عن منصة توصيل.."
+    (searchChange)="searchChange.emit($event)"
+  />
+  <app-sort-select class="shrink-0" (sortChange)="sortChange.emit($event)" />
+</div>

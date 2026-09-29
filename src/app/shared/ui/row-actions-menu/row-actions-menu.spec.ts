@@ -102,4 +102,20 @@ describe('RowActionsMenu', () => {
     expect(edit).toHaveBeenCalledOnce();
     expect(duplicate).toHaveBeenCalledOnce();
   });
+  it('can add a view item under "تعديل", as the delivery platforms menu does', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('viewLabel', 'عرض المتاجر المرتبطة');
+    fixture.detectChanges();
+    const view = vi.fn();
+    fixture.componentInstance.view.subscribe(view);
+
+    const panel = openPanel(fixture);
+    const labels = Array.from(panel.querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    expect(labels).toEqual(['تعديل', 'عرض المتاجر المرتبطة', 'تغيير الحالة', 'حذف']);
+    itemNamed(panel, 'عرض المتاجر المرتبطة').click();
+
+    expect(view).toHaveBeenCalledOnce();
+  });
 });

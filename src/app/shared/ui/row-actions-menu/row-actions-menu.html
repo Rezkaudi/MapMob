@@ -20,6 +20,16 @@
       <span>تعديل</span>
     </button>
   }
+  @if (viewLabel(); as label) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="view.emit()"
+    >
+      <app-icon name="eye-filled" [size]="16.5" aria-hidden="true" />
+      <span>{{ label }}</span>
+    </button>
+  }
   @if (duplicateLabel(); as label) {
     <button
       type="button"

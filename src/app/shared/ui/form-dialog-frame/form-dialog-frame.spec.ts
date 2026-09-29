@@ -25,6 +25,16 @@ class HostComponent {
 })
 class NoticeHostComponent {}
 
+@Component({
+  imports: [FormDialogFrame],
+  template: `
+    <app-form-dialog-frame heading="المتاجر المرتبطة بمنصة طلبات" size="wide" [hasFooter]="false">
+      <p data-role="body-text">الجدول</p>
+    </app-form-dialog-frame>
+  `,
+})
+class WideHostComponent {}
+
 function build() {
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
@@ -69,5 +79,24 @@ describe('FormDialogFrame', () => {
 
     expect(element.querySelector('h2')?.className).toContain('font-bold');
     expect(element.querySelector('header p')).toBeNull();
+  });
+
+  it('opens 560px wide with a footer by default', () => {
+    const element: HTMLElement = build().nativeElement;
+
+    const card = element.querySelector('[data-role="dialog-card"]') as HTMLElement;
+    expect(card.classList).toContain('w-[560px]');
+    expect(element.querySelector('footer')).not.toBeNull();
+  });
+
+  it('opens 1051px wide with a centred heading and no footer for a table', () => {
+    const fixture = TestBed.createComponent(WideHostComponent);
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+
+    const card = element.querySelector('[data-role="dialog-card"]') as HTMLElement;
+    expect(card.classList).toContain('w-[1051px]');
+    expect(element.querySelector('header')?.classList).toContain('items-center');
+    expect(element.querySelector('footer')).toBeNull();
   });
 });

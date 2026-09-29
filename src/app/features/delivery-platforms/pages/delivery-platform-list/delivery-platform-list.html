@@ -1,0 +1,83 @@
+<!-- Header, the cards 24px below, the toolbar and the table 32px apart, and paging 4px under it. -->
+<app-page-header
+  title="منصات الطلبات و التوصيل"
+  description="إدارة منصات الطلبات والتوصيل المتاحة ."
+  descriptionSize="small"
+  addLabel="إضافة منصة توصيل"
+  (add)="dialogFlow.openCreate()"
+/>
+
+<app-delivery-platform-stat-cards
+  class="mt-6"
+  [cards]="store.statCards()"
+  [isLoading]="store.isSummaryLoading()"
+/>
+
+<app-delivery-platform-toolbar
+  class="mt-8"
+  (searchChange)="store.setSearch($event)"
+  (sortChange)="store.setSort($event)"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-8" [message]="error" (retry)="store.loadPlatforms()" />
+} @else {
+  <app-delivery-platform-table
+    class="mt-8"
+    [entries]="store.entries()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    [emptyMessage]="store.emptyMessage()"
+    [rowCount]="store.pageSize()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (edit)="dialogFlow.openEdit($event)"
+    (viewStores)="linkedStores.open($event)"
+    (statusChange)="dialogFlow.openStatusChange($event)"
+    (remove)="dialogFlow.openDelete($event)"
+  />
+
+  <app-table-pagination
+    class="mt-1"
+    [pageIndex]="store.pageIndex()"
+    [pageSize]="store.pageSize()"
+    [totalCount]="store.totalCount()"
+    itemNoun="منصة"
+    (pageIndexChange)="store.changePage($event)"
+  />
+}
+
+<app-delivery-platform-dialogs
+  [request]="dialogFlow.request()"
+  [suggestedSortOrder]="store.nextSortOrder()"
+  [isBusy]="store.isSaving()"
+  (draftSubmitted)="dialogFlow.submitDraft($event)"
+  (confirmed)="dialogFlow.confirm()"
+  (closed)="closeDialog()"
+/>
+
+@if (linkedStores.platform(); as platform) {
+  <app-linked-stores-dialog
+    [platform]="platform"
+    [rows]="linkedStores.rows()"
+    [categoryOptions]="linkedStores.categoryOptions()"
+    [isLoading]="linkedStores.isLoading()"
+    [error]="linkedStores.error()"
+    [emptyMessage]="linkedStores.emptyMessage()"
+    (searchChange)="linkedStores.setSearch($event)"
+    (categoryChange)="linkedStores.setCategory($event)"
+    (retry)="linkedStores.open(platform)"
+    (closed)="linkedStores.close()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ التغييرات"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

@@ -11,7 +11,13 @@ export const CATALOG_DOMAIN: DbDomain = {
   layout: [
     ['categories', 'delivery_platforms'],
     ['places'],
-    ['place_working_hours', 'place_delivery_links', 'place_media', 'products'],
+    [
+      'place_working_hours',
+      'place_delivery_links',
+      'delivery_referrals',
+      'place_media',
+      'products',
+    ],
   ],
   tables: [
     {
@@ -112,12 +118,18 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'delivery_platforms',
       description: 'The ordering apps a place can link to, such as BeeOrder or Talabat.',
-      servedAs: 'deliveryLinks[].platform on /owner/place',
+      servedAs: '/delivery-platforms, deliveryLinks[].platform on /owner/place',
       columns: [
         ID,
         { name: 'name', type: 'varchar(60)', note: 'Arabic name, e.g. بي أوردر.' },
-        { name: 'latin_name', type: 'varchar(60)', note: 'e.g. BeeOrder.' },
+        {
+          name: 'latin_name',
+          type: 'varchar(60)',
+          key: 'uq',
+          note: 'e.g. BeeOrder. Unique, case-insensitive.',
+        },
         { name: 'logo_path', type: 'varchar(255)', isNullable: true },
+        { name: 'website_url', type: 'varchar(255)', note: 'The public site of the platform.' },
         ACTIVATION_STATUS_COLUMN,
         { name: 'sort_order', type: 'smallint unsigned' },
         ...TIMESTAMPS,
@@ -135,6 +147,20 @@ export const CATALOG_DOMAIN: DbDomain = {
         ...TIMESTAMPS,
       ],
       indexes: ['PRIMARY (place_id, delivery_platform_id)'],
+    },
+    {
+      name: 'delivery_referrals',
+      description:
+        'One row each time an app user opens a place\'s page on an ordering app. Counted as "التحويلات".',
+      servedAs: 'referralCount on /delivery-platforms and /delivery-platforms/summary',
+      columns: [
+        ID,
+        foreignKey('delivery_platform_id', 'delivery_platforms.id', 'Cascade on delete.'),
+        foreignKey('place_id', 'places.id'),
+        foreignKey('user_id', 'users.id', 'null for a visitor.', true),
+        { name: 'created_at', type: 'timestamp' },
+      ],
+      indexes: ['INDEX (delivery_platform_id, created_at)'],
     },
     {
       name: 'place_media',

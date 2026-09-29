@@ -1,4 +1,4 @@
-import { NamedReference } from './named-reference';
+import { NamedReference } from '../../../shared/models/named-reference';
 import { StoreContact } from './store-contact';
 import { StoreDeliveryLink } from './store-delivery-link';
 import { StoreLocation } from './store-location';
