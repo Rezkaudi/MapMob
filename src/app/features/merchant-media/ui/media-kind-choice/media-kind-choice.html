@@ -1,0 +1,22 @@
+<!-- RTL: صورة is written first so it sits on the right; each icon leads its word. -->
+<div
+  role="radiogroup"
+  aria-label="نوع الوسائط"
+  class="flex h-11 items-center rounded-lg bg-[#f2f4f6] px-3 py-2"
+>
+  @for (segment of segments(); track segment.kind) {
+    <button
+      type="button"
+      role="radio"
+      class="flex h-7 max-w-[232px] flex-1 items-center justify-center gap-1 rounded px-4 text-[12px]/[16px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+      [class]="segment.classes"
+      [attr.aria-checked]="segment.isPicked"
+      [disabled]="segment.isDisabled"
+      [attr.title]="segment.title"
+      (click)="selectedChange.emit(segment.kind)"
+    >
+      <app-icon [name]="segment.icon" [size]="14" aria-hidden="true" />
+      <span>{{ segment.label }}</span>
+    </button>
+  }
+</div>

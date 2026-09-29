@@ -1,0 +1,26 @@
+<!-- RTL: the row hugs the right edge, so الكل leads. Each tab reads icon, label, then count. -->
+<div class="flex w-full items-center justify-start border-b border-border" role="tablist">
+  <div class="flex items-start gap-8">
+    @for (tab of tabViews(); track tab.value) {
+      <button
+        type="button"
+        role="tab"
+        class="flex items-center gap-2 border-b-2 px-1 py-3 text-[14px]/[20px] transition-colors hover:text-primary"
+        [class]="tab.classes"
+        [attr.aria-selected]="tab.isSelected"
+        (click)="selectTab.emit(tab.value)"
+      >
+        <app-icon [name]="tab.icon" [size]="16" aria-hidden="true" />
+        <span>{{ tab.label }}</span>
+        @if (tab.isCountVisible) {
+          <span
+            data-role="count"
+            class="rounded-full px-2 py-0.5 text-[12px]/[16px] font-bold"
+            [class]="tab.badgeClasses"
+            >{{ tab.count }}</span
+          >
+        }
+      </button>
+    }
+  </div>
+</div>

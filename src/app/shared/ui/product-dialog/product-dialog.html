@@ -1,193 +1,156 @@
-<!--
-  560px modal from the ADD PRODUCT frame: 90px header, 24px-padded body with a
-  20px gap between fields, and a tinted footer. RTL puts the heading on the right
-  and the close button on the left.
--->
-<div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] p-4 backdrop-blur-[2px]"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="product-dialog-title"
-  (click)="cancelled.emit()"
+<app-form-dialog-frame
+  [heading]="copy().heading"
+  [subheading]="copy().subtitle"
+  (closed)="cancelled.emit()"
 >
-  <div
-    class="flex max-h-full w-[560px] flex-col overflow-hidden rounded-2xl bg-surface shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
-    (click)="$event.stopPropagation()"
-  >
-    <header class="flex items-start justify-between gap-4 px-6 py-5">
-      <div class="text-start">
-        <h2 id="product-dialog-title" class="text-[18px]/[28px] font-medium text-text-primary">
-          {{ copy().heading }}
-        </h2>
-        <p class="mt-1 text-[13px]/[18px] text-text-secondary">{{ copy().subtitle }}</p>
+  <div class="flex flex-col gap-2">
+    <app-field-label size="compact" text="الصورة" [isOptional]="true" />
+    @if (imageUrl()) {
+      <div class="flex items-center gap-3 rounded-lg bg-[#f2f4f6] p-3">
+        <img [src]="imageUrl()" [alt]="imageName()" class="size-16 rounded-lg object-cover" />
+        <span class="flex-1 truncate text-start text-[13px] text-text-primary">
+          {{ imageName() }}
+        </span>
+        <button
+          type="button"
+          data-testid="remove-product-image"
+          class="text-[13px] font-medium text-error"
+          (click)="removeImage()"
+        >
+          حذف
+        </button>
       </div>
-      <button
-        type="button"
-        data-testid="close-product-dialog"
-        class="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-primary hover:bg-surface-muted"
-        aria-label="إغلاق النافذة"
-        (click)="cancelled.emit()"
-      >
-        <app-icon name="close" [size]="18" />
-      </button>
-    </header>
+    } @else {
+      <app-file-dropzone
+        appearance="dashed"
+        prompt="اسحب وأفلت الصور هنا"
+        hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+        accept="image/jpeg,image/png"
+        (filesPicked)="onImagePicked($event)"
+      />
+    }
+  </div>
 
-    <div class="flex flex-col gap-5 overflow-y-auto px-6 py-4">
-      <div class="flex flex-col gap-2">
-        <app-field-label size="compact" text="الصورة" [isOptional]="true" />
-        @if (imageUrl()) {
-          <div class="flex items-center gap-3 rounded-lg bg-[#f2f4f6] p-3">
-            <img [src]="imageUrl()" [alt]="imageName()" class="size-16 rounded-lg object-cover" />
-            <span class="flex-1 truncate text-start text-[13px] text-text-primary">
-              {{ imageName() }}
-            </span>
-            <button
-              type="button"
-              data-testid="remove-product-image"
-              class="text-[13px] font-medium text-error"
-              (click)="removeImage()"
-            >
-              حذف
-            </button>
-          </div>
-        } @else {
-          <app-file-dropzone
-            appearance="dashed"
-            prompt="اسحب وأفلت الصور هنا"
-            hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
-            accept="image/jpeg,image/png"
-            (filesPicked)="onImagePicked($event)"
-          />
-        }
-      </div>
+  <div class="flex flex-col gap-1.5">
+    <app-field-label
+      size="compact"
+      text="اسم المنتج أو الخدمة"
+      forId="product-name"
+      [isRequired]="true"
+    />
+    <input
+      id="product-name"
+      data-testid="product-name"
+      type="text"
+      class="h-11 rounded-lg bg-[#f2f4f6] px-3.5 text-right text-[14px] text-text-primary outline-none placeholder:text-text-secondary"
+      placeholder="مثال: تنظيف بشرة عميق"
+      [value]="name()"
+      (input)="onNameInput($event)"
+    />
+  </div>
 
-      <div class="flex flex-col gap-1.5">
-        <app-field-label
-          size="compact"
-          text="اسم المنتج أو الخدمة"
-          forId="product-name"
-          [isRequired]="true"
-        />
+  <!-- RTL: the price keeps the right column and the status sits to its left, as the design pairs them. -->
+  <div class="grid grid-cols-2 gap-5">
+    <div class="flex flex-col gap-1.5">
+      <app-field-label size="compact" text="السعر" forId="product-price" [isRequired]="true" />
+      <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
+      <div class="relative">
         <input
-          id="product-name"
-          data-testid="product-name"
-          type="text"
-          class="h-11 rounded-lg bg-[#f2f4f6] px-3.5 text-right text-[14px] text-text-primary outline-none placeholder:text-text-secondary"
-          placeholder="مثال: تنظيف بشرة عميق"
-          [value]="name()"
-          (input)="onNameInput($event)"
+          id="product-price"
+          data-testid="product-price"
+          type="number"
+          min="0"
+          step="0.01"
+          class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-3.5 pl-[92px] text-right font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+          placeholder="0"
+          [value]="price()"
+          (input)="onPriceInput($event)"
         />
-      </div>
-
-      <!-- RTL: the price keeps the right column and the status sits to its left, as the design pairs them. -->
-      <div class="grid grid-cols-2 gap-5">
-        <div class="flex flex-col gap-1.5">
-          <app-field-label size="compact" text="السعر" forId="product-price" [isRequired]="true" />
-          <!-- RTL: the currency badge is pinned to the left edge, as in the design. -->
-          <div class="relative">
-            <input
-              id="product-price"
-              data-testid="product-price"
-              type="number"
-              min="0"
-              step="0.01"
-              class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-3.5 pl-[92px] text-right font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
-              placeholder="0"
-              [value]="price()"
-              (input)="onPriceInput($event)"
-            />
-            <app-currency-select
-              class="absolute end-2 top-1/2 -translate-y-1/2"
-              variant="chip"
-              label="عملة السعر"
-              [currency]="currency()"
-              (currencyChange)="onCurrencyChange($event)"
-            />
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <app-field-label
-            size="compact"
-            text="الحالة"
-            forId="product-status"
-            [isRequired]="true"
-          />
-          <div class="relative">
-            <select
-              id="product-status"
-              data-testid="product-status"
-              class="h-11 w-full appearance-none rounded-lg bg-[#f2f4f6] pr-3.5 pl-9 text-right text-[14px] text-text-primary outline-none"
-              [value]="availability()"
-              (change)="onAvailabilityChange($event)"
-            >
-              @for (choice of availabilityChoices; track choice.value) {
-                <option [value]="choice.value" [selected]="choice.value === availability()">
-                  {{ choice.label }}
-                </option>
-              }
-            </select>
-            <app-icon
-              name="chevron-down"
-              [size]="14"
-              class="pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-text-primary"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-1.5">
-        <app-field-label
-          size="compact"
-          text="رابط الطلب"
-          forId="product-order-url"
-          [isOptional]="true"
+        <app-currency-select
+          class="absolute end-2 top-1/2 -translate-y-1/2"
+          variant="chip"
+          label="عملة السعر"
+          [currency]="currency()"
+          (currencyChange)="onCurrencyChange($event)"
         />
-        <div class="relative">
-          <input
-            id="product-order-url"
-            data-testid="product-order-url"
-            type="url"
-            dir="ltr"
-            class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-10 pl-3.5 text-left font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
-            placeholder="https://..."
-            [value]="orderUrl()"
-            (input)="onOrderUrlInput($event)"
-          />
-          <app-icon
-            name="link"
-            [size]="15"
-            class="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-placeholder"
-          />
-        </div>
-        @if (isOrderUrlHintVisible()) {
-          <p class="text-start text-[11px]/[14px] font-medium text-text-secondary">
-            يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.
-          </p>
-        }
       </div>
     </div>
 
-    <!-- RTL: `justify-end` packs the pair against the left edge, so the blue action lands leftmost; its icon is written first to sit on the right. -->
-    <footer class="mt-1 flex items-center justify-end gap-3 bg-[rgba(242,244,246,0.5)] px-6 py-4">
-      <button
-        type="button"
-        data-testid="cancel-product"
-        class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary"
-        (click)="cancelled.emit()"
-      >
-        إلغاء
-      </button>
-      <button
-        type="button"
-        data-testid="submit-product"
-        class="flex h-11 items-center gap-2.5 rounded-lg bg-primary px-5 text-[14px] font-bold text-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-50"
-        [disabled]="!isComplete()"
-        (click)="submit()"
-      >
-        <app-icon [name]="copy().submitIcon" [size]="20" />
-        <span>{{ copy().submitLabel }}</span>
-      </button>
-    </footer>
+    <div class="flex flex-col gap-1.5">
+      <app-field-label size="compact" text="الحالة" forId="product-status" [isRequired]="true" />
+      <div class="relative">
+        <select
+          id="product-status"
+          data-testid="product-status"
+          class="h-11 w-full appearance-none rounded-lg bg-[#f2f4f6] pr-3.5 pl-9 text-right text-[14px] text-text-primary outline-none"
+          [value]="availability()"
+          (change)="onAvailabilityChange($event)"
+        >
+          @for (choice of availabilityChoices; track choice.value) {
+            <option [value]="choice.value" [selected]="choice.value === availability()">
+              {{ choice.label }}
+            </option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down"
+          [size]="14"
+          class="pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-text-primary"
+        />
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="flex flex-col gap-1.5">
+    <app-field-label
+      size="compact"
+      text="رابط الطلب"
+      forId="product-order-url"
+      [isOptional]="true"
+    />
+    <div class="relative">
+      <input
+        id="product-order-url"
+        data-testid="product-order-url"
+        type="url"
+        dir="ltr"
+        class="h-11 w-full rounded-lg bg-[#f2f4f6] pr-10 pl-3.5 text-left font-latin text-[14px] text-text-primary outline-none placeholder:text-placeholder"
+        placeholder="https://..."
+        [value]="orderUrl()"
+        (input)="onOrderUrlInput($event)"
+      />
+      <app-icon
+        name="link"
+        [size]="15"
+        class="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-placeholder"
+      />
+    </div>
+    @if (isOrderUrlHintVisible()) {
+      <p class="text-start text-[11px]/[14px] font-medium text-text-secondary">
+        يستخدم لنقل المستخدم إلى منصة أو تطبيق الطلب الخارجي.
+      </p>
+    }
+  </div>
+
+  <!-- RTL: the blue action lands leftmost; its icon is written first to sit on the right. -->
+  <button
+    formDialogFooter
+    type="button"
+    data-testid="cancel-product"
+    class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary"
+    (click)="cancelled.emit()"
+  >
+    إلغاء
+  </button>
+  <button
+    formDialogFooter
+    type="button"
+    data-testid="submit-product"
+    class="flex h-11 items-center gap-2.5 rounded-lg bg-primary px-5 text-[14px] font-bold text-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-50"
+    [disabled]="!isComplete()"
+    (click)="submit()"
+  >
+    <app-icon [name]="copy().submitIcon" [size]="20" />
+    <span>{{ copy().submitLabel }}</span>
+  </button>
+</app-form-dialog-frame>

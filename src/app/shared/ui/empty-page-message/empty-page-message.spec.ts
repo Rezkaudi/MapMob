@@ -29,4 +29,19 @@ describe('EmptyPageMessage', () => {
     expect(element.querySelector('p')).toBeNull();
     expect(element.querySelector('app-add-button')).toBeNull();
   });
+
+  it('centres itself over the page unless it is asked to sit in the flow under other content', () => {
+    const fixture = TestBed.createComponent(EmptyPageMessage);
+    fixture.componentRef.setInput('title', 'لا توجد وسائط مضافة حتى الآن');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.className).toContain('absolute');
+
+    fixture.componentRef.setInput('placement', 'flow');
+    fixture.detectChanges();
+
+    expect(host.className).not.toContain('absolute');
+    expect(host.className).toContain('justify-center');
+    expect(host.querySelector('div')?.className).not.toContain('w-[550px]');
+  });
 });

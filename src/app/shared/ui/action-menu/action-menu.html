@@ -2,8 +2,8 @@
   <button
     #trigger
     type="button"
-    class="rounded-md px-1 pt-1 pb-[11px]"
     [class]="triggerClasses()"
+    [attr.aria-label]="label()"
     aria-haspopup="true"
     [attr.aria-expanded]="isOpen()"
     (click)="toggle()"

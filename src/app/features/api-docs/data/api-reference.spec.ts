@@ -36,10 +36,10 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call the dashboard makes, the three the place form needs, and me/logout', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(161);
+    expect(countEndpoints(API_FEATURES).total).toBe(165);
   });
 
-  it('lists the twenty-four calls of the place owner area', () => {
+  it('lists the twenty-eight calls of the place owner area', () => {
     const ownerPaths = endpoints
       .filter((endpoint) => endpoint.path.startsWith('/owner/'))
       .map((endpoint) => `${endpoint.method} ${endpoint.path}`);
@@ -64,6 +64,10 @@ describe('the API reference data', () => {
       'POST /owner/offers/{id}/pause',
       'POST /owner/offers/{id}/resume',
       'DELETE /owner/offers/{id}',
+      'GET /owner/media',
+      'POST /owner/media',
+      'PUT /owner/media/{id}',
+      'DELETE /owner/media/{id}',
       'GET /owner/notifications',
       'PATCH /owner/notifications/{id}/read',
       'GET /owner/account',

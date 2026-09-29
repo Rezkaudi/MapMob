@@ -107,12 +107,19 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'place_media',
       description: 'Gallery photos and videos.',
-      servedAs: 'images and videos on /places/{id}',
+      servedAs: 'images and videos on /places/{id}, /owner/media',
       columns: [
         ID,
         foreignKey('place_id', 'places.id', 'Cascade on delete.'),
         { name: 'type', type: "enum('image','video')" },
         { name: 'path', type: 'varchar(255)' },
+        { name: 'mime_type', type: 'varchar(100)' },
+        { name: 'size_bytes', type: 'int unsigned' },
+        {
+          name: 'is_main',
+          type: 'boolean',
+          note: 'Pictures only. At most one true per place: the first picture of the place card.',
+        },
         { name: 'poster_path', type: 'varchar(255)', isNullable: true, note: 'Videos only.' },
         { name: 'duration_seconds', type: 'int unsigned', isNullable: true, note: 'Videos only.' },
         { name: 'sort_order', type: 'smallint unsigned' },

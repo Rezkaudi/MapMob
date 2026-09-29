@@ -1,0 +1,103 @@
+<!-- Header, the quota cards 40px below, the tabs 32px below them and the grid 24px under that. -->
+<app-page-header
+  title="الصور و الوسائط"
+  description="إدارة الصور والوسائط الخاصة بمكانك و التي تظهر للمستخدمين على المنصة"
+  [isAddVisible]="false"
+>
+  <app-add-button
+    pageHeaderAction
+    label="إضافة وسائط"
+    [isDisabled]="store.isFull()"
+    (pressed)="store.openAdd()"
+  />
+</app-page-header>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+} @else {
+  <!-- RTL grid: the 8-column usage card comes first, so it takes the right-hand side. -->
+  <div
+    data-role="quota-grid"
+    class="mt-10 grid auto-rows-[minmax(172px,auto)] grid-cols-12 items-start gap-2"
+  >
+    @if (store.quota(); as quota) {
+      <app-plan-usage-card
+        class="col-span-12 xl:col-span-8"
+        title="الوسائط المستخدمة"
+        [planName]="store.planName()"
+        [quota]="quota"
+      />
+      <app-media-distribution-card
+        class="col-span-12 xl:col-span-4"
+        [tiles]="store.countTiles()"
+        [limitText]="store.limitText()"
+      />
+    }
+  </div>
+
+  @if (store.library()) {
+    <app-media-tabs
+      class="mt-8"
+      [tabs]="store.tabs()"
+      [selected]="store.selectedTab()"
+      (selectTab)="store.selectTab($event)"
+    />
+
+    @if (store.hasNoMedia()) {
+      <app-empty-page-message
+        class="mt-[140px]"
+        placement="flow"
+        title="لا توجد وسائط مضافة حتى الآن"
+        description="أضف صورة أو فيديو جديد لمكانك لتظهر للمستخدمين في تطبيق MapMob."
+        addLabel="إضافة وسائط"
+        (add)="store.openAdd()"
+      />
+    } @else {
+      <!-- RTL: the main picture leads on the right and the dashed add card closes the row on the left. -->
+      <ul
+        class="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4"
+        aria-label="الصور والفيديوهات"
+      >
+        @for (card of store.cards(); track card.item.id) {
+          <li>
+            <app-media-card
+              [card]="card"
+              (replaceFile)="store.replaceFile(card.item, $event)"
+              (remove)="store.openDelete(card.item)"
+            />
+          </li>
+        }
+        @if (!store.isFull()) {
+          <li>
+            <app-media-add-tile (pressed)="store.openAdd()" />
+          </li>
+        }
+      </ul>
+    }
+  }
+}
+
+@if (store.addDialog(); as dialog) {
+  <app-media-add-dialog
+    [dialog]="dialog"
+    [isBusy]="store.isSaving()"
+    (submitted)="store.submitDraft($event)"
+    (cancelled)="store.closeDialog()"
+  />
+} @else if (store.deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDelete()"
+    (cancelled)="store.closeDialog()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

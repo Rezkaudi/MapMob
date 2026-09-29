@@ -18,10 +18,13 @@ const PANEL_HEIGHT_PX = 163;
 
 export type ActionMenuStyle = 'soft' | 'sharp';
 
-/** The featured package card is dark blue, so its dots are drawn in white instead. */
-export type ActionMenuTriggerTone = 'default' | 'inverse';
+/** Dark cards draw the dots white; the media cards float a white tile over a picture. */
+export type ActionMenuTriggerTone = 'default' | 'inverse' | 'tile';
 
-const INVERSE_TRIGGER_CLASSES = 'text-white/80 hover:bg-white/10';
+const LIST_TRIGGER_SHAPE = 'rounded-md px-1 pt-1 pb-[11px]';
+const INVERSE_TRIGGER_CLASSES = `${LIST_TRIGGER_SHAPE} text-white/80 hover:bg-white/10`;
+const TILE_TRIGGER_CLASSES =
+  'flex size-8 items-center justify-center rounded-xl bg-white/90 text-text-primary hover:bg-white';
 
 interface MenuSkin {
   readonly trigger: string;
@@ -61,6 +64,7 @@ interface PanelPosition {
 export class ActionMenu {
   readonly menuStyle = input<ActionMenuStyle>('soft');
   readonly triggerTone = input<ActionMenuTriggerTone>('default');
+  readonly label = input<string>('خيارات');
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly trigger = viewChild.required<ElementRef<HTMLElement>>('trigger');
@@ -68,9 +72,16 @@ export class ActionMenu {
   protected readonly isOpen = signal(false);
   protected readonly position = signal<PanelPosition>({ left: 0, top: 0 });
   protected readonly skin = computed(() => MENU_SKINS[this.menuStyle()]);
-  protected readonly triggerClasses = computed(() =>
-    this.triggerTone() === 'inverse' ? INVERSE_TRIGGER_CLASSES : this.skin().trigger,
-  );
+  protected readonly triggerClasses = computed(() => {
+    switch (this.triggerTone()) {
+      case 'inverse':
+        return INVERSE_TRIGGER_CLASSES;
+      case 'tile':
+        return TILE_TRIGGER_CLASSES;
+      default:
+        return `${LIST_TRIGGER_SHAPE} ${this.skin().trigger}`;
+    }
+  });
 
   protected toggle(): void {
     if (this.isOpen()) {

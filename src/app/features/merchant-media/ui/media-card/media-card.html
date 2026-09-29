@@ -1,0 +1,91 @@
+<article
+  class="flex h-[260px] flex-col overflow-hidden rounded-lg border border-[rgba(192,199,213,0.3)] bg-white shadow-[0_1px_30px_0_rgba(0,0,0,0.05)]"
+>
+  <div class="relative h-[180px] shrink-0 bg-[#eceef0]">
+    @let item = card().item;
+    @if (!card().isVideo) {
+      <img [src]="item.url" [alt]="card().kindLabel" class="size-full object-cover" />
+    } @else if (item.posterUrl) {
+      <img [src]="item.posterUrl" [alt]="card().kindLabel" class="size-full object-cover" />
+    } @else {
+      <video
+        [src]="item.url"
+        preload="metadata"
+        muted
+        playsinline
+        class="size-full object-cover"
+      ></video>
+    }
+
+    @if (card().isVideo) {
+      <span
+        data-role="play"
+        class="absolute inset-0 m-auto flex size-9 items-center justify-center rounded-full border border-white/20 bg-black/25 text-white backdrop-blur-[10px]"
+        aria-hidden="true"
+      >
+        <app-icon name="play" [size]="20" />
+      </span>
+    }
+
+    <!-- RTL: start is the right edge, where the frame flags the main picture. -->
+    @if (item.isMain) {
+      <span
+        data-role="main-badge"
+        class="absolute start-2.5 top-2.5 rounded-xl bg-primary px-3 py-0.5 text-[12px]/[16px] text-white"
+        >الصورة الرئيسية</span
+      >
+    }
+
+    <div class="absolute end-2.5 top-2.5">
+      <app-action-menu menuStyle="sharp" triggerTone="tile" [label]="'خيارات ' + card().kindLabel">
+        <!-- RTL: each item leads with its icon on the right, then the label. -->
+        <button
+          type="button"
+          class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+          (click)="openReplacePicker()"
+        >
+          <app-icon name="change-status" [size]="12" aria-hidden="true" />
+          <span>{{ card().replaceLabel }}</span>
+        </button>
+        <span class="block h-px bg-border"></span>
+        <button
+          type="button"
+          class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-3 pb-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+          (click)="remove.emit()"
+        >
+          <app-icon name="trash-filled" [size]="14" class="text-closed" aria-hidden="true" />
+          <span>حذف</span>
+        </button>
+      </app-action-menu>
+    </div>
+
+    <input
+      #replacePicker
+      type="file"
+      class="sr-only"
+      tabindex="-1"
+      aria-hidden="true"
+      [attr.accept]="card().accept"
+      (change)="onReplacePicked($event)"
+    />
+  </div>
+
+  <div class="flex flex-col gap-[9px] p-3">
+    <p data-role="kind" class="pt-2 text-[11px]/[14px] font-bold text-text-primary">
+      {{ card().kindLabel }}
+    </p>
+    <!-- RTL: the date with its clock leads on the right; the green format sits on the left. -->
+    <div class="flex items-center justify-between gap-2 pt-2">
+      <span class="flex min-w-0 items-center gap-1 text-text-secondary">
+        <app-icon name="time-circle" [size]="12" aria-hidden="true" />
+        <span data-role="added" class="truncate text-[11px]/[14px]">{{ card().addedText }}</span>
+      </span>
+      <span
+        data-role="file"
+        dir="ltr"
+        class="shrink-0 text-[11px]/[14px] font-semibold whitespace-nowrap text-status-success"
+        >{{ card().fileText }}</span
+      >
+    </div>
+  </div>
+</article>

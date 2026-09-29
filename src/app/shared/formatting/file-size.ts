@@ -9,3 +9,11 @@ export function formatFileSize(sizeInBytes: number): string {
   }
   return `${(sizeInBytes / BYTES_PER_MEGABYTE).toFixed(DECIMALS)} ميجابايت`;
 }
+
+/** "2.4 MB", as the media cards write a size beside its format. */
+export function formatLatinFileSize(sizeInBytes: number): string {
+  if (sizeInBytes < BYTES_PER_MEGABYTE) {
+    return `${(sizeInBytes / BYTES_PER_KILOBYTE).toFixed(DECIMALS)} KB`;
+  }
+  return `${(sizeInBytes / BYTES_PER_MEGABYTE).toFixed(DECIMALS)} MB`;
+}

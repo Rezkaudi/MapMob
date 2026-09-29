@@ -118,4 +118,24 @@ describe('ActionMenu', () => {
     expect(trigger.className).toContain('text-white/80');
     expect(trigger.className).not.toContain('text-text-secondary');
   });
+
+  it('draws the white 32px tile the media cards float over a picture', () => {
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('triggerTone', 'tile');
+    fixture.detectChanges();
+
+    const trigger: HTMLElement = fixture.nativeElement.querySelector('button[aria-haspopup]');
+    expect(trigger.className).toContain('size-8');
+    expect(trigger.className).toContain('bg-white/90');
+    expect(trigger.className).not.toContain('pb-[11px]');
+  });
+
+  it('names the trigger for screen readers', () => {
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('label', 'خيارات الصورة');
+    fixture.detectChanges();
+
+    const trigger: HTMLElement = fixture.nativeElement.querySelector('button[aria-haspopup]');
+    expect(trigger.getAttribute('aria-label')).toBe('خيارات الصورة');
+  });
 });

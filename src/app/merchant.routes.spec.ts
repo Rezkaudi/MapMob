@@ -17,6 +17,8 @@ import { StoreProfileRepository } from './features/merchant-store/data/store-pro
 import { buildStoreProfile } from './features/merchant-store/testing/store-profile-fixture';
 import { MerchantProductRepository } from './features/merchant-products/data/merchant-product.repository';
 import { buildMerchantProductCatalog } from './features/merchant-products/testing/merchant-product-fixture';
+import { MerchantMediaRepository } from './features/merchant-media/data/merchant-media.repository';
+import { buildMediaLibrary } from './features/merchant-media/testing/merchant-media-fixture';
 import { MerchantOfferRepository } from './features/merchant-offers/data/merchant-offer.repository';
 import { FakeMerchantOfferRepository } from './features/merchant-offers/testing/fake-merchant-offer-repository';
 import { OwnerAccountRepository } from './features/merchant-settings/data/owner-account.repository';
@@ -50,6 +52,10 @@ describe('merchant routes', () => {
           useValue: { getCatalog: () => of(buildMerchantProductCatalog()) },
         },
         { provide: MerchantOfferRepository, useValue: new FakeMerchantOfferRepository() },
+        {
+          provide: MerchantMediaRepository,
+          useValue: { getLibrary: () => of(buildMediaLibrary()) },
+        },
         {
           provide: OwnerNotificationsRepository,
           useValue: { getNotifications: () => of([buildOwnerNotification()]) },
@@ -127,6 +133,16 @@ describe('merchant routes', () => {
     expect(element.querySelector('app-merchant-shell app-merchant-products-page')).toBeTruthy();
   });
 
+  it('opens the media page at /merchant/media, inside the merchant shell', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/media');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/media');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-merchant-shell app-merchant-media-page')).toBeTruthy();
+  });
+
   it('opens the offers page at /merchant/offers, inside the merchant shell', async () => {
     TestBed.inject(AuthStore).startSession(MERCHANT);
     const harness = await RouterTestingHarness.create();
@@ -184,7 +200,7 @@ describe('merchant routes', () => {
   it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {
     TestBed.inject(AuthStore).startSession(MERCHANT);
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/merchant/media');
+    await harness.navigateByUrl('/merchant/reviews');
 
     expect(TestBed.inject(Location).path()).toBe('/merchant/not-found');
     const element = harness.fixture.nativeElement as HTMLElement;

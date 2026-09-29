@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
   computed,
   input,
   linkedSignal,
@@ -14,6 +13,7 @@ import { AppIcon } from '../app-icon/app-icon';
 import { CurrencySelect } from '../currency-select/currency-select';
 import { FieldLabel } from '../field-label/field-label';
 import { FileDropzone } from '../file-dropzone/file-dropzone';
+import { FormDialogFrame } from '../form-dialog-frame/form-dialog-frame';
 import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { PRODUCT_AVAILABILITY_CHOICES, availabilityValue } from '../../models/product-availability';
 import { ProductDraft } from '../../models/product-draft';
@@ -25,7 +25,7 @@ const SAVED_IMAGE_LABEL = 'الصورة الحالية';
 
 @Component({
   selector: 'app-product-dialog',
-  imports: [AppIcon, CurrencySelect, FieldLabel, FileDropzone],
+  imports: [AppIcon, CurrencySelect, FieldLabel, FileDropzone, FormDialogFrame],
   templateUrl: './product-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -105,11 +105,6 @@ export class ProductDialog {
       imageFile: this.pickedImageFile(),
       orderUrl: this.orderUrl().trim(),
     });
-  }
-
-  @HostListener('document:keydown.escape')
-  protected cancelOnEscape(): void {
-    this.cancelled.emit();
   }
 }
 

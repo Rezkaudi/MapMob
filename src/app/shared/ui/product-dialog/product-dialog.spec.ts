@@ -92,7 +92,7 @@ describe('ProductDialog', () => {
     fixture.componentInstance.cancelled.subscribe(() => (cancels += 1));
 
     fixture.nativeElement.querySelector('[data-testid="cancel-product"]').click();
-    fixture.nativeElement.querySelector('[data-testid="close-product-dialog"]').click();
+    fixture.nativeElement.querySelector('[data-role="close-dialog"]').click();
 
     expect(cancels).toBe(2);
   });

@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="flex h-[260px] w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-[#c0c7d5] bg-white px-6 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  (click)="pressed.emit()"
+>
+  <span class="flex size-14 items-center justify-center rounded-xl bg-[#f2f4f6] text-text-primary">
+    <app-icon name="add" [size]="24" aria-hidden="true" />
+  </span>
+  <span class="w-[120px] text-center text-[14px]/[20px] font-medium text-[#191c1e]">
+    إضافة وسائط جديدة<br />(صورة/فيديو)
+  </span>
+</button>

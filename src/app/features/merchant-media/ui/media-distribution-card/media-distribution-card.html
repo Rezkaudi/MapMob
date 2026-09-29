@@ -1,0 +1,39 @@
+<!-- 23px padding plus the 1px border keeps the frame's 24px inset and 168px card. -->
+<section
+  class="flex h-full min-h-[168px] flex-col justify-between rounded-lg border border-border bg-surface p-[23px] shadow-[0_2px_30px_0_rgba(0,0,0,0.05)]"
+>
+  <h2 class="text-[12px]/[16px] font-bold text-[#404753]">توزيع الوسائط</h2>
+
+  <!-- RTL: the first tile and each tile's icon sit on the right, as the frame draws them. -->
+  <div class="flex gap-2 pt-3">
+    @for (tile of tiles(); track tile.kind) {
+      <div
+        data-role="count-tile"
+        class="flex h-[66px] min-w-0 flex-1 items-center gap-3 rounded bg-[#f2f4f6] py-3 ps-3 pe-2"
+      >
+        <span
+          data-role="kind-icon"
+          class="flex size-8 shrink-0 items-center justify-center rounded"
+          [class]="skins[tile.kind].tile"
+        >
+          <app-icon [name]="skins[tile.kind].icon" [size]="16" aria-hidden="true" />
+        </span>
+        <div class="flex min-w-0 flex-col">
+          <span data-role="count" class="text-[18px]/[28px] font-bold text-[#191c1e]">{{
+            tile.count
+          }}</span>
+          <span data-role="label" class="truncate text-[11px]/[14px] text-text-primary">{{
+            tile.label
+          }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- RTL: justify-end sends the limit line to the left edge, where the frame puts it. -->
+  <div class="flex justify-end pt-3">
+    <span data-role="limit" class="text-[11px]/[14px] font-medium text-primary">{{
+      limitText()
+    }}</span>
+  </div>
+</section>
