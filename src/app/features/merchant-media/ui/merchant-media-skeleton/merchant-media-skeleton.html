@@ -1,0 +1,20 @@
+<!-- Same gaps as the loaded page: quota cards 40px under the header, tabs 32px, grid 24px. -->
+<p role="status" class="sr-only">جاري التحميل</p>
+
+<!-- RTL grid: the 8-column usage card takes the right-hand side, as on the loaded page. -->
+<div data-role="quota" class="mt-10 grid grid-cols-12 gap-2">
+  <app-skeleton class="col-span-12 xl:col-span-8" height="172px" />
+  <app-skeleton class="col-span-12 xl:col-span-4" height="172px" />
+</div>
+
+<div data-role="tabs" class="mt-8 flex items-center gap-8 border-b border-border py-3">
+  @for (tab of tabs; track tab) {
+    <app-skeleton width="72px" height="20px" shape="text" />
+  }
+</div>
+
+<div data-role="cards" class="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+  @for (card of mediaCards; track card) {
+    <app-skeleton height="260px" />
+  }
+</div>

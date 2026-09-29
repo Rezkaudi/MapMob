@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
 import { MerchantSubscriptionRepository } from '../../data/merchant-subscription.repository';
 import { MerchantSubscriptionOverview } from '../../models/merchant-subscription-overview';
@@ -10,8 +10,10 @@ import { MerchantSubscriptionPage } from './merchant-subscription-page';
 
 class FakeRepository extends MerchantSubscriptionRepository {
   failure: Error | null = null;
+  isPending = false;
 
   getOverview(): Observable<MerchantSubscriptionOverview> {
+    if (this.isPending) return NEVER;
     return this.failure ? throwError(() => this.failure) : of(buildOverview());
   }
   requestPlanChange(draft: PlanChangeDraft): Observable<PlanChangeRequest> {
@@ -114,5 +116,21 @@ describe('MerchantSubscriptionPage', () => {
 
     expect(element.querySelector('app-error-state')?.textContent).toContain('انقطع الاتصال');
     expect(element.querySelector('app-subscription-hero-card')).toBeNull();
+  });
+
+  it('shows the skeleton while the page loads', () => {
+    const element: HTMLElement = render((repository) => {
+      repository.isPending = true;
+    }).nativeElement;
+
+    expect(element.querySelector('h1')?.textContent?.trim()).toBe('الاشتراكات و الباقات');
+    expect(element.querySelector('app-merchant-subscription-skeleton')).toBeTruthy();
+    expect(element.querySelector('app-subscription-hero-card')).toBeNull();
+  });
+
+  it('hides the skeleton once the page has loaded', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    expect(element.querySelector('app-merchant-subscription-skeleton')).toBeNull();
   });
 });

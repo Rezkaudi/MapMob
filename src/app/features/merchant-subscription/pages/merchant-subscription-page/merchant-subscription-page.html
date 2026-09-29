@@ -58,6 +58,8 @@
     [rows]="store.historyRows()"
     (view)="store.openDetails($event)"
   />
+} @else {
+  <app-merchant-subscription-skeleton />
 }
 
 @if (store.detailsView(); as details) {

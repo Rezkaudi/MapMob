@@ -1,0 +1,30 @@
+<!-- Same gaps as the loaded page: the hero 40px under the header, each section 32px below. -->
+<p role="status" class="sr-only">جاري التحميل</p>
+
+<div data-role="hero" class="mt-10">
+  <app-skeleton height="216px" />
+</div>
+
+<div class="mt-8 flex flex-col items-start gap-2">
+  <app-skeleton width="140px" height="24px" shape="text" />
+  <app-skeleton width="min(420px, 100%)" height="16px" shape="text" />
+</div>
+<div data-role="usage" class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+  @for (card of usageCards; track card) {
+    <app-skeleton height="169px" />
+  }
+</div>
+
+<div class="mt-8 flex flex-col items-start gap-2">
+  <app-skeleton width="140px" height="24px" shape="text" />
+  <app-skeleton width="min(420px, 100%)" height="16px" shape="text" />
+</div>
+<div data-role="plans" class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+  @for (card of planCards; track card) {
+    <app-skeleton height="658px" />
+  }
+</div>
+
+<div data-role="history" class="mt-8">
+  <app-skeleton height="320px" />
+</div>

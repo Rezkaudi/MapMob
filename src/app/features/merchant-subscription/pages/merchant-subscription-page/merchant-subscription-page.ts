@@ -4,6 +4,7 @@ import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { PageHeader } from '../../../../shared/ui/page-header/page-header';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { MerchantSubscriptionStore } from '../../state/merchant-subscription.store';
+import { MerchantSubscriptionSkeleton } from '../../ui/merchant-subscription-skeleton/merchant-subscription-skeleton';
 import { PlanDowngradeDialog } from '../../ui/plan-downgrade-dialog/plan-downgrade-dialog';
 import { PlanOfferCard } from '../../ui/plan-offer-card/plan-offer-card';
 import { PlanRequestDialog } from '../../ui/plan-request-dialog/plan-request-dialog';
@@ -18,6 +19,7 @@ import { UsageCard } from '../../ui/usage-card/usage-card';
   imports: [
     BillingCycleToggle,
     ErrorState,
+    MerchantSubscriptionSkeleton,
     PageHeader,
     PlanDowngradeDialog,
     PlanOfferCard,

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { MerchantMediaRepository } from '../../data/merchant-media.repository';
 import { MediaDraft } from '../../models/media-draft';
 import { MerchantMediaItem } from '../../models/merchant-media-item';
@@ -21,8 +21,10 @@ class FakeRepository extends MerchantMediaRepository {
     ],
   });
   isFailing = false;
+  isPending = false;
 
   getLibrary(): Observable<MerchantMediaLibrary> {
+    if (this.isPending) return NEVER;
     return this.isFailing ? throwError(() => new Error('انقطع الاتصال')) : of(this.library);
   }
   addMedia(draft: MediaDraft): Observable<MerchantMediaItem> {
@@ -142,5 +144,19 @@ describe('MerchantMediaPage', () => {
 
     expect(host.querySelector('app-error-state')?.textContent).toContain('انقطع الاتصال');
     expect(host.querySelector('app-media-tabs')).toBeNull();
+  });
+
+  it('shows the skeleton while the gallery loads', () => {
+    const host = hostOf(build((fake) => (fake.isPending = true)));
+
+    expect(host.querySelector('h1')?.textContent?.trim()).toBe('الصور و الوسائط');
+    expect(host.querySelector('app-merchant-media-skeleton')).not.toBeNull();
+    expect(host.querySelector('app-media-tabs')).toBeNull();
+  });
+
+  it('hides the skeleton once the gallery has loaded', () => {
+    const host = hostOf(build());
+
+    expect(host.querySelector('app-merchant-media-skeleton')).toBeNull();
   });
 });

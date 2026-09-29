@@ -12,6 +12,7 @@ import { MediaAddTile } from '../../ui/media-add-tile/media-add-tile';
 import { MediaCard } from '../../ui/media-card/media-card';
 import { MediaDistributionCard } from '../../ui/media-distribution-card/media-distribution-card';
 import { MediaTabs } from '../../ui/media-tabs/media-tabs';
+import { MerchantMediaSkeleton } from '../../ui/merchant-media-skeleton/merchant-media-skeleton';
 
 @Component({
   selector: 'app-merchant-media-page',
@@ -25,6 +26,7 @@ import { MediaTabs } from '../../ui/media-tabs/media-tabs';
     MediaCard,
     MediaDistributionCard,
     MediaTabs,
+    MerchantMediaSkeleton,
     PageHeader,
     PlanUsageCard,
     Toast,
