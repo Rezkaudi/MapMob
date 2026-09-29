@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { PlanTier } from '../../models/plan-tier';
+import { PlanTier } from '../../../../shared/models/plan-tier';
 
 const TIER_BACKGROUND: Record<PlanTier, string> = {
   featured: 'bg-accent',

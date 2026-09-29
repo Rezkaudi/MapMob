@@ -31,12 +31,19 @@ export const VIEW_WORDS: CountWords = {
 };
 export const YEAR_WORDS: CountWords = { one: 'سنة', two: 'سنتين', few: 'سنوات', many: 'سنة' };
 
-export function formatArabicCount(count: number, words: CountWords): string {
+/** The noun alone, for text that writes the number itself: "/ 5 عروض". */
+export function pickArabicCountWord(count: number, words: CountWords): string {
   if (count === 1) {
     return words.one;
   }
   if (count === 2) {
     return words.two;
   }
-  return `${count} ${count <= LAST_PLURAL_COUNT ? words.few : words.many}`;
+  return count <= LAST_PLURAL_COUNT ? words.few : words.many;
+}
+
+/** One and two are said by the noun alone ("يومين"); from three the number leads. */
+export function formatArabicCount(count: number, words: CountWords): string {
+  const word = pickArabicCountWord(count, words);
+  return count === 1 || count === 2 ? word : `${count} ${word}`;
 }

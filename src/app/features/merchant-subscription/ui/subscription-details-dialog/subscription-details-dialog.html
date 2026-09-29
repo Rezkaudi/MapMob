@@ -1,0 +1,36 @@
+<app-dialog-frame
+  heading="تفاصيل الاشتراك"
+  appearance="slim"
+  [hasFooter]="false"
+  (closed)="closed.emit()"
+>
+  <dl class="grid auto-rows-[minmax(74px,auto)] grid-cols-2 gap-3">
+    <!-- RTL: the plan comes first, so it sits on the right and the badge on the left. -->
+    <div class="col-span-2 flex items-center justify-between rounded-lg bg-[#F2F4F6] p-4">
+      <div class="flex flex-col gap-1">
+        <dt class="text-[12px]/[14px] text-text-secondary">الباقة المشترك بها</dt>
+        <dd data-role="plan-name" class="py-1 text-[16px]/[16px] font-bold text-text-primary">
+          {{ details().planName }}
+        </dd>
+      </div>
+      <app-subscription-status-badge [status]="details().status" />
+    </div>
+
+    @for (fact of facts(); track fact.label) {
+      <div class="flex flex-col justify-center gap-1 rounded-lg bg-[#F2F4F6] px-4 pt-4 pb-5">
+        <dt class="text-[12px]/[14px] text-text-secondary">{{ fact.label }}</dt>
+        <dd class="text-[14px]/[20px] font-medium text-text-primary">
+          @if (fact.isLatin) {
+            <span dir="ltr">{{ fact.value }}</span>
+          } @else {
+            {{ fact.value }}
+          }
+        </dd>
+      </div>
+    }
+  </dl>
+
+  @if (details().features.length > 0) {
+    <app-plan-feature-list [features]="details().features" />
+  }
+</app-dialog-frame>

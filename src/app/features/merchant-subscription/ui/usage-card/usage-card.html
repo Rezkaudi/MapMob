@@ -1,0 +1,53 @@
+<!-- 169px is the frame's card: the note area keeps its 37px even on one line. -->
+<article class="flex min-h-[169px] flex-col gap-2 rounded-2xl border border-border bg-surface p-5">
+  <!-- RTL: the icon comes first, so it sits right of the title. -->
+  <div class="flex items-center gap-2">
+    <app-icon [name]="card().iconName" [size]="18" class="text-text-primary" aria-hidden="true" />
+    <h3 class="text-[14px]/[20px] font-bold text-text-primary">{{ card().title }}</h3>
+  </div>
+
+  <!-- The frame insets the count 21px from the card's right edge. -->
+  <div class="flex h-9 items-center justify-between ps-[21px] pt-1">
+    <p class="flex items-center gap-1">
+      <span data-role="used" class="text-[24px]/[32px] font-black text-text-primary">{{
+        card().usedCount
+      }}</span>
+      <span data-role="limit" class="text-[14px]/[20px] font-medium text-text-secondary">{{
+        card().limitText
+      }}</span>
+    </p>
+    <span data-role="percent" class="text-[12px]/[16px] font-bold" [class]="skin().percent">{{
+      card().percentText
+    }}</span>
+  </div>
+
+  <div
+    role="progressbar"
+    class="h-2.5 overflow-hidden rounded-full bg-[#F1F5F9]"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="card().usedPercent"
+    [attr.aria-label]="card().title"
+  >
+    <div
+      class="h-full rounded-full"
+      [class]="skin().fill"
+      [style.width.%]="card().usedPercent"
+    ></div>
+  </div>
+
+  <!-- The frame sets the note 7px into a 37px strip. -->
+  <div class="min-h-[37px] pt-[7px]">
+    <div class="flex items-center gap-1">
+      <app-icon
+        [name]="skin().noteIcon"
+        [size]="skin().noteIconSize"
+        [class]="skin().noteIconColour"
+        aria-hidden="true"
+      />
+      <p data-role="note" class="text-[11px]/[16.5px] font-medium" [class]="skin().note">
+        {{ card().note }}
+      </p>
+    </div>
+  </div>
+</article>

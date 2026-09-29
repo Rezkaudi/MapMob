@@ -24,6 +24,16 @@ describe('BillingCycleToggle', () => {
     expect(render().nativeElement.textContent).toContain('خصم 20%');
   });
 
+  it('takes the saving wording the merchant frame uses', () => {
+    const fixture = TestBed.createComponent(BillingCycleToggle);
+    fixture.componentRef.setInput('value', 'monthly');
+    fixture.componentRef.setInput('savingLabel', 'وفر 20%');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('وفر 20%');
+    expect(fixture.nativeElement.textContent).not.toContain('خصم 20%');
+  });
+
   it('raises only the chosen cycle onto a white card', () => {
     const buttons = buttonsOf(render().nativeElement);
 

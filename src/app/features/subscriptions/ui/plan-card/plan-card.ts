@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { RowActionsMenu } from '../../../../shared/ui/row-actions-menu/row-actions-menu';
 import { PackagePlan } from '../../models/package-plan';
-import { BillingCycle } from '../../models/billing-cycle';
+import { BillingCycle } from '../../../../shared/models/billing-cycle';
 import { buildPlanCardView } from '../../state/plan-card-view';
 import { PLAN_TIER_SKINS } from './plan-tier-skin';
 

@@ -1,0 +1,94 @@
+<!-- Header, the plan card 40px below, then each section 32px under the one before. -->
+<app-page-header
+  title="الاشتراكات و الباقات"
+  description="إدارة اشتراكك ،متابعة استخدام الباقة و استكشاف الباقات."
+  [isAddVisible]="false"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+} @else if (store.hero(); as hero) {
+  <app-subscription-hero-card
+    class="mt-10"
+    [hero]="hero"
+    (upgrade)="store.openHeroUpgrade()"
+    (details)="store.openCurrentDetails()"
+  />
+
+  <section class="mt-8" aria-labelledby="plan-usage-heading">
+    <app-section-heading
+      id="plan-usage-heading"
+      title="استخدام الباقة"
+      description="تابع حدود استخدامك الحالية ضمن باقتك لضمان استمرار ظهور كافة أنشطتك."
+    />
+    <!-- RTL: the products card comes first, so it sits on the right. -->
+    <ul class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      @for (card of store.usageCards(); track card.title) {
+        <li><app-usage-card class="h-full" [card]="card" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="mt-8" aria-labelledby="available-plans-heading">
+    <!-- RTL: the heading comes first, so it sits on the right and the switch on the left. -->
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <app-section-heading
+        id="available-plans-heading"
+        title="الباقات المتاحة"
+        description="اختر الباقة التي تناسب احتياجات نشاطك التجاري وقم بطلب الترقية بسهولة."
+      />
+      <app-billing-cycle-toggle
+        savingLabel="وفر 20%"
+        [value]="store.cycle()"
+        (valueChange)="store.selectCycle($event)"
+      />
+    </div>
+    <!-- RTL: the free plan comes first, so it sits on the right and the featured one on the left. -->
+    <ul class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      @for (card of store.planCards(); track card.plan.id) {
+        <li>
+          <app-plan-offer-card class="h-full" [card]="card" (act)="store.openPlanAction($event)" />
+        </li>
+      }
+    </ul>
+  </section>
+
+  <app-subscription-history-table
+    class="mt-8"
+    [rows]="store.historyRows()"
+    (view)="store.openDetails($event)"
+  />
+}
+
+@if (store.detailsView(); as details) {
+  <app-subscription-details-dialog [details]="details" (closed)="store.closeDialog()" />
+} @else if (store.requestView(); as request) {
+  <app-plan-request-dialog
+    [request]="request"
+    [isBusy]="store.isSaving()"
+    (submitted)="store.submitRequest()"
+    (closed)="store.closeDialog()"
+  />
+} @else if (store.downgradeView(); as downgrade) {
+  <app-plan-downgrade-dialog
+    [downgrade]="downgrade"
+    [isBusy]="store.isSaving()"
+    (submitted)="store.submitRequest()"
+    (closed)="store.closeDialog()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إرسال الطلب"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+} @else if (store.isRequestSent()) {
+  <app-toast
+    title="تم إرسال الطلب"
+    message="سيراجع فريق MapMob طلبك ويتواصل معك لتأكيد الدفع وتفعيل الباقة."
+    (dismissed)="store.dismissRequestSent()"
+  />
+}

@@ -1,5 +1,5 @@
 import { ActionMenuTriggerTone } from '../../../../shared/ui/action-menu/action-menu';
-import { PlanTier } from '../../models/plan-tier';
+import { PlanTier } from '../../../../shared/models/plan-tier';
 
 /** Every colour the card changes between tiers. The geometry is the same for all three. */
 export interface PlanTierSkin {

@@ -24,6 +24,8 @@ import { FakeMerchantOfferRepository } from './features/merchant-offers/testing/
 import { OwnerAccountRepository } from './features/merchant-settings/data/owner-account.repository';
 import { OwnerNotificationsRepository } from './features/merchant-notifications/data/owner-notifications.repository';
 import { buildOwnerNotification } from './features/merchant-notifications/testing/owner-notification-fixture';
+import { MerchantSubscriptionRepository } from './features/merchant-subscription/data/merchant-subscription.repository';
+import { buildOverview as buildSubscriptionOverview } from './features/merchant-subscription/testing/merchant-subscription-fixture';
 
 describe('merchant routes', () => {
   const MERCHANT = { id: 'm-1', name: 'أحمد', role: 'owner', avatarUrl: null, token: 't' };
@@ -55,6 +57,10 @@ describe('merchant routes', () => {
         {
           provide: MerchantMediaRepository,
           useValue: { getLibrary: () => of(buildMediaLibrary()) },
+        },
+        {
+          provide: MerchantSubscriptionRepository,
+          useValue: { getOverview: () => of(buildSubscriptionOverview()) },
         },
         {
           provide: OwnerNotificationsRepository,
@@ -195,6 +201,20 @@ describe('merchant routes', () => {
     expect((element.querySelector('#account-email') as HTMLInputElement).value).toBe(
       'owner@example.com',
     );
+  });
+
+  it('opens the subscription page at /merchant/subscription, inside the merchant shell', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/subscription');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/subscription');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(
+      element.querySelector(
+        'app-merchant-shell app-merchant-subscription-page app-subscription-hero-card',
+      ),
+    ).toBeTruthy();
   });
 
   it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {

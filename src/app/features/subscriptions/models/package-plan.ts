@@ -1,6 +1,6 @@
 import { CurrencyCode } from '../../../shared/money/currency-code';
-import { PlanLimits } from './plan-limits';
-import { PlanTier } from './plan-tier';
+import { PlanLimits } from '../../../shared/models/plan-limits';
+import { PlanTier } from '../../../shared/models/plan-tier';
 
 /** One subscription package, as the cards on the "باقات الاشتراك" tab show it. */
 export interface PackagePlan {

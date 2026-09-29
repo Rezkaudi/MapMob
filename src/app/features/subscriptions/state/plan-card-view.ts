@@ -1,7 +1,7 @@
 import { CURRENCY_SYMBOLS } from '../../../shared/money/currency-symbols';
-import { BillingCycle } from '../models/billing-cycle';
+import { BillingCycle } from '../../../shared/models/billing-cycle';
 import { PackagePlan } from '../models/package-plan';
-import { PlanLimitRow, buildPlanLimitRows } from './plan-limit-rows';
+import { PlanLimitRow, buildPlanLimitRows } from '../../../shared/state/plan-limit-rows';
 
 /** The price line: a big amount, the currency sign beside it, then the billing period. */
 export interface PlanPriceDisplay {

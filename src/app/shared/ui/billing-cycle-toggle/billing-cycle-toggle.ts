@@ -9,5 +9,7 @@ import { BillingCycle } from '../../models/billing-cycle';
 })
 export class BillingCycleToggle {
   readonly value = input.required<BillingCycle>();
+  /** Admin says "خصم 20%"; the merchant frame says "وفر 20%". */
+  readonly savingLabel = input<string>('خصم 20%');
   readonly valueChange = output<BillingCycle>();
 }

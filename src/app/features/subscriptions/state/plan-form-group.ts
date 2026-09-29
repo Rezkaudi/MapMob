@@ -2,7 +2,7 @@ import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@ang
 import { CurrencyCode } from '../../../shared/money/currency-code';
 import { PackagePlan } from '../models/package-plan';
 import { PlanDraft } from '../models/plan-draft';
-import { PlanLimits } from '../models/plan-limits';
+import { PlanLimits } from '../../../shared/models/plan-limits';
 
 const HAS_TEXT = /\S/;
 /** The steppers write an unlimited allowance as this, since a number input cannot hold `null`. */

@@ -1,0 +1,8 @@
+<!-- RTL: the dot comes first, so it sits on the right of the word. -->
+<span
+  class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px]/[16px] font-bold whitespace-nowrap"
+  [class]="skin().badge"
+>
+  <span data-role="dot" class="size-2 rounded-full" [class]="skin().dot" aria-hidden="true"></span>
+  {{ status().label }}
+</span>

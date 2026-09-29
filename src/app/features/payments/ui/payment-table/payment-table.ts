@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
-import { PAYMENT_METHOD_LABELS } from '../../models/payment-method';
+import { PAYMENT_METHOD_LABELS } from '../../models/payment-method-labels';
 import { Payment } from '../../models/payment';
 
 /**

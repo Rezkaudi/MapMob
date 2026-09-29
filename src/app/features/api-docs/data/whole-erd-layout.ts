@@ -9,5 +9,12 @@ export const WHOLE_ERD_LAYOUT: DbDomain['layout'] = [
   ['place_working_hours', 'place_media', 'products', 'offer_products', 'offers'],
   ['users', 'favorites', 'user_activities', 'device_tokens'],
   ['reviews', 'review_reports', 'complaints', 'complaint_attachments', 'ads', 'ad_events'],
-  ['subscription_plans', 'plan_features', 'subscriptions', 'payments', 'payment_methods'],
+  [
+    'subscription_plans',
+    'plan_features',
+    'subscriptions',
+    'subscription_requests',
+    'payments',
+    'payment_methods',
+  ],
 ];

@@ -14,7 +14,7 @@
       <!-- RTL: the arrow or tile and the heading on the right, the cross on the left. -->
       <!-- The frames draw this bar 73px tall with the tile or cross, 70px with the back arrow. -->
       <header
-        class="flex items-center justify-between border-b border-[#e6e8ea] bg-[#f2f4f6]"
+        class="flex justify-between border-b border-[#e6e8ea] bg-[#f2f4f6]"
         [class]="isBackVisible() ? skin().backHeader : skin().header"
       >
         <div class="flex items-center gap-3">
@@ -37,11 +37,14 @@
               <app-icon [name]="icon" [size]="skin().tileIconSize" aria-hidden="true" />
             </span>
           }
-          <div class="flex flex-col gap-1 text-start">
+          <!-- min-h-8 centres a lone heading on the 32px cross, as the slim frames draw it. -->
+          <div class="flex min-h-8 flex-col justify-center gap-1 text-start">
             <h2 id="dialog-frame-title" class="font-bold text-text-primary" [class]="skin().heading">
               {{ heading() }}
             </h2>
-            <p class="text-text-secondary" [class]="skin().subheading">{{ subheading() }}</p>
+            @if (subheading(); as line) {
+              <p class="text-text-secondary" [class]="skin().subheading">{{ line }}</p>
+            }
           </div>
         </div>
         @if (!isBackVisible()) {
@@ -61,11 +64,11 @@
       </div>
 
       <!-- RTL: justify-end packs the buttons against the left edge; the first one lands on the right. -->
-      <footer
-        class="flex min-h-[79px] items-center justify-end gap-4 border-t border-[#e6e8ea] bg-[#f2f4f6] p-4"
-      >
-        <ng-content select="[dialogFooter]" />
-      </footer>
+      @if (hasFooter()) {
+        <footer class="flex items-center justify-end bg-[#f2f4f6]" [class]="skin().footer">
+          <ng-content select="[dialogFooter]" />
+        </footer>
+      }
     </div>
   </div>
 </div>

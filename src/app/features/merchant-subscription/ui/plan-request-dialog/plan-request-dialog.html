@@ -1,0 +1,39 @@
+<app-dialog-frame [heading]="request().title" appearance="slim" (closed)="closed.emit()">
+  <dl class="flex flex-col rounded-lg bg-[#F2F4F6] px-4 py-4">
+    @for (row of request().rows; track row.label) {
+      <!-- RTL: the label comes first, so it sits on the right. -->
+      <div
+        data-role="summary-row"
+        class="flex items-center justify-between gap-4 border-b border-border py-3 last:border-b-0"
+      >
+        <dt class="text-[12px]/[14px] text-text-secondary">{{ row.label }}</dt>
+        <dd
+          class="py-1 text-[14px]/[16px] font-bold"
+          [class]="row.isHighlighted ? 'text-primary' : 'text-text-primary'"
+        >
+          {{ row.value }}
+        </dd>
+      </div>
+    }
+  </dl>
+
+  <div class="flex items-start gap-4 rounded-lg border border-primary bg-primary/8 p-4">
+    <app-icon name="info-circle-filled" [size]="17" class="text-primary" aria-hidden="true" />
+    <!-- The frame keeps the text 14px clear of the box's left edge. -->
+    <div class="flex flex-1 flex-col gap-0.5 pe-[14.35px] text-[14px]/[18px] text-text-primary">
+      <p class="font-bold">آلية التفعيل و مراجعة الطلب :</p>
+      <p>
+        بعد إرسال الطلب ،ستتم مراجعته من قبل MapMob وسيقوم المسؤول بالتواصل معك لتأكيد عملية الدفع
+        اليدوي وتفعيل الباقة المطلوبة.
+      </p>
+    </div>
+  </div>
+
+  <app-request-dialog-buttons
+    dialogFooter
+    confirmLabel="إرسال الطلب"
+    [isBusy]="isBusy()"
+    (confirmed)="submitted.emit()"
+    (cancelled)="closed.emit()"
+  />
+</app-dialog-frame>

@@ -1,5 +1,5 @@
 import { PaymentCurrency } from './payment-currency';
-import { PaymentMethod } from './payment-method';
+import { PaymentMethod } from '../../../shared/models/payment-method';
 
 export interface Payment {
   readonly id: string;

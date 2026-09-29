@@ -1,0 +1,81 @@
+<!-- 658px is the frame's card: it pins the button to the same line on all three. -->
+<article
+  class="relative flex h-full min-h-[658px] flex-col justify-between overflow-hidden rounded-2xl p-6"
+  [class]="cardClasses()"
+>
+  @if (card().isCurrent) {
+    <!-- The frame hangs the tag in the top-left corner whatever the page direction. -->
+    <span
+      data-role="current-ribbon"
+      class="absolute top-0 left-0 rounded-br-2xl bg-primary pt-[5px] pr-[34px] pb-[6.5px] pl-4 text-[11px]/[16.5px] font-extrabold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+      >باقتك الحالية</span
+    >
+  }
+
+  <div class="flex flex-col gap-[7.3px] pb-8">
+    <p data-role="eyebrow" class="text-[14px]/[20px] font-extrabold" [class]="skin().eyebrow">
+      {{ card().eyebrow }}
+    </p>
+    <h3 class="pt-[8.7px] text-[20px]/[28px] font-black" [class]="skin().name">
+      {{ card().plan.name }}
+    </h3>
+    <p
+      class="line-clamp-2 min-h-[56.45px] pb-[17.45px] text-[12px]/[19.5px]"
+      [class]="skin().tagline"
+    >
+      {{ card().plan.tagline }}
+    </p>
+
+    <div class="flex flex-col gap-1 border-b pb-6" [class]="skin().priceDivider">
+      <!-- RTL: the amount comes first, so it leads on the right, 33px in as the frame draws it. -->
+      <p class="flex h-10 items-center gap-1 ps-[33px]">
+        <span data-role="amount" class="text-[36px]/[40px] font-black" [class]="skin().amount">{{
+          card().amountText
+        }}</span>
+        <span
+          data-role="currency"
+          class="pt-1.5 text-[14px]/[20px] font-bold"
+          [class]="skin().unit"
+          >{{ card().currencyText }}</span
+        >
+        @if (card().periodText; as period) {
+          <span
+            data-role="period"
+            class="pt-1.5 text-[12px]/[16px] font-medium"
+            [class]="skin().unit"
+            >{{ period }}</span
+          >
+        }
+      </p>
+      <p data-role="price-note" class="text-[12px]/[16px]" [class]="skin().unit">
+        {{ card().priceNote }}
+      </p>
+    </div>
+
+    <dl class="flex flex-col gap-2 rounded-xl p-[14px]" [class]="skin().limitsBox">
+      @for (row of card().limitRows; track row.label) {
+        <!-- RTL: the label comes first, so it sits on the right. -->
+        <div data-role="limit-row" class="flex items-center justify-between gap-2">
+          <dt class="text-[12px]/[16px] font-medium" [class]="skin().limitLabel">
+            {{ row.label }}
+          </dt>
+          <dd class="text-[12px]/[16px] font-bold" [class]="skin().limitValue">{{ row.value }}</dd>
+        </div>
+      }
+    </dl>
+
+    <app-plan-feature-list [features]="card().plan.features" [tone]="skin().featureTone" />
+  </div>
+
+  <button
+    data-role="plan-action"
+    type="button"
+    class="h-10 w-full shrink-0 rounded-[4px] px-4 text-center text-[12px]/[16px] font-bold disabled:cursor-not-allowed"
+    [class]="actionClasses()"
+    [class.opacity-50]="isLocked()"
+    [disabled]="card().action.isDisabled"
+    (click)="act.emit(card())"
+  >
+    {{ card().action.label }}
+  </button>
+</article>

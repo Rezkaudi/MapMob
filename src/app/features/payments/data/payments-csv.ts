@@ -1,5 +1,5 @@
 import { CsvRow, buildCsvFile } from '../../../shared/files/csv-file';
-import { PAYMENT_METHOD_LABELS } from '../models/payment-method';
+import { PAYMENT_METHOD_LABELS } from '../models/payment-method-labels';
 import { Payment } from '../models/payment';
 
 const HEADER: CsvRow = [

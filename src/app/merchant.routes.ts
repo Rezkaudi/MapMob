@@ -57,6 +57,13 @@ export const MERCHANT_ROUTES: Routes = [
           ),
       },
       {
+        path: 'subscription',
+        loadComponent: () =>
+          import('./features/merchant-subscription/pages/merchant-subscription-page/merchant-subscription-page').then(
+            (m) => m.MerchantSubscriptionPage,
+          ),
+      },
+      {
         path: 'notifications',
         loadComponent: () =>
           import('./features/merchant-notifications/pages/merchant-notifications-page/merchant-notifications-page').then(

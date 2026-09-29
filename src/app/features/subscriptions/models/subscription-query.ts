@@ -1,6 +1,6 @@
 import { ListQuery } from '../../../shared/models/list-query';
-import { PlanTier } from './plan-tier';
-import { SubscriptionStatus } from './subscription-status';
+import { PlanTier } from '../../../shared/models/plan-tier';
+import { SubscriptionStatus } from '../../../shared/models/subscription-status';
 
 export interface SubscriptionQuery extends ListQuery {
   readonly tier?: PlanTier;

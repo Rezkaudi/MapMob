@@ -4,7 +4,7 @@ import { DateRange } from '../../../../shared/models/date-range';
 import { ChoiceChips } from '../../../../shared/ui/choice-chips/choice-chips';
 import { DateRangeFields } from '../../../../shared/ui/date-range-fields/date-range-fields';
 import { FilterPopover } from '../../../../shared/ui/filter-popover/filter-popover';
-import { PlanTier } from '../../models/plan-tier';
+import { PlanTier } from '../../../../shared/models/plan-tier';
 import {
   PLAN_TIER_CHOICES,
   SUBSCRIPTION_STATUS_CHOICES,
@@ -13,7 +13,7 @@ import {
   NO_SUBSCRIPTION_FILTERS,
   SubscriptionFilters,
 } from '../../models/subscription-filters';
-import { SubscriptionStatus } from '../../models/subscription-status';
+import { SubscriptionStatus } from '../../../../shared/models/subscription-status';
 
 /** The popover under "الفلاتر". Picks stay a draft until "تطبيق الفلاتر". */
 @Component({

@@ -1,5 +1,5 @@
 import { CurrencyCode } from '../../../shared/money/currency-code';
-import { PlanLimits } from './plan-limits';
+import { PlanLimits } from '../../../shared/models/plan-limits';
 
 /** What the edit dialog can change about a package. */
 export interface PlanDraft {

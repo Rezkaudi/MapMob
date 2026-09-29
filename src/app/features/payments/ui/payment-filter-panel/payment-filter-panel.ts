@@ -16,7 +16,7 @@ import { PAYMENT_CURRENCY_CHOICES } from '../../models/payment-currency-choices'
 import { NO_PAYMENT_FILTERS, PaymentFilters } from '../../models/payment-filters';
 import { PAYMENT_METHOD_CHOICES } from '../../models/payment-method-choices';
 import { PaymentCurrency } from '../../models/payment-currency';
-import { PaymentMethod } from '../../models/payment-method';
+import { PaymentMethod } from '../../../../shared/models/payment-method';
 
 /** The 384px popover under "الفلاتر" on the payments page — the compact-filter-popover-card frame. */
 @Component({

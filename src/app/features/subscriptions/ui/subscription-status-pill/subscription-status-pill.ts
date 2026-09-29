@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { SUBSCRIPTION_STATUS_LABEL } from '../../models/subscription-status-label';
-import { SubscriptionStatus } from '../../models/subscription-status';
+import { SubscriptionStatus } from '../../../../shared/models/subscription-status';
 
 const STATUS_BACKGROUND: Record<SubscriptionStatus, string> = {
   active: 'bg-status-success',

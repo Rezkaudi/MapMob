@@ -1,5 +1,5 @@
 import { ChoiceOption } from '../../../shared/ui/choice-chips/choice-option';
-import { PAYMENT_METHOD_LABELS } from './payment-method';
+import { PAYMENT_METHOD_LABELS } from './payment-method-labels';
 
 /** RTL renders the first option on the right, so this reads "آخرى، نقداً، الكل" left to right. */
 export const PAYMENT_METHOD_CHOICES: readonly ChoiceOption[] = [

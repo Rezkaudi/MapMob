@@ -1,7 +1,7 @@
 import { DateRange } from '../../../shared/models/date-range';
 import { ListQuery } from '../../../shared/models/list-query';
 import { PaymentCurrency } from './payment-currency';
-import { PaymentMethod } from './payment-method';
+import { PaymentMethod } from '../../../shared/models/payment-method';
 
 export interface PaymentQuery extends ListQuery {
   readonly companyName?: string;

@@ -1,0 +1,46 @@
+<app-dialog-frame
+  [heading]="downgrade().title"
+  [subheading]="downgrade().description"
+  appearance="slim"
+  (closed)="closed.emit()"
+>
+  <!-- RTL: the current plan comes first, so it sits on the right. -->
+  <div
+    class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:justify-center sm:gap-[60px]"
+  >
+    <app-plan-limits-column
+      class="sm:w-[234px]"
+      heading="الباقة الحالية"
+      tone="current"
+      [column]="downgrade().current"
+    />
+    <app-plan-limits-column
+      class="sm:w-[232px]"
+      heading="الباقة الجديدة"
+      tone="target"
+      [column]="downgrade().target"
+    />
+  </div>
+
+  <!-- The frame keeps 48px clear on the left of the text. -->
+  <div
+    role="alert"
+    class="flex items-start gap-3 rounded-2xl border border-[rgba(146,64,14,0.8)] bg-accent/16 py-[14px] ps-[14px] pe-12 text-[12px]/[19.5px] text-[#92400E]"
+  >
+    <span class="flex h-[26px] w-6 shrink-0 items-center justify-center" aria-hidden="true">
+      <app-icon name="warning-triangle" [size]="16" />
+    </span>
+    <div class="flex flex-col gap-[1.5px]">
+      <p class="font-extrabold">تنبيه:</p>
+      <p>{{ downgrade().warning }}</p>
+    </div>
+  </div>
+
+  <app-request-dialog-buttons
+    dialogFooter
+    [confirmLabel]="downgrade().confirmLabel"
+    [isBusy]="isBusy()"
+    (confirmed)="submitted.emit()"
+    (cancelled)="closed.emit()"
+  />
+</app-dialog-frame>

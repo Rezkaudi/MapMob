@@ -2,9 +2,9 @@ import { MOCK_PLACES } from '../../../../mock/mock-places';
 import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
 import { addCalendarDays, toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { PLAN_TIER_LABEL } from '../models/plan-tier-label';
-import { PlanTier } from '../models/plan-tier';
+import { PlanTier } from '../../../shared/models/plan-tier';
 import { Subscription } from '../models/subscription';
-import { SubscriptionStatus } from '../models/subscription-status';
+import { SubscriptionStatus } from '../../../shared/models/subscription-status';
 
 const SEED = 20260916;
 const EARLIEST_START_DAYS = -540;

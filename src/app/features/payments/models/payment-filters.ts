@@ -1,6 +1,6 @@
 import { DateRange } from '../../../shared/models/date-range';
 import { PaymentCurrency } from './payment-currency';
-import { PaymentMethod } from './payment-method';
+import { PaymentMethod } from '../../../shared/models/payment-method';
 
 /** What the filter panel applies. `null`/empty and an open range mean "الكل". */
 export interface PaymentFilters {

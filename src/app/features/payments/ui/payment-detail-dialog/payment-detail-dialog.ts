@@ -4,7 +4,7 @@ import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { PAYMENT_CURRENCY_FULL_NAMES } from '../../models/payment-currency';
-import { PAYMENT_METHOD_LABELS } from '../../models/payment-method';
+import { PAYMENT_METHOD_LABELS } from '../../models/payment-method-labels';
 import { PaymentDetail } from '../../models/payment-detail';
 
 /** The centered modal the "detail-payments" frame draws on top of the list, shaped like plan-form-dialog. */

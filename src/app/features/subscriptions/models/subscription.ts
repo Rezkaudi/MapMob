@@ -1,5 +1,5 @@
-import { PlanTier } from './plan-tier';
-import { SubscriptionStatus } from './subscription-status';
+import { PlanTier } from '../../../shared/models/plan-tier';
+import { SubscriptionStatus } from '../../../shared/models/subscription-status';
 
 /** One row of the "سجل الاشتراكات" table. */
 export interface Subscription {

@@ -9,7 +9,7 @@ export const BILLING_DOMAIN: DbDomain = {
   description: 'What the platform sells, who holds which plan, and the money received.',
   layout: [
     ['subscription_plans', 'plan_features'],
-    ['subscriptions'],
+    ['subscriptions', 'subscription_requests'],
     ['payments', 'payment_methods'],
   ],
   tables: [
@@ -100,6 +100,28 @@ export const BILLING_DOMAIN: DbDomain = {
         ...TIMESTAMPS,
       ],
       indexes: ['INDEX (place_id, status)', 'INDEX (ends_on)'],
+    },
+    {
+      name: 'subscription_requests',
+      description:
+        'A place owner asking to upgrade, move to a cheaper plan or renew. An admin handles it after the cash is paid.',
+      servedAs: 'pendingRequest on /owner/subscription',
+      columns: [
+        ID,
+        foreignKey('place_id', 'places.id'),
+        foreignKey('plan_id', 'subscription_plans.id', 'The plan asked for.'),
+        { name: 'kind', type: "enum('upgrade','downgrade','renewal')" },
+        { name: 'term', type: "enum('monthly','yearly')" },
+        {
+          name: 'status',
+          type: "enum('pending','approved','rejected')",
+          note: 'At most one pending row per place.',
+        },
+        adminReference('handled_by_admin_id', 'Who approved or rejected it.'),
+        { name: 'handled_at', type: 'timestamp', isNullable: true },
+        ...TIMESTAMPS,
+      ],
+      indexes: ['INDEX (place_id, status)'],
     },
     {
       name: 'payments',

@@ -1,4 +1,4 @@
-import { PlanTier } from './plan-tier';
+import { PlanTier } from '../../../shared/models/plan-tier';
 
 export const PLAN_TIER_LABEL: Record<PlanTier, string> = {
   featured: 'مميزة',

@@ -7,10 +7,11 @@ import { DialogFrame } from './dialog-frame';
   template: `
     <app-dialog-frame
       heading="تفاصيل الإشعار"
-      subheading="معاينة الإشعار"
+      [subheading]="subheading()"
       [headingIcon]="headingIcon()"
       [isBackVisible]="isBackVisible()"
       [appearance]="appearance()"
+      [hasFooter]="hasFooter()"
     >
       <p data-role="body">المحتوى</p>
       <button dialogFooter type="button">حفظ</button>
@@ -20,14 +21,18 @@ import { DialogFrame } from './dialog-frame';
 class HostComponent {
   readonly headingIcon = input<string | null>('notifications');
   readonly isBackVisible = input<boolean>(false);
-  readonly appearance = input<'compact' | 'roomy'>('compact');
+  readonly appearance = input<'compact' | 'roomy' | 'slim'>('compact');
+  readonly subheading = input<string | null>('معاينة الإشعار');
+  readonly hasFooter = input<boolean>(true);
 }
 
 function render(
   inputs: {
     headingIcon?: string | null;
     isBackVisible?: boolean;
-    appearance?: 'compact' | 'roomy';
+    appearance?: 'compact' | 'roomy' | 'slim';
+    subheading?: string | null;
+    hasFooter?: boolean;
   } = {},
 ) {
   const fixture = TestBed.createComponent(HostComponent);
@@ -90,5 +95,26 @@ describe('DialogFrame', () => {
     (element.querySelector('button[aria-label="رجوع"]') as HTMLButtonElement).click();
 
     expect(back).toHaveBeenCalledOnce();
+  });
+
+  it('gives the slim card the subscription frames\' 65px bar and a borderless footer', () => {
+    const { element } = render({ appearance: 'slim', headingIcon: null });
+
+    expect(element.querySelector('header')?.className).toContain('min-h-[65px]');
+    expect(element.querySelector('[data-role="dialog-body"]')?.className).toContain('p-6');
+    expect(element.querySelector('footer')?.className).not.toContain('border-t');
+    expect(element.querySelector('footer')?.className).toContain('gap-3');
+  });
+
+  it('leaves the line under the heading out when there is none', () => {
+    const { element } = render({ subheading: null });
+
+    expect(element.querySelector('header p')).toBeNull();
+  });
+
+  it('drops the footer bar for a read-only dialog', () => {
+    const { element } = render({ hasFooter: false });
+
+    expect(element.querySelector('footer')).toBeNull();
   });
 });
