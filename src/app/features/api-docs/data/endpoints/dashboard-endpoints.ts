@@ -12,6 +12,7 @@ import { PLACE_ROW_FIELDS } from './place-fields';
 export const DASHBOARD_FEATURE: ApiFeature = {
   id: 'dashboard',
   name: 'Dashboard (home)',
+  app: 'admin',
   screen: '/admin/dashboard',
   permissionModule: 'home',
   intro:

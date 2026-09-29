@@ -1,6 +1,7 @@
 import { ApiFeature } from '../models/api-feature';
 import { DbDomain } from '../models/db-domain';
 import { DocsNavGroup, DocsNavLink } from '../models/docs-nav-link';
+import { groupFeaturesByApp } from './feature-groups';
 import { WHOLE_DATABASE_ID } from './whole-database';
 
 const START_LINKS: readonly DocsNavLink[] = [
@@ -20,14 +21,14 @@ export function docsNavGroups(
 ): DocsNavGroup[] {
   return [
     { title: 'Start here', links: START_LINKS },
-    {
-      title: 'Endpoints',
-      links: features.map((feature) => ({
+    ...groupFeaturesByApp(features).map((group) => ({
+      title: group.title,
+      links: group.features.map((feature) => ({
         id: feature.id,
         label: feature.name,
         count: feature.endpoints.length,
       })),
-    },
+    })),
     {
       title: 'Database',
       links: [

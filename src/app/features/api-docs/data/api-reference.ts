@@ -8,8 +8,8 @@ import { OPEN_QUESTIONS } from './open-questions';
 import { WHOLE_ERD_LAYOUT } from './whole-erd-layout';
 
 export const MAPMOB_API_REFERENCE: ApiReference = {
-  title: 'MapMob Admin API — Backend Reference',
-  updatedOn: '2026-09-28',
+  title: 'MapMob API — Backend Reference',
+  updatedOn: '2026-09-29',
   conventions: API_CONVENTIONS,
   features: API_FEATURES,
   domains: DATABASE_DOMAINS,

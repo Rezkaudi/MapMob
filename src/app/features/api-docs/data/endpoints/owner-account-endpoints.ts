@@ -3,11 +3,10 @@ import { OWNER_ACCOUNT } from '../examples/owner-examples';
 import { PASSWORD_CHANGE } from '../examples/settings-examples';
 import { NO_CONTENT, field } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account.';
-
 export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
   id: 'owner-account',
   name: 'Place owner account settings',
+  app: 'owner',
   screen: '/merchant/settings',
   permissionModule: null,
   intro:
@@ -18,7 +17,6 @@ export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/account',
       summary: "The signed-in owner's own account.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'The account.',
@@ -34,7 +32,6 @@ export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/account',
       summary: "Change the signed-in owner's name and email.",
-      permission: OWNER_ONLY,
       body: {
         contentType: 'application/json',
         fields: [
@@ -57,7 +54,6 @@ export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/account/password',
       summary: "Change the signed-in owner's password.",
-      permission: OWNER_ONLY,
       body: {
         contentType: 'application/json',
         fields: [

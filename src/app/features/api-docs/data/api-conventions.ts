@@ -5,16 +5,17 @@ export const API_CONVENTIONS: readonly DocsSection[] = [
     id: 'convention-base-url',
     title: 'Base URL',
     paragraphs: [
-      'The dashboard reads one base URL (NG_APP_API_BASE_URL) and calls every path below it. Every path in this reference is relative to it: /users means <base>/users.',
-      'Keep every admin route under one prefix, for example https://api.mapmob.com.co/admin, so /users becomes https://api.mapmob.com.co/admin/users.',
+      'The frontend reads one base URL (NG_APP_API_BASE_URL) and calls every path below it, from both the admin dashboard and the place owner app. Every path in this reference is relative to it: /users means <base>/users.',
+      'Keep every route under one prefix, for example https://api.mapmob.com.co/v1. Admin calls sit right under it (/users becomes https://api.mapmob.com.co/v1/users); place owner calls start with /owner (https://api.mapmob.com.co/v1/owner/place).',
     ],
   },
   {
     id: 'convention-auth',
     title: 'Authentication and permissions',
     paragraphs: [
-      'Laravel Sanctum bearer tokens. POST /auth/login returns a token; every other call sends it as "Authorization: Bearer <token>". POST /auth/logout revokes it.',
-      '401 when the token is missing, wrong or expired: the dashboard signs the admin out. 403 when the admin is signed in but the role lacks the permission: the dashboard stays signed in.',
+      'Laravel Sanctum bearer tokens, one kind per app. POST /auth/login gives an admin token; POST /owner/auth/login gives a place owner token. Every other call sends it as "Authorization: Bearer <token>". POST /auth/logout and POST /owner/auth/logout revoke it.',
+      "An admin token opens only admin calls; an owner token opens only /owner calls, and only for the owner's own place. Never take a place id from an owner request: read it from the token.",
+      '401 when the token is missing, wrong or expired: the app signs the user out. 403 when the user is signed in but may not do this (the admin role lacks the permission, or the token is the wrong kind): the app stays signed in.',
       'Each endpoint names the permission it checks, as "module:action". A full-access role passes every check. Check on the server even though the dashboard hides what a role cannot do.',
     ],
     code: 'GET /places?pageIndex=0&pageSize=20\nAuthorization: Bearer 19|IMIsakH3jSYZAYYrrTvsc6rEpQX4Fad1d0nPq2Lx\nAccept: application/json\nAccept-Language: ar',

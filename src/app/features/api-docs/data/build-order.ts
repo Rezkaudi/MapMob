@@ -42,5 +42,10 @@ export const BUILD_ORDER: DocsTable = {
       'Dashboard summary and charts, analytics reports',
       'Read-only totals over everything above',
     ],
+    [
+      '10',
+      'Place owner app: owner sign-in and password reset, own place, products, offers, media, reviews, subscription requests, notifications, account, home stats',
+      'Reuses the tables above, scoped to the one place of the signed-in owner',
+    ],
   ],
 };

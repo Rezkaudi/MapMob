@@ -2,11 +2,10 @@ import { ApiFeature } from '../../models/api-feature';
 import { OWNER_OVERVIEW, OWNER_PERFORMANCE } from '../examples/owner-examples';
 import { field } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
-
 export const OWNER_OVERVIEW_FEATURE: ApiFeature = {
   id: 'owner-overview',
   name: 'Place owner home',
+  app: 'owner',
   screen: '/merchant/dashboard',
   permissionModule: null,
   intro:
@@ -17,7 +16,6 @@ export const OWNER_OVERVIEW_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/overview',
       summary: 'Everything on the owner home except the chart.',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -73,7 +71,6 @@ export const OWNER_OVERVIEW_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/overview/performance',
       summary: 'The "أداء المتجر والمشاهدات" chart for one tab.',
-      permission: OWNER_ONLY,
       queryParams: [
         field(
           'period',

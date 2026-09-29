@@ -54,6 +54,7 @@ const ALREADY_SENT = {
 export const NOTIFICATIONS_FEATURE: ApiFeature = {
   id: 'notifications',
   name: 'Push notifications',
+  app: 'admin',
   screen: '/admin/notifications',
   permissionModule: 'notifications',
   intro:

@@ -50,7 +50,7 @@
         <app-docs-section-heading
           number="01"
           title="Overview"
-          description="Paths are relative to the API base URL. Every request except sign-in sends the admin's bearer token. Read the conventions once — they apply to every endpoint."
+          description="One API serves two apps: the admin dashboard and the place owner app. Paths are relative to the API base URL. Every request except sign-in sends the signed-in user's bearer token. Read the conventions once — they apply to every endpoint."
         />
         <app-docs-overview />
       </section>
@@ -72,7 +72,7 @@
         <app-docs-section-heading
           number="03"
           title="Endpoints"
-          description="Grouped by dashboard screen. Open a card for its parameters, request body, expected response, errors, rules and a cURL line."
+          description="Grouped by app, then by screen. Open a card for its parameters, request body, expected response, errors, rules and a cURL line."
         />
         <div class="z-10 -mx-1 mb-6 px-1 pt-2 pb-1 lg:sticky lg:top-0 print:hidden">
           <app-docs-toolbar
@@ -85,14 +85,23 @@
             (closeAll)="store.closeAll()"
           />
         </div>
-        <div class="space-y-12">
-          @for (feature of store.visibleFeatures(); track feature.id) {
-            <app-endpoint-section
-              [feature]="feature"
-              [openEndpointIds]="store.openEndpointSet()"
-              [isAllOpen]="store.isPrinting()"
-              (toggle)="toggleEndpoint($event)"
-            />
+        <div class="space-y-16">
+          @for (group of store.visibleFeatureGroups(); track group.app) {
+            <div class="space-y-12" [attr.data-app-group]="group.app">
+              <h3
+                class="border-b border-border pb-3 font-code text-[13px] font-bold tracking-[0.12em] text-primary uppercase"
+              >
+                {{ group.title }}
+              </h3>
+              @for (feature of group.features; track feature.id) {
+                <app-endpoint-section
+                  [feature]="feature"
+                  [openEndpointIds]="store.openEndpointSet()"
+                  [isAllOpen]="store.isPrinting()"
+                  (toggle)="toggleEndpoint($event)"
+                />
+              }
+            </div>
           } @empty {
             <div
               class="rounded-xl border border-dashed border-[#CBD5E1] bg-surface px-6 py-12 text-center"

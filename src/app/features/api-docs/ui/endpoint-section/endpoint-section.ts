@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { ApiFeature } from '../../models/api-feature';
+import { featureAccessLabel } from '../../state/access-text';
 import { EndpointCard } from '../endpoint-card/endpoint-card';
 
 @Component({
@@ -15,4 +16,6 @@ export class EndpointSection {
   /** While printing, every endpoint shows open. */
   readonly isAllOpen = input(false);
   readonly toggle = output<string>();
+
+  protected readonly accessLabel = computed(() => featureAccessLabel(this.feature()));
 }

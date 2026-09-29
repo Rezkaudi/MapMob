@@ -2,11 +2,10 @@ import { ApiFeature } from '../../models/api-feature';
 import { OWNER_NOTIFICATION } from '../examples/owner-examples';
 import { field } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
-
 export const OWNER_NOTIFICATIONS_FEATURE: ApiFeature = {
   id: 'owner-notifications',
   name: 'Place owner notifications',
+  app: 'owner',
   screen: '/merchant/notifications',
   permissionModule: null,
   intro:
@@ -17,7 +16,6 @@ export const OWNER_NOTIFICATIONS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/notifications',
       summary: "The owner's notifications, newest first.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'The latest 50 owner_inbox_items. Not paged.',
@@ -48,7 +46,6 @@ export const OWNER_NOTIFICATIONS_FEATURE: ApiFeature = {
       method: 'PATCH',
       path: '/owner/notifications/{id}/read',
       summary: 'Mark one notification as read.',
-      permission: OWNER_ONLY,
       body: { contentType: 'application/json', fields: [], example: {} },
       response: {
         status: 200,

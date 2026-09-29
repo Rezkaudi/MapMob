@@ -35,6 +35,7 @@ const NO_OPEN_REPORT = {
 export const REVIEWS_FEATURE: ApiFeature = {
   id: 'reviews',
   name: 'Reviews',
+  app: 'admin',
   screen: '/admin/reviews',
   permissionModule: 'reviews',
   intro: 'Stars and comments on places, and the queue of reviews users reported.',

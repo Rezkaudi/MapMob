@@ -7,7 +7,6 @@ import {
 } from '../examples/owner-examples';
 import { NO_CONTENT, field, optionalField } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const NOT_THEIR_PRODUCT = {
   status: 404,
   when: 'The product does not exist or belongs to another place.',
@@ -41,6 +40,7 @@ const PRODUCT_WRITE_FIELDS = [
 export const OWNER_PRODUCTS_FEATURE: ApiFeature = {
   id: 'owner-products',
   name: 'Place owner products',
+  app: 'owner',
   screen: '/merchant/products',
   permissionModule: null,
   intro:
@@ -51,7 +51,6 @@ export const OWNER_PRODUCTS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/products',
       summary: "Every product of the signed-in owner's place, with the plan's product limit.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -73,7 +72,6 @@ export const OWNER_PRODUCTS_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/products',
       summary: 'Add a product or service from the "إضافة منتج أو خدمة" dialog.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: PRODUCT_WRITE_FIELDS,
@@ -100,7 +98,6 @@ export const OWNER_PRODUCTS_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/products/{id}',
       summary: 'Save a product changed in the same dialog.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: [
@@ -129,7 +126,6 @@ export const OWNER_PRODUCTS_FEATURE: ApiFeature = {
       method: 'DELETE',
       path: '/owner/products/{id}',
       summary: 'Delete a product after the owner confirms.',
-      permission: OWNER_ONLY,
       response: NO_CONTENT,
       errors: [NOT_THEIR_PRODUCT],
       notes: ['Also delete its stored picture. Offers that listed it drop it from their items.'],

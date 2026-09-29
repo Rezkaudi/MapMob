@@ -27,6 +27,7 @@ const COMPLAINT_FILTER_FIELDS = [
 export const COMPLAINTS_FEATURE: ApiFeature = {
   id: 'complaints',
   name: 'Complaints',
+  app: 'admin',
   screen: '/admin/complaints',
   permissionModule: 'complaints',
   intro: 'Reports users file against a place, and what the admin decides on each.',

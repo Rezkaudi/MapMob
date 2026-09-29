@@ -3,13 +3,13 @@ import { OWNER_PLACE, OWNER_PLACE_UPDATE_FORM } from '../examples/owner-examples
 import { field, optionalField } from '../shared-fields';
 import { DELIVERY_LINK_FIELDS, DELIVERY_LINK_WRITE_FIELDS } from './delivery-link-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const DAY_NAMES = 'saturday | sunday | monday | tuesday | wednesday | thursday | friday';
 const REF = '{ id, name }';
 
 export const OWNER_PLACE_FEATURE: ApiFeature = {
   id: 'owner-place',
   name: 'Place owner details',
+  app: 'owner',
   screen: '/merchant/store',
   permissionModule: null,
   intro:
@@ -20,7 +20,6 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/place',
       summary: "The signed-in owner's place, as the details screen shows it.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -67,7 +66,6 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/place',
       summary: 'Save the details screen in one request.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: [

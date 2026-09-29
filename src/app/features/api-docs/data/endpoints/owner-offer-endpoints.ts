@@ -13,7 +13,6 @@ import {
   SAVED_CAMPAIGN_STATUS,
 } from './campaign-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const NOT_THEIR_OFFER = {
   status: 404,
   when: 'The offer does not exist or belongs to another place.',
@@ -65,6 +64,7 @@ const OFFER_WRITE_FIELDS = [
 export const OWNER_OFFERS_FEATURE: ApiFeature = {
   id: 'owner-offers',
   name: 'Place owner offers',
+  app: 'owner',
   screen: '/merchant/offers',
   permissionModule: null,
   intro:
@@ -75,7 +75,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/offers',
       summary: "Every offer of the signed-in owner's place, with the plan's live-offer limit.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -101,7 +100,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/offers/{id}',
       summary: 'One offer, to fill the edit page.',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'Shaped like one of items[] in GET /owner/offers.',
@@ -114,7 +112,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/offers',
       summary: 'Add an offer from the "إضافة عرض جديد" page ("حفظ العرض" or "حفظ كمسودة").',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: OFFER_WRITE_FIELDS,
@@ -136,7 +133,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/offers/{id}',
       summary: 'Save an offer changed on the "تعديل العرض" page.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: OFFER_WRITE_FIELDS,
@@ -158,7 +154,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/offers/{id}/pause',
       summary: 'Pause an offer from "إيقاف العرض" in the detail drawer.',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'The offer, now paused.',
@@ -172,7 +167,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/offers/{id}/resume',
       summary: 'Resume a paused offer from "تفعيل العرض".',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'The offer, status worked out again from its days.',
@@ -186,7 +180,6 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       method: 'DELETE',
       path: '/owner/offers/{id}',
       summary: 'Delete an offer after the owner confirms.',
-      permission: OWNER_ONLY,
       response: NO_CONTENT,
       errors: [NOT_THEIR_OFFER],
       notes: ['Also delete its stored picture and its offer_products rows.'],

@@ -43,6 +43,7 @@ const PLACE_FILTER_FIELDS = [
 export const PLACES_FEATURE: ApiFeature = {
   id: 'places',
   name: 'Places',
+  app: 'admin',
   screen: '/admin/places',
   permissionModule: 'places',
   intro:

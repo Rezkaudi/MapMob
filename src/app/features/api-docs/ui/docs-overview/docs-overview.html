@@ -21,16 +21,20 @@
       <div>
         <dt class="font-semibold text-text-primary">Base URL</dt>
         <dd class="text-text-secondary">
-          One prefix, e.g.
-          <code class="font-code text-[13px] text-primary">https://api.mapmob.com.co/admin</code>.
-          Paths below are relative to it.
+          One prefix for both apps, e.g.
+          <code class="font-code text-[13px] text-primary">https://api.mapmob.com.co/v1</code>.
+          Admin paths sit right under it; place owner paths start with
+          <code class="font-code text-[13px]">/owner</code>.
         </dd>
       </div>
       <div>
         <dt class="font-semibold text-text-primary">Sign-in</dt>
         <dd class="text-text-secondary">
           <code class="font-code text-[13px]">Authorization: Bearer &lt;token&gt;</code> on every
-          call except <code class="font-code text-[13px]">POST /auth/login</code>.
+          call except sign-in and password reset. Admins sign in with
+          <code class="font-code text-[13px]">POST /auth/login</code>, owners with
+          <code class="font-code text-[13px]">POST /owner/auth/login</code>. One kind of token never
+          opens the other app's calls.
         </dd>
       </div>
       <div>

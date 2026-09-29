@@ -17,6 +17,13 @@ const reference: ApiReference = {
     buildFeature({
       endpoints: [buildEndpoint(), buildEndpoint({ id: 'b', method: 'DELETE' })],
     }),
+    buildFeature({
+      id: 'owner-place',
+      name: 'Own place',
+      app: 'owner',
+      permissionModule: null,
+      endpoints: [buildEndpoint({ id: 'owner-place-get', path: '/owner/place' })],
+    }),
   ],
   domains: [
     {
@@ -64,7 +71,20 @@ describe('buildApiReferenceMarkdown', () => {
   });
 
   it('counts the endpoints by method', () => {
-    expect(markdown).toContain('| 2 | 1 | 0 | 0 | 0 | 1 |');
+    expect(markdown).toContain('| 3 | 2 | 0 | 0 | 0 | 1 |');
+  });
+
+  it('serves both the admin dashboard and the place owner app', () => {
+    expect(markdown).toContain('the admin dashboard and the place owner app');
+  });
+
+  it('splits the endpoints by app, admin dashboard first', () => {
+    const adminAt = markdown.indexOf('**Admin dashboard** — 2 endpoints');
+    const ownerAt = markdown.indexOf('**Place owner app** — 1 endpoints');
+
+    expect(adminAt).toBeGreaterThan(markdown.indexOf('## Endpoints'));
+    expect(ownerAt).toBeGreaterThan(adminAt);
+    expect(markdown.indexOf('### Own place')).toBeGreaterThan(ownerAt);
   });
 
   it('writes the sections in reading order', () => {

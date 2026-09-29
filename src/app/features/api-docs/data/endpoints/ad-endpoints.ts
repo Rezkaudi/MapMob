@@ -86,6 +86,7 @@ const AD_FORM_FIELDS = [
 export const ADS_FEATURE: ApiFeature = {
   id: 'ads',
   name: 'Ads',
+  app: 'admin',
   screen: '/admin/ads',
   // The role matrix has no ads row yet, so ads share the offers permissions.
   permissionModule: 'offers',

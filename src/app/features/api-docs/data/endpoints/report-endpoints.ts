@@ -14,6 +14,7 @@ const LAST_30_DAYS = 'Counts the last 30 days.';
 export const REPORTS_FEATURE: ApiFeature = {
   id: 'reports',
   name: 'Analytics reports',
+  app: 'admin',
   screen: '/admin/reports',
   permissionModule: 'reports',
   intro:

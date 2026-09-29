@@ -1,5 +1,6 @@
 import { ApiFeature } from '../../models/api-feature';
 import {
+  CURRENT_OWNER,
   NEW_PASSWORD_REQUEST,
   OWNER_SIGN_IN_REQUEST,
   RESET_CODE_CHECK,
@@ -8,6 +9,12 @@ import {
   SIGNED_IN_OWNER,
 } from '../examples/owner-examples';
 import { NO_CONTENT, field } from '../shared-fields';
+
+const OWNER_FIELDS = [
+  field('id / name', 'string', 'The owner account. name is shown in the top bar.'),
+  field('role', 'enum: owner', 'Always "owner". The dashboard opens the owner area for it.'),
+  field('avatarUrl', 'string (url) | null'),
+];
 
 const TOO_MANY_TRIES = {
   status: 429,
@@ -18,6 +25,7 @@ const TOO_MANY_TRIES = {
 export const OWNER_AUTH_FEATURE: ApiFeature = {
   id: 'owner-auth',
   name: 'Place owner sign-in',
+  app: 'owner',
   screen: '/login?role=merchant',
   permissionModule: null,
   intro:
@@ -42,13 +50,7 @@ export const OWNER_AUTH_FEATURE: ApiFeature = {
         description: 'The token and who signed in.',
         example: SIGNED_IN_OWNER,
         fields: [
-          field('id / name', 'string', 'The owner account. name is shown in the top bar.'),
-          field(
-            'role',
-            'enum: owner',
-            'Always "owner". The dashboard opens the owner area for it.',
-          ),
-          field('avatarUrl', 'string (url) | null'),
+          ...OWNER_FIELDS,
           field('token', 'string', 'Sanctum token, scoped to owner calls only.'),
         ],
       },
@@ -135,6 +137,26 @@ export const OWNER_AUTH_FEATURE: ApiFeature = {
       notes: [
         'Revoke every token of the account, so old sessions end. The dashboard then shows the login.',
       ],
+    },
+    {
+      id: 'owner-auth-me',
+      method: 'GET',
+      path: '/owner/auth/me',
+      summary: 'The signed-in owner, to check a saved token when the owner dashboard reloads.',
+      response: {
+        status: 200,
+        description: "The owner, same shape as login's answer without the token.",
+        example: CURRENT_OWNER,
+        fields: OWNER_FIELDS,
+      },
+    },
+    {
+      id: 'owner-auth-logout',
+      method: 'POST',
+      path: '/owner/auth/logout',
+      summary: 'Sign out: revoke the token that made the call.',
+      response: NO_CONTENT,
+      notes: ['The "تسجيل الخروج" button must call this before clearing its copy of the token.'],
     },
   ],
 };

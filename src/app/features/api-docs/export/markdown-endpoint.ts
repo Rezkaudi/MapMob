@@ -4,6 +4,7 @@ import { ApiField } from '../models/api-field';
 import { errorCasesFor } from '../state/error-cases';
 import { pathParamsFor } from '../state/path-params';
 import { prettyJson } from '../state/pretty-json';
+import { accessText } from '../state/access-text';
 import { requiredPermission } from '../state/required-permission';
 import { buildCurlExample } from './curl-example';
 import { markdownTable } from './markdown-table';
@@ -30,9 +31,7 @@ function codeBlock(language: string, text: string): string {
 function facts(feature: ApiFeature, endpoint: ApiEndpoint): string {
   const lines: string[] = [];
   const permission = requiredPermission(feature, endpoint);
-  lines.push(
-    `**Permission:** ${permission ? `\`${permission}\`` : endpoint.isPublic ? 'none (public)' : 'any signed-in admin'}`,
-  );
+  lines.push(`**Permission:** ${permission ? `\`${permission}\`` : accessText(feature, endpoint)}`);
   lines.push(`**Called from:** \`${feature.screen}\``);
   return lines.join('  \n');
 }

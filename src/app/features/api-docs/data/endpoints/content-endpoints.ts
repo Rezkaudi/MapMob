@@ -44,6 +44,7 @@ const CONTACT_FIELDS = [
 export const CONTENT_FEATURE: ApiFeature = {
   id: 'content',
   name: 'Content pages',
+  app: 'admin',
   screen: '/admin/content',
   permissionModule: 'content',
   intro: 'The fixed pages the mobile app shows: about, terms, privacy, contact and the FAQ.',

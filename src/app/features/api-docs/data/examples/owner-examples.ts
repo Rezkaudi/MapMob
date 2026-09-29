@@ -24,6 +24,13 @@ export const SIGNED_IN_OWNER = {
   token: '27|q8PzWcm1dKbX0oLs3YhT9vNaRf6uEi2GjSkM4tBy',
 } satisfies AuthenticatedUser;
 
+export const CURRENT_OWNER = {
+  id: SIGNED_IN_OWNER.id,
+  name: SIGNED_IN_OWNER.name,
+  role: SIGNED_IN_OWNER.role,
+  avatarUrl: SIGNED_IN_OWNER.avatarUrl,
+};
+
 export const RESET_CODE_REQUEST = { email: 'rawabi@gmail.com' };
 
 export const RESET_CODE_CHECK = {

@@ -16,6 +16,7 @@ const ADMIN_FIELDS = [
 export const AUTH_FEATURE: ApiFeature = {
   id: 'auth',
   name: 'Authentication',
+  app: 'admin',
   screen: '/login',
   permissionModule: null,
   intro:

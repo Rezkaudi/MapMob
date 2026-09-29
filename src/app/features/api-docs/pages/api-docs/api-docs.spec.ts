@@ -28,6 +28,13 @@ const reference: ApiReference = {
       name: 'App users',
       endpoints: [buildEndpoint({ id: 'users-list', path: '/users' })],
     }),
+    buildFeature({
+      id: 'owner-place',
+      name: 'Own place',
+      app: 'owner',
+      permissionModule: null,
+      endpoints: [buildEndpoint({ id: 'owner-place-get', path: '/owner/place' })],
+    }),
   ],
   domains: [
     {
@@ -99,6 +106,25 @@ describe('ApiDocsPage', () => {
     expect(root.getAttribute('lang')).toBe('en');
   });
 
+  it('splits the endpoints into the admin dashboard and the place owner app', () => {
+    const element: HTMLElement = render().nativeElement;
+    const groups = [...element.querySelectorAll('#endpoints [data-app-group]')];
+
+    expect(groups.map((group) => group.querySelector('h3')?.textContent?.trim())).toEqual([
+      'Admin dashboard',
+      'Place owner app',
+    ]);
+    expect(groups[1].querySelector('#owner-place')).toBeTruthy();
+    expect(groups[0].querySelector('#owner-place')).toBeNull();
+  });
+
+  it('introduces the reference as serving both apps', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    expect(element.querySelector('header')?.textContent).toContain('place owner');
+    expect(element.querySelector('#overview')?.textContent).toContain('/owner');
+  });
+
   it('shows every part of the reference', () => {
     const element: HTMLElement = render().nativeElement;
 
@@ -118,7 +144,7 @@ describe('ApiDocsPage', () => {
     ]) {
       expect(element.querySelector(`#${id}`), id).toBeTruthy();
     }
-    expect(cardCount(element)).toBe(3);
+    expect(cardCount(element)).toBe(4);
     expect(element.querySelector('app-erd-diagram')).toBeTruthy();
     expect(element.textContent).toContain('Soft delete?');
   });
@@ -216,7 +242,7 @@ describe('ApiDocsPage', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(openCardsAtPrint).toEqual([3]);
+    expect(openCardsAtPrint).toEqual([4]);
     expect(fixture.nativeElement.querySelectorAll('[data-endpoint-details]')).toHaveLength(0);
   });
 });

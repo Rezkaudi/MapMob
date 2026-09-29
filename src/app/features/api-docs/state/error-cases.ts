@@ -6,7 +6,7 @@ import { requiredPermission } from './required-permission';
 
 const UNAUTHENTICATED: ApiErrorCase = {
   status: 401,
-  when: 'The bearer token is missing, wrong or expired. The dashboard signs the admin out.',
+  when: 'The bearer token is missing, wrong or expired. The app signs the user out.',
   example: { message: 'Unauthenticated.' },
 };
 
@@ -34,6 +34,12 @@ function validationFailed(endpoint: ApiEndpoint): ApiErrorCase {
   };
 }
 
+const WRONG_TOKEN_KIND: ApiErrorCase = {
+  status: 403,
+  when: 'The token is an admin token, not a place owner token. Do not sign out.',
+  example: { message: 'This action is unauthorized.' },
+};
+
 function forbidden(permission: string): ApiErrorCase {
   return {
     status: 403,
@@ -51,6 +57,9 @@ export function errorCasesFor(feature: ApiFeature, endpoint: ApiEndpoint): ApiEr
   }
   if (permission) {
     cases.push(forbidden(permission));
+  }
+  if (feature.app === 'owner' && !endpoint.isPublic) {
+    cases.push(WRONG_TOKEN_KIND);
   }
   if (pathParamNames(endpoint.path).length > 0) {
     cases.push(NOT_FOUND);

@@ -67,6 +67,7 @@ const OFFER_FORM_FIELDS = [
 export const OFFERS_FEATURE: ApiFeature = {
   id: 'offers',
   name: 'Offers',
+  app: 'admin',
   screen: '/admin/offers',
   permissionModule: 'offers',
   intro:

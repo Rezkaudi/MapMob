@@ -32,6 +32,15 @@ describe('endpointMarkdown', () => {
     expect(markdown).not.toContain('**Status:**');
   });
 
+  it('asks an owner app call for a place owner token instead of a role permission', () => {
+    const ownerMarkdown = endpointMarkdown(
+      buildFeature({ app: 'owner', permissionModule: null, screen: '/merchant/store' }),
+      buildEndpoint({ path: '/owner/place' }),
+    );
+
+    expect(ownerMarkdown).toContain('**Permission:** Place owner token — own place only');
+  });
+
   it('lists the path, query and body fields in tables', () => {
     expect(markdown).toContain('**Path parameters**');
     expect(markdown).toContain('| `id` | string | yes | The record id. |');

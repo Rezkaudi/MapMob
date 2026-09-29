@@ -5,6 +5,7 @@ import { SETTINGS_TEAM_ENDPOINTS } from './settings-team-endpoints';
 export const SETTINGS_FEATURE: ApiFeature = {
   id: 'settings',
   name: 'Settings',
+  app: 'admin',
   screen: '/admin/settings',
   permissionModule: 'system',
   intro:

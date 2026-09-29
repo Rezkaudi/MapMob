@@ -32,6 +32,7 @@ const STILL_IN_USE = {
 export const REGIONS_FEATURE: ApiFeature = {
   id: 'regions',
   name: 'Governorates and areas',
+  app: 'admin',
   screen: '/admin/regions',
   permissionModule: 'regions',
   intro:

@@ -5,7 +5,7 @@ import { ApiFeature } from '../../models/api-feature';
 import { errorCasesFor } from '../../state/error-cases';
 import { pathParamsFor } from '../../state/path-params';
 import { prettyJson } from '../../state/pretty-json';
-import { requiredPermission } from '../../state/required-permission';
+import { accessText } from '../../state/access-text';
 import { CodeBlock } from '../code-block/code-block';
 import { ErrorTable } from '../error-table/error-table';
 import { FieldTable } from '../field-table/field-table';
@@ -33,12 +33,5 @@ export class EndpointDetails {
     const example = this.endpoint().response.example;
     return example === undefined ? null : prettyJson(example);
   });
-  protected readonly permissionText = computed(() => {
-    const endpoint = this.endpoint();
-    const permission = requiredPermission(this.feature(), endpoint);
-    if (permission) {
-      return permission;
-    }
-    return endpoint.isPublic ? 'None — public' : 'Any signed-in admin';
-  });
+  protected readonly permissionText = computed(() => accessText(this.feature(), this.endpoint()));
 }

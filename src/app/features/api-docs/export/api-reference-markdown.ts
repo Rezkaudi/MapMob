@@ -3,6 +3,7 @@ import { ApiReference } from '../models/api-reference';
 import { DocsSection } from '../models/docs-section';
 import { HTTP_METHODS } from '../models/http-method';
 import { countEndpoints } from '../state/count-endpoints';
+import { FeatureGroup, groupFeaturesByApp } from '../state/feature-groups';
 import { wholeDatabase } from '../state/whole-database';
 import { databaseMarkdown, mermaidDiagram } from './markdown-database';
 import { endpointMarkdown } from './markdown-endpoint';
@@ -49,19 +50,27 @@ function featureMarkdown(feature: ApiFeature): string {
   ].join('\n\n');
 }
 
+function featureGroupMarkdown(group: FeatureGroup): string {
+  const endpointCount = countEndpoints(group.features).total;
+  return [
+    `**${group.title}** — ${endpointCount} endpoints`,
+    ...group.features.map(featureMarkdown),
+  ].join('\n\n');
+}
+
 /** The whole reference as one README-style Markdown file. */
 export function buildApiReferenceMarkdown(reference: ApiReference): string {
   return (
     [
       `# ${reference.title}`,
-      `What the backend must provide for the MapMob admin dashboard. Updated ${reference.updatedOn}. Every path is relative to the API base URL.`,
+      `What the backend must provide for the admin dashboard and the place owner app. Updated ${reference.updatedOn}. Every path is relative to the API base URL.`,
       summaryTable(reference),
       '## Contents',
       CONTENTS,
       '## Conventions',
       ...reference.conventions.map(conventionMarkdown),
       '## Endpoints',
-      ...reference.features.map(featureMarkdown),
+      ...groupFeaturesByApp(reference.features).map(featureGroupMarkdown),
       '## Database',
       'A MySQL schema (Laravel migrations) that serves every endpoint above. Column names are snake_case; the API maps them to camelCase.',
       '### Complete ERD',

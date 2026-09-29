@@ -59,6 +59,23 @@ describe('errorCasesFor', () => {
     expect(forbidden?.when).toContain('places:view');
   });
 
+  it('checks the kind of token, not a role, on an owner app call', () => {
+    const ownerFeature = buildFeature({ app: 'owner', permissionModule: null });
+    const forbidden = errorCasesFor(ownerFeature, buildEndpoint()).find(
+      (one) => one.status === 403,
+    );
+
+    expect(forbidden?.when).toContain('admin token');
+  });
+
+  it('signs out the user of either app on 401', () => {
+    const unauthenticated = errorCasesFor(feature, buildEndpoint()).find(
+      (one) => one.status === 401,
+    );
+
+    expect(unauthenticated?.when).not.toContain('admin');
+  });
+
   it('adds the cases an endpoint lists itself, in status order', () => {
     const endpoint = buildEndpoint({
       path: '/places/{id}',

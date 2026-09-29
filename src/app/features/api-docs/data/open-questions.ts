@@ -13,4 +13,6 @@ export const OPEN_QUESTIONS: readonly string[] = [
   'The roles matrix has no "delivery platforms" module, so this reference guards /delivery-platforms with the places permissions. Add its own module instead?',
   'Deleting a delivery platform removes its place links and its referral history. Refuse the delete while places are still linked (switching it off keeps everything), or make it a soft delete?',
   'Place owners send plan change requests (subscription_requests), but no admin screen lists or handles them yet. Which screen should, and does approving one also record the payment?',
+  'Owner notifications mention an admin approving or rejecting an offer, but no admin endpoint approves an offer a place owner made. Do owner offers go live at once, or add POST /offers/{id}/approve and /reject?',
+  'Do changes a place owner saves (PUT /owner/place, products, media) go live at once, or wait for an admin to check them?',
 ];

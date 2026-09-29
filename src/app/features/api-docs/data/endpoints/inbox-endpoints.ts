@@ -5,6 +5,7 @@ import { field } from '../shared-fields';
 export const INBOX_FEATURE: ApiFeature = {
   id: 'inbox',
   name: 'Admin inbox',
+  app: 'admin',
   screen: '/admin/inbox',
   permissionModule: null,
   intro: "The signed-in admin's own alerts behind the bell in the top bar.",

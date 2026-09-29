@@ -3,6 +3,7 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { API_REFERENCE } from '../data/api-reference';
 import { HttpMethod } from '../models/http-method';
 import { countEndpoints } from './count-endpoints';
+import { groupFeaturesByApp } from './feature-groups';
 import { filterApiFeatures } from './filter-api-features';
 import { wholeDatabase } from './whole-database';
 
@@ -42,6 +43,7 @@ export const ApiDocsStore = signalStore(
           reference.domains.reduce((sum, domain) => sum + domain.tables.length, 0),
         ),
         visibleFeatures,
+        visibleFeatureGroups: computed(() => groupFeaturesByApp(visibleFeatures())),
         visibleCount,
         hasNoMatches: computed(() => visibleCount() === 0),
         openEndpointSet: computed(() => new Set(openEndpointIds())),

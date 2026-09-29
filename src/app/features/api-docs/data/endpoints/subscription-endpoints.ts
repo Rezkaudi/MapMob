@@ -57,6 +57,7 @@ const PLAN_DRAFT_FIELDS = [
 export const SUBSCRIPTIONS_FEATURE: ApiFeature = {
   id: 'subscriptions',
   name: 'Plans and subscriptions',
+  app: 'admin',
   screen: '/admin/subscriptions',
   permissionModule: 'subscriptions',
   intro:

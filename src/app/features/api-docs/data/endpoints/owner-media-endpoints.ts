@@ -7,7 +7,6 @@ import {
 } from '../examples/owner-media-examples';
 import { NO_CONTENT, field } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const NOT_THEIR_MEDIA = {
   status: 404,
   when: 'The file does not exist or belongs to another place.',
@@ -33,6 +32,7 @@ const MEDIA_FIELDS = [
 export const OWNER_MEDIA_FEATURE: ApiFeature = {
   id: 'owner-media',
   name: 'Place owner media',
+  app: 'owner',
   screen: '/merchant/media',
   permissionModule: null,
   intro:
@@ -44,7 +44,6 @@ export const OWNER_MEDIA_FEATURE: ApiFeature = {
       path: '/owner/media',
       summary:
         "Every picture and video of the signed-in owner's place, with the plan's two limits.",
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -71,7 +70,6 @@ export const OWNER_MEDIA_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/media',
       summary: 'Add one picture or video from the "إضافة وسائط" dialog.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: [
@@ -107,7 +105,6 @@ export const OWNER_MEDIA_FEATURE: ApiFeature = {
       method: 'PUT',
       path: '/owner/media/{id}',
       summary: 'Swap the file of one picture or video, from the card menu ("استبدال الصورة").',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'multipart/form-data',
         fields: [field('file', 'file', `Same kind as the one it replaces. ${FILE_RULES}`)],
@@ -136,7 +133,6 @@ export const OWNER_MEDIA_FEATURE: ApiFeature = {
       method: 'DELETE',
       path: '/owner/media/{id}',
       summary: 'Delete one picture or video after the owner confirms.',
-      permission: OWNER_ONLY,
       response: NO_CONTENT,
       errors: [NOT_THEIR_MEDIA],
       notes: [

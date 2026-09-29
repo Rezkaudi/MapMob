@@ -48,6 +48,7 @@ const CATEGORY_DRAFT_FIELDS = [
 export const CATEGORIES_FEATURE: ApiFeature = {
   id: 'categories',
   name: 'Categories',
+  app: 'admin',
   screen: '/admin/categories',
   permissionModule: 'categories',
   intro:

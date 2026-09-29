@@ -6,7 +6,6 @@ import {
 } from '../examples/owner-subscription-examples';
 import { PLAN_TIER, field } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const PERIOD = 'enum: monthly | yearly';
 const CHANGE_KIND = 'enum: upgrade | downgrade | renewal';
 
@@ -84,6 +83,7 @@ const REQUEST_FIELDS = [
 export const OWNER_SUBSCRIPTION_FEATURE: ApiFeature = {
   id: 'owner-subscription',
   name: 'Place owner subscription',
+  app: 'owner',
   screen: '/merchant/subscription',
   permissionModule: null,
   intro:
@@ -94,7 +94,6 @@ export const OWNER_SUBSCRIPTION_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/subscription',
       summary: 'Everything the subscription screen shows, in one call.',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: 'One object for the whole screen.',
@@ -136,7 +135,6 @@ export const OWNER_SUBSCRIPTION_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/subscription/requests',
       summary: 'Ask to upgrade, move to a cheaper plan, or renew, from the plan dialogs.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'application/json',
         fields: [

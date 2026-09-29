@@ -35,8 +35,29 @@ const MOMENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(Z|[+-]\d\d:\d\d)$/;
 const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
-  it('lists every call the dashboard makes, the three the place form needs, and me/logout', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(177);
+  it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
+    expect(countEndpoints(API_FEATURES).total).toBe(179);
+  });
+
+  it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {
+    const misplaced = API_FEATURES.flatMap((feature) =>
+      feature.endpoints
+        .filter((endpoint) => endpoint.path.startsWith('/owner/') !== (feature.app === 'owner'))
+        .map((endpoint) => endpoint.id),
+    );
+
+    expect(misplaced).toEqual([]);
+  });
+
+  it('never gives an owner app call an admin role permission', () => {
+    const ownerFeatures = API_FEATURES.filter((feature) => feature.app === 'owner');
+    const withRole = ownerFeatures.flatMap((feature) =>
+      feature.endpoints
+        .filter((endpoint) => feature.permissionModule || endpoint.permission)
+        .map((endpoint) => endpoint.id),
+    );
+
+    expect(withRole).toEqual([]);
   });
 
   it('lists the seven calls of the delivery platforms screen', () => {
@@ -55,7 +76,7 @@ describe('the API reference data', () => {
     ]);
   });
 
-  it('lists the thirty-three calls of the place owner area', () => {
+  it('lists the thirty-five calls of the place owner area', () => {
     const ownerPaths = endpoints
       .filter((endpoint) => endpoint.path.startsWith('/owner/'))
       .map((endpoint) => `${endpoint.method} ${endpoint.path}`);
@@ -65,6 +86,8 @@ describe('the API reference data', () => {
       'POST /owner/auth/password/forgot',
       'POST /owner/auth/password/verify-code',
       'POST /owner/auth/password/reset',
+      'GET /owner/auth/me',
+      'POST /owner/auth/logout',
       'GET /owner/overview',
       'GET /owner/overview/performance',
       'GET /owner/place',

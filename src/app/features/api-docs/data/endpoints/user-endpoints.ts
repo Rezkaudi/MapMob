@@ -34,6 +34,7 @@ const USER_ROW_FIELDS = [
 export const USERS_FEATURE: ApiFeature = {
   id: 'users',
   name: 'App users',
+  app: 'admin',
   screen: '/admin/users',
   permissionModule: 'users',
   intro:

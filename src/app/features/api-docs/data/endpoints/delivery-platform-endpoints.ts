@@ -68,6 +68,7 @@ const DUPLICATE_NAME = {
 export const DELIVERY_PLATFORMS_FEATURE: ApiFeature = {
   id: 'delivery-platforms',
   name: 'Delivery platforms',
+  app: 'admin',
   screen: '/admin/delivery-platforms',
   permissionModule: 'places',
   intro:

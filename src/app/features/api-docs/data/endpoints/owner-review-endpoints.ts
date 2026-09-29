@@ -13,13 +13,13 @@ import {
   pagedExample,
 } from '../shared-fields';
 
-const OWNER_ONLY = 'The owner of the signed-in account; scoped to reviews of their own place.';
 const REPORT_STATUS = 'enum: none | pending | accepted | rejected';
 const REPORT_REASON = 'enum: abusive | fake | unrelated | promotional | other';
 
 export const OWNER_REVIEWS_FEATURE: ApiFeature = {
   id: 'owner-reviews',
   name: 'Place owner reviews',
+  app: 'owner',
   screen: '/merchant/reviews',
   permissionModule: null,
   intro:
@@ -30,7 +30,6 @@ export const OWNER_REVIEWS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/reviews',
       summary: "The paged reviews table of the signed-in owner's place.",
-      permission: OWNER_ONLY,
       queryParams: [
         ...PAGED_QUERY_FIELDS,
         optionalField('rating', 'integer 1-5', 'Exactly this many stars.'),
@@ -62,7 +61,6 @@ export const OWNER_REVIEWS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/owner/reviews/summary',
       summary: 'The card above the table: score, star bars and this month.',
-      permission: OWNER_ONLY,
       response: {
         status: 200,
         description: "Counts over every published review of the owner's place.",
@@ -93,7 +91,6 @@ export const OWNER_REVIEWS_FEATURE: ApiFeature = {
       method: 'POST',
       path: '/owner/reviews/{id}/report',
       summary: 'Report one review from the "الإبلاغ عن مراجعة" dialog.',
-      permission: OWNER_ONLY,
       body: {
         contentType: 'application/json',
         fields: [
