@@ -5,6 +5,14 @@ const STORAGE = 'https://api.mapmob.com.co/storage';
 
 const PLAN = { id: '2', name: 'الباقة الأساسية', tier: 'basic' };
 
+const BEE_ORDER = {
+  id: '1',
+  name: 'بي أوردر',
+  latinName: 'BeeOrder',
+  logoUrl: `${STORAGE}/delivery-platforms/1.png`,
+};
+const TALABAT = { id: '3', name: 'طلبات', latinName: 'Talabat', logoUrl: null };
+
 export const PLACE_ROW = {
   id: '12',
   code: 'PL-0012',
@@ -102,6 +110,14 @@ export const PLACE_DETAIL = {
       imageUrl: `${STORAGE}/offers/2.png`,
     },
   ],
+  deliveryLinks: [
+    {
+      platform: BEE_ORDER,
+      isEnabled: true,
+      storeUrl: 'https://beeorder.sy/store/damascus-central',
+    },
+    { platform: TALABAT, isEnabled: false, storeUrl: null },
+  ],
   createdAt: '2026-09-22T19:01:50Z',
   updatedAt: '2026-09-25T08:30:00Z',
 };
@@ -133,6 +149,11 @@ export const PLACE_WRITE_FORM = {
   'workingHours[1][isOpen]': true,
   'workingHours[1][openTime]': '09:00',
   'workingHours[1][closeTime]': '18:00',
+  'deliveryLinks[0][platformId]': '1',
+  'deliveryLinks[0][isEnabled]': true,
+  'deliveryLinks[0][storeUrl]': 'https://beeorder.sy/store/damascus-central',
+  'deliveryLinks[1][platformId]': '3',
+  'deliveryLinks[1][isEnabled]': false,
   logo: '@logo.png',
   'images[]': ['@front.jpg', '@inside.jpg'],
   'videos[]': ['@tour.mp4'],
@@ -162,6 +183,7 @@ export const PLACE_FORM_OPTIONS = {
     PLAN,
     { id: '3', name: 'الباقة المميزة', tier: 'featured' },
   ],
+  deliveryPlatforms: [BEE_ORDER, TALABAT],
 };
 
 export const PLACE_OFFER_ITEMS = [

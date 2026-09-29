@@ -1,0 +1,20 @@
+<!-- The frame pads this card 35px at the bottom (34px + the border), 19px more than its sides. -->
+<app-info-card
+  class="[&>section]:pb-[34px]"
+  heading="الاشتراك"
+  [canEdit]="true"
+  padding="compact"
+  (edit)="edit.emit()"
+>
+  <div class="flex flex-col gap-4">
+    <app-place-fact-row label="خطة الاشتراك">
+      <span data-role="plan" class="text-accent">{{ planLabel() }}</span>
+    </app-place-fact-row>
+    <app-place-fact-row label="الحالة">
+      <span data-role="status" [class]="statusClass()">{{ statusLabel() }}</span>
+    </app-place-fact-row>
+    <app-place-fact-row label="تاريخ التجديد">
+      <span data-role="card-date" class="text-text-secondary" dir="ltr">{{ renewsOn() }}</span>
+    </app-place-fact-row>
+  </div>
+</app-info-card>

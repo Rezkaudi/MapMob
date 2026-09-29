@@ -1,0 +1,27 @@
+<app-form-section heading="الباقة والحالة" icon="settings" appearance="compact" [iconSize]="20">
+  <div class="grid grid-cols-2 gap-6" [formGroup]="form()">
+    <div class="flex flex-col gap-1">
+      <app-field-label text="الباقة" forId="package" [isRequired]="true" />
+      <app-place-select-frame>
+        <select id="package" formControlName="package" appPlaceFieldControl>
+          @for (option of packages; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </app-place-select-frame>
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="حالة المكان" forId="status" [isRequired]="true" />
+      <app-place-select-frame>
+        <select id="status" formControlName="status" appPlaceFieldControl>
+          @for (option of statuses; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </app-place-select-frame>
+      <p class="mt-1 text-start text-[11px]/[14px] text-text-secondary">
+        يتم عرض الأماكن "النشطة" فقط للجمهور.
+      </p>
+    </div>
+  </div>
+</app-form-section>

@@ -199,7 +199,8 @@ export const PLACES_FEATURE: ApiFeature = {
       id: 'places-form-options',
       method: 'GET',
       path: '/places/form-options',
-      summary: 'The dropdowns of the place form: categories, governorates with areas, plans.',
+      summary:
+        'The dropdowns of the place form: categories, governorates with areas, plans, and the ordering apps to link.',
       response: {
         status: 200,
         description: 'Active entries only, sorted as they should show.',
@@ -208,6 +209,11 @@ export const PLACES_FEATURE: ApiFeature = {
           field('mainCategories[]', 'object', '{ id, name, subCategories: [{ id, name }] }'),
           field('governorates[]', 'object', '{ id, name, areas: [{ id, name }] }'),
           field('plans[]', 'object', '{ id, name, tier }'),
+          field(
+            'deliveryPlatforms[]',
+            'object',
+            '{ id, name, latinName, logoUrl | null }. Active platforms by sort_order; a new place gets one switch per row.',
+          ),
         ],
       },
     },

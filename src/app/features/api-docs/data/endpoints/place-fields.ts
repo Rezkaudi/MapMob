@@ -1,4 +1,5 @@
 import { PLAN_TIER, field, optionalField } from '../shared-fields';
+import { DELIVERY_LINK_FIELDS, DELIVERY_LINK_WRITE_FIELDS } from './delivery-link-fields';
 
 export const PLACE_STATUS = 'enum: active | suspended | pending';
 const DAY_NAMES = 'saturday | sunday | monday | tuesday | wednesday | thursday | friday';
@@ -57,6 +58,7 @@ export const PLACE_DETAIL_FIELDS = [
     'object[]',
     "The place's offers: { id, title, description, startsOn, endsOn, status, imageUrl | null }. Same status words as /offers.",
   ),
+  ...DELIVERY_LINK_FIELDS,
   field('createdAt / updatedAt', 'datetime (ISO 8601)'),
 ];
 
@@ -89,6 +91,7 @@ export const PLACE_WRITE_FIELDS = [
     'string (HH:mm)',
     'Required when isOpen is true; closeTime after openTime.',
   ),
+  ...DELIVERY_LINK_WRITE_FIELDS,
   optionalField('logo', 'file (png, jpg, webp; max 2 MB)'),
   optionalField(
     'images[]',

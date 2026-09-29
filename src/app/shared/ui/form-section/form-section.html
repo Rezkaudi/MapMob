@@ -4,7 +4,7 @@
     [class]="headerClasses()"
   >
     <div class="flex items-center text-accent" [class]="headingClasses()">
-      <app-icon [name]="icon()" [size]="24" />
+      <app-icon aria-hidden="true" [name]="icon()" [size]="iconSize()" />
       <h2
         class="text-[18px]/[28px]"
         [class.font-bold]="appearance() === 'rounded'"
@@ -15,7 +15,7 @@
     </div>
     <ng-content select="[headerAction]" />
   </header>
-  <div class="p-6">
+  <div [class.p-6]="!hasFlushBody()">
     <ng-content />
   </div>
 </section>

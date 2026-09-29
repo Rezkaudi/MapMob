@@ -58,6 +58,18 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
         duration: '01:24',
       },
     ],
+    deliveryLinks: [
+      {
+        platform: { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },
+        isEnabled: true,
+        storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+      },
+      {
+        platform: { id: '3', name: 'طلبات', latinName: 'Talabat', logoUrl: null },
+        isEnabled: false,
+        storeUrl: null,
+      },
+    ],
     isOpenNow: true,
     ...overrides,
   };

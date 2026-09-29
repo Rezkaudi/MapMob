@@ -1,0 +1,10 @@
+<app-info-card heading="سجل النشاط" padding="compact">
+  <div class="flex flex-col gap-4">
+    <app-place-fact-row label="تاريخ الإضافة">
+      <span data-role="card-date" class="text-text-secondary" dir="ltr">{{ addedOn() }}</span>
+    </app-place-fact-row>
+    <app-place-fact-row label="آخر تحديث">
+      <span class="text-text-secondary">{{ activity().updatedLabel }}</span>
+    </app-place-fact-row>
+  </div>
+</app-info-card>

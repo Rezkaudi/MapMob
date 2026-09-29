@@ -1,4 +1,4 @@
-import { DeliveryPlatform } from './delivery-platform';
+import { DeliveryPlatform } from '../../../shared/models/delivery-platform';
 
 /** One platform of the ordering card, ready to show. */
 export interface DeliveryLinkRow {

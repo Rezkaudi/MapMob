@@ -1,6 +1,6 @@
 import { FormBuilder } from '@angular/forms';
 import { buildStoreProfile } from '../testing/store-profile-fixture';
-import { setDeliveryLinkEnabled } from './delivery-link-form';
+import { setDeliveryLinkEnabled } from '../../../shared/forms/delivery-link-form';
 import { toDeliveryLinkRows } from './delivery-link-rows';
 import { createStoreProfileFormGroup } from './store-profile-form-group';
 import { fillStoreProfileForm } from './store-profile-form-mapping';

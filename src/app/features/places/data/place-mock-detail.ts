@@ -1,3 +1,4 @@
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { Place } from '../models/place';
 import { PlaceDetail } from '../models/place-detail';
 import { PlaceOffer } from '../models/place-offer';
@@ -52,6 +53,25 @@ const VIDEOS: readonly PlaceVideo[] = [
   { id: 'video-1', url: '', posterUrl: `${IMAGES}/place-cover.jpg`, duration: '01:24' },
 ];
 
+/** BeeOrder and Talabat switched on, YallaGo listed but off, as the place frames show. */
+const DELIVERY_LINKS: readonly DeliveryLink[] = [
+  {
+    platform: { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },
+    isEnabled: true,
+    storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+  },
+  {
+    platform: { id: '3', name: 'طلبات', latinName: 'Talabat', logoUrl: null },
+    isEnabled: true,
+    storeUrl: 'https://www.talabat.com/syria/alhayat-pharmacy',
+  },
+  {
+    platform: { id: '2', name: 'يلا غو دليفري', latinName: 'YallaGo', logoUrl: null },
+    isEnabled: false,
+    storeUrl: null,
+  },
+];
+
 export function buildMockPlaceDetail(place: Place): PlaceDetail {
   return {
     id: place.id,
@@ -89,6 +109,7 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
     products: PRODUCTS,
     offers: OFFERS,
     videos: VIDEOS,
+    deliveryLinks: DELIVERY_LINKS,
     isOpenNow: true,
   };
 }

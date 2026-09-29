@@ -1,6 +1,7 @@
 import { ApiFeature } from '../../models/api-feature';
 import { OWNER_PLACE, OWNER_PLACE_UPDATE_FORM } from '../examples/owner-examples';
 import { field, optionalField } from '../shared-fields';
+import { DELIVERY_LINK_FIELDS, DELIVERY_LINK_WRITE_FIELDS } from './delivery-link-fields';
 
 const OWNER_ONLY = 'The owner of the signed-in account; scoped to their own place.';
 const DAY_NAMES = 'saturday | sunday | monday | tuesday | wednesday | thursday | friday';
@@ -57,18 +58,7 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
             'object[]',
             `Always 7 rows, Saturday first: { day: ${DAY_NAMES}, isOpen, openTime | null, closeTime | null } (HH:mm).`,
           ),
-          field(
-            'deliveryLinks',
-            'object[]',
-            'One row for every active delivery_platforms row, by sort_order, even if the place never set it up (then isEnabled false, storeUrl null).',
-          ),
-          field('deliveryLinks[].platform', 'object', '{ id, name, latinName, logoUrl | null }.'),
-          field('deliveryLinks[].isEnabled', 'boolean', 'Shown to app users only when true.'),
-          field(
-            'deliveryLinks[].storeUrl',
-            'string (url) | null',
-            "The place's page on that app. Kept while switched off.",
-          ),
+          ...DELIVERY_LINK_FIELDS,
         ],
       },
     },
@@ -101,16 +91,7 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
             'string (HH:mm)',
             'Sent only for an open day. closeTime may be earlier than openTime for a night past midnight.',
           ),
-          field(
-            'deliveryLinks[n][platformId] / [isEnabled]',
-            'string / boolean',
-            'Every platform from GET, n = 0, 1, … in the same order.',
-          ),
-          optionalField(
-            'deliveryLinks[n][storeUrl]',
-            'string (url)',
-            'Full https URL. Required when isEnabled is true; left out when empty.',
-          ),
+          ...DELIVERY_LINK_WRITE_FIELDS,
           optionalField(
             'cover',
             'file (JPG or PNG, max 5 MB)',

@@ -1,30 +1,36 @@
-<ul>
+<!-- The frame leaves an empty 18px row and a 16px gap above Saturday. -->
+<ul class="flex flex-col gap-4 pt-[34px]">
   @for (day of week(); track day.day; let index = $index) {
-    <li class="flex items-center gap-4 border-b border-border py-4 last:border-0">
-      <span class="w-24 shrink-0 text-[14px] font-medium text-text-primary">{{ day.day }}</span>
+    <!-- RTL: the day on the right, then its switch, then the opening and closing times. -->
+    <li class="flex items-center gap-4 border-b border-[#e0e3e5] pb-4 last:border-0 last:pb-0">
+      <span class="w-24 shrink-0 text-start text-[16px]/[24px] text-text-primary">{{
+        day.day
+      }}</span>
 
-      <div class="flex w-32 shrink-0 items-center gap-2">
+      <div class="flex shrink-0 items-center gap-3 pl-4">
         <app-toggle-switch
           [isOn]="day.isOpen"
           [label]="day.day"
           (toggled)="patchDay(index, { isOpen: $event })"
         />
-        <span class="text-[13px] text-text-secondary">{{ day.isOpen ? 'مفتوح' : 'مغلق' }}</span>
+        <span class="w-[31px] text-start text-[13px]/[18px] text-[#404753]">
+          {{ day.isOpen ? 'مفتوح' : 'مغلق' }}
+        </span>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex flex-1 items-center gap-3" [class.opacity-50]="!day.isOpen">
         <input
           type="time"
-          class="h-11 w-32 rounded-lg border border-border px-3 text-center font-latin text-[14px] text-text-primary outline-none disabled:bg-surface-muted disabled:text-placeholder"
+          class="h-[50px] w-32 rounded border border-[#c0c7d5] bg-white px-4 font-inter text-[16px]/[24px] text-[#191c1e] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed"
           [attr.aria-label]="'وقت فتح ' + day.day"
           [value]="day.opensAt"
           [disabled]="!day.isOpen"
           (input)="onTimeInput(index, 'opensAt', $event)"
         />
-        <span class="text-[13px] text-text-secondary">إلى</span>
+        <span class="text-[16px]/[24px] text-[#717784]">إلى</span>
         <input
           type="time"
-          class="h-11 w-32 rounded-lg border border-border px-3 text-center font-latin text-[14px] text-text-primary outline-none disabled:bg-surface-muted disabled:text-placeholder"
+          class="h-[50px] w-32 rounded border border-[#c0c7d5] bg-white px-4 font-inter text-[16px]/[24px] text-[#191c1e] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed"
           [attr.aria-label]="'وقت إغلاق ' + day.day"
           [value]="day.closesAt"
           [disabled]="!day.isOpen"

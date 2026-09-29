@@ -9,7 +9,7 @@ describe('FieldLabel', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('اسم المكان');
-    expect(fixture.nativeElement.querySelector('.text-error').textContent).toBe('*');
+    expect(fixture.nativeElement.querySelector('.text-closed').textContent).toBe('*');
   });
 
   it('draws the compact 12/16 label of the product dialog, with the star 4px after the text', () => {
@@ -26,11 +26,16 @@ describe('FieldLabel', () => {
     expect([...label.children].map((child) => child.textContent?.trim())).toEqual(['السعر', '*']);
   });
 
-  it('keeps the place form label at 13/14 by default', () => {
+  it('draws the place form label at 14/14 with an 11px star right after the words', () => {
     const fixture = TestBed.createComponent(FieldLabel);
     fixture.componentRef.setInput('text', 'اسم المكان');
+    fixture.componentRef.setInput('isRequired', true);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('label').classList).toContain('text-[13px]/[14px]');
+    const label: HTMLElement = fixture.nativeElement.querySelector('label');
+    expect(label.classList).toContain('text-[14px]/[14px]');
+    const [text, star] = [...label.children];
+    expect(text.textContent?.trim()).toBe('اسم المكان');
+    expect(star.classList).toContain('text-[11px]/[14px]');
   });
 });

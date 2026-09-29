@@ -1,4 +1,4 @@
-import { StoreDeliveryLink } from '../models/store-delivery-link';
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { StoreProfile } from '../models/store-profile';
 import { StoreWorkingDay } from '../models/store-working-day';
 import { WeekDay } from '../models/week-day';
@@ -21,7 +21,7 @@ export function buildWeek(): StoreWorkingDay[] {
 }
 
 /** BeeOrder switched on with its link, Talabat off and never set up. */
-export function buildDeliveryLinks(): StoreDeliveryLink[] {
+export function buildDeliveryLinks(): DeliveryLink[] {
   return [
     {
       platform: { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },

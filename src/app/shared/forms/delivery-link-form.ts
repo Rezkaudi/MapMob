@@ -5,7 +5,8 @@ import {
   FormGroup,
   ValidationErrors,
 } from '@angular/forms';
-import { webAddress } from '../../../shared/forms/contact-validators';
+import { DeliveryPlatform } from '../models/delivery-platform';
+import { WEB_ADDRESS_MESSAGE, webAddress } from './contact-validators';
 
 /** A switched-on platform needs its link; a switched-off one may leave it blank. */
 function requiredWhenEnabled(control: AbstractControl<string>): ValidationErrors | null {
@@ -41,4 +42,26 @@ export function resizeDeliveryLinks(links: FormArray<DeliveryLinkFormGroup>, cou
   while (links.length < count) {
     links.push(createDeliveryLinkGroup(), { emitEvent: false });
   }
+}
+
+/** Nothing until the field is touched; then a missing link first, a malformed one second. */
+export function findDeliveryLinkError(
+  storeUrl: FormControl<string>,
+  missingMessage: string,
+): string | null {
+  if (!storeUrl.touched || storeUrl.valid) {
+    return null;
+  }
+  return storeUrl.hasError('required') ? missingMessage : WEB_ADDRESS_MESSAGE;
+}
+
+/** One switched-off row per platform, as a place that never linked any app starts. */
+export function resetDeliveryLinks(
+  links: FormArray<DeliveryLinkFormGroup>,
+  platforms: readonly DeliveryPlatform[],
+): void {
+  resizeDeliveryLinks(links, platforms.length);
+  links.reset(
+    platforms.map((platform) => ({ platformId: platform.id, isEnabled: false, storeUrl: '' })),
+  );
 }

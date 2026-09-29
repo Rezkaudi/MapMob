@@ -34,4 +34,30 @@ describe('FormSection', () => {
     expect(offer.className).toContain('rounded-lg');
     expect(offer.querySelector('h2')?.className).toContain('font-medium');
   });
+
+  it('draws the heading icon at 24px unless the section asks for another size', () => {
+    const fixture = TestBed.createComponent(FormSection);
+    fixture.componentRef.setInput('heading', 'موقع المكان');
+    fixture.componentRef.setInput('icon', 'map-pin');
+    fixture.detectChanges();
+    const icon = () => fixture.nativeElement.querySelector('header app-icon span') as HTMLElement;
+    expect(icon().style.width).toBe('24px');
+
+    fixture.componentRef.setInput('iconSize', 20);
+    fixture.detectChanges();
+    expect(icon().style.width).toBe('20px');
+  });
+
+  it('pads its body 24px, or none when the rows run edge to edge', () => {
+    const fixture = TestBed.createComponent(FormSection);
+    fixture.componentRef.setInput('heading', 'منصات التوصيل');
+    fixture.componentRef.setInput('icon', 'delivery');
+    fixture.detectChanges();
+    const body = () => fixture.nativeElement.querySelector('section > div') as HTMLElement;
+    expect(body().classList).toContain('p-6');
+
+    fixture.componentRef.setInput('hasFlushBody', true);
+    fixture.detectChanges();
+    expect(body().classList).not.toContain('p-6');
+  });
 });

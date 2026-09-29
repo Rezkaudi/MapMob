@@ -1,4 +1,4 @@
-import { StoreDeliveryLink } from '../models/store-delivery-link';
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { StoreDeliveryLinkUpdate } from '../models/store-delivery-link-update';
 import { StoreProfile } from '../models/store-profile';
 import { StoreProfileUpdate } from '../models/store-profile-update';
@@ -37,9 +37,9 @@ export function applyStoreProfileUpdate(
 }
 
 function applyDeliveryLinkUpdate(
-  saved: StoreDeliveryLink,
+  saved: DeliveryLink,
   updates: readonly StoreDeliveryLinkUpdate[],
-): StoreDeliveryLink {
+): DeliveryLink {
   const update = updates.find((candidate) => candidate.platformId === saved.platform.id);
   return update ? { ...saved, isEnabled: update.isEnabled, storeUrl: update.storeUrl } : saved;
 }

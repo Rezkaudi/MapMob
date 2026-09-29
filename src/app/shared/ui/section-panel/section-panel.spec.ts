@@ -15,6 +15,25 @@ describe('SectionPanel', () => {
     expect(text).toContain('العروض الترويجية الحالية');
   });
 
+  it('draws the count badge as a grey pill, as the offers header does', () => {
+    const fixture = TestBed.createComponent(SectionPanel);
+    fixture.componentRef.setInput('heading', 'العروض الترويجية');
+    fixture.componentRef.setInput('badge', '3 عروض');
+    fixture.detectChanges();
+
+    const badge: HTMLElement = fixture.nativeElement.querySelector('[data-testid="section-badge"]');
+    expect(badge.classList).toContain('bg-[#f1f5f9]');
+    expect(badge.classList).toContain('rounded-full');
+  });
+
+  it('rules the header off from the content with a thin line', () => {
+    const fixture = TestBed.createComponent(SectionPanel);
+    fixture.componentRef.setInput('heading', 'معرض الفيديوهات');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('header').classList).toContain('border-b');
+  });
+
   it('hides the badge until one is given', () => {
     const fixture = TestBed.createComponent(SectionPanel);
     fixture.componentRef.setInput('heading', 'معرض الفيديوهات');

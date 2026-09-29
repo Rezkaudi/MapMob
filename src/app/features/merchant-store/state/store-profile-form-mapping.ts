@@ -1,6 +1,6 @@
 import { StoreProfile } from '../models/store-profile';
 import { StoreProfileUpdate } from '../models/store-profile-update';
-import { resizeDeliveryLinks } from './delivery-link-form';
+import { resizeDeliveryLinks } from '../../../shared/forms/delivery-link-form';
 import { StoreProfileFormGroup, StoreProfileFormValue } from './store-profile-form-group';
 import { toSavedWeek } from './working-week-editing';
 

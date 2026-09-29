@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { DeliveryLinkRow } from '../../models/delivery-link-row';
-import { setDeliveryLinkEnabled } from '../../state/delivery-link-form';
+import { setDeliveryLinkEnabled } from '../../../../shared/forms/delivery-link-form';
 import { StoreProfileFormGroup } from '../../state/store-profile-form-group';
 import { DeliveryPlatformItem } from '../delivery-platform-item/delivery-platform-item';
 import { StoreCard } from '../store-card/store-card';

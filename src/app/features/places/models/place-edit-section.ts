@@ -3,6 +3,7 @@ export type PlaceEditSection =
   | 'basic-info'
   | 'location'
   | 'details'
+  | 'delivery'
   | 'working-hours'
   | 'subscription'
   | 'media'

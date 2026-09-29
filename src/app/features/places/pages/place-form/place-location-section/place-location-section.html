@@ -1,0 +1,88 @@
+<app-form-section heading="موقع المكان" icon="map-pin-outline" appearance="compact" [iconSize]="20">
+  <div class="grid grid-cols-2 gap-6" [formGroup]="form()">
+    <div class="flex flex-col gap-1">
+      <app-field-label text="المحافظة" forId="city" [isRequired]="true" />
+      <app-place-select-frame>
+        <select id="city" formControlName="city" appPlaceFieldControl fieldTone="strong">
+          <option value="">اختر المحافظة...</option>
+          @for (city of cities(); track city) {
+            <option [value]="city">{{ city }}</option>
+          }
+        </select>
+      </app-place-select-frame>
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="المنطقة" forId="region" [isRequired]="true" />
+      <app-place-select-frame>
+        <select id="region" formControlName="region" appPlaceFieldControl fieldTone="strong">
+          <option value="">اختر المنطقة...</option>
+          @for (region of regions(); track region) {
+            <option [value]="region">{{ region }}</option>
+          }
+        </select>
+      </app-place-select-frame>
+    </div>
+    <div class="col-span-2 flex flex-col gap-1">
+      <app-field-label text="العنوان بالتفصيل" forId="address" [isRequired]="true" />
+      <input
+        id="address"
+        type="text"
+        formControlName="address"
+        placeholder="الشارع، رقم المبنى..."
+        appPlaceFieldControl
+        fieldTone="strong"
+      />
+    </div>
+
+    <!--
+      The frame gives the map a 274px grid row, 18px taller than the map itself.
+      `isolate` keeps Leaflet's panes (z-index 400) and controls (1000), and the
+      overlays below, inside this box so they cannot paint over the sticky save bar.
+    -->
+    <div
+      data-testid="map-box"
+      class="relative isolate col-span-2 mb-[18px] h-64 overflow-clip rounded border border-[#c0c7d5]"
+    >
+      <app-map-picker
+        class="size-full"
+        [latitude]="form().controls.latitude.value"
+        [longitude]="form().controls.longitude.value"
+        (locationPicked)="setPoint($event)"
+      />
+
+      @if (isPickingOnMap()) {
+        <p
+          class="pointer-events-none absolute inset-x-0 top-0 z-1000 bg-primary/90 py-1.5 text-center text-[12px] text-white"
+        >
+          اضغط على الخريطة أو اسحب المؤشر لتحديد الموقع
+        </p>
+      } @else {
+        <!-- RTL: "تحديد موقعي" comes first so it sits rightmost, 13px in from the corner. -->
+        <div class="absolute inset-0 z-1000 bg-black/20">
+          <div class="flex items-start gap-3 p-[13px]">
+            <button
+              type="button"
+              class="flex h-[47px] items-center gap-1.5 rounded border border-[#c0c7d5] bg-surface px-4 text-[14px]/[21px] font-medium text-text-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+              (click)="useMyLocation()"
+            >
+              <app-icon name="crosshair" aria-hidden="true" [size]="14" />
+              <span>تحديد موقعي</span>
+            </button>
+            <button
+              type="button"
+              class="flex h-[46px] items-center gap-1.5 rounded bg-primary px-4 text-[14px]/[20px] text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+              (click)="startPickingOnMap()"
+            >
+              <app-icon name="map" aria-hidden="true" [size]="14" />
+              <span>اختيار الموقع من الخريطة</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (locationError()) {
+    <p class="mt-2 text-start text-[12px] text-error">{{ locationError() }}</p>
+  }
+</app-form-section>

@@ -19,4 +19,16 @@ describe('PlaceContactCard', () => {
     expect(links[0].getAttribute('href')).toBe('tel:+966 50 123 4567');
     expect(links[1].getAttribute('href')).toBe('https://wa.me/966501234567');
   });
+
+  it('is headed "معلومات التواصل" and draws every channel on a blue circle', () => {
+    const fixture = TestBed.createComponent(PlaceContactCard);
+    fixture.componentRef.setInput('contact', CONTACT);
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+
+    expect(element.querySelector('h2')?.textContent?.trim()).toBe('معلومات التواصل');
+    const circles = Array.from(element.querySelectorAll('[data-role="channel-icon"]'));
+    expect(circles).toHaveLength(4);
+    expect(circles.every((circle) => circle.classList.contains('bg-primary'))).toBe(true);
+  });
 });

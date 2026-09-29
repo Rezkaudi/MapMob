@@ -29,6 +29,10 @@ export class FormSection {
   readonly heading = input.required<string>();
   readonly icon = input.required<string>();
   readonly appearance = input<FormSectionAppearance>('rounded');
+  /** The place form draws its info icon at 24px and the other section icons at 20px. */
+  readonly iconSize = input<number>(24);
+  /** The delivery card's rows run edge to edge, so its body has no padding. */
+  readonly hasFlushBody = input<boolean>(false);
 
   protected readonly sectionClasses = computed(() => SECTION_CLASSES[this.appearance()]);
   protected readonly headerClasses = computed(() => HEADER_CLASSES[this.appearance()]);

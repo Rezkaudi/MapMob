@@ -60,7 +60,7 @@ function submit(fixture: ReturnType<typeof render>): void {
 }
 
 describe('PlaceForm', () => {
-  it('renders the six sections of the design, in its order', () => {
+  it('renders the eight sections of the design, in its order', () => {
     const headings: HTMLElement[] = Array.from(
       render().nativeElement.querySelectorAll('app-form-section h2, app-form-section h3'),
     );
@@ -69,6 +69,7 @@ describe('PlaceForm', () => {
       'المعلومات الأساسية',
       'موقع المكان',
       'تفاصيل المكان',
+      'منصات التوصيل',
       'أوقات العمل',
       'الباقة والحالة',
       'معرض الصور و الفيديوهات',
@@ -131,7 +132,10 @@ describe('PlaceForm', () => {
   it('starts with a full week of opening hours', () => {
     const fixture = render();
 
-    expect(fixture.nativeElement.querySelectorAll('button[role="switch"]').length).toBe(7);
+    expect(
+      fixture.nativeElement.querySelectorAll('app-working-hours-editor button[role="switch"]')
+        .length,
+    ).toBe(7);
   });
 
   it('"مفتوح 24 ساعة" opens every day of the week', () => {
@@ -144,7 +148,7 @@ describe('PlaceForm', () => {
     fixture.detectChanges();
 
     const switches: HTMLButtonElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('button[role="switch"]'),
+      fixture.nativeElement.querySelectorAll('app-working-hours-editor button[role="switch"]'),
     );
     expect(switches.every((toggle) => toggle.getAttribute('aria-checked') === 'true')).toBe(true);
   });
@@ -316,7 +320,7 @@ describe('PlaceForm', () => {
     const fixture = render('place-1');
 
     const switches: HTMLButtonElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('button[role="switch"]'),
+      fixture.nativeElement.querySelectorAll('app-working-hours-editor button[role="switch"]'),
     );
     // The fixture opens السبت and الأحد - الخميس, and leaves الجمعة closed.
     expect(switches.map((toggle) => toggle.getAttribute('aria-checked'))).toEqual([
@@ -349,6 +353,79 @@ describe('PlaceForm', () => {
     fixture.detectChanges();
 
     expect(fieldValue(fixture, 'input#place-name')).toBe('صيدلية الحياة');
+  });
+
+  function platformRows(fixture: ReturnType<typeof render>): HTMLElement[] {
+    return Array.from(fixture.nativeElement.querySelectorAll('[data-role="platform-row"]'));
+  }
+
+  it('offers every ordering app, switched off, when adding', () => {
+    const rows = platformRows(render());
+
+    expect(
+      rows.map((row) => row.querySelector('[data-role="platform-name"]')?.textContent?.trim()),
+    ).toEqual(['طلبات (Talabat)', 'بي أوردر (BeeOrder)', 'يلا غو دليفري (YallaGo)']);
+    expect(rows.every((row) => row.querySelector('input[type="url"]') === null)).toBe(true);
+  });
+
+  it('lists the saved ordering apps with their links when editing', () => {
+    const rows = platformRows(render('place-1'));
+
+    expect(rows).toHaveLength(2);
+    expect(rows[0].querySelector<HTMLInputElement>('input[type="url"]')?.value).toBe(
+      'https://beeorder.sy/store/alhayat-pharma',
+    );
+    expect(rows[1].querySelector('input[type="url"]')).toBeNull();
+  });
+
+  it('writes phones and links left to right, as the frame lays them out', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    for (const id of [
+      'owner-phone',
+      'owner-extra-phone',
+      'phone',
+      'extra-phone',
+      'website',
+      'whatsapp',
+      'facebook',
+      'instagram',
+      'telegram',
+    ]) {
+      expect(element.querySelector(`#${id}`)?.getAttribute('dir'), id).toBe('ltr');
+    }
+    expect(element.querySelector('#place-name')?.getAttribute('dir')).toBeNull();
+  });
+
+  it('spans the detailed address across both columns', () => {
+    const address: HTMLElement = render().nativeElement.querySelector('#address');
+
+    expect(address.closest('.col-span-2')).not.toBeNull();
+  });
+
+  it('draws the frame chevron on every dropdown', () => {
+    const selects: HTMLElement[] = Array.from(render().nativeElement.querySelectorAll('select'));
+
+    expect(selects.map((select) => select.id)).toEqual([
+      'main-category',
+      'city',
+      'region',
+      'package',
+      'status',
+    ]);
+    expect(
+      selects.every((select) => select.parentElement?.tagName === 'APP-PLACE-SELECT-FRAME'),
+    ).toBe(true);
+  });
+
+  it('outlines "إلغاء" in red, as the frame draws the footer', () => {
+    const element: HTMLElement = render().nativeElement;
+    const actions = Array.from(
+      element.querySelectorAll<HTMLElement>('[data-testid="form-actions"] > *'),
+    );
+    const cancel = actions.find((action) => action.textContent?.trim() === 'إلغاء');
+
+    expect(cancel?.classList).toContain('border-closed');
   });
 
   it('keeps the save bar above the map', () => {
@@ -386,15 +463,14 @@ describe('PlaceForm sections', () => {
 
   it('gives every section the anchor the detail page links to', () => {
     const sections: HTMLElement[] = Array.from(
-      render().nativeElement.querySelectorAll(
-        'form > app-form-section, form > app-products-editor',
-      ),
+      render().nativeElement.querySelectorAll('form > [id]'),
     );
 
     expect(sections.map((section) => section.id)).toEqual([
       'basic-info',
       'location',
       'details',
+      'delivery',
       'working-hours',
       'subscription',
       'media',

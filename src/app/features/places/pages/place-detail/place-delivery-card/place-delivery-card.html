@@ -1,0 +1,19 @@
+<app-info-card
+  heading="منصات الطلب والتوصيل"
+  headingFont="cairo"
+  [canEdit]="true"
+  (edit)="edit.emit()"
+>
+  <!-- The frame's 24px heading row and 20px gap put the list 8px lower than the other cards. -->
+  <div class="mt-2 flex flex-col gap-4">
+    @for (link of openableLinks(); track link.platform.id) {
+      <app-delivery-link-preview [link]="link" />
+    } @empty {
+      <p
+        class="flex h-[120px] items-center justify-center rounded-xl border border-dashed border-border text-[13px] text-text-secondary"
+      >
+        لا توجد منصات توصيل مفعلة
+      </p>
+    }
+  </div>
+</app-info-card>

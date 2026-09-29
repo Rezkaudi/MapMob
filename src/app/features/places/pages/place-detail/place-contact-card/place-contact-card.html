@@ -1,19 +1,20 @@
-<app-info-card heading="معلومات التوصل" [canEdit]="true" (edit)="edit.emit()">
-  <ul class="flex flex-col gap-3">
+<app-info-card heading="معلومات التواصل" [canEdit]="true" (edit)="edit.emit()">
+  <ul class="mt-2 flex flex-col gap-3">
     @for (link of links(); track link.icon) {
+      <!-- RTL: the blue circle leads, so it sits on the right with the value to its left. -->
       <li class="flex h-8 items-center gap-3">
         <span
-          class="flex size-7 shrink-0 items-center justify-center rounded-full text-white"
-          [class]="link.colorClass"
+          data-role="channel-icon"
+          class="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_20px_0_rgba(0,0,0,0.12)]"
         >
-          <app-icon [name]="link.icon" [size]="14" />
+          <app-icon aria-hidden="true" [name]="link.icon" [size]="14" />
         </span>
         <a
-          [href]="link.href"
-          class="font-latin truncate text-[13px] text-text-secondary"
+          class="min-w-0 truncate text-[14px]/[18px] text-text-primary hover:text-primary"
           dir="ltr"
           target="_blank"
           rel="noopener"
+          [href]="link.href"
         >
           {{ link.label }}
         </a>

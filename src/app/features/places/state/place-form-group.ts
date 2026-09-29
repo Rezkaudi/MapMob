@@ -1,4 +1,5 @@
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { DeliveryLinkFormGroup } from '../../../shared/forms/delivery-link-form';
 import { PlacePackage } from '../models/place-package';
 import { PlaceStatus } from '../models/place-status';
 
@@ -33,6 +34,8 @@ export function createPlaceFormGroup(formBuilder: FormBuilder) {
     description: builder.control(''),
     package: builder.control<PlacePackage>(DEFAULT_PACKAGE, Validators.required),
     status: builder.control<PlaceStatus>(DEFAULT_STATUS, Validators.required),
+    /** One row per active ordering app, in the order `deliveryPlatforms` lists them. */
+    deliveryLinks: new FormArray<DeliveryLinkFormGroup>([]),
   });
 }
 

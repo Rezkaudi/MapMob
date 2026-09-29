@@ -1,3 +1,4 @@
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { PlaceActivity } from './place-activity';
 import { PlaceContact } from './place-contact';
 import { PlaceLocation } from './place-location';
@@ -27,5 +28,7 @@ export interface PlaceDetail {
   readonly products: readonly PlaceProduct[];
   readonly offers: readonly PlaceOffer[];
   readonly videos: readonly PlaceVideo[];
+  /** Every active ordering app, switched on or off, so the form can list them all. */
+  readonly deliveryLinks: readonly DeliveryLink[];
   readonly isOpenNow: boolean;
 }

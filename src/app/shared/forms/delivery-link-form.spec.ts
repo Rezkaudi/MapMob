@@ -3,6 +3,8 @@ import {
   DeliveryLinkFormGroup,
   createDeliveryLinkGroup,
   resizeDeliveryLinks,
+  findDeliveryLinkError,
+  resetDeliveryLinks,
   setDeliveryLinkEnabled,
 } from './delivery-link-form';
 
@@ -44,5 +46,39 @@ describe('delivery link form', () => {
 
     resizeDeliveryLinks(links, 1);
     expect(links.length).toBe(1);
+  });
+
+  it('stays quiet about a link until it is touched', () => {
+    const link = createDeliveryLinkGroup();
+    setDeliveryLinkEnabled(link, true);
+
+    expect(findDeliveryLinkError(link.controls.storeUrl, 'أدخل الرابط')).toBeNull();
+  });
+
+  it('asks for a missing link in the caller words, and for a full https link otherwise', () => {
+    const link = createDeliveryLinkGroup();
+    setDeliveryLinkEnabled(link, true);
+    link.controls.storeUrl.markAsTouched();
+    expect(findDeliveryLinkError(link.controls.storeUrl, 'أدخل الرابط')).toBe('أدخل الرابط');
+
+    link.controls.storeUrl.setValue('talabat');
+    expect(findDeliveryLinkError(link.controls.storeUrl, 'أدخل الرابط')).toBe(
+      'أدخل رابطاً كاملاً يبدأ بـ https://',
+    );
+  });
+
+  it('starts one switched-off row per platform, for a new place', () => {
+    const links = new FormArray<DeliveryLinkFormGroup>([]);
+
+    resetDeliveryLinks(links, [
+      { id: '3', name: 'طلبات', latinName: 'Talabat', logoUrl: null },
+      { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },
+    ]);
+
+    expect(links.getRawValue()).toEqual([
+      { platformId: '3', isEnabled: false, storeUrl: '' },
+      { platformId: '1', isEnabled: false, storeUrl: '' },
+    ]);
+    expect(links.pristine).toBe(true);
   });
 });

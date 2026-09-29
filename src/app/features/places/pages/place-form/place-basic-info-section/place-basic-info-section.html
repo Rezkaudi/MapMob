@@ -1,0 +1,76 @@
+<app-form-section heading="المعلومات الأساسية" icon="info" appearance="compact">
+  <!-- RTL: each row's first field sits on the right. -->
+  <div class="grid grid-cols-2 gap-6" [formGroup]="form()">
+    <div class="flex flex-col gap-1">
+      <app-field-label text="اسم المكان" forId="place-name" [isRequired]="true" />
+      <input
+        id="place-name"
+        type="text"
+        formControlName="name"
+        placeholder="مثال: صيدلية الحياة"
+        appPlaceFieldControl
+        fieldTone="strong"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="اسم المالك / المسؤول" forId="owner-name" />
+      <input
+        id="owner-name"
+        type="text"
+        formControlName="ownerName"
+        appPlaceFieldControl
+        fieldTone="strong"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="رقم هاتف المالك /المسؤول" forId="owner-phone" [isRequired]="true" />
+      <input
+        id="owner-phone"
+        type="tel"
+        formControlName="ownerPhone"
+        placeholder="05XXXXXXXX"
+        appPlaceFieldControl
+        fieldTone="strong"
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="رقم هاتف إضافي للمالك /المسؤول" forId="owner-extra-phone" />
+      <input
+        id="owner-extra-phone"
+        type="tel"
+        formControlName="ownerExtraPhone"
+        placeholder="05XXXXXXXX"
+        appPlaceFieldControl
+        fieldTone="strong"
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="التصنيف الرئيسي" forId="main-category" [isRequired]="true" />
+      <app-place-select-frame>
+        <select
+          id="main-category"
+          formControlName="mainCategory"
+          appPlaceFieldControl
+          fieldTone="strong"
+        >
+          <option value="">اختر التصنيف...</option>
+          @for (category of categories(); track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </app-place-select-frame>
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="التصنيف الفرعي" forId="sub-category" />
+      <input
+        id="sub-category"
+        type="text"
+        formControlName="subCategory"
+        appPlaceFieldControl
+        fieldTone="strong"
+      />
+    </div>
+  </div>
+</app-form-section>

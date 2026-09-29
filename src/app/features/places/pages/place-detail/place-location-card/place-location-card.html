@@ -1,12 +1,14 @@
-<app-info-card heading="الموقع" [canEdit]="true" (edit)="edit.emit()">
-  <div class="relative h-[469px] overflow-clip rounded-xl bg-surface-muted">
-    <div class="flex size-full items-center justify-center text-placeholder">
-      <app-icon name="map" [size]="48" />
+<app-info-card heading="الموقع" corner="large" [canEdit]="true" (edit)="edit.emit()">
+  <div class="relative h-[469px] overflow-clip rounded-3xl bg-[#f1f5f9]">
+    <div class="flex size-full items-center justify-center text-[#94a3b8]">
+      <app-icon name="map-fold" aria-hidden="true" [size]="48" />
     </div>
 
-    <div class="absolute inset-x-4 bottom-4 rounded-xl bg-surface p-4 shadow-panel">
-      <p class="text-[14px] font-bold text-text-primary">{{ location().city }}</p>
-      <p class="mt-1 text-[13px] text-text-secondary">{{ location().address }}</p>
+    <div
+      class="absolute inset-x-4 bottom-4 rounded-2xl border border-[rgba(226,232,240,0.5)] bg-white/90 p-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] backdrop-blur-[6px]"
+    >
+      <p class="text-[14px]/[28px] font-medium text-text-primary">{{ location().city }}</p>
+      <p class="text-[14px]/[28px] text-text-secondary">{{ location().address }}</p>
     </div>
   </div>
 </app-info-card>

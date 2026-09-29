@@ -1,0 +1,53 @@
+<app-form-section
+  heading="معرض الصور و الفيديوهات"
+  icon="image"
+  appearance="compact"
+  [iconSize]="20"
+>
+  <!-- RTL: each row keeps its label on the right and its quota badge on the left. -->
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4 pt-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <p class="text-start text-[14px]/[14px] text-text-primary">صور المكان</p>
+        <app-package-quota-badge
+          noun="صور"
+          [packageLabel]="packageLabel()"
+          [used]="images().length"
+          [limit]="limit().images"
+        />
+      </div>
+      <app-media-picker
+        prompt="اسحب وأفلت الصور هنا"
+        hint="الحد الأقصى لحجم الصورة 5 ميجابايت (JPG, PNG)"
+        accept="image/jpeg,image/png"
+        noun="صور"
+        [limit]="limit().images"
+        [rules]="imageRules"
+        [files]="images()"
+        (filesChange)="imagesChange.emit($event)"
+      />
+    </div>
+
+    <div class="flex flex-col gap-4 pt-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <p class="text-start text-[14px]/[14px] text-text-primary">فيديوهات المكان</p>
+        <app-package-quota-badge
+          noun="فيديو"
+          [packageLabel]="packageLabel()"
+          [used]="videos().length"
+          [limit]="limit().videos"
+        />
+      </div>
+      <app-media-picker
+        prompt="اسحب وأفلت الفيديو هنا"
+        accept="video/*"
+        kind="video"
+        noun="فيديو"
+        [limit]="limit().videos"
+        [rules]="videoRules"
+        [files]="videos()"
+        (filesChange)="videosChange.emit($event)"
+      />
+    </div>
+  </div>
+</app-form-section>

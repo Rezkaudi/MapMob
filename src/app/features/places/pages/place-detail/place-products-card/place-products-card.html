@@ -8,25 +8,33 @@
     <div class="overflow-hidden rounded-xl border border-border">
       <table class="w-full text-right">
         <thead>
-          <tr class="bg-surface-muted">
-            <th class="w-14 px-4 py-[14px]">
-              <span class="sr-only">تحديد</span>
+          <tr class="h-[59px] bg-surface-muted text-[13px]/[16px] font-bold text-text-primary">
+            <th class="w-14 px-4">
+              <input
+                type="checkbox"
+                aria-label="تحديد كل المنتجات"
+                class="block size-[18px] rounded border border-[#94a3b8] bg-white accent-primary"
+                [checked]="isEveryRowSelected()"
+                (change)="toggleAll($any($event.target).checked)"
+              />
             </th>
-            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الصورة</th>
-            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">المنتج/الخدمة</th>
-            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">السعر</th>
-            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الحالة</th>
-            <th class="px-4 py-[14px] text-[13px] font-medium text-text-primary">الإجراء</th>
+            <th class="px-4">الصورة</th>
+            <th class="px-4">المنتج/الخدمة</th>
+            <th class="px-4">السعر</th>
+            <th class="px-4">الحالة</th>
+            <th class="px-4">الإجراء</th>
           </tr>
         </thead>
         <tbody>
           @for (product of products(); track product.id) {
-            <tr class="border-t border-border bg-surface">
+            <tr class="h-[77px] border-t border-border bg-surface">
               <td class="px-4 py-[14px]">
                 <input
                   type="checkbox"
-                  class="size-[18px] rounded border border-placeholder bg-white accent-primary"
+                  class="block size-[18px] rounded border border-[#94a3b8] bg-white accent-primary"
                   [attr.aria-label]="'تحديد ' + product.name"
+                  [checked]="selectedIds().has(product.id)"
+                  (change)="toggleRow(product, $any($event.target).checked)"
                 />
               </td>
               <td class="px-4 py-[14px]">
@@ -54,13 +62,16 @@
                   {{ product.name }}
                 </button>
               </td>
-              <td class="px-4 py-[14px] font-latin text-[14px] text-text-secondary">
+              <td class="px-4 py-[14px] text-[14px] text-text-secondary">
                 {{ product.price | number: '1.0-2' }} {{ product.currency | currencySign }}
               </td>
               <td class="px-4 py-[14px]">
-                <app-badge [tone]="product.isAvailable ? 'success' : 'neutral'">
+                <span
+                  class="inline-flex h-[26px] items-center rounded-full px-3 text-[12px]/[18px] whitespace-nowrap text-white"
+                  [class]="product.isAvailable ? 'bg-status-success' : 'bg-text-secondary'"
+                >
                   {{ product.isAvailable ? labels.available : labels.unavailable }}
-                </app-badge>
+                </span>
               </td>
               <td class="px-4 py-[14px]">
                 <app-action-menu>

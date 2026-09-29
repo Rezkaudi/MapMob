@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/** `compact` is the product dialog's 12/16 label; `regular` the place form's 13/14 one. */
+/** `compact` is the product dialog's 12/16 label; `regular` the place form's 14/14 one. */
 export type FieldLabelSize = 'regular' | 'compact';
 
 @Component({

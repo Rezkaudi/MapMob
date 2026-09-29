@@ -1,20 +1,15 @@
-import { FormArray, FormControl } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 import { DeliveryLinkRow } from '../models/delivery-link-row';
-import { StoreDeliveryLink } from '../models/store-delivery-link';
-import { DeliveryLinkFormGroup } from './delivery-link-form';
-import { LINK_MESSAGE } from './store-field-errors';
+import { DeliveryLink } from '../../../shared/models/delivery-link';
+import {
+  DeliveryLinkFormGroup,
+  findDeliveryLinkError,
+} from '../../../shared/forms/delivery-link-form';
 
 const MISSING_LINK_MESSAGE = 'أدخل رابط متجرك على المنصة';
 
-function findLinkError(storeUrl: FormControl<string>): string | null {
-  if (!storeUrl.touched || storeUrl.valid) {
-    return null;
-  }
-  return storeUrl.hasError('required') ? MISSING_LINK_MESSAGE : LINK_MESSAGE;
-}
-
 export function toDeliveryLinkRows(
-  savedLinks: readonly StoreDeliveryLink[],
+  savedLinks: readonly DeliveryLink[],
   linkForms: FormArray<DeliveryLinkFormGroup>,
 ): DeliveryLinkRow[] {
   return savedLinks.map((saved, index) => {
@@ -25,7 +20,7 @@ export function toDeliveryLinkRows(
       isEnabled: isEnabled.value,
       storeUrl: storeUrl.value,
       canOpen: isEnabled.value && storeUrl.valid,
-      error: findLinkError(storeUrl),
+      error: findDeliveryLinkError(storeUrl, MISSING_LINK_MESSAGE),
     };
   });
 }

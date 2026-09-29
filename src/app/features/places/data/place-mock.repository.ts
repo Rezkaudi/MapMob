@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { mockRequest } from '../../../../mock/mock-delay';
 import { PagedResult } from '../../../core/models/paged-result';
 import { ActivationStatus } from '../../../shared/models/activation-status';
@@ -9,10 +9,12 @@ import { PlaceExportRequest } from '../models/place-export-request';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceStatusCounts } from '../models/place-status-counts';
 import { PlaceMockDatabase } from './place-mock-database';
-import { buildMockPlaceDetail } from './place-mock-detail';
 import { countPlacesByStatus, filterPlaces, queryPlaces } from './place-mock-query';
 import { PlaceRepository } from './place.repository';
 import { buildPlacesCsvFile } from './places-csv';
+
+/** The sample detail page is loaded on first use, so its copy stays out of the initial bundle. */
+const loadDetailBuilder = () => from(import('./place-mock-detail'));
 
 @Injectable()
 export class PlaceMockRepository implements PlaceRepository {
@@ -23,7 +25,11 @@ export class PlaceMockRepository implements PlaceRepository {
   }
 
   getPlace(id: string): Observable<PlaceDetail> {
-    return mockRequest(() => buildMockPlaceDetail(this.database.find(id)));
+    return loadDetailBuilder().pipe(
+      switchMap(({ buildMockPlaceDetail }) =>
+        mockRequest(() => buildMockPlaceDetail(this.database.find(id))),
+      ),
+    );
   }
 
   getStatusCounts(): Observable<PlaceStatusCounts> {

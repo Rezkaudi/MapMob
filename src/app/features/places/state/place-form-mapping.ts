@@ -1,5 +1,6 @@
+import { resizeDeliveryLinks } from '../../../shared/forms/delivery-link-form';
 import { PlaceDetail } from '../models/place-detail';
-import { PlaceFormValue } from './place-form-group';
+import { PlaceFormGroup, PlaceFormValue } from './place-form-group';
 
 /** The saved place as the form holds it. */
 export function toPlaceFormValue(detail: PlaceDetail): PlaceFormValue {
@@ -27,5 +28,16 @@ export function toPlaceFormValue(detail: PlaceDetail): PlaceFormValue {
     description: detail.description,
     package: subscription.package,
     status: detail.status,
+    deliveryLinks: detail.deliveryLinks.map((link) => ({
+      platformId: link.platform.id,
+      isEnabled: link.isEnabled,
+      storeUrl: link.storeUrl ?? '',
+    })),
   };
+}
+
+/** Puts the saved place in the form and marks it untouched. */
+export function fillPlaceForm(form: PlaceFormGroup, detail: PlaceDetail): void {
+  resizeDeliveryLinks(form.controls.deliveryLinks, detail.deliveryLinks.length);
+  form.reset(toPlaceFormValue(detail));
 }

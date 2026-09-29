@@ -93,3 +93,56 @@ describe('FormPageHeading on a content page', () => {
     );
   });
 });
+
+@Component({
+  imports: [FormPageHeading],
+  template: `
+    <app-form-page-heading
+      parentLabel="الشركات و المتاجر"
+      parentLink="/admin/places"
+      title="صيدلية الحياة"
+      appearance="detail"
+    >
+      <p pageHeadingMeta data-role="meta">طرطوس شارع الثورة</p>
+      <button pageHeadingAction type="button">تعديل المكان</button>
+    </app-form-page-heading>
+  `,
+})
+class DetailHeadingHost {}
+
+describe('FormPageHeading on a detail page', () => {
+  function renderDetail() {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(DetailHeadingHost);
+    fixture.detectChanges();
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  it('sets the title at 24px in the primary text colour', () => {
+    const title = renderDetail().querySelector('h1')!;
+
+    expect(title.classList).toContain('text-[24px]/[29px]');
+    expect(title.classList).toContain('text-text-primary');
+  });
+
+  it('puts the meta line right under the title', () => {
+    const element = renderDetail();
+
+    const titleBlock = element.querySelector('h1')!.parentElement!;
+    expect(titleBlock.querySelector('[data-role="meta"]')?.textContent).toBe('طرطوس شارع الثورة');
+  });
+
+  it('lines the actions up with the top of the title', () => {
+    const row = renderDetail().querySelector('[data-role="heading-row"]')!;
+
+    expect(row.classList).toContain('items-start');
+    expect(row.textContent).toContain('تعديل المكان');
+  });
+
+  it('keeps the form look by default: a 28px black title, centred actions', () => {
+    const element = render();
+
+    expect(element.querySelector('h1')!.classList).toContain('text-[28px]/[34px]');
+    expect(element.querySelector('[data-role="heading-row"]')!.classList).toContain('items-center');
+  });
+});

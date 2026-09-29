@@ -12,23 +12,16 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { PICTURE_RULES } from '../../../../shared/files/picture-rules';
-import { VIDEO_RULES } from '../../../../shared/files/video-rules';
-import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { ActivatedRoute } from '@angular/router';
+import { resetDeliveryLinks } from '../../../../shared/forms/delivery-link-form';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
-import { FieldLabel } from '../../../../shared/ui/field-label/field-label';
-import { MediaFile } from '../../../../shared/ui/media-picker/media-file';
-import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
-import { toSavedMediaFiles } from '../../../../shared/ui/media-picker/saved-media-files';
-import { PackageQuotaBadge } from '../../../../shared/ui/package-quota-badge/package-quota-badge';
+import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
 import { FormSection } from '../../../../shared/ui/form-section/form-section';
-import { MapPicker } from '../../../../shared/ui/map-picker/map-picker';
-import { MapPoint } from '../../../../shared/ui/map-picker/map-point';
+import { MediaFile } from '../../../../shared/ui/media-picker/media-file';
+import { toSavedMediaFiles } from '../../../../shared/ui/media-picker/saved-media-files';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
-import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
-import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
+import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
 import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
 import { PlaceDetail } from '../../models/place-detail';
@@ -37,7 +30,7 @@ import { PlaceProduct } from '../../models/place-product';
 import { ProductDraft } from '../../../../shared/models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
 import { createPlaceFormGroup } from '../../state/place-form-group';
-import { toPlaceFormValue } from '../../state/place-form-mapping';
+import { fillPlaceForm } from '../../state/place-form-mapping';
 import { toSavedVideoFiles } from '../../state/place-video-files';
 import { PlaceFormStore } from '../../state/place-form.store';
 import { withSavedOption } from '../../state/with-saved-option';
@@ -45,12 +38,21 @@ import { toWorkingWeek } from '../../state/working-week-from-rows';
 import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
 import { FormMode } from '../../../../shared/models/form-mode';
 import { ProductDialog } from '../../../../shared/ui/product-dialog/product-dialog';
+import { PlaceBasicInfoSection } from './place-basic-info-section/place-basic-info-section';
+import { PlaceDeliverySection } from './place-delivery-section/place-delivery-section';
+import { PlaceDetailsSection } from './place-details-section/place-details-section';
+import { PlaceFormActions } from './place-form-actions/place-form-actions';
+import {
+  CATEGORY_OPTIONS,
+  CITY_OPTIONS,
+  DELIVERY_PLATFORM_OPTIONS,
+  REGION_OPTIONS,
+} from './place-form-options';
+import { PlaceLocationSection } from './place-location-section/place-location-section';
+import { PlaceMediaSection } from './place-media-section/place-media-section';
+import { PlaceSubscriptionSection } from './place-subscription-section/place-subscription-section';
 import { ProductsEditor } from './products-editor/products-editor';
 import { WorkingHoursEditor } from './working-hours-editor/working-hours-editor';
-
-const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
-const CITIES = ['الرياض', 'جدة', 'الدمام', 'طرطوس'];
-const REGIONS = ['المركز', 'الشمال', 'الجنوب', 'الشرق', 'الغرب'];
 
 /** The delete step the design puts in front of removing a product. */
 const REMOVE_PRODUCT_COPY = {
@@ -65,21 +67,23 @@ const ALL_DAY_CLOSES_AT = '23:59';
 @Component({
   selector: 'app-place-form',
   imports: [
-    AppIcon,
-    ErrorState,
-    FieldLabel,
-    MapPicker,
-    MediaPicker,
-    FormSection,
-    PackageQuotaBadge,
     ConfirmDialog,
+    ErrorState,
+    FormPageHeading,
+    FormSection,
+    PlaceBasicInfoSection,
+    PlaceDeliverySection,
+    PlaceDetailsSection,
+    PlaceFormActions,
+    PlaceLocationSection,
+    PlaceMediaSection,
+    PlaceSubscriptionSection,
     ProductDialog,
     ProductsEditor,
+    ReactiveFormsModule,
     Skeleton,
     Toast,
     WorkingHoursEditor,
-    ReactiveFormsModule,
-    RouterLink,
   ],
   templateUrl: './place-form.html',
   providers: [PlaceFormStore],
@@ -94,21 +98,20 @@ export class PlaceForm {
 
   /** The saved value joins the list when the list does not already offer it. */
   protected readonly categories = computed(() =>
-    withSavedOption(CATEGORIES, this.store.editedPlace()?.mainCategory),
+    withSavedOption(CATEGORY_OPTIONS, this.store.editedPlace()?.mainCategory),
   );
   protected readonly cities = computed(() =>
-    withSavedOption(CITIES, this.store.editedPlace()?.location.city),
+    withSavedOption(CITY_OPTIONS, this.store.editedPlace()?.location.city),
   );
   protected readonly regions = computed(() =>
-    withSavedOption(REGIONS, this.store.editedPlace()?.location.region),
+    withSavedOption(REGION_OPTIONS, this.store.editedPlace()?.location.region),
   );
-  protected readonly packages = (Object.keys(PLACE_PACKAGE_LABEL) as PlacePackage[]).map(
-    (value) => ({ value, label: PLACE_PACKAGE_LABEL[value] }),
+  /** A saved place lists the apps it came with; a new one is offered every app, switched off. */
+  protected readonly deliveryPlatforms = computed(
+    () =>
+      this.store.editedPlace()?.deliveryLinks.map((link) => link.platform) ??
+      DELIVERY_PLATFORM_OPTIONS,
   );
-  protected readonly statuses = (Object.keys(PLACE_STATUS_LABEL) as PlaceStatus[]).map((value) => ({
-    value,
-    label: PLACE_STATUS_LABEL[value],
-  }));
 
   protected readonly hasSaved = signal(false);
   protected readonly isEditing = computed(() => Boolean(this.id()));
@@ -117,10 +120,6 @@ export class PlaceForm {
   );
 
   protected readonly week = signal<readonly WorkingDay[]>(createDefaultWeek());
-  protected readonly imageRules = PICTURE_RULES;
-  protected readonly videoRules = VIDEO_RULES;
-  protected readonly isPickingOnMap = signal(false);
-  protected readonly locationError = signal('');
   protected readonly images = signal<readonly MediaFile[]>([]);
   protected readonly products = signal<readonly PlaceProduct[]>([]);
   protected readonly isAddingProduct = signal(false);
@@ -158,6 +157,7 @@ export class PlaceForm {
   private readonly injector = inject(Injector);
 
   constructor() {
+    resetDeliveryLinks(this.form.controls.deliveryLinks, DELIVERY_PLATFORM_OPTIONS);
     // The add route binds no id, and its empty string means "adding", the same as none.
     this.store.load(computed(() => this.id() || null));
     effect(() => {
@@ -224,32 +224,6 @@ export class PlaceForm {
     this.productToRemove.set(null);
   }
 
-  protected startPickingOnMap(): void {
-    this.locationError.set('');
-    this.isPickingOnMap.set(true);
-  }
-
-  protected setPoint(point: MapPoint): void {
-    this.form.patchValue({ latitude: point.latitude, longitude: point.longitude });
-  }
-
-  protected useMyLocation(): void {
-    if (!navigator.geolocation) {
-      this.locationError.set('المتصفح لا يدعم تحديد الموقع');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setPoint({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        this.startPickingOnMap();
-      },
-      () => this.locationError.set('تعذر تحديد موقعك، اختر الموقع من الخريطة'),
-    );
-  }
-
   protected openAllDay(): void {
     this.week.update((week) =>
       week.map((day) => ({
@@ -275,7 +249,7 @@ export class PlaceForm {
   }
 
   private fillFrom(place: PlaceDetail): void {
-    this.form.reset(toPlaceFormValue(place));
+    fillPlaceForm(this.form, place);
     this.week.set(toWorkingWeek(place.workingHours));
     this.images.set(toSavedMediaFiles(place.images));
     this.videos.set(toSavedVideoFiles(place.videos));

@@ -2,14 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmAction, statusAfter } from '../../../../shared/models/confirm-action';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
-import { Badge, BadgeTone } from '../../../../shared/ui/badge/badge';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
+import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
 import { InfoCard } from '../../../../shared/ui/info-card/info-card';
 import { Toast } from '../../../../shared/ui/toast/toast';
-import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
-import { PLACE_PACKAGE_LABEL } from '../../models/place-package';
-import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { FormMode } from '../../../../shared/models/form-mode';
 import { PlaceEditSection } from '../../models/place-edit-section';
 import { PlaceProduct } from '../../models/place-product';
@@ -18,47 +15,44 @@ import { ProductDialog } from '../../../../shared/ui/product-dialog/product-dial
 import { buildRemoveProductCopy } from '../../../../shared/ui/product-dialog/product-confirm-copy';
 import { EMPTY_PRODUCT_DRAFT } from '../../../../shared/models/empty-product-draft';
 import { PlaceDetailStore } from '../../state/place-detail.store';
+import { PlaceActivityCard } from './place-activity-card/place-activity-card';
+import { PlaceDeliveryCard } from './place-delivery-card/place-delivery-card';
 import { PlaceDetailSkeleton } from './place-detail-skeleton/place-detail-skeleton';
 import { PlaceGallery } from './place-gallery/place-gallery';
 import { PlaceContactCard } from './place-contact-card/place-contact-card';
 import { PlaceHoursCard } from './place-hours-card/place-hours-card';
 import { PlaceLocationCard } from './place-location-card/place-location-card';
 import { PlaceOffersCard } from './place-offers-card/place-offers-card';
+import { PlaceOwnerCard } from './place-owner-card/place-owner-card';
 import { PlaceProductsCard } from './place-products-card/place-products-card';
 import { buildPlaceConfirmCopy } from '../../ui/place-confirm-copy';
+import { PlaceStatusBadge } from './place-status-badge/place-status-badge';
+import { PlaceSubscriptionCard } from './place-subscription-card/place-subscription-card';
 import { PlaceVideosCard } from './place-videos-card/place-videos-card';
-
-const STATUS_TEXT_CLASS: Record<PlaceStatus, string> = {
-  active: 'text-success',
-  suspended: 'text-error',
-  pending: 'text-warning',
-};
-
-const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
-  active: 'success',
-  suspended: 'error',
-  pending: 'warning',
-};
 
 @Component({
   selector: 'app-place-detail',
   imports: [
     AppIcon,
-    Badge,
     ConfirmActionDialog,
     ErrorState,
+    FormPageHeading,
     InfoCard,
+    PlaceActivityCard,
+    PlaceDeliveryCard,
     PlaceDetailSkeleton,
     PlaceGallery,
     PlaceContactCard,
     PlaceHoursCard,
     PlaceLocationCard,
     PlaceOffersCard,
+    PlaceOwnerCard,
     PlaceProductsCard,
+    PlaceStatusBadge,
+    PlaceSubscriptionCard,
     PlaceVideosCard,
     ProductDialog,
     Toast,
-    ArabicDatePipe,
     RouterLink,
   ],
   templateUrl: './place-detail.html',
@@ -71,10 +65,6 @@ export class PlaceDetail {
   private readonly router = inject(Router);
 
   protected readonly store = inject(PlaceDetailStore);
-  protected readonly statusLabel = PLACE_STATUS_LABEL;
-  protected readonly statusTone = STATUS_TONE;
-  protected readonly statusTextClass = STATUS_TEXT_CLASS;
-  protected readonly packageLabel = PLACE_PACKAGE_LABEL;
 
   protected readonly place = this.store.place;
   protected readonly isSuspended = computed(() => this.place()?.status === 'suspended');

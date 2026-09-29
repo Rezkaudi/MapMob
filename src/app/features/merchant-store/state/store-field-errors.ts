@@ -1,3 +1,4 @@
+import { WEB_ADDRESS_MESSAGE } from '../../../shared/forms/contact-validators';
 import { StoreProfileFormGroup } from './store-profile-form-group';
 
 export type StoreTextField =
@@ -13,7 +14,7 @@ export type StoreTextField =
 
 type ErrorMessages = Partial<Record<'required' | 'maxlength' | 'pattern', string>>;
 
-export const LINK_MESSAGE = 'أدخل رابطاً كاملاً يبدأ بـ https://';
+const LINK_MESSAGE = WEB_ADDRESS_MESSAGE;
 
 /** Checked in this order, so an empty field is asked for before its shape is judged. */
 const MESSAGES: Record<StoreTextField, ErrorMessages> = {

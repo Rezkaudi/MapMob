@@ -118,7 +118,8 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'delivery_platforms',
       description: 'The ordering apps a place can link to, such as BeeOrder or Talabat.',
-      servedAs: '/delivery-platforms, deliveryLinks[].platform on /owner/place',
+      servedAs:
+        '/delivery-platforms, deliveryLinks[].platform on /owner/place and /places/{id}, deliveryPlatforms on /places/form-options',
       columns: [
         ID,
         { name: 'name', type: 'varchar(60)', note: 'Arabic name, e.g. بي أوردر.' },
@@ -138,7 +139,7 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'place_delivery_links',
       description: "A place's page on one ordering app. Switched off keeps the link.",
-      servedAs: 'deliveryLinks on /owner/place',
+      servedAs: 'deliveryLinks on /owner/place and /places/{id}',
       columns: [
         { ...foreignKey('place_id', 'places.id', 'Cascade on delete.'), key: 'pk' },
         { ...foreignKey('delivery_platform_id', 'delivery_platforms.id'), key: 'pk' },

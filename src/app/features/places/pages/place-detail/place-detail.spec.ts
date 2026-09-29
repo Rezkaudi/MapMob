@@ -114,6 +114,23 @@ describe('PlaceDetail', () => {
     expect(text).toContain('منذ يومين');
   });
 
+  it('writes the renewal and added dates the way the frame does, "Oct 24, 2024"', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    const dates = Array.from(element.querySelectorAll('[data-role="card-date"]')).map((date) =>
+      date.textContent?.trim(),
+    );
+    expect(dates).toEqual(['Oct 24, 2024', 'Oct 24, 2024']);
+  });
+
+  it('shows the switched-on delivery platforms right under the location card', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    const card = element.querySelector('app-place-location-card + app-place-delivery-card');
+    expect(card?.textContent).toContain('https://beeorder.sy/store/alhayat-pharma');
+    expect(card?.textContent).not.toContain('طلبات');
+  });
+
   it('shows the working hours and the contact channels', () => {
     const text = render().nativeElement.textContent;
 
@@ -276,8 +293,9 @@ describe('PlaceDetail edit links', () => {
     ['معلومات المالك', 'basic-info'],
     ['الاشتراك', 'subscription'],
     ['أوقات العمل', 'working-hours'],
-    ['معلومات التوصل', 'details'],
+    ['معلومات التواصل', 'details'],
     ['الموقع', 'location'],
+    ['منصات الطلب والتوصيل', 'delivery'],
   ];
 
   for (const [heading, section] of CARD_SECTIONS) {

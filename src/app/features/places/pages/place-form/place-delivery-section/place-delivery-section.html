@@ -1,0 +1,71 @@
+<app-form-section
+  heading="منصات التوصيل"
+  icon="delivery"
+  appearance="compact"
+  [iconSize]="20"
+  [hasFlushBody]="true"
+>
+  <ul class="flex flex-col gap-4">
+    @for (row of rows(); track row.platform.id) {
+      <li
+        data-role="platform-row"
+        class="flex flex-col gap-4 rounded-lg p-4"
+        [class]="
+          row.isEnabled
+            ? 'bg-[rgba(247,249,251,0.5)]'
+            : 'border border-[rgba(192,199,213,0.6)] bg-white'
+        "
+      >
+        <!-- RTL: the name comes first so it sits on the right, the switch on the left. -->
+        <div class="flex items-center justify-between gap-4">
+          <span data-role="platform-name" class="text-[14px]/[20px] text-[#191c1e]">
+            {{ row.platform.name }} ({{ row.platform.latinName }})
+          </span>
+          <app-toggle-switch
+            [isOn]="row.isEnabled"
+            [label]="'تفعيل ' + row.platform.name"
+            (toggled)="setEnabled(row.link, $event)"
+          />
+        </div>
+
+        @if (row.isEnabled) {
+          <div class="flex flex-col gap-1 border-t border-[#e0e3e5] pt-3">
+            <label class="flex items-start text-[11px]/[14px] text-[#404753]" [for]="row.inputId">
+              <span>رابط المتجر على {{ row.platform.latinName }}</span>
+              <span class="font-inter font-medium text-[#ba1a1a]">*</span>
+            </label>
+            <!-- The chain icon sits 13px in from the left edge, inside the field's 40px start. -->
+            <div class="relative">
+              <input
+                type="url"
+                dir="ltr"
+                placeholder="https://"
+                autocomplete="url"
+                class="h-[46px] w-full rounded border border-[#c0c7d5] bg-white pr-4 pl-10 text-left font-inter text-[14px]/[20px] text-[#191c1e] outline-none placeholder:text-[#94a3b8] focus:border-primary focus:ring-2 focus:ring-primary/20 aria-invalid:border-closed"
+                [id]="row.inputId"
+                [formControl]="row.link.controls.storeUrl"
+                [attr.aria-invalid]="row.error ? true : null"
+                [attr.aria-describedby]="row.error ? row.inputId + '-error' : null"
+              />
+              <app-icon
+                name="link-chain"
+                aria-hidden="true"
+                class="pointer-events-none absolute top-1/2 left-[13px] -translate-y-1/2 text-[#404753]"
+                [size]="16"
+              />
+            </div>
+            @if (row.error; as error) {
+              <p
+                role="alert"
+                class="text-start text-[11px]/[16px] text-closed"
+                [id]="row.inputId + '-error'"
+              >
+                {{ error }}
+              </p>
+            }
+          </div>
+        }
+      </li>
+    }
+  </ul>
+</app-form-section>

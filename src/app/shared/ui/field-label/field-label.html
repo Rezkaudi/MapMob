@@ -13,13 +13,14 @@
     }
   </label>
 } @else {
-  <label [attr.for]="forId() || null" class="block text-right text-[13px]/[14px] text-text-primary">
-    {{ text() }}
+  <!-- RTL: the words read first on the right; the star touches them on their left. -->
+  <label [attr.for]="forId() || null" class="flex items-start text-[14px]/[14px] text-text-primary">
+    <span>{{ text() }}</span>
     @if (isRequired()) {
-      <span class="text-error">*</span>
+      <span class="font-inter text-[11px]/[14px] font-medium text-closed">*</span>
     }
     @if (isOptional()) {
-      <span class="text-[11px] font-normal text-text-secondary">(اختياري)</span>
+      <span class="ms-1 text-[11px]/[14px] font-normal text-text-secondary">(اختياري)</span>
     }
   </label>
 }

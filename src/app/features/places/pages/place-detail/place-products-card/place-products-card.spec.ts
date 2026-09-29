@@ -39,13 +39,29 @@ describe('PlaceProductsCard', () => {
     expect(text).toContain('إضافة منتج أو خدمة');
   });
 
-  it('renders every column header', () => {
-    const headers: string[] = Array.from(
-      build(PRODUCTS).nativeElement.querySelectorAll('th'),
-      (cell) => (cell as HTMLElement).textContent?.trim() ?? '',
-    );
+  it('ticks every row from the header box, and clears it when one row is unticked', () => {
+    const fixture = build(PRODUCTS);
+    const element: HTMLElement = fixture.nativeElement;
+    const selectAll = element.querySelector<HTMLInputElement>('thead input[type="checkbox"]')!;
+    const rowBoxes = () =>
+      Array.from(element.querySelectorAll<HTMLInputElement>('tbody input[type="checkbox"]'));
 
-    expect(headers).toEqual(['تحديد', 'الصورة', 'المنتج/الخدمة', 'السعر', 'الحالة', 'الإجراء']);
+    selectAll.click();
+    fixture.detectChanges();
+    expect(rowBoxes().map((box) => box.checked)).toEqual([true, true]);
+
+    rowBoxes()[0].click();
+    fixture.detectChanges();
+    expect(selectAll.checked).toBe(false);
+    expect(rowBoxes().map((box) => box.checked)).toEqual([false, true]);
+  });
+
+  it('renders every column header, the first one being the select-all box', () => {
+    const cells: HTMLElement[] = Array.from(build(PRODUCTS).nativeElement.querySelectorAll('th'));
+    const headers = cells.map((cell) => cell.textContent?.trim() ?? '');
+
+    expect(cells[0].querySelector('input')?.getAttribute('aria-label')).toBe('تحديد كل المنتجات');
+    expect(headers.slice(1)).toEqual(['الصورة', 'المنتج/الخدمة', 'السعر', 'الحالة', 'الإجراء']);
   });
 
   it('renders one row per product with its price and availability', () => {

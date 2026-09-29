@@ -10,12 +10,17 @@
   <span class="text-text-primary" aria-current="page">{{ crumbLabel() }}</span>
 </nav>
 <!-- RTL: the title block on the right, an optional page action on the left. -->
-<div data-role="heading-row" class="mt-4 flex items-center justify-between gap-4">
+<div
+  data-role="heading-row"
+  class="mt-4 flex justify-between gap-4"
+  [class]="appearanceClasses().row"
+>
   <div class="flex flex-col gap-1 text-start">
-    <h1 class="text-[28px]/[34px] font-bold text-black">{{ title() }}</h1>
+    <h1 class="font-bold" [class]="appearanceClasses().title">{{ title() }}</h1>
     @if (description()) {
       <p class="text-text-secondary" [class]="descriptionClasses()">{{ description() }}</p>
     }
+    <ng-content select="[pageHeadingMeta]" />
   </div>
   <ng-content select="[pageHeadingAction]" />
 </div>

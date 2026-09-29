@@ -1,21 +1,35 @@
-<app-info-card heading="أوقات العمل" [canEdit]="true" (edit)="edit.emit()">
+<app-info-card
+  heading="أوقات العمل"
+  headingSize="large"
+  corner="small"
+  [canEdit]="true"
+  (edit)="edit.emit()"
+>
   @if (isOpenNow()) {
+    <!-- RTL: the dot leads, so it sits on the right of the words. -->
     <span
-      class="mb-3 inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-1 text-[12px] font-medium text-success"
+      class="-mt-2 mb-4 inline-flex h-7 items-center gap-1 rounded bg-status-success/10 px-2 text-[11px]/[24px] font-bold text-status-success"
     >
-      <span class="size-1.5 rounded-full bg-success"></span>
+      <span class="size-1.5 rounded-full bg-status-success" aria-hidden="true"></span>
       <span>مفتوح الآن</span>
     </span>
   }
 
-  <ul class="flex flex-col">
+  <ul class="flex flex-col gap-2">
     @for (row of rows(); track row.days) {
+      <!-- Today's band bleeds 16px past the list on both sides, as the frame draws it. -->
       <li
-        class="flex items-center justify-between border-b border-border px-3 py-3 last:border-0"
-        [class]="row.isToday ? 'rounded-lg bg-primary-soft text-primary' : 'text-text-secondary'"
+        class="flex items-center justify-between"
+        [class]="
+          row.isToday
+            ? '-mx-4 rounded-lg bg-primary/5 px-4 py-2.5 text-[13px]/[18px] text-primary'
+            : 'border-b border-[#eceef0] py-2.5 text-[14px]/[18px]'
+        "
       >
-        <span class="text-[13px] font-medium">{{ row.days }}</span>
-        <span class="font-latin text-[13px]" dir="ltr">{{ row.hours }}</span>
+        <span [class.text-text-primary]="!row.isToday">{{ row.days }}</span>
+        <span dir="ltr" [class]="row.isToday ? 'font-medium' : 'text-text-secondary'">
+          {{ row.hours }}
+        </span>
       </li>
     }
   </ul>

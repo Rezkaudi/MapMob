@@ -1,0 +1,20 @@
+<app-info-card heading="معلومات المالك" [canEdit]="true" padding="compact" (edit)="edit.emit()">
+  <div class="flex flex-col gap-4">
+    <app-place-fact-row label="اسم المالك/المسؤول">
+      <span class="text-text-secondary">{{ owner().name }}</span>
+    </app-place-fact-row>
+    <app-place-fact-row label="رقم هاتف المالك/المسؤول">
+      <span data-role="owner-phone" class="text-text-secondary" dir="ltr">{{ owner().phone }}</span>
+    </app-place-fact-row>
+  </div>
+
+  <!-- RTL: the phone icon leads, so it sits on the right of the words. -->
+  <a
+    data-role="call-owner"
+    class="mt-6 flex h-8 items-center justify-center gap-0.5 rounded border border-primary text-[14px]/[20px] font-medium text-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    [href]="callHref()"
+  >
+    <app-icon name="call-curved" aria-hidden="true" [size]="16" />
+    <span>الاتصال بالمالك</span>
+  </a>
+</app-info-card>

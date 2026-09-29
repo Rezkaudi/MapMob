@@ -1,0 +1,96 @@
+<app-form-section heading="تفاصيل المكان" icon="file-text" appearance="compact" [iconSize]="20">
+  <div class="grid grid-cols-2 gap-6" [formGroup]="form()">
+    <div class="flex flex-col gap-1">
+      <app-field-label text="رقم الهاتف" forId="phone" [isRequired]="true" />
+      <input
+        id="phone"
+        type="tel"
+        formControlName="phone"
+        placeholder="05XXXXXXXX"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="رقم الهاتف الإضافي" forId="extra-phone" />
+      <input
+        id="extra-phone"
+        type="tel"
+        formControlName="extraPhone"
+        placeholder="05XXXXXXXX"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="col-span-2 flex flex-col gap-1">
+      <app-field-label text="الموقع الإلكتروني" forId="website" />
+      <input
+        id="website"
+        type="url"
+        formControlName="website"
+        placeholder="https://"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="واتساب" forId="whatsapp" />
+      <input
+        id="whatsapp"
+        type="tel"
+        formControlName="whatsapp"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+      <!-- RTL: the small amber box leads, so it sits on the right of the hint. -->
+      <label class="flex items-center gap-1 text-[11px]/[14px] text-accent">
+        <input
+          type="checkbox"
+          formControlName="useMainPhoneForWhatsapp"
+          class="size-3 rounded border border-accent accent-accent"
+        />
+        <span>استخدام رقم الهاتف الرئيسي للواتساب</span>
+      </label>
+    </div>
+    <div class="flex flex-col gap-1 self-start">
+      <app-field-label text="فيسبوك" forId="facebook" />
+      <input
+        id="facebook"
+        type="url"
+        formControlName="facebook"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="إنستغرام" forId="instagram" />
+      <input
+        id="instagram"
+        type="url"
+        formControlName="instagram"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <app-field-label text="تلغرام" forId="telegram" />
+      <input
+        id="telegram"
+        type="url"
+        formControlName="telegram"
+        appPlaceFieldControl
+        [isLatin]="true"
+      />
+    </div>
+    <div class="col-span-2 flex flex-col gap-1">
+      <app-field-label text="وصف المكان" forId="description" />
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="5"
+        placeholder="اكتب وصفاً موجزاً عن المكان وما يقدمه من خدمات..."
+        appPlaceFieldControl
+      ></textarea>
+    </div>
+  </div>
+</app-form-section>

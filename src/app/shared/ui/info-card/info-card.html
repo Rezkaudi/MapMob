@@ -1,13 +1,17 @@
-<section class="rounded-2xl border border-border bg-surface" [class]="paddingClasses()">
-  <div class="flex items-center justify-between">
-    <h2 class="text-[16px]/[24px] font-bold text-text-primary">{{ heading() }}</h2>
+<section
+  class="border border-border bg-surface shadow-[0_4px_30px_0_rgba(0,0,0,0.08)]"
+  [class]="sectionClasses()"
+>
+  <!-- RTL: the heading comes first so it sits on the right, "تعديل" on the left. -->
+  <div class="flex items-center justify-between gap-3">
+    <h2 class="font-bold text-text-primary" [class]="headingClasses()">{{ heading() }}</h2>
     @if (canEdit()) {
       <button
         type="button"
-        class="flex items-center gap-1 text-[13px] font-medium text-primary"
+        class="flex items-center gap-0.5 text-[12px]/[20px] font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         (click)="edit.emit()"
       >
-        <app-icon name="edit" [size]="13" />
+        <app-icon name="edit-3-feather" aria-hidden="true" [size]="10" />
         <span>تعديل</span>
       </button>
     }

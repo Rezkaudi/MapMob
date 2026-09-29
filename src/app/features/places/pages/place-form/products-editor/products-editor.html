@@ -2,7 +2,7 @@
   RTL: the heading sits on the right, then the quota badge, then the add button
   on the left. Sizes come from the "المنتجات والخدمات" section of the add-place frame.
 -->
-<app-form-section heading="المنتجات والخدمات" icon="bag">
+<app-form-section heading="المنتجات والخدمات" icon="bag" appearance="compact" [iconSize]="20">
   <div headerAction class="flex items-center gap-4">
     <app-package-quota-badge
       [packageLabel]="packageLabel()"

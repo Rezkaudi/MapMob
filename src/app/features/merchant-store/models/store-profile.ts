@@ -1,6 +1,6 @@
 import { NamedReference } from '../../../shared/models/named-reference';
 import { StoreContact } from './store-contact';
-import { StoreDeliveryLink } from './store-delivery-link';
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { StoreLocation } from './store-location';
 import { StoreWorkingDay } from './store-working-day';
 
@@ -16,5 +16,5 @@ export interface StoreProfile {
   readonly isOpen24Hours: boolean;
   readonly workingHours: readonly StoreWorkingDay[];
   /** One row per platform the admins list, in their order. */
-  readonly deliveryLinks: readonly StoreDeliveryLink[];
+  readonly deliveryLinks: readonly DeliveryLink[];
 }

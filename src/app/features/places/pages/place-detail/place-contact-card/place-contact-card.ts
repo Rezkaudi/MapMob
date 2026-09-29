@@ -19,28 +19,24 @@ export class PlaceContactCard {
     const contact = this.contact();
     return [
       {
-        icon: 'phone',
+        icon: 'phone-feather',
         label: contact.phone,
         href: `tel:${contact.phone}`,
-        colorClass: 'bg-primary',
       },
       {
-        icon: 'whatsapp',
+        icon: 'whatsapp-fill',
         label: contact.whatsapp,
         href: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`,
-        colorClass: 'bg-[#25d366]',
       },
       {
-        icon: 'facebook',
+        icon: 'facebook-feather',
         label: contact.facebook,
         href: contact.facebook,
-        colorClass: 'bg-[#1877f2]',
       },
       {
-        icon: 'instagram',
+        icon: 'instagram-fill',
         label: contact.instagram,
         href: contact.instagram,
-        colorClass: 'bg-[#e1306c]',
       },
     ];
   });
