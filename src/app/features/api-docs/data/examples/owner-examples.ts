@@ -123,6 +123,23 @@ export const OWNER_PLACE = {
     { day: 'thursday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
     { day: 'friday', isOpen: false, openTime: null, closeTime: null },
   ],
+  deliveryLinks: [
+    {
+      platform: {
+        id: '1',
+        name: 'بي أوردر',
+        latinName: 'BeeOrder',
+        logoUrl: 'https://cdn.mapmob.sy/delivery-platforms/1.png',
+      },
+      isEnabled: true,
+      storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+    },
+    {
+      platform: { id: '3', name: 'طلبات', latinName: 'talabat', logoUrl: null },
+      isEnabled: false,
+      storeUrl: null,
+    },
+  ],
 } satisfies StoreProfile;
 
 export const OWNER_PLACE_UPDATE_FORM = {
@@ -143,6 +160,11 @@ export const OWNER_PLACE_UPDATE_FORM = {
   'workingHours[0][closeTime]': '23:00',
   'workingHours[6][day]': 'friday',
   'workingHours[6][isOpen]': false,
+  'deliveryLinks[0][platformId]': '1',
+  'deliveryLinks[0][isEnabled]': true,
+  'deliveryLinks[0][storeUrl]': 'https://beeorder.sy/store/alhayat-pharma',
+  'deliveryLinks[1][platformId]': '3',
+  'deliveryLinks[1][isEnabled]': false,
   cover: '@cover.jpg',
 };
 

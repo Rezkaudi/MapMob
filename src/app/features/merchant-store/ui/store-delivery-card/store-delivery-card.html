@@ -1,0 +1,24 @@
+<section
+  appStoreCard
+  class="flex flex-col gap-5 rounded-2xl p-6"
+  aria-labelledby="store-delivery-title"
+>
+  <h2
+    id="store-delivery-title"
+    class="text-start font-cairo text-[14px]/[24px] font-bold text-text-primary"
+  >
+    منصات الطلب والتوصيل
+  </h2>
+
+  <ul class="flex flex-col gap-4">
+    @for (row of rows(); track row.platform.id) {
+      <li>
+        <app-delivery-platform-item
+          [row]="row"
+          [urlControl]="form().controls.deliveryLinks.at(row.index).controls.storeUrl"
+          (enabledChanged)="setEnabled(row.index, $event)"
+        />
+      </li>
+    }
+  </ul>
+</section>

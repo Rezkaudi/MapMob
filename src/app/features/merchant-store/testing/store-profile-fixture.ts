@@ -1,3 +1,4 @@
+import { StoreDeliveryLink } from '../models/store-delivery-link';
 import { StoreProfile } from '../models/store-profile';
 import { StoreWorkingDay } from '../models/store-working-day';
 import { WeekDay } from '../models/week-day';
@@ -16,6 +17,22 @@ export function buildWeek(): StoreWorkingDay[] {
   return [
     ...OPEN_DAYS.map((day) => ({ day, isOpen: true, openTime: '09:00', closeTime: '23:00' })),
     { day: 'friday', isOpen: false, openTime: null, closeTime: null },
+  ];
+}
+
+/** BeeOrder switched on with its link, Talabat off and never set up. */
+export function buildDeliveryLinks(): StoreDeliveryLink[] {
+  return [
+    {
+      platform: { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },
+      isEnabled: true,
+      storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+    },
+    {
+      platform: { id: '3', name: 'طلبات', latinName: 'talabat', logoUrl: null },
+      isEnabled: false,
+      storeUrl: null,
+    },
   ];
 }
 
@@ -43,6 +60,7 @@ export function buildStoreProfile(overrides: Partial<StoreProfile> = {}): StoreP
     },
     isOpen24Hours: false,
     workingHours: buildWeek(),
+    deliveryLinks: buildDeliveryLinks(),
     ...overrides,
   };
 }

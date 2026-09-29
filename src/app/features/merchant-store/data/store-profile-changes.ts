@@ -1,3 +1,5 @@
+import { StoreDeliveryLink } from '../models/store-delivery-link';
+import { StoreDeliveryLinkUpdate } from '../models/store-delivery-link-update';
 import { StoreProfile } from '../models/store-profile';
 import { StoreProfileUpdate } from '../models/store-profile-update';
 
@@ -28,5 +30,16 @@ export function applyStoreProfileUpdate(
     },
     isOpen24Hours: update.isOpen24Hours,
     workingHours: update.workingHours,
+    deliveryLinks: saved.deliveryLinks.map((link) =>
+      applyDeliveryLinkUpdate(link, update.deliveryLinks),
+    ),
   };
+}
+
+function applyDeliveryLinkUpdate(
+  saved: StoreDeliveryLink,
+  updates: readonly StoreDeliveryLinkUpdate[],
+): StoreDeliveryLink {
+  const update = updates.find((candidate) => candidate.platformId === saved.platform.id);
+  return update ? { ...saved, isEnabled: update.isEnabled, storeUrl: update.storeUrl } : saved;
 }

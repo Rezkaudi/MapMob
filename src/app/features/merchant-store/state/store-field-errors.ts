@@ -13,7 +13,7 @@ export type StoreTextField =
 
 type ErrorMessages = Partial<Record<'required' | 'maxlength' | 'pattern', string>>;
 
-const LINK_MESSAGE = 'أدخل رابطاً كاملاً يبدأ بـ https://';
+export const LINK_MESSAGE = 'أدخل رابطاً كاملاً يبدأ بـ https://';
 
 /** Checked in this order, so an empty field is asked for before its shape is judged. */
 const MESSAGES: Record<StoreTextField, ErrorMessages> = {

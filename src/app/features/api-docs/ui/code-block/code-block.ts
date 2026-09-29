@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { JsonToken, JsonTokenKind } from '../../models/json-token';
 import { tokenizeJson } from '../../state/json-tokens';
 import { ScriptRun, splitScriptRuns } from '../../state/script-runs';
-import { ClipboardWriter } from './clipboard-writer';
+import { ClipboardWriter } from '../../../../shared/browser/clipboard-writer';
 import { CodeLanguage } from './code-language';
 
 const COPIED_NOTICE_MS = 1600;

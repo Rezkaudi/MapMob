@@ -33,6 +33,14 @@ export function toStoreProfileFormData(update: StoreProfileUpdate): FormData {
       data.set(`${prefix}[closeTime]`, day.closeTime);
     }
   });
+  update.deliveryLinks.forEach((link, index) => {
+    const prefix = `deliveryLinks[${index}]`;
+    data.set(`${prefix}[platformId]`, link.platformId);
+    data.set(`${prefix}[isEnabled]`, String(link.isEnabled));
+    if (link.storeUrl !== null) {
+      data.set(`${prefix}[storeUrl]`, link.storeUrl);
+    }
+  });
   if (update.cover) {
     data.set('cover', update.cover);
   }

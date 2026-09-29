@@ -17,26 +17,25 @@ import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Spinner } from '../../../../shared/ui/spinner/spinner';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { WeekDay } from '../../models/week-day';
+import { toDeliveryLinkRows } from '../../state/delivery-link-rows';
 import { describeStoreLocation } from '../../state/location-summary';
 import { findStoreFieldErrors } from '../../state/store-field-errors';
 import {
   DESCRIPTION_MAX_LENGTH,
   createStoreProfileFormGroup,
 } from '../../state/store-profile-form-group';
-import {
-  toStoreProfileFormValue,
-  toStoreProfileUpdate,
-} from '../../state/store-profile-form-mapping';
+import { fillStoreProfileForm, toStoreProfileUpdate } from '../../state/store-profile-form-mapping';
 import { StoreProfileStore } from '../../state/store-profile.store';
 import { toWorkingDayRows } from '../../state/working-day-rows';
 import { closeDay, openDay, setDayTime } from '../../state/working-week-editing';
 import { StoreBasicInfoCard } from '../../ui/store-basic-info-card/store-basic-info-card';
 import { StoreClassificationCard } from '../../ui/store-classification-card/store-classification-card';
 import { StoreContactCard } from '../../ui/store-contact-card/store-contact-card';
+import { StoreDeliveryCard } from '../../ui/store-delivery-card/store-delivery-card';
 import { StoreHoursCard, WeekDayTimeChange } from '../../ui/store-hours-card/store-hours-card';
 import { StoreLocationCard } from '../../ui/store-location-card/store-location-card';
 
-const FIRST_INVALID_FIELD = '[appStoreInput].ng-invalid';
+const FIRST_INVALID_FIELD = ':is(input, textarea).ng-invalid';
 
 @Component({
   selector: 'app-store-profile-page',
@@ -48,6 +47,7 @@ const FIRST_INVALID_FIELD = '[appStoreInput].ng-invalid';
     StoreBasicInfoCard,
     StoreClassificationCard,
     StoreContactCard,
+    StoreDeliveryCard,
     StoreHoursCard,
     StoreLocationCard,
     Toast,
@@ -81,6 +81,11 @@ export class StoreProfilePage {
     this.formChanges();
     return this.form.controls.isOpen24Hours.value;
   });
+  protected readonly deliveryLinkRows = computed(() => {
+    this.formChanges();
+    const savedLinks = this.store.profile()?.deliveryLinks ?? [];
+    return toDeliveryLinkRows(savedLinks, this.form.controls.deliveryLinks);
+  });
   protected readonly locationSummary = computed(() => {
     this.formChanges();
     const governorate = this.store.profile()?.location.governorate.name ?? '';
@@ -94,7 +99,7 @@ export class StoreProfilePage {
       const profile = this.store.profile();
       if (profile) {
         untracked(() => {
-          this.form.reset(toStoreProfileFormValue(profile));
+          fillStoreProfileForm(this.form, profile);
           this.pickedCover.set(null);
         });
       }

@@ -1,0 +1,115 @@
+@let item = row();
+<article
+  class="flex flex-col rounded-xl border border-[rgba(226,232,240,0.8)] bg-white p-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+>
+  <div class="flex flex-col gap-3" [class.pb-4]="item.isEnabled">
+    <!-- RTL: the logo and names on the right, the switch on the left. -->
+    <div data-role="platform-header" class="flex items-center justify-between gap-3">
+      <div data-role="platform-brand" class="flex min-w-0 items-center gap-2.5">
+        <span
+          data-role="platform-logo"
+          class="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-accent shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+        >
+          @if (item.platform.logoUrl; as logoUrl) {
+            <img class="size-full object-cover" alt="" [src]="logoUrl" />
+          }
+        </span>
+        <h3 class="flex min-w-0 items-center gap-1.5 font-cairo text-text-primary">
+          <span class="truncate text-[12px]/[16px] font-bold">{{ item.platform.name }}</span>
+          <span class="shrink-0 text-[11px]/[16px] font-semibold" dir="ltr"
+            >({{ item.platform.latinName }})</span
+          >
+        </h3>
+      </div>
+      <app-toggle-switch
+        data-role="platform-switch"
+        [isOn]="item.isEnabled"
+        [label]="'تفعيل ' + item.platform.name"
+        (toggled)="toggle($event)"
+      />
+    </div>
+
+    @if (item.isEnabled) {
+      <div class="flex flex-col gap-1">
+        <label
+          class="self-start text-[10px]/[16px] font-medium text-text-primary"
+          [for]="inputId()"
+        >
+          رابط المتجر المباشر
+        </label>
+        <!-- RTL: the copy button on the right, the link read from the left edge. -->
+        <div
+          data-role="link-box"
+          class="flex h-8 items-center gap-2 rounded-lg border bg-surface-muted px-2.5 transition-shadow focus-within:ring-2 focus-within:ring-primary/40"
+          [class]="item.error ? 'border-closed' : 'border-[#f1f5f9]'"
+        >
+          <button
+            data-role="copy-link"
+            type="button"
+            class="relative flex shrink-0 rounded text-text-secondary transition-colors after:absolute after:-inset-2 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-text-secondary"
+            [attr.aria-label]="hasCopied() ? 'تم نسخ الرابط' : 'نسخ الرابط'"
+            [disabled]="!item.canOpen"
+            (click)="copyLink()"
+          >
+            <app-icon
+              aria-hidden="true"
+              [name]="hasCopied() ? 'check-thin' : 'copy-feather'"
+              [size]="14"
+            />
+          </button>
+          <input
+            #urlInput
+            type="url"
+            dir="ltr"
+            placeholder="https://"
+            autocomplete="url"
+            class="h-full min-w-0 flex-1 truncate bg-transparent text-left text-[11px]/[16.5px] text-text-primary outline-none placeholder:text-placeholder"
+            [id]="inputId()"
+            [formControl]="urlControl()"
+            [readOnly]="!isUrlEditable()"
+            [attr.aria-invalid]="item.error ? true : null"
+            [attr.aria-describedby]="item.error ? inputId() + '-error' : null"
+            (blur)="finishEditing()"
+          />
+        </div>
+        @if (item.error; as error) {
+          <p
+            role="alert"
+            class="text-start text-[11px]/[16px] text-closed"
+            [id]="inputId() + '-error'"
+          >
+            {{ error }}
+          </p>
+        }
+      </div>
+    }
+  </div>
+
+  @if (item.isEnabled) {
+    <!-- RTL: open the store on the right, edit the link on the left. -->
+    <div
+      data-role="platform-actions"
+      class="flex items-center justify-between gap-2 border-t border-[#f1f5f9] pt-2"
+    >
+      <a
+        data-role="open-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-8 w-[158px] items-center justify-center gap-1.5 rounded-lg bg-[#f0f7ff] px-3 text-[10px]/[16px] font-bold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:bg-[#f0f7ff]"
+        [attr.href]="item.canOpen ? item.storeUrl : null"
+        [attr.aria-disabled]="item.canOpen ? null : true"
+      >
+        فتح رابط المتجر
+      </a>
+      <button
+        data-role="edit-link"
+        type="button"
+        class="flex h-8 items-center justify-center gap-1 rounded-lg border border-border bg-surface-muted px-3 text-[10px]/[16px] font-medium text-text-secondary transition-colors hover:bg-[#f1f5f9] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        (click)="startEditing()"
+      >
+        <app-icon name="edit-3-feather" aria-hidden="true" [size]="10" />
+        <span>تعديل الرابط</span>
+      </button>
+    </div>
+  }
+</article>

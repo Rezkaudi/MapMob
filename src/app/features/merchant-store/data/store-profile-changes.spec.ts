@@ -23,6 +23,27 @@ describe('applyStoreProfileUpdate', () => {
     expect(result.subCategory).toEqual(saved.subCategory);
   });
 
+  it('switches platforms and sets their links, keeping the platform details', () => {
+    const update = {
+      ...buildUpdate(),
+      deliveryLinks: [
+        { platformId: '1', isEnabled: false, storeUrl: 'https://beeorder.sy/store/alhayat-pharma' },
+        { platformId: '3', isEnabled: true, storeUrl: 'https://talabat.com/syria/alhayat' },
+      ],
+    };
+
+    const result = applyStoreProfileUpdate(saved, update, null);
+
+    expect(result.deliveryLinks).toEqual([
+      { ...saved.deliveryLinks[0], isEnabled: false },
+      {
+        platform: saved.deliveryLinks[1].platform,
+        isEnabled: true,
+        storeUrl: 'https://talabat.com/syria/alhayat',
+      },
+    ]);
+  });
+
   it('keeps the saved cover unless a new one was uploaded', () => {
     expect(applyStoreProfileUpdate(saved, buildUpdate(), null).coverImageUrl).toBe(
       saved.coverImageUrl,

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ClipboardWriter } from '../code-block/clipboard-writer';
+import { ClipboardWriter } from '../../../../shared/browser/clipboard-writer';
 import { buildEndpoint, buildFeature } from '../../testing/api-docs-fixture';
 import { EndpointCard } from './endpoint-card';
 

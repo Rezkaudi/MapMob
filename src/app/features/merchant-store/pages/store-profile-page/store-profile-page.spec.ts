@@ -58,7 +58,12 @@ describe('StoreProfilePage', () => {
     expect(
       columns.map((column) => [...column.children].map((card) => card.tagName.toLowerCase())),
     ).toEqual([
-      ['app-store-basic-info-card', 'app-store-classification-card', 'app-store-contact-card'],
+      [
+        'app-store-basic-info-card',
+        'app-store-classification-card',
+        'app-store-contact-card',
+        'app-store-delivery-card',
+      ],
       ['app-store-location-card', 'app-store-hours-card'],
     ]);
   });
@@ -75,6 +80,10 @@ describe('StoreProfilePage', () => {
     );
     expect(element.querySelector('[data-role="counter"]')?.textContent?.trim()).toBe('300/39');
     expect(element.querySelectorAll('app-store-hours-card li')).toHaveLength(7);
+    expect(element.querySelectorAll('app-delivery-platform-item')).toHaveLength(2);
+    expect((element.querySelector('#delivery-link-1') as HTMLInputElement).value).toBe(
+      'https://beeorder.sy/store/alhayat-pharma',
+    );
   });
 
   it('keeps the counter and the map card in step with typing', () => {
@@ -110,6 +119,44 @@ describe('StoreProfilePage', () => {
       element.querySelector('app-store-basic-info-card [role="alert"]')?.textContent?.trim(),
     ).toBe('أدخل اسم المتجر');
     expect(document.activeElement?.id).toBe('store-name');
+  });
+
+  it('asks for the link of a platform switched on without one, instead of saving', () => {
+    const { fixture, element, saveProfile, saveButton } = render();
+    const talabatSwitch = element.querySelectorAll<HTMLButtonElement>(
+      'app-store-delivery-card [role="switch"]',
+    )[1];
+
+    talabatSwitch.click();
+    fixture.detectChanges();
+    (document.activeElement as HTMLElement | null)?.blur();
+    saveButton().click();
+    fixture.detectChanges();
+
+    expect(saveProfile).not.toHaveBeenCalled();
+    expect(
+      element.querySelector('app-store-delivery-card [role="alert"]')?.textContent?.trim(),
+    ).toBe('أدخل رابط متجرك على المنصة');
+    expect(document.activeElement?.id).toBe('delivery-link-3');
+  });
+
+  it('saves the platforms switched off and on with their links', () => {
+    const { fixture, element, saveProfile, saveButton, type } = render();
+    const switches = element.querySelectorAll<HTMLButtonElement>(
+      'app-store-delivery-card [role="switch"]',
+    );
+
+    switches[0].click();
+    switches[1].click();
+    fixture.detectChanges();
+    type('#delivery-link-3', 'https://talabat.com/syria/alhayat');
+    saveButton().click();
+    fixture.detectChanges();
+
+    expect(saveProfile.mock.calls[0][0].deliveryLinks).toEqual([
+      { platformId: '1', isEnabled: false, storeUrl: 'https://beeorder.sy/store/alhayat-pharma' },
+      { platformId: '3', isEnabled: true, storeUrl: 'https://talabat.com/syria/alhayat' },
+    ]);
   });
 
   it('saves the edited fields and week, then says so', () => {

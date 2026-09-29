@@ -33,4 +33,21 @@ export const STORE_PROFILE_SEED: StoreProfile = {
     { day: 'thursday', isOpen: true, openTime: '09:00', closeTime: '23:00' },
     { day: 'friday', isOpen: false, openTime: null, closeTime: null },
   ],
+  deliveryLinks: [
+    {
+      platform: { id: '1', name: 'بي أوردر', latinName: 'BeeOrder', logoUrl: null },
+      isEnabled: true,
+      storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+    },
+    {
+      platform: { id: '2', name: 'يلا غو', latinName: 'yallago', logoUrl: null },
+      isEnabled: true,
+      storeUrl: 'https://yallago.sy/store/alhayat-pharma',
+    },
+    {
+      platform: { id: '3', name: 'طلبات', latinName: 'talabat', logoUrl: null },
+      isEnabled: false,
+      storeUrl: null,
+    },
+  ],
 };

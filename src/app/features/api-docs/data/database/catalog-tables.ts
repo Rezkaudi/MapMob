@@ -6,8 +6,13 @@ const OPTIONAL_TEXT = { type: 'varchar(255)', isNullable: true };
 export const CATALOG_DOMAIN: DbDomain = {
   id: 'db-catalog',
   name: 'Places and catalog',
-  description: 'Categories, places, and what hangs off a place: hours, media and products.',
-  layout: [['categories'], ['places'], ['place_working_hours', 'place_media', 'products']],
+  description:
+    'Categories, places, and what hangs off a place: hours, ordering apps, media and products.',
+  layout: [
+    ['categories', 'delivery_platforms'],
+    ['places'],
+    ['place_working_hours', 'place_delivery_links', 'place_media', 'products'],
+  ],
   tables: [
     {
       name: 'categories',
@@ -103,6 +108,33 @@ export const CATALOG_DOMAIN: DbDomain = {
         { name: 'close_time', type: 'time', isNullable: true },
       ],
       indexes: ['UNIQUE (place_id, day_of_week)'],
+    },
+    {
+      name: 'delivery_platforms',
+      description: 'The ordering apps a place can link to, such as BeeOrder or Talabat.',
+      servedAs: 'deliveryLinks[].platform on /owner/place',
+      columns: [
+        ID,
+        { name: 'name', type: 'varchar(60)', note: 'Arabic name, e.g. بي أوردر.' },
+        { name: 'latin_name', type: 'varchar(60)', note: 'e.g. BeeOrder.' },
+        { name: 'logo_path', type: 'varchar(255)', isNullable: true },
+        ACTIVATION_STATUS_COLUMN,
+        { name: 'sort_order', type: 'smallint unsigned' },
+        ...TIMESTAMPS,
+      ],
+    },
+    {
+      name: 'place_delivery_links',
+      description: "A place's page on one ordering app. Switched off keeps the link.",
+      servedAs: 'deliveryLinks on /owner/place',
+      columns: [
+        { ...foreignKey('place_id', 'places.id', 'Cascade on delete.'), key: 'pk' },
+        { ...foreignKey('delivery_platform_id', 'delivery_platforms.id'), key: 'pk' },
+        { name: 'is_enabled', type: 'boolean' },
+        { name: 'store_url', type: 'varchar(255)', isNullable: true },
+        ...TIMESTAMPS,
+      ],
+      indexes: ['PRIMARY (place_id, delivery_platform_id)'],
     },
     {
       name: 'place_media',

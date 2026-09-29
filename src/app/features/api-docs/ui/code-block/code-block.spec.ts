@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ClipboardWriter } from './clipboard-writer';
+import { ClipboardWriter } from '../../../../shared/browser/clipboard-writer';
 import { CodeBlock } from './code-block';
 
 const clipboard = { write: vi.fn(() => Promise.resolve()) };

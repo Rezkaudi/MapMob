@@ -12,7 +12,7 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
   screen: '/merchant/store',
   permissionModule: null,
   intro:
-    'The owner keeps their own place up to date: cover picture, name, description, contact channels, address, map pin and working hours. Categories, governorate and area stay with the admins and are only shown.',
+    'The owner keeps their own place up to date: cover picture, name, description, contact channels, ordering apps, address, map pin and working hours. Categories, governorate and area stay with the admins and are only shown.',
   endpoints: [
     {
       id: 'owner-place-read',
@@ -57,6 +57,18 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
             'object[]',
             `Always 7 rows, Saturday first: { day: ${DAY_NAMES}, isOpen, openTime | null, closeTime | null } (HH:mm).`,
           ),
+          field(
+            'deliveryLinks',
+            'object[]',
+            'One row for every active delivery_platforms row, by sort_order, even if the place never set it up (then isEnabled false, storeUrl null).',
+          ),
+          field('deliveryLinks[].platform', 'object', '{ id, name, latinName, logoUrl | null }.'),
+          field('deliveryLinks[].isEnabled', 'boolean', 'Shown to app users only when true.'),
+          field(
+            'deliveryLinks[].storeUrl',
+            'string (url) | null',
+            "The place's page on that app. Kept while switched off.",
+          ),
         ],
       },
     },
@@ -89,6 +101,16 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
             'string (HH:mm)',
             'Sent only for an open day. closeTime may be earlier than openTime for a night past midnight.',
           ),
+          field(
+            'deliveryLinks[n][platformId] / [isEnabled]',
+            'string / boolean',
+            'Every platform from GET, n = 0, 1, … in the same order.',
+          ),
+          optionalField(
+            'deliveryLinks[n][storeUrl]',
+            'string (url)',
+            'Full https URL. Required when isEnabled is true; left out when empty.',
+          ),
           optionalField(
             'cover',
             'file (JPG or PNG, max 5 MB)',
@@ -104,6 +126,7 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
       },
       notes: [
         'The screen always sends the whole form: an optional text field that is left out is cleared to null.',
+        'Answer 422 when a switched-on platform has no storeUrl, or when platformId is not an active platform.',
         'Ignore any category, governorate or area field in the body; only an admin changes those, through PUT /places/{id}.',
         'PHP does not read multipart bodies on PUT. Parse the body yourself (for example in a middleware).',
       ],

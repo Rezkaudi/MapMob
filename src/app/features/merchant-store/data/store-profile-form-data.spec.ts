@@ -36,6 +36,17 @@ describe('toStoreProfileFormData', () => {
     expect(data.has('workingHours[7][day]')).toBe(false);
   });
 
+  it('sends every platform, with a link only where one is set', () => {
+    const data = toStoreProfileFormData(buildUpdate());
+
+    expect(data.get('deliveryLinks[0][platformId]')).toBe('1');
+    expect(data.get('deliveryLinks[0][isEnabled]')).toBe('true');
+    expect(data.get('deliveryLinks[0][storeUrl]')).toBe('https://beeorder.sy/store/alhayat-pharma');
+    expect(data.get('deliveryLinks[1][platformId]')).toBe('3');
+    expect(data.get('deliveryLinks[1][isEnabled]')).toBe('false');
+    expect(data.has('deliveryLinks[1][storeUrl]')).toBe(false);
+  });
+
   it('leaves out an empty field and a cover that was not changed', () => {
     const update = { ...buildUpdate(), email: null, instagram: null };
 

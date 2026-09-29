@@ -1,6 +1,12 @@
 import { buildStoreProfile } from '../testing/store-profile-fixture';
+import { FormBuilder } from '@angular/forms';
 import { closeDay } from './working-week-editing';
-import { toStoreProfileFormValue, toStoreProfileUpdate } from './store-profile-form-mapping';
+import { createStoreProfileFormGroup } from './store-profile-form-group';
+import {
+  fillStoreProfileForm,
+  toStoreProfileFormValue,
+  toStoreProfileUpdate,
+} from './store-profile-form-mapping';
 
 describe('store profile form mapping', () => {
   it('fills the form from the saved place, with empty text for missing values', () => {
@@ -23,6 +29,14 @@ describe('store profile form mapping', () => {
       longitude: 35.8866,
       isOpen24Hours: false,
       workingHours: profile.workingHours,
+      deliveryLinks: [
+        {
+          platformId: '1',
+          isEnabled: true,
+          storeUrl: 'https://beeorder.sy/store/alhayat-pharma',
+        },
+        { platformId: '3', isEnabled: false, storeUrl: '' },
+      ],
     });
   });
 
@@ -43,11 +57,30 @@ describe('store profile form mapping', () => {
     expect(update.instagram).toBeNull();
     expect(update.telegram).toBe('https://t.me/alhayatpharmacy');
     expect(update.cover).toBe(cover);
+    expect(update.deliveryLinks).toEqual([
+      { platformId: '1', isEnabled: true, storeUrl: 'https://beeorder.sy/store/alhayat-pharma' },
+      { platformId: '3', isEnabled: false, storeUrl: null },
+    ]);
     expect(update.workingHours.find((day) => day.day === 'sunday')).toEqual({
       day: 'sunday',
       isOpen: false,
       openTime: null,
       closeTime: null,
     });
+  });
+
+  it('fills the form with one link group per platform, even after a longer list', () => {
+    const form = createStoreProfileFormGroup(new FormBuilder());
+    const profile = buildStoreProfile();
+
+    fillStoreProfileForm(form, {
+      ...profile,
+      deliveryLinks: [...profile.deliveryLinks, ...profile.deliveryLinks],
+    });
+    fillStoreProfileForm(form, profile);
+
+    expect(form.controls.deliveryLinks.length).toBe(2);
+    expect(form.getRawValue()).toEqual(toStoreProfileFormValue(profile));
+    expect(form.pristine).toBe(true);
   });
 });

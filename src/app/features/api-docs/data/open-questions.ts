@@ -10,5 +10,6 @@ export const OPEN_QUESTIONS: readonly string[] = [
   'How does a subscription become paused? The status exists, but no screen pauses one yet.',
   'Where do pending payments come from, and who confirms them? The summary counts them, but no screen confirms one yet.',
   'The admin team page lists admins but cannot change a role, suspend or remove an admin. Add endpoints for that now?',
+  'Owners link their place to ordering apps (delivery_platforms), but no admin screen adds, renames or hides an app yet. Seed the list by hand until one exists?',
   'Place owners send plan change requests (subscription_requests), but no admin screen lists or handles them yet. Which screen should, and does approving one also record the payment?',
 ];

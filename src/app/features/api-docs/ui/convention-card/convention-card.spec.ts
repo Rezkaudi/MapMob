@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ClipboardWriter } from '../code-block/clipboard-writer';
+import { ClipboardWriter } from '../../../../shared/browser/clipboard-writer';
 import { ConventionCard } from './convention-card';
 
 describe('ConventionCard', () => {

@@ -1,6 +1,7 @@
 import { FormBuilder, Validators } from '@angular/forms';
 import { contactEmail, phoneNumber, webAddress } from '../../../shared/forms/contact-validators';
 import { StoreWorkingDay } from '../models/store-working-day';
+import { DeliveryLinkFormGroup } from './delivery-link-form';
 
 export const DESCRIPTION_MAX_LENGTH = 300;
 const NAME_MAX_LENGTH = 150;
@@ -25,6 +26,7 @@ export function createStoreProfileFormGroup(formBuilder: FormBuilder) {
     longitude: builder.control(0),
     isOpen24Hours: builder.control(false),
     workingHours: builder.control<readonly StoreWorkingDay[]>([]),
+    deliveryLinks: builder.array<DeliveryLinkFormGroup>([]),
   });
 }
 

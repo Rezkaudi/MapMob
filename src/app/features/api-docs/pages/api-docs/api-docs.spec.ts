@@ -5,7 +5,7 @@ import { ApiReferenceExporter } from '../../export/api-reference-exporter';
 import { ApiReference } from '../../models/api-reference';
 import { SectionScroller } from '../../state/section-scroller';
 import { buildEndpoint, buildFeature } from '../../testing/api-docs-fixture';
-import { ClipboardWriter } from '../../ui/code-block/clipboard-writer';
+import { ClipboardWriter } from '../../../../shared/browser/clipboard-writer';
 import { ApiDocsPage } from './api-docs';
 
 const reference: ApiReference = {
