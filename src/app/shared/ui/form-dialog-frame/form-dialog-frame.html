@@ -16,15 +16,18 @@
   >
     <header class="flex items-start justify-between gap-4 px-6 py-5">
       <div class="text-start">
-        <h2 [id]="titleId" class="text-[18px]/[28px] font-medium text-text-primary">
+        <h2 [id]="titleId" class="text-[18px]/[28px] text-text-primary" [class]="skin().heading">
           {{ heading() }}
         </h2>
-        <p class="mt-1 text-[13px]/[18px] text-text-secondary">{{ subheading() }}</p>
+        @if (subheading(); as line) {
+          <p class="text-text-secondary" [class]="skin().subheading">{{ line }}</p>
+        }
       </div>
       <button
         type="button"
         data-role="close-dialog"
-        class="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-primary hover:bg-surface-muted"
+        class="flex size-9 shrink-0 items-center justify-center rounded-lg hover:bg-surface-muted"
+        [class]="skin().closeButton"
         aria-label="إغلاق النافذة"
         (click)="closed.emit()"
       >

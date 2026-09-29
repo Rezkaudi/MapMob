@@ -1,7 +1,7 @@
 import { CsvRow, buildCsvFile } from '../../../shared/files/csv-file';
 import { Review } from '../models/review';
 import { REVIEW_STATUS_LABEL } from '../models/review-status';
-import { formatReviewRating } from '../state/review-rating-label';
+import { formatReviewRating } from '../../../shared/formatting/review-rating-label';
 
 const HEADER: CsvRow = [
   'اسم المستخدم',

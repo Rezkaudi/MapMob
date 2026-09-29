@@ -24,6 +24,11 @@ import { FakeMerchantOfferRepository } from './features/merchant-offers/testing/
 import { OwnerAccountRepository } from './features/merchant-settings/data/owner-account.repository';
 import { OwnerNotificationsRepository } from './features/merchant-notifications/data/owner-notifications.repository';
 import { buildOwnerNotification } from './features/merchant-notifications/testing/owner-notification-fixture';
+import { OwnerReviewsRepository } from './features/merchant-reviews/data/owner-reviews.repository';
+import {
+  buildOwnerReview,
+  buildOwnerReviewSummary,
+} from './features/merchant-reviews/testing/owner-review-fixture';
 import { MerchantSubscriptionRepository } from './features/merchant-subscription/data/merchant-subscription.repository';
 import { buildOverview as buildSubscriptionOverview } from './features/merchant-subscription/testing/merchant-subscription-fixture';
 
@@ -65,6 +70,13 @@ describe('merchant routes', () => {
         {
           provide: OwnerNotificationsRepository,
           useValue: { getNotifications: () => of([buildOwnerNotification()]) },
+        },
+        {
+          provide: OwnerReviewsRepository,
+          useValue: {
+            getReviews: () => of({ items: [buildOwnerReview()], totalCount: 1 }),
+            getSummary: () => of(buildOwnerReviewSummary()),
+          },
         },
         {
           provide: OwnerAccountRepository,
@@ -217,10 +229,22 @@ describe('merchant routes', () => {
     ).toBeTruthy();
   });
 
-  it('sends a merchant link with no page yet to the not-found page, linking back to /merchant', async () => {
+  it('opens the reviews page at /merchant/reviews, inside the merchant shell', async () => {
     TestBed.inject(AuthStore).startSession(MERCHANT);
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/merchant/reviews');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/reviews');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(
+      element.querySelector('app-merchant-shell app-merchant-reviews-page app-owner-review-table'),
+    ).toBeTruthy();
+  });
+
+  it('sends a merchant link with no page to the not-found page, linking back to /merchant', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/no-such-page');
 
     expect(TestBed.inject(Location).path()).toBe('/merchant/not-found');
     const element = harness.fixture.nativeElement as HTMLElement;

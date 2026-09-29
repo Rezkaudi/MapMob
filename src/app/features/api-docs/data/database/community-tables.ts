@@ -115,7 +115,7 @@ export const COMMUNITY_DOMAIN: DbDomain = {
     {
       name: 'review_reports',
       description: 'A report against a review, and how it was settled.',
-      servedAs: 'report on /reviews/{id}',
+      servedAs: 'report on /reviews/{id}; reportStatus on /owner/reviews',
       columns: [
         ID,
         foreignKey('review_id', 'reviews.id', 'Cascade on delete.'),
@@ -126,7 +126,11 @@ export const COMMUNITY_DOMAIN: DbDomain = {
           'Set when the place itself reported it.',
           true,
         ),
-        { name: 'reason', type: 'varchar(120)' },
+        {
+          name: 'reason',
+          type: 'varchar(120)',
+          note: 'A place owner sends one of abusive, fake, unrelated, promotional, other.',
+        },
         { name: 'notes', type: 'text', isNullable: true },
         { name: 'status', type: "enum('open','accepted','rejected')" },
         adminReference('resolved_by_admin_id', 'Who accepted or rejected it.'),

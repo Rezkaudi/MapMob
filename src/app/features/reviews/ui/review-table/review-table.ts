@@ -4,7 +4,7 @@ import { RowActionsMenu } from '../../../../shared/ui/row-actions-menu/row-actio
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
 import { Review } from '../../models/review';
-import { formatReviewRating } from '../../state/review-rating-label';
+import { formatReviewRating } from '../../../../shared/formatting/review-rating-label';
 import { ReviewStatusPill } from '../review-status-pill/review-status-pill';
 
 /**

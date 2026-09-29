@@ -3,7 +3,7 @@ import { getNameInitials } from '../../../shared/formatting/name-initials';
 import { ReviewDetail } from '../models/review-detail';
 import { ReviewStatus } from '../models/review-status';
 import { Reviewer } from '../models/reviewer';
-import { formatReviewRating } from './review-rating-label';
+import { formatReviewRating } from '../../../shared/formatting/review-rating-label';
 
 const TITLE_WITH_REPORT = 'تفاصيل المراجعة والبلاغ';
 const TITLE_WITHOUT_REPORT = 'تفاصيل المراجعة';

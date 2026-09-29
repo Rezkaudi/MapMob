@@ -1,0 +1,21 @@
+<!-- RTL: each item leads with its icon on the right, then the label. -->
+<app-action-menu menuStyle="sharp">
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 rounded-[2px] px-3 py-2 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+    (click)="view.emit()"
+  >
+    <app-icon name="eye-filled" [size]="16.5" aria-hidden="true" />
+    <span>عرض التفاصيل</span>
+  </button>
+  @if (canReport()) {
+    <button
+      type="button"
+      class="flex w-full items-center gap-3 rounded-[2px] px-3 pt-2 pb-3 text-[14px]/[20px] text-text-primary hover:bg-surface-muted"
+      (click)="report.emit()"
+    >
+      <app-icon name="flag-feather" [size]="16" class="text-closed" aria-hidden="true" />
+      <span>الإبلاغ عن مراجعة</span>
+    </button>
+  }
+</app-action-menu>

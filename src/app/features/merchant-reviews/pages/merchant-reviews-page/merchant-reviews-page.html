@@ -1,0 +1,73 @@
+<!-- Header, the summary card 40px below, the toolbar 32px below it, the table 30px under that, paging 8px under it. -->
+<app-page-header
+  title="التقييمات والمراجعات"
+  description="اطلع على تقييمات العملاء ومراجعاتهم"
+  [isAddVisible]="false"
+/>
+
+<app-rating-summary-card class="mt-10" [view]="store.summaryView()" />
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.loadReviews()" />
+} @else {
+  <app-owner-review-toolbar
+    class="mt-8"
+    [filters]="store.filters()"
+    [activeFilterCount]="store.activeFilterCount()"
+    (searchChange)="store.setSearch($event)"
+    (sortChange)="store.setSort($event)"
+    (filtersApply)="store.applyFilters($event)"
+  />
+
+  <app-owner-review-table
+    class="mt-[30px]"
+    [entries]="store.entries()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    [emptyMessage]="store.emptyMessage()"
+    [rowCount]="store.pageSize()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (view)="store.openDetails($event)"
+    (report)="store.openReport($event)"
+  />
+
+  @if (!store.hasNoReviews()) {
+    <app-table-pagination
+      class="mt-2"
+      itemNoun="مراجعة"
+      [pageIndex]="store.pageIndex()"
+      [pageSize]="store.pageSize()"
+      [totalCount]="store.totalCount()"
+      (pageIndexChange)="store.changePage($event)"
+    />
+  }
+}
+
+@if (store.detailsReview(); as review) {
+  <app-review-details-dialog
+    [review]="review"
+    (closed)="store.closeDialog()"
+    (report)="store.openReport(review)"
+  />
+}
+
+@if (store.reportedReview(); as review) {
+  <app-review-report-dialog
+    [review]="review"
+    [isBusy]="store.isSaving()"
+    (closed)="store.closeDialog()"
+    (submitted)="sendReport($event)"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إرسال البلاغ"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

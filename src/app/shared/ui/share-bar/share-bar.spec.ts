@@ -36,4 +36,19 @@ describe('ShareBar', () => {
     expect(meter.getAttribute('aria-label')).toBe('دمشق');
     expect(meter.getAttribute('aria-valuenow')).toBe('32');
   });
+
+  it('draws the slim yellow bar of the star distribution', () => {
+    const fixture = TestBed.createComponent(ShareBar);
+    fixture.componentRef.setInput('share', 66);
+    fixture.componentRef.setInput('tone', 'yellow');
+    fixture.componentRef.setInput('label', '5 نجوم');
+    fixture.componentRef.setInput('size', 'slim');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    const meter = host.querySelector('[role="meter"]')!;
+    expect(meter.className).toContain('h-2.5');
+    expect(meter.className).toContain('bg-[#f1f5f9]');
+    expect(fillOf(host).className).toContain('bg-[#fbbf24]');
+  });
 });

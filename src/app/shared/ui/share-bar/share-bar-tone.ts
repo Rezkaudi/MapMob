@@ -1,1 +1,1 @@
-export type ShareBarTone = 'violet' | 'blue' | 'green' | 'amber' | 'red';
+export type ShareBarTone = 'violet' | 'blue' | 'green' | 'amber' | 'red' | 'yellow';

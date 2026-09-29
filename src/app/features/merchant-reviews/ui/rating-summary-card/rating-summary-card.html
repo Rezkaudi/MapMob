@@ -1,0 +1,87 @@
+@if (view(); as summary) {
+  <!-- RTL grid: the score takes the right four columns, the bars the middle five, the policy the left three. -->
+  <div
+    class="grid grid-cols-1 overflow-hidden rounded-xl border border-border bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] lg:h-[216px] lg:grid-cols-12"
+  >
+    <section class="flex flex-col justify-between p-6 lg:col-span-4">
+      <div class="flex flex-col gap-2">
+        <h3 class="text-[12px]/[16px] font-bold tracking-[0.6px] text-text-secondary">
+          التقييم العام للمتجر
+        </h3>
+        <!-- The frame sets the score 27px in from the right, its stars 5.5px to its left. -->
+        <div class="flex h-[60px] items-start gap-[5.5px] ps-[27px]">
+          <span
+            data-role="average"
+            dir="ltr"
+            class="text-[48px]/[60px] font-extrabold tracking-[-1.2px] text-text-primary"
+            >{{ summary.averageText }}</span
+          >
+          <div class="mt-3.5 flex flex-col items-start">
+            <app-star-rating
+              class="pb-2"
+              starStyle="amber"
+              fillDirection="rtl"
+              [rating]="summary.filledStarCount"
+              [size]="16"
+              [gap]="0"
+            />
+            <p data-role="basis" class="pt-0.5 text-[12px]/[16px] font-medium text-text-secondary">
+              {{ summary.basisText }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RTL: the month's count on the right, the change chip on the left. -->
+      <div class="mt-4 flex h-[60px] items-center justify-between rounded-xl bg-[#f1f5f9] p-3">
+        <div class="flex flex-col items-start">
+          <span class="text-[12px]/[16px] text-text-secondary">تقييمات هذا الشهر</span>
+          <span data-role="month-count" class="text-[14px]/[20px] font-bold text-text-primary">{{
+            summary.month.countText
+          }}</span>
+        </div>
+        @if (summary.month.change; as change) {
+          <!-- The icon is written first so it lands right of the percentage, as the frame draws it. -->
+          <span
+            data-role="month-change"
+            class="flex items-center gap-1 rounded-md border px-2 py-0.5 text-[12px]/[16px] font-bold"
+            [class]="
+              change.isRising
+                ? 'border-status-success bg-status-success/16 text-status-success'
+                : 'border-status-error bg-status-error/16 text-status-error'
+            "
+          >
+            <app-icon
+              name="trend-up-line"
+              [size]="14"
+              [class.-scale-y-100]="!change.isRising"
+              aria-hidden="true"
+            />
+            <span dir="ltr">{{ change.text }}</span>
+          </span>
+        }
+      </div>
+    </section>
+
+    <app-star-distribution
+      class="border-[#f1f5f9] p-6 lg:col-span-5 lg:border-s"
+      [rows]="summary.starRows"
+    />
+
+    <section class="border-[#f1f5f9] bg-[rgba(240,247,255,0.5)] p-6 lg:col-span-3 lg:border-s">
+      <h3 class="pt-px text-[12px]/[16px] font-bold text-text-primary">سياسة موثوقية المراجعات</h3>
+      <p class="mt-[7px] max-w-[190px] text-[12px]/[19.5px] text-text-secondary">
+        التقييمات تعكس تجارب العملاء الحقيقية. بصفتك تاجراً، يمكنك الاطلاع على الآراء والإبلاغ عن أي
+        مراجعة مسيئة أو غير صحيحة ليتم التحقق منها من قبل فريق الرقابة.
+      </p>
+    </section>
+  </div>
+} @else {
+  <div
+    aria-busy="true"
+    aria-label="جارٍ تحميل ملخص التقييمات"
+    class="h-[216px] rounded-xl border border-border bg-white p-6"
+  >
+    <app-skeleton height="100%" />
+  </div>
+}

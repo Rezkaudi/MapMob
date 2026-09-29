@@ -1,6 +1,7 @@
 <div
   role="meter"
-  class="h-3 w-full overflow-hidden rounded-xl bg-[#eceef0]"
+  class="w-full overflow-hidden rounded-xl"
+  [class]="trackClasses()"
   [attr.aria-label]="label()"
   [attr.aria-valuenow]="share()"
   [attr.aria-valuemin]="minShare"

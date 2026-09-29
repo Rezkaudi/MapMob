@@ -19,6 +19,12 @@ class HostComponent {
   closedCount = 0;
 }
 
+@Component({
+  imports: [FormDialogFrame],
+  template: `<app-form-dialog-frame heading="تفاصيل المراجعة" appearance="notice" />`,
+})
+class NoticeHostComponent {}
+
 function build() {
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
@@ -54,5 +60,14 @@ describe('FormDialogFrame', () => {
     element.querySelector<HTMLElement>('[data-role="body-text"]')!.click();
 
     expect(fixture.componentInstance.closedCount).toBe(3);
+  });
+
+  it('draws a bold heading and leaves the line under it out when there is none', () => {
+    const fixture = TestBed.createComponent(NoticeHostComponent);
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+
+    expect(element.querySelector('h2')?.className).toContain('font-bold');
+    expect(element.querySelector('header p')).toBeNull();
   });
 });
