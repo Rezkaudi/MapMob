@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { CLOCK } from '../../../core/config/clock';
@@ -6,6 +7,9 @@ import { NotificationEdgeTone } from '../../models/notification-edge-tone';
 import { NotificationCard } from './notification-card';
 
 const NOW = new Date('2026-09-20T10:00:00.000Z');
+
+@Component({ template: '' })
+class EmptyPage {}
 
 function buildView(overrides: Partial<NotificationCardView> = {}): NotificationCardView {
   return {
@@ -33,7 +37,10 @@ const cardOf = (view: NotificationCardView) => render(view).nativeElement as HTM
 describe('NotificationCard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: CLOCK, useValue: () => NOW }],
+      providers: [
+        provideRouter([{ path: '**', component: EmptyPage }]),
+        { provide: CLOCK, useValue: () => NOW },
+      ],
     });
   });
 
