@@ -147,37 +147,46 @@
                   {{ place.joinedAt | arabicDate }}
                 </td>
                 <td class="px-4 text-center">
-                  <app-action-menu>
+                  <!-- RTL: each icon comes first so it sits right of its label, as the frame draws it. -->
+                  <app-action-menu menuStyle="sharp">
                     <a
                       [routerLink]="['/admin/places', place.id]"
-                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                      class="flex w-full items-center gap-3 rounded-lg px-3 py-[7.5px] text-sm text-text-primary hover:bg-surface-muted"
                     >
+                      <app-icon name="eye" aria-hidden="true" [size]="16" />
                       <span>عرض التفاصيل</span>
-                      <app-icon name="eye" [size]="16" class="text-text-secondary" />
                     </a>
+                    <button
+                      type="button"
+                      class="flex w-full items-center gap-3 rounded-lg px-3 py-[7.5px] text-sm text-text-primary hover:bg-surface-muted"
+                      (click)="showQrCode(place)"
+                    >
+                      <app-icon name="scan-qr" aria-hidden="true" [size]="16" />
+                      <span>عرض رمز QR</span>
+                    </button>
                     <a
                       [routerLink]="['/admin/places', place.id, 'edit']"
-                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                      class="flex w-full items-center gap-3 rounded-lg px-3 py-[7.5px] text-sm text-text-primary hover:bg-surface-muted"
                     >
+                      <app-icon name="edit" aria-hidden="true" [size]="16" />
                       <span>تعديل</span>
-                      <app-icon name="edit" [size]="14" class="text-text-secondary" />
                     </a>
                     <button
                       type="button"
-                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-text-primary hover:bg-surface-muted"
+                      class="flex w-full items-center gap-3 rounded-lg px-3 py-[7.5px] text-sm text-text-primary hover:bg-surface-muted"
                       (click)="flow.askForStatusChange(place)"
                     >
+                      <app-icon name="refresh" aria-hidden="true" [size]="14" />
                       <span>تغيير الحالة</span>
-                      <app-icon name="refresh" [size]="12" class="text-text-secondary" />
                     </button>
-                    <span class="my-1 block h-px bg-border"></span>
+                    <span class="my-1.5 block h-px bg-border"></span>
                     <button
                       type="button"
-                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-error hover:bg-error-soft"
+                      class="flex w-full items-center gap-3 rounded-lg px-3 py-[7.5px] text-sm text-text-primary hover:bg-error-soft"
                       (click)="flow.askForRow(place, 'delete')"
                     >
+                      <app-icon name="trash" aria-hidden="true" class="text-error" [size]="16" />
                       <span>حذف</span>
-                      <app-icon name="trash" [size]="14" />
                     </button>
                   </app-action-menu>
                 </td>
@@ -201,6 +210,10 @@
     </div>
   }
 </div>
+
+@if (qrPlace(); as place) {
+  <app-store-qr-dialog [url]="place.publicUrl" [storeName]="place.name" (closed)="closeQrCode()" />
+}
 
 @if (flow.dialog(); as confirm) {
   <app-confirm-dialog

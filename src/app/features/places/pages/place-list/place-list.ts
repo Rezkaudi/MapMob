@@ -14,12 +14,14 @@ import { EmptyState } from '../../../../shared/ui/empty-state/empty-state';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
+import { StoreQrDialog } from '../../../../shared/ui/store-qr-dialog/store-qr-dialog';
 import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { PLACE_PACKAGE_LABEL, PlacePackage } from '../../models/place-package';
 import { PLACE_SORT_LABEL, PlaceSort } from '../../models/place-sort';
+import { Place } from '../../models/place';
 import { PLACE_STATUS_LABEL, PlaceStatus } from '../../models/place-status';
 import { PlacesStore } from '../../state/places.store';
 import { PackageBadge } from './package-badge/package-badge';
@@ -67,6 +69,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
     NotifyDialog,
     PlaceFilters,
     PlaceLogo,
+    StoreQrDialog,
     TablePagination,
     Toast,
     ArabicDatePipe,
@@ -108,6 +111,8 @@ export class PlaceList {
   protected readonly selectedStatus = computed(() => this.store.status() ?? 'all');
 
   protected readonly isComposingNotification = signal(false);
+  /** The row whose QR dialog is open. */
+  protected readonly qrPlace = signal<Place | null>(null);
   protected readonly flow = new PlaceActionFlow({
     changeStatus: (ids, status) => this.store.changeStatus(ids, status),
     deletePlaces: (ids) => this.store.deletePlaces(ids),
@@ -164,6 +169,14 @@ export class PlaceList {
 
   protected cancelNotification(): void {
     this.isComposingNotification.set(false);
+  }
+
+  protected showQrCode(place: Place): void {
+    this.qrPlace.set(place);
+  }
+
+  protected closeQrCode(): void {
+    this.qrPlace.set(null);
   }
 
   protected cancelAction(): void {

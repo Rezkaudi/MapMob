@@ -6,6 +6,7 @@ export function createPlace(overrides: Partial<Place> = {}): Place {
     id: 'place-1',
     code: '1024',
     name: 'صيدلية الحياة',
+    publicUrl: 'https://mapmob.app/store/alhayat-pharmacy',
     logoUrl: '',
     category: 'صيدلية',
     city: 'الرياض',

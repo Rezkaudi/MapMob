@@ -6,6 +6,7 @@ import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
 import { InfoCard } from '../../../../shared/ui/info-card/info-card';
+import { StoreQrCard } from '../../../../shared/ui/store-qr-card/store-qr-card';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { FormMode } from '../../../../shared/models/form-mode';
 import { PlaceEditSection } from '../../models/place-edit-section';
@@ -52,6 +53,7 @@ import { PlaceVideosCard } from './place-videos-card/place-videos-card';
     PlaceSubscriptionCard,
     PlaceVideosCard,
     ProductDialog,
+    StoreQrCard,
     Toast,
     RouterLink,
   ],

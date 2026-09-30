@@ -3,6 +3,7 @@ import { StoreProfile } from '../models/store-profile';
 /** The pharmacy the "بيانات المتجر" frame is drawn with. */
 export const STORE_PROFILE_SEED: StoreProfile = {
   name: 'صيدلية الحياة',
+  publicUrl: 'https://mapmob.app/store/alhayat-pharmacy',
   description:
     'صيدلية الحياة تقدم مجموعة واسعة من الأدوية والمستلزمات الطبية ومنتجات العناية الشخصية والتجميل. نحرص على تقديم أفضل خدمة صيدلانية مع استشارات طبية متخصصة من قبل صيادلة مؤهلين.',
   coverImageUrl: 'assets/images/store-cover-pharmacy.jpg',

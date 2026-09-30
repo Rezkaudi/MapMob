@@ -14,6 +14,8 @@ export interface PlaceDetail {
   readonly id: string;
   readonly code: string;
   readonly name: string;
+  /** The place's public page on MapMob; the QR card encodes it. */
+  readonly publicUrl: string;
   readonly status: PlaceStatus;
   readonly description: string;
   readonly mainCategory: string;

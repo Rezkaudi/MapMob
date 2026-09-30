@@ -10,6 +10,11 @@ export const PLACE_ROW_FIELDS = [
   field('code', 'string', 'Human reference such as PL-0012. Unique, made by the server.'),
   field('name', 'string'),
   field(
+    'publicUrl',
+    'string (url)',
+    'The public page of the place, https://mapmob.app/store/{places.slug}. The QR card and the row QR dialog encode it.',
+  ),
+  field(
     'logoUrl',
     'string (url) | null',
     'null when there is no logo; the dashboard draws a placeholder.',
@@ -24,7 +29,11 @@ export const PLACE_ROW_FIELDS = [
 ];
 
 export const PLACE_DETAIL_FIELDS = [
-  field('id / code / name / status / logoUrl / rating / reviewCount', '', 'As in the list row.'),
+  field(
+    'id / code / name / publicUrl / status / logoUrl / rating / reviewCount',
+    '',
+    'As in the list row.',
+  ),
   field('description', 'string | null'),
   field('mainCategory', 'object', REF),
   field('subCategory', 'object | null', REF),

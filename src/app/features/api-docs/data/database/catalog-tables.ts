@@ -53,6 +53,12 @@ export const CATALOG_DOMAIN: DbDomain = {
         ID,
         { name: 'code', type: 'varchar(20)', key: 'uq', note: 'PL-0012. Made on insert.' },
         { name: 'name', type: 'varchar(150)' },
+        {
+          name: 'slug',
+          type: 'varchar(160)',
+          key: 'uq',
+          note: 'Latin, lowercase, dashes (alhayat-pharmacy). Made on insert and kept when the name changes, so printed QR codes stay valid.',
+        },
         { name: 'description', type: 'text', isNullable: true },
         foreignKey('main_category_id', 'categories.id'),
         foreignKey('sub_category_id', 'categories.id', '', true),

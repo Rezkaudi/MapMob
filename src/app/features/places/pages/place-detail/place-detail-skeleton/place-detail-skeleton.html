@@ -23,7 +23,8 @@
       </div>
     </div>
 
-    <div class="flex w-[353px] shrink-0 flex-col gap-4">
+    <div data-role="side-column" class="flex w-[353px] shrink-0 flex-col gap-4">
+      <app-skeleton height="417px" />
       @for (card of sideCards; track card) {
         <app-skeleton height="170px" />
       }

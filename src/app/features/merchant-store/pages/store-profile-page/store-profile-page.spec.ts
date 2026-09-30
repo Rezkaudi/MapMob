@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { MERCHANT_SUPPORT_URL } from '../../../../core/config/merchant-support-url';
 import { StoreProfileRepository } from '../../data/store-profile.repository';
 import { StoreProfile } from '../../models/store-profile';
@@ -64,8 +64,20 @@ describe('StoreProfilePage', () => {
         'app-store-contact-card',
         'app-store-delivery-card',
       ],
-      ['app-store-location-card', 'app-store-hours-card'],
+      ['app-store-qr-card', 'app-store-location-card', 'app-store-hours-card'],
     ]);
+  });
+
+  it('draws the QR card for the public link under the saved name, not the typed one', () => {
+    const { element, type } = render();
+
+    type('#store-name', 'اسم لم يحفظ بعد');
+    const card = element.querySelector('app-store-qr-card') as HTMLElement;
+
+    expect(card.querySelector('input')?.value).toBe('mapmob.app/store/alhayat-pharmacy');
+    expect(card.querySelector('svg')?.getAttribute('aria-label')).toBe(
+      'رمز QR لصفحة صيدلية الحياة',
+    );
   });
 
   it('fills every card from the saved place', () => {
@@ -96,6 +108,15 @@ describe('StoreProfilePage', () => {
     expect(element.querySelector('[data-role="map-summary"]')?.textContent).toContain(
       'طرطوس، شارع هنانو',
     );
+  });
+
+  it('draws the QR card and the map column in grey while the place loads', () => {
+    const { element } = render({ getProfile: () => NEVER });
+
+    const heights = [
+      ...element.querySelectorAll('[data-role="loading-side-column"] app-skeleton'),
+    ].map((block) => (block as HTMLElement).style.height);
+    expect(heights).toEqual(['417px', '716px']);
   });
 
   it('offers a retry when the place cannot be loaded', () => {

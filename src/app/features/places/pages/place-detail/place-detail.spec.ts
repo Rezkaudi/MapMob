@@ -123,6 +123,23 @@ describe('PlaceDetail', () => {
     expect(dates).toEqual(['Oct 24, 2024', 'Oct 24, 2024']);
   });
 
+  it('puts the store QR card at the top of the side column, above the owner', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    const card = element.querySelector('app-store-qr-card:first-child + app-place-owner-card');
+    expect(card).not.toBeNull();
+  });
+
+  it('draws the QR card for the place public link and name', () => {
+    const element: HTMLElement = render().nativeElement;
+    const card = element.querySelector('app-store-qr-card') as HTMLElement;
+
+    expect(card.querySelector('input')?.value).toBe('mapmob.app/store/alhayat-pharmacy');
+    expect(card.querySelector('svg')?.getAttribute('aria-label')).toBe(
+      'رمز QR لصفحة صيدلية الحياة',
+    );
+  });
+
   it('shows the switched-on delivery platforms right under the location card', () => {
     const element: HTMLElement = render().nativeElement;
 

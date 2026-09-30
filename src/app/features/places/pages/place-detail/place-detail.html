@@ -102,6 +102,7 @@
     </div>
 
     <div class="flex w-[353px] shrink-0 flex-col gap-4">
+      <app-store-qr-card [url]="place.publicUrl" [storeName]="place.name" />
       <app-place-owner-card [owner]="place.owner" (edit)="goToEdit('basic-info')" />
       <app-place-subscription-card
         [subscription]="place.subscription"

@@ -77,6 +77,7 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
     id: place.id,
     code: place.code,
     name: place.name,
+    publicUrl: place.publicUrl,
     status: place.status,
     description: DESCRIPTION,
     mainCategory: place.category,

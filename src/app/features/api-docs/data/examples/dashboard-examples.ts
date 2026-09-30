@@ -16,7 +16,14 @@ export const ACTION_ITEMS = [
 ];
 
 export const RECENT_PLACES = [
-  { ...PLACE_ROW, id: '402', code: 'PL-0402', name: 'مطعم الشام', status: 'pending' },
+  {
+    ...PLACE_ROW,
+    id: '402',
+    code: 'PL-0402',
+    name: 'مطعم الشام',
+    publicUrl: 'https://mapmob.app/store/al-sham-restaurant',
+    status: 'pending',
+  },
 ];
 
 export const REVENUE_SERIES = {

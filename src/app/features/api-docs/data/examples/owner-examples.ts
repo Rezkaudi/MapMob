@@ -101,6 +101,7 @@ export const OWNER_PERFORMANCE = {
 
 export const OWNER_PLACE = {
   name: 'صيدلية الحياة',
+  publicUrl: 'https://mapmob.app/store/alhayat-pharmacy',
   description: 'صيدلية تقدم الأدوية والمستلزمات الطبية ومنتجات العناية الشخصية.',
   coverImageUrl: 'https://cdn.mapmob.sy/places/12/cover.jpg',
   mainCategory: { id: '3', name: 'صيدليات' },

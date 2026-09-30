@@ -15,6 +15,7 @@ import { formatCharacterCount } from '../../../../shared/formatting/character-co
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Spinner } from '../../../../shared/ui/spinner/spinner';
+import { StoreQrCard } from '../../../../shared/ui/store-qr-card/store-qr-card';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { WeekDay } from '../../models/week-day';
 import { toDeliveryLinkRows } from '../../state/delivery-link-rows';
@@ -50,6 +51,7 @@ const FIRST_INVALID_FIELD = ':is(input, textarea).ng-invalid';
     StoreDeliveryCard,
     StoreHoursCard,
     StoreLocationCard,
+    StoreQrCard,
     Toast,
   ],
   templateUrl: './store-profile-page.html',

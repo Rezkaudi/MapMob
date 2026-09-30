@@ -21,7 +21,7 @@ import { DialogFrame } from './dialog-frame';
 class HostComponent {
   readonly headingIcon = input<string | null>('notifications');
   readonly isBackVisible = input<boolean>(false);
-  readonly appearance = input<'compact' | 'roomy' | 'slim'>('compact');
+  readonly appearance = input<'compact' | 'roomy' | 'slim' | 'light'>('compact');
   readonly subheading = input<string | null>('معاينة الإشعار');
   readonly hasFooter = input<boolean>(true);
 }
@@ -30,7 +30,7 @@ function render(
   inputs: {
     headingIcon?: string | null;
     isBackVisible?: boolean;
-    appearance?: 'compact' | 'roomy' | 'slim';
+    appearance?: 'compact' | 'roomy' | 'slim' | 'light';
     subheading?: string | null;
     hasFooter?: boolean;
   } = {},
@@ -97,13 +97,33 @@ describe('DialogFrame', () => {
     expect(back).toHaveBeenCalledOnce();
   });
 
-  it('gives the slim card the subscription frames\' 65px bar and a borderless footer', () => {
+  it("gives the slim card the subscription frames' 65px bar and a borderless footer", () => {
     const { element } = render({ appearance: 'slim', headingIcon: null });
 
     expect(element.querySelector('header')?.className).toContain('min-h-[65px]');
     expect(element.querySelector('[data-role="dialog-body"]')?.className).toContain('p-6');
     expect(element.querySelector('footer')?.className).not.toContain('border-t');
     expect(element.querySelector('footer')?.className).toContain('gap-3');
+  });
+
+  it("gives the light card the QR frame's 448px width, white header and pale footer", () => {
+    const { element } = render({ appearance: 'light', headingIcon: null });
+    const card = element.querySelector('header')?.parentElement;
+
+    expect(card?.classList).toContain('max-w-md');
+    expect(card?.classList).toContain('rounded-2xl');
+    expect(element.querySelector('header')?.classList).toContain('bg-white');
+    expect(element.querySelector('header')?.classList).not.toContain('bg-[#f2f4f6]');
+    expect(element.querySelector('footer')?.classList).toContain('bg-surface-muted');
+  });
+
+  it('keeps the grey bars and the 576px card on the other frames', () => {
+    const { element } = render();
+    const card = element.querySelector('header')?.parentElement;
+
+    expect(card?.classList).toContain('max-w-[576px]');
+    expect(element.querySelector('header')?.classList).toContain('bg-[#f2f4f6]');
+    expect(element.querySelector('footer')?.classList).toContain('bg-[#f2f4f6]');
   });
 
   it('leaves the line under the heading out when there is none', () => {

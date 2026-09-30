@@ -7,6 +7,8 @@ import { StoreWorkingDay } from './store-working-day';
 /** The merchant's own place, as the "بيانات المتجر" page shows it. */
 export interface StoreProfile {
   readonly name: string;
+  /** The place's public page on MapMob; the QR card encodes it. */
+  readonly publicUrl: string;
   readonly description: string | null;
   readonly coverImageUrl: string | null;
   readonly mainCategory: NamedReference;

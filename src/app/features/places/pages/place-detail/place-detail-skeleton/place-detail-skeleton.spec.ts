@@ -8,4 +8,14 @@ describe('PlaceDetailSkeleton', () => {
 
     expect(fixture.nativeElement.querySelectorAll('app-skeleton').length).toBeGreaterThan(10);
   });
+
+  it('starts the side column with a block the height of the QR card', () => {
+    const fixture = TestBed.createComponent(PlaceDetailSkeleton);
+    fixture.detectChanges();
+
+    const first = fixture.nativeElement.querySelector(
+      '[data-role="side-column"] app-skeleton',
+    ) as HTMLElement;
+    expect(first.style.height).toBe('417px');
+  });
 });

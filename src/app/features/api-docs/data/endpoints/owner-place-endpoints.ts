@@ -26,6 +26,11 @@ export const OWNER_PLACE_FEATURE: ApiFeature = {
         example: OWNER_PLACE,
         fields: [
           field('name', 'string'),
+          field(
+            'publicUrl',
+            'string (url)',
+            'The public page of the place, https://mapmob.app/store/{places.slug}. The QR card encodes it.',
+          ),
           field('description', 'string | null'),
           field(
             'coverImageUrl',

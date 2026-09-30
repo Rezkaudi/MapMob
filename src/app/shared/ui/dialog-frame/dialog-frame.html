@@ -7,14 +7,14 @@
     (click)="closed.emit()"
   >
     <div
-      class="w-full max-w-[576px] overflow-hidden border bg-white"
+      class="w-full overflow-hidden border bg-white"
       [class]="skin().card"
       (click)="$event.stopPropagation()"
     >
       <!-- RTL: the arrow or tile and the heading on the right, the cross on the left. -->
       <!-- The frames draw this bar 73px tall with the tile or cross, 70px with the back arrow. -->
       <header
-        class="flex justify-between border-b border-[#e6e8ea] bg-[#f2f4f6]"
+        class="flex justify-between border-b"
         [class]="isBackVisible() ? skin().backHeader : skin().header"
       >
         <div class="flex items-center gap-3">
@@ -39,7 +39,11 @@
           }
           <!-- min-h-8 centres a lone heading on the 32px cross, as the slim frames draw it. -->
           <div class="flex min-h-8 flex-col justify-center gap-1 text-start">
-            <h2 id="dialog-frame-title" class="font-bold text-text-primary" [class]="skin().heading">
+            <h2
+              id="dialog-frame-title"
+              class="font-bold text-text-primary"
+              [class]="skin().heading"
+            >
               {{ heading() }}
             </h2>
             @if (subheading(); as line) {
@@ -65,7 +69,7 @@
 
       <!-- RTL: justify-end packs the buttons against the left edge; the first one lands on the right. -->
       @if (hasFooter()) {
-        <footer class="flex items-center justify-end bg-[#f2f4f6]" [class]="skin().footer">
+        <footer class="flex items-center justify-end" [class]="skin().footer">
           <ng-content select="[dialogFooter]" />
         </footer>
       }

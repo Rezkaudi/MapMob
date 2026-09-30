@@ -201,6 +201,69 @@ describe('PlaceList row actions', () => {
     fixture.detectChanges();
   }
 
+  function openRowMenu(fixture: ReturnType<typeof render>): HTMLElement {
+    const element = fixture.nativeElement as HTMLElement;
+    (element.querySelector('tbody button[aria-haspopup]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    return element.querySelector('[data-testid="action-menu-panel"]') as HTMLElement;
+  }
+
+  it('lists the row actions in the frame order, the QR one second', () => {
+    const panel = openRowMenu(
+      render({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) }),
+    );
+
+    const labels = [...panel.querySelectorAll('a, button')].map((item) => item.textContent?.trim());
+    expect(labels).toEqual(['عرض التفاصيل', 'عرض رمز QR', 'تعديل', 'تغيير الحالة', 'حذف']);
+  });
+
+  it('puts each icon to the right of its label, on the square-cornered panel', () => {
+    const panel = openRowMenu(
+      render({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) }),
+    );
+
+    const firstChildren = [...panel.querySelectorAll('a, button')].map((item) =>
+      item.firstElementChild?.tagName.toLowerCase(),
+    );
+    expect(new Set(firstChildren)).toEqual(new Set(['app-icon']));
+    expect(panel.classList).toContain('rounded-[2px]');
+  });
+
+  it('draws the delete label dark and only its bin red, as the frame does', () => {
+    const panel = openRowMenu(
+      render({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) }),
+    );
+    const remove = [...panel.querySelectorAll('button')].at(-1) as HTMLButtonElement;
+
+    expect(remove.querySelector('app-icon')?.classList).toContain('text-error');
+    expect(remove.classList).toContain('text-text-primary');
+    expect(remove.classList).not.toContain('text-error');
+  });
+
+  it('opens the QR dialog of the row, then closes it', () => {
+    const fixture = render({
+      getPlaces: () =>
+        of({
+          items: [createPlace({ publicUrl: 'https://mapmob.app/store/abualez' })],
+          totalCount: 1,
+        }),
+    });
+    const element = fixture.nativeElement as HTMLElement;
+
+    pickRowMenuItem(fixture, 'عرض رمز QR');
+    const dialog = element.querySelector('app-store-qr-dialog') as HTMLElement;
+    expect((dialog.querySelector('input') as HTMLInputElement).value).toBe(
+      'https://mapmob.app/store/abualez',
+    );
+    expect(dialog.querySelector('svg')?.getAttribute('aria-label')).toBe(
+      'رمز QR لصفحة صيدلية الحياة',
+    );
+
+    (dialog.querySelector('button[aria-label="إغلاق النافذة"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(element.querySelector('app-store-qr-dialog')).toBeNull();
+  });
+
   it('suspends the row behind the status change once it is confirmed', async () => {
     let saved = '';
     const fixture = render({

@@ -12,6 +12,7 @@ const CITIES = ['الرياض', 'جدة', 'الدمام'];
 const STATUSES: readonly PlaceStatus[] = ['active', 'active', 'active', 'pending', 'suspended'];
 const PACKAGES: readonly PlacePackage[] = ['free', 'basic', 'basic', 'premium'];
 const MIN_RATING = 35;
+const PUBLIC_STORE_PAGES = 'https://mapmob.app/store';
 const MAX_RATING = 50;
 const RATING_SCALE = 10;
 const FIRST_JOIN_DAY = 1;
@@ -23,6 +24,7 @@ function buildPlace(index: number): Place {
     id: `place-${index + 1}`,
     code: String(FIRST_PLACE_CODE + index),
     name: pickOne(next, NAMES),
+    publicUrl: `${PUBLIC_STORE_PAGES}/place-${FIRST_PLACE_CODE + index}`,
     logoUrl: `${IMAGES}/place-logo.jpg`,
     category: pickOne(next, CATEGORIES),
     city: pickOne(next, CITIES),

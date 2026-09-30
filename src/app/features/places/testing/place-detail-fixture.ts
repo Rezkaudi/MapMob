@@ -5,6 +5,7 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
     id: 'place-1',
     code: '1024',
     name: 'صيدلية الحياة',
+    publicUrl: 'https://mapmob.app/store/alhayat-pharmacy',
     status: 'active',
     description: 'صيدلية الحياة تقدم مجموعة واسعة من الأدوية.',
     mainCategory: 'صيدليات',

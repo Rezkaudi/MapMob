@@ -13,8 +13,8 @@ import { AppIcon } from '../app-icon/app-icon';
 
 /** Gap between the trigger and the panel, from the design. */
 const OFFSET_PX = 4;
-/** Tallest the panel gets: the four-item menu of the places table. */
-const PANEL_HEIGHT_PX = 163;
+/** Tallest the panel gets: the five-item menu of the places table. */
+const PANEL_HEIGHT_PX = 197;
 
 export type ActionMenuStyle = 'soft' | 'sharp';
 

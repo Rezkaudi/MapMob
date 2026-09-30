@@ -39,6 +39,7 @@ export function buildDeliveryLinks(): DeliveryLink[] {
 export function buildStoreProfile(overrides: Partial<StoreProfile> = {}): StoreProfile {
   return {
     name: 'صيدلية الحياة',
+    publicUrl: 'https://mapmob.app/store/alhayat-pharmacy',
     description: 'صيدلية تقدم الأدوية والمستلزمات الطبية.',
     coverImageUrl: 'https://cdn.mapmob.sy/places/12/cover.jpg',
     mainCategory: { id: '3', name: 'صيدليات' },
