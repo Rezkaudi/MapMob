@@ -1,0 +1,37 @@
+<article
+  class="relative flex flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_20px_0_rgba(0,0,0,0.05)]"
+>
+  <!-- Covers the whole card, so a click anywhere opens the story; the dots sit above it. -->
+  <button
+    type="button"
+    data-role="open-story"
+    class="absolute inset-0 z-[1] cursor-pointer rounded-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+    aria-label="عرض القصة"
+    (click)="view.emit()"
+  ></button>
+  <div class="relative">
+    <app-story-visual [card]="card()" />
+    <!-- RTL: `end` is the left edge, where the frame floats the dots. -->
+    <app-story-menu
+      class="absolute end-4 top-4 z-[2]"
+      [canEdit]="true"
+      (view)="view.emit()"
+      (edit)="edit.emit()"
+      (remove)="remove.emit()"
+    />
+  </div>
+
+  <!-- RTL: the publish time leads on the right, the views end on the left; each icon leads its text. -->
+  <div data-role="meta" class="flex items-center justify-between gap-2 p-4">
+    <span class="flex min-w-0 items-center gap-1 text-text-secondary">
+      <app-icon name="clock-filled" [size]="12" aria-hidden="true" />
+      <span data-role="published" class="truncate text-[11px]/[14px] font-medium">{{
+        card().publishedText
+      }}</span>
+    </span>
+    <span class="flex shrink-0 items-center gap-1 text-primary">
+      <app-icon name="eye-line-small" [size]="16" aria-hidden="true" />
+      <span data-role="views" class="text-[12px]/[16px]">{{ card().viewsText }}</span>
+    </span>
+  </div>
+</article>

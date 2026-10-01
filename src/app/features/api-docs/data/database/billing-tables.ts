@@ -51,6 +51,12 @@ export const BILLING_DOMAIN: DbDomain = {
         },
         { name: 'limit_videos', type: 'smallint unsigned', isNullable: true, note: LIMIT_NOTE },
         {
+          name: 'limit_active_stories',
+          type: 'smallint unsigned',
+          isNullable: true,
+          note: 'Stories active at the same time; expired ones do not count. null = no cap.',
+        },
+        {
           name: 'limit_products',
           type: 'smallint unsigned',
           isNullable: true,

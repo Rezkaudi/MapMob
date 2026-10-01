@@ -15,4 +15,7 @@ export const OPEN_QUESTIONS: readonly string[] = [
   'Place owners send plan change requests (subscription_requests), but no admin screen lists or handles them yet. Which screen should, and does approving one also record the payment?',
   'Owner notifications mention an admin approving or rejecting an offer, but no admin endpoint approves an offer a place owner made. Do owner offers go live at once, or add POST /offers/{id}/approve and /reject?',
   'Do changes a place owner saves (PUT /owner/place, products, media) go live at once, or wait for an admin to check them?',
+  'Stories need a plan limit (plans.limit_active_stories), but the admin plan form has no field for it and GET /owner/subscription does not list it. Add it to both, and what is the limit of each tier? The stories screen shows 5 on the free plan.',
+  'How long are expired stories kept? GET /owner/stories returns all of them, unpaged. If they are kept for good, cap the answer (for example the last 30 days) or page the expired list.',
+  'Which call of the customer app counts a story view, and is it one view per user or one per open? This reference only reads place_stories.view_count.',
 ];

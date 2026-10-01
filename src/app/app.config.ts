@@ -23,6 +23,7 @@ import { provideMerchantOffersFeature } from './features/merchant-offers/merchan
 import { provideMerchantOverviewFeature } from './features/merchant-overview/merchant-overview.providers';
 import { provideMerchantProductsFeature } from './features/merchant-products/merchant-products.providers';
 import { provideMerchantSettingsFeature } from './features/merchant-settings/merchant-settings.providers';
+import { provideMerchantStoriesFeature } from './features/merchant-stories/merchant-stories.providers';
 import { provideMerchantStoreFeature } from './features/merchant-store/merchant-store.providers';
 import { provideMerchantSubscriptionFeature } from './features/merchant-subscription/merchant-subscription.providers';
 import { provideMerchantReviewsFeature } from './features/merchant-reviews/merchant-reviews.providers';
@@ -71,6 +72,7 @@ export const appConfig: ApplicationConfig = {
     provideMerchantStoreFeature(),
     provideMerchantProductsFeature(),
     provideMerchantOffersFeature(),
+    provideMerchantStoriesFeature(),
     provideMerchantMediaFeature(),
     provideMerchantSettingsFeature(),
     provideMerchantNotificationsFeature(),

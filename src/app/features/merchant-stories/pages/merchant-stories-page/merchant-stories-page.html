@@ -1,0 +1,143 @@
+<!-- Header, the quota cards 40px below, then each list 32px under the block before it. -->
+<app-page-header
+  title="القصص"
+  description="شارك أخبار و عروض متجرك مع العملاء لمدة 24 ساعة لتعزيز المبيعات والمتابعة الفورية"
+  [isAddVisible]="false"
+>
+  <app-add-button
+    pageHeaderAction
+    label="إضافة قصة"
+    [isDisabled]="store.isFull()"
+    (pressed)="store.openAdd()"
+  />
+</app-page-header>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-10" [message]="error" (retry)="store.load()" />
+} @else if (store.library()) {
+  <!-- RTL grid: the 8-column usage card comes first, so it takes the right-hand side. -->
+  <div
+    data-role="quota-grid"
+    class="mt-10 grid auto-rows-[minmax(172px,auto)] grid-cols-12 items-start gap-2"
+  >
+    @if (store.quota(); as quota) {
+      <app-plan-usage-card
+        class="col-span-12 xl:col-span-8"
+        title="القصص المستخدمة"
+        headingGap="wide"
+        [planName]="store.planName()"
+        [quota]="quota"
+      />
+      <app-distribution-card
+        class="col-span-12 xl:col-span-4"
+        heading="توزيع القصص"
+        [tiles]="store.countTiles()"
+        [limitText]="store.limitText()"
+      />
+    }
+  </div>
+
+  @if (store.hasNoStories()) {
+    <app-empty-page-message
+      class="mt-[140px]"
+      placement="flow"
+      title="لا توجد قصص حتى الآن"
+      description="انشر أول قصة لمتجرك لتظهر لعملائك في تطبيق MapMob لمدة 24 ساعة."
+      addLabel="إضافة قصة"
+      (add)="store.openAdd()"
+    />
+  } @else {
+    <section class="mt-8" aria-labelledby="active-stories-title">
+      <div class="flex flex-col gap-1 pb-1">
+        <h2
+          id="active-stories-title"
+          data-role="section-title"
+          class="text-[24px]/[32px] font-bold tracking-[-0.24px] text-[#191c1e]"
+        >
+          القصص النشطة
+        </h2>
+        <p class="text-[12px]/[14px] text-text-secondary">
+          تنتهي صلاحية كل قصة بعد 24 ساعة من نشرها
+        </p>
+      </div>
+
+      <!-- RTL: the newest story leads on the right. -->
+      <ul data-role="active-list" class="mt-4 flex flex-wrap gap-6">
+        @for (card of store.activeCards(); track card.story.id) {
+          <li class="w-[298.66px] max-w-full">
+            <app-active-story-card
+              [card]="card"
+              (view)="store.openView(card.story)"
+              (edit)="store.openEdit(card.story)"
+              (remove)="store.openDelete(card.story)"
+            />
+          </li>
+        } @empty {
+          <li
+            data-role="no-active"
+            class="w-full rounded-lg border-2 border-dashed border-[#c0c7d5] bg-white p-8 text-center text-[14px]/[20px] text-text-secondary"
+          >
+            لا توجد قصص نشطة حالياً. انشر قصة جديدة لتظهر لعملائك لمدة 24 ساعة.
+          </li>
+        }
+      </ul>
+    </section>
+
+    @if (store.expiredCards().length > 0) {
+      <section class="mt-8" aria-labelledby="expired-stories-title">
+        <h2
+          id="expired-stories-title"
+          data-role="section-title"
+          class="pb-1 text-[24px]/[32px] font-bold tracking-[-0.24px] text-[#191c1e]"
+        >
+          القصص المنتهية
+        </h2>
+
+        <ul data-role="expired-list" class="mt-4 flex flex-wrap gap-8">
+          @for (card of store.expiredCards(); track card.story.id) {
+            <li class="w-[320px] max-w-full">
+              <app-expired-story-card
+                [card]="card"
+                (view)="store.openView(card.story)"
+                (remove)="store.openDelete(card.story)"
+              />
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+} @else {
+  <app-merchant-stories-skeleton />
+}
+
+@if (store.formDialog(); as dialog) {
+  <app-story-form-dialog
+    [dialog]="dialog"
+    [isBusy]="store.isSaving()"
+    (submitted)="store.submitDraft($event)"
+    (cancelled)="store.closeDialog()"
+  />
+} @else if (store.detail(); as detail) {
+  <app-story-detail-drawer
+    [detail]="detail"
+    (remove)="store.openDelete(detail.card.story)"
+    (closed)="store.closeDialog()"
+  />
+} @else if (store.deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="store.confirmDelete()"
+    (cancelled)="store.closeDialog()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

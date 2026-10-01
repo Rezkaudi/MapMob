@@ -1,0 +1,64 @@
+<article
+  class="relative flex h-[305px] flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+>
+  <!-- Covers the whole card, so a click anywhere opens the story; the dots sit above it. -->
+  <button
+    type="button"
+    data-role="open-story"
+    class="absolute inset-0 z-[1] cursor-pointer rounded-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+    aria-label="عرض القصة"
+    (click)="view.emit()"
+  ></button>
+  <div class="relative aspect-[12/7] w-full shrink-0 overflow-hidden bg-[#eceef0]">
+    <app-story-media class="opacity-80" [story]="card().story" />
+    <span
+      class="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0)_100%)]"
+      aria-hidden="true"
+    ></span>
+
+    <!-- RTL: the status sits on the right; the dots float 8px in from the left edge. -->
+    <app-story-status-pill
+      class="absolute start-4 top-4"
+      [status]="card().story.status"
+      [label]="card().statusLabel"
+    />
+    <app-story-menu
+      class="absolute end-2 top-3 z-[2] opacity-80"
+      [canEdit]="false"
+      (view)="view.emit()"
+      (remove)="remove.emit()"
+    />
+
+    @if (card().story.caption; as caption) {
+      <h3
+        data-role="caption"
+        class="absolute inset-x-4 bottom-4 truncate text-start text-[18px]/[28px] font-normal text-white"
+      >
+        {{ caption }}
+      </h3>
+    }
+  </div>
+
+  <div class="flex flex-col gap-3 p-4">
+    <!-- RTL: the publish time is written first, so it takes the right half. -->
+    <dl class="flex gap-1 rounded bg-[#f2f4f6] p-2">
+      <div data-role="date" class="flex min-w-0 flex-1 flex-col">
+        <dt class="text-[11px]/[14px] text-text-secondary">وقت النشر</dt>
+        <dd class="truncate text-[12px]/[16px] font-medium text-text-primary">
+          {{ card().publishedText }}
+        </dd>
+      </div>
+      <div data-role="date" class="flex min-w-0 flex-1 flex-col">
+        <dt class="text-[11px]/[14px] text-text-secondary">انتهت بتاريخ</dt>
+        <dd class="truncate text-[12px]/[16px] font-medium text-text-primary">
+          {{ card().endedText }}
+        </dd>
+      </div>
+    </dl>
+
+    <p data-role="views-row" class="flex items-center gap-1 pt-1 text-text-primary">
+      <app-icon name="eye-line-small" [size]="16" aria-hidden="true" />
+      <span data-role="views" class="text-[12px]/[16px]">{{ card().viewsText }}</span>
+    </p>
+  </div>
+</article>

@@ -60,7 +60,7 @@ describe('MerchantMediaPage', () => {
       'إدارة الصور والوسائط الخاصة بمكانك و التي تظهر للمستخدمين على المنصة',
     );
     expect(host.querySelector('app-plan-usage-card')?.textContent).toContain('الوسائط المستخدمة');
-    expect(host.querySelector('app-media-distribution-card')?.textContent).toContain(
+    expect(host.querySelector('app-distribution-card')?.textContent).toContain(
       'الحد المسموح 5 وسائط',
     );
     expect(host.querySelectorAll('app-media-tabs [role="tab"]')).toHaveLength(3);

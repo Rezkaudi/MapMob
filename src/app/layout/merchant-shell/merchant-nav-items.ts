@@ -14,6 +14,7 @@ export const MERCHANT_NAV_ITEMS: readonly NavItem[] = [
   { label: 'بيانات المتجر', route: '/merchant/store', icon: 'building' },
   { label: 'المنتجات', route: '/merchant/products', icon: 'package' },
   { label: 'العروض', route: MERCHANT_OFFERS_ROUTE, icon: 'offers' },
+  { label: 'القصص', route: '/merchant/stories', icon: 'play-circle' },
   { label: 'الصور والوسائط', route: '/merchant/media', icon: 'media' },
   { label: 'التقييمات و المراجعات', route: MERCHANT_REVIEWS_ROUTE, icon: 'reviews' },
   { label: 'الاشتراكات والباقات', route: MERCHANT_SUBSCRIPTION_ROUTE, icon: 'subscriptions' },

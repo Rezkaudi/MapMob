@@ -14,9 +14,9 @@
   @if (isOpen()) {
     <div
       data-testid="action-menu-panel"
-      class="z-40 w-48 border border-border bg-surface"
+      class="z-40 border border-border bg-surface"
       style="position: fixed"
-      [class]="skin().panel"
+      [class]="panelClasses()"
       [style.left.px]="position().left"
       [style.top.px]="position().top"
       [style.bottom.px]="position().bottom"

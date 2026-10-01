@@ -6,8 +6,8 @@ describe('countMedia', () => {
     const items = [buildMediaItem({ id: '1' }), buildMediaItem({ id: '2' }), buildMediaVideo()];
 
     expect(countMedia(items)).toEqual([
-      { kind: 'image', label: 'صور نشطة', count: 2 },
-      { kind: 'video', label: 'فيديو نشط', count: 1 },
+      { key: 'image', label: 'صور نشطة', count: 2, icon: 'media', tone: 'primary' },
+      { key: 'video', label: 'فيديو نشط', count: 1, icon: 'video', tone: 'accent' },
     ]);
   });
 });

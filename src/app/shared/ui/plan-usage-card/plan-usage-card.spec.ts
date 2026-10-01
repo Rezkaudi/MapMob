@@ -64,4 +64,21 @@ describe('PlanUsageCard', () => {
     expect(chip.textContent?.trim()).toBe('وصلت للحد المتاح');
     expect(chip.classList).toContain('bg-error');
   });
+
+  it('keeps the plan 4px from the title, or 16px where the stories frame draws it', () => {
+    expect(build().querySelector('[data-role="heading-row"]')?.className).toContain('gap-1');
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(PlanUsageCard);
+    fixture.componentRef.setInput('title', 'القصص المستخدمة');
+    fixture.componentRef.setInput('planName', 'الباقة المجانية');
+    fixture.componentRef.setInput('quota', describeProductQuota(3, 5));
+    fixture.componentRef.setInput('headingGap', 'wide');
+    fixture.detectChanges();
+
+    const row = (fixture.nativeElement as HTMLElement).querySelector('[data-role="heading-row"]');
+    expect(row?.className).toContain('gap-4');
+    expect(row?.className).not.toContain('gap-1');
+  });
 });

@@ -60,7 +60,15 @@ interface DetailSkin {
   readonly actions: string;
   /** `false` where the detail keeps its own colour instead of the tone's. */
   readonly followsTone: boolean;
+  /** A boxed detail takes the width of the card, or of the context card above it. */
+  readonly isBoxed: boolean;
 }
+
+/** The story frame sets its context card and warning 4px in, and its icon 4px closer to the title. */
+const FULL_BOX_WIDTH = 'w-full';
+const CONTEXT_BOX_WIDTH = 'w-[calc(100%-8px)]';
+const ICON_SPACING = 'pb-4';
+const CONTEXT_ICON_SPACING = 'pb-3';
 
 const DETAIL_SKINS: Record<ConfirmDetailAppearance, DetailSkin> = {
   muted: {
@@ -68,19 +76,22 @@ const DETAIL_SKINS: Record<ConfirmDetailAppearance, DetailSkin> = {
     detail: 'pb-1 text-[16px]/[24px] text-text-secondary',
     actions: 'mt-[53px]',
     followsTone: false,
+    isBoxed: false,
   },
   toned: {
     question: 'pb-1',
     detail: 'pb-8 text-[14px]/[21px]',
     actions: '',
     followsTone: true,
+    isBoxed: false,
   },
   callout: {
     question: 'mt-2 pb-1',
     detail:
-      'mt-1 flex h-[47px] w-full items-center justify-start rounded border border-[#fecaca] bg-[rgba(254,242,242,0.7)] px-4 text-start text-[14px]/[20px] font-bold text-status-error',
+      'mt-1 flex h-[47px] items-center justify-start rounded border border-[#fecaca] bg-[rgba(254,242,242,0.7)] px-4 text-start text-[14px]/[20px] font-bold text-status-error',
     actions: 'mt-4',
     followsTone: false,
+    isBoxed: true,
   },
 };
 
@@ -104,9 +115,17 @@ export class ConfirmActionDialog {
 
   protected readonly questionClasses = computed(() => this.detailSkin().question);
   protected readonly actionsClasses = computed(() => this.detailSkin().actions);
+  protected readonly boxWidth = computed(() =>
+    this.copy().context ? CONTEXT_BOX_WIDTH : FULL_BOX_WIDTH,
+  );
+  protected readonly iconSpacing = computed(() =>
+    this.copy().context ? CONTEXT_ICON_SPACING : ICON_SPACING,
+  );
   protected readonly detailClasses = computed(() => {
     const detail = this.detailSkin();
-    return detail.followsTone ? `${detail.detail} ${this.skin().detailText}` : detail.detail;
+    const tone = detail.followsTone ? ` ${this.skin().detailText}` : '';
+    const width = detail.isBoxed ? ` ${this.boxWidth()}` : '';
+    return `${detail.detail}${tone}${width}`;
   });
 
   @HostListener('document:keydown.escape')

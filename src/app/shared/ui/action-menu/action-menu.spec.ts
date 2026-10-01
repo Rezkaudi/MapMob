@@ -130,6 +130,31 @@ describe('ActionMenu', () => {
     expect(trigger.className).not.toContain('pb-[11px]');
   });
 
+  it('draws the dark blurred 32px tile the story cards float over a picture', () => {
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('triggerTone', 'overlay');
+    fixture.detectChanges();
+
+    const trigger: HTMLElement = fixture.nativeElement.querySelector('button[aria-haspopup]');
+    expect(trigger.className).toContain('size-8');
+    expect(trigger.className).toContain('bg-black/40');
+    expect(trigger.className).toContain('text-white');
+    expect(trigger.className).not.toContain('pb-[11px]');
+  });
+
+  it('keeps the 192px panel unless the 146px one of the story menu is asked for', () => {
+    expect(panelOf(open()).className).toContain('w-48');
+
+    const fixture = TestBed.createComponent(ActionMenu);
+    fixture.componentRef.setInput('panelWidth', 'narrow');
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('button[aria-haspopup]').click();
+    fixture.detectChanges();
+
+    expect(panelOf(fixture).className).toContain('w-[146px]');
+    expect(panelOf(fixture).className).not.toContain('w-48');
+  });
+
   it('names the trigger for screen readers', () => {
     const fixture = TestBed.createComponent(ActionMenu);
     fixture.componentRef.setInput('label', 'خيارات الصورة');

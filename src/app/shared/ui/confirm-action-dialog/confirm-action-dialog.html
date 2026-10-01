@@ -9,7 +9,7 @@
     class="flex w-full max-w-[448px] flex-col items-center rounded-xl bg-white p-8 text-center shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
     (click)="$event.stopPropagation()"
   >
-    <div class="pb-4">
+    <div data-role="confirm-icon" [class]="iconSpacing()">
       <span class="flex size-16 items-center justify-center rounded-full" [class]="skin().halo">
         <app-icon [name]="skin().icon" [size]="skin().iconSize" aria-hidden="true" />
       </span>
@@ -21,6 +21,28 @@
     <p class="text-[16px]/[24px] text-text-secondary" [class]="questionClasses()">
       {{ copy().question }}
     </p>
+    @if (copy().context; as context) {
+      <!-- RTL: the picture leads on the right. 11px padding plus the border keeps the frame's 68px. -->
+      <div
+        data-role="confirm-context"
+        class="mt-1 flex items-center gap-3 rounded border border-border p-[11px] text-start"
+        [class]="boxWidth()"
+      >
+        <span
+          data-role="context-picture"
+          class="size-11 shrink-0 overflow-hidden rounded-lg bg-[#eceef0]"
+        >
+          @if (context.imageUrl; as imageUrl) {
+            <img [src]="imageUrl" alt="" class="size-full object-cover" />
+          }
+        </span>
+        <span class="flex min-w-0 flex-1 flex-col gap-0.5 text-[14px]/[20px] text-[#1e293b]">
+          @for (line of context.lines; track line) {
+            <span data-role="context-line" class="truncate">{{ line }}</span>
+          }
+        </span>
+      </div>
+    }
     <p data-role="confirm-detail" [class]="detailClasses()">{{ copy().detail }}</p>
 
     <!-- RTL: the coloured action sits on the right, cancel on the left. -->

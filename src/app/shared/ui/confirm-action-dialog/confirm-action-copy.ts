@@ -1,3 +1,5 @@
+import { ConfirmActionContext } from './confirm-action-context';
+
 export type ConfirmActionTone = 'success' | 'danger' | 'warning' | 'critical';
 
 /** How the third line reads: muted grey, the tone's own colour, or a red warning box. */
@@ -10,4 +12,5 @@ export interface ConfirmActionCopy {
   readonly confirmLabel: string;
   readonly tone: ConfirmActionTone;
   readonly detailAppearance?: ConfirmDetailAppearance;
+  readonly context?: ConfirmActionContext;
 }

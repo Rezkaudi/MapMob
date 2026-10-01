@@ -124,3 +124,67 @@ describe('ConfirmActionDialog tones from the ad design', () => {
     expect(detail?.className).toContain('text-text-secondary');
   });
 });
+
+describe('ConfirmActionDialog context card from the story design', () => {
+  const STORY_COPY: ConfirmActionCopy = {
+    ...CRITICAL_COPY,
+    context: {
+      lines: ['صيدلية الشفاء • قصة اليوم', 'حصلت القصة على 842 مشاهدة'],
+      imageUrl: 'https://cdn.example.com/story.jpg',
+    },
+  };
+
+  it('names what is being deleted between the question and the warning', () => {
+    const element = renderCopy(STORY_COPY);
+
+    const context = element.querySelector('[data-role="confirm-context"]')!;
+    const lines = [...context.querySelectorAll('[data-role="context-line"]')];
+    expect(lines.map((line) => line.textContent?.trim())).toEqual([
+      'صيدلية الشفاء • قصة اليوم',
+      'حصلت القصة على 842 مشاهدة',
+    ]);
+    expect(context.nextElementSibling?.getAttribute('data-role')).toBe('confirm-detail');
+  });
+
+  it('leads with the picture, so RTL puts it on the right', () => {
+    const context = renderCopy(STORY_COPY).querySelector('[data-role="confirm-context"]')!;
+
+    expect(context.firstElementChild?.getAttribute('data-role')).toBe('context-picture');
+    expect(context.querySelector('img')?.getAttribute('src')).toBe(
+      'https://cdn.example.com/story.jpg',
+    );
+  });
+
+  it('keeps the grey tile when there is no picture to show', () => {
+    const element = renderCopy({
+      ...STORY_COPY,
+      context: { lines: ['صيدلية الشفاء • قصة اليوم'], imageUrl: null },
+    });
+
+    expect(element.querySelector('[data-role="context-picture"]')).not.toBeNull();
+    expect(element.querySelector('[data-role="confirm-context"] img')).toBeNull();
+  });
+
+  it('pulls the icon 4px closer and sets both boxes 4px in, as the story frame draws them', () => {
+    const element = renderCopy(STORY_COPY);
+
+    expect(element.querySelector('[data-role="confirm-icon"]')?.className).toContain('pb-3');
+    expect(element.querySelector('[data-role="confirm-context"]')?.className).toContain(
+      'w-[calc(100%-8px)]',
+    );
+    expect(element.querySelector('[data-role="confirm-detail"]')?.className).toContain(
+      'w-[calc(100%-8px)]',
+    );
+  });
+
+  it('keeps the spacing of the other dialogs when there is no context card', () => {
+    const element = renderCopy(CRITICAL_COPY);
+
+    expect(element.querySelector('[data-role="confirm-icon"]')?.className).toContain('pb-4');
+    expect(element.querySelector('[data-role="confirm-detail"]')?.className).toContain('w-full');
+  });
+
+  it('draws no context card for the other dialogs', () => {
+    expect(renderCopy(CRITICAL_COPY).querySelector('[data-role="confirm-context"]')).toBeNull();
+  });
+});

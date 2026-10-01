@@ -1,0 +1,26 @@
+@let shown = story();
+@if (!isVideo()) {
+  <img [src]="shown.url" [alt]="description()" class="size-full object-cover" />
+} @else if (isPlaying()) {
+  <video
+    [src]="shown.url"
+    [attr.poster]="shown.posterUrl"
+    [attr.aria-label]="description()"
+    [autoplay]="true"
+    [muted]="true"
+    [loop]="true"
+    playsinline
+    class="size-full object-cover"
+  ></video>
+} @else if (shown.posterUrl) {
+  <img [src]="shown.posterUrl" [alt]="description()" class="size-full object-cover" />
+} @else {
+  <video
+    [src]="shown.url"
+    [attr.aria-label]="description()"
+    [muted]="true"
+    preload="metadata"
+    playsinline
+    class="size-full object-cover"
+  ></video>
+}

@@ -50,6 +50,13 @@ export const MERCHANT_ROUTES: Routes = [
       { path: 'offers/new', loadComponent: loadMerchantOfferForm },
       { path: 'offers/:id/edit', loadComponent: loadMerchantOfferForm },
       {
+        path: 'stories',
+        loadComponent: () =>
+          import('./features/merchant-stories/pages/merchant-stories-page/merchant-stories-page').then(
+            (m) => m.MerchantStoriesPage,
+          ),
+      },
+      {
         path: 'media',
         loadComponent: () =>
           import('./features/merchant-media/pages/merchant-media-page/merchant-media-page').then(

@@ -11,6 +11,7 @@ describe('merchant nav items', () => {
       'بيانات المتجر',
       'المنتجات',
       'العروض',
+      'القصص',
       'الصور والوسائط',
       'التقييمات و المراجعات',
       'الاشتراكات والباقات',
@@ -40,5 +41,13 @@ describe('merchant nav items', () => {
       'الإشعارات',
       'الإعدادات',
     ]);
+  });
+
+  it('links the stories with the play icon the frame draws', () => {
+    expect(MERCHANT_NAV_ITEMS.find((item) => item.label === 'القصص')).toEqual({
+      label: 'القصص',
+      route: '/merchant/stories',
+      icon: 'play-circle',
+    });
   });
 });

@@ -18,13 +18,23 @@ const PANEL_HEIGHT_PX = 197;
 
 export type ActionMenuStyle = 'soft' | 'sharp';
 
-/** Dark cards draw the dots white; the media cards float a white tile over a picture. */
-export type ActionMenuTriggerTone = 'default' | 'inverse' | 'tile';
+/** Dark cards draw the dots white; media cards float a white tile over a picture, story cards a dark one. */
+export type ActionMenuTriggerTone = 'default' | 'inverse' | 'tile' | 'overlay';
+
+/** `narrow` is the 146px menu of the story cards. */
+export type ActionMenuPanelWidth = 'regular' | 'narrow';
 
 const LIST_TRIGGER_SHAPE = 'rounded-md px-1 pt-1 pb-[11px]';
 const INVERSE_TRIGGER_CLASSES = `${LIST_TRIGGER_SHAPE} text-white/80 hover:bg-white/10`;
 const TILE_TRIGGER_CLASSES =
   'flex size-8 items-center justify-center rounded-xl bg-white/90 text-text-primary hover:bg-white';
+const OVERLAY_TRIGGER_CLASSES =
+  'flex size-8 items-center justify-center rounded-xl bg-black/40 text-white backdrop-blur-[6px] hover:bg-black/55';
+
+const PANEL_WIDTHS: Record<ActionMenuPanelWidth, string> = {
+  regular: 'w-48',
+  narrow: 'w-[146px]',
+};
 
 interface MenuSkin {
   readonly trigger: string;
@@ -65,6 +75,7 @@ export class ActionMenu {
   readonly menuStyle = input<ActionMenuStyle>('soft');
   readonly triggerTone = input<ActionMenuTriggerTone>('default');
   readonly label = input<string>('خيارات');
+  readonly panelWidth = input<ActionMenuPanelWidth>('regular');
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly trigger = viewChild.required<ElementRef<HTMLElement>>('trigger');
@@ -72,12 +83,17 @@ export class ActionMenu {
   protected readonly isOpen = signal(false);
   protected readonly position = signal<PanelPosition>({ left: 0, top: 0 });
   protected readonly skin = computed(() => MENU_SKINS[this.menuStyle()]);
+  protected readonly panelClasses = computed(
+    () => `${this.skin().panel} ${PANEL_WIDTHS[this.panelWidth()]}`,
+  );
   protected readonly triggerClasses = computed(() => {
     switch (this.triggerTone()) {
       case 'inverse':
         return INVERSE_TRIGGER_CLASSES;
       case 'tile':
         return TILE_TRIGGER_CLASSES;
+      case 'overlay':
+        return OVERLAY_TRIGGER_CLASSES;
       default:
         return `${LIST_TRIGGER_SHAPE} ${this.skin().trigger}`;
     }

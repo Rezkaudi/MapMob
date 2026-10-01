@@ -19,6 +19,8 @@ import { MerchantProductRepository } from './features/merchant-products/data/mer
 import { buildMerchantProductCatalog } from './features/merchant-products/testing/merchant-product-fixture';
 import { MerchantMediaRepository } from './features/merchant-media/data/merchant-media.repository';
 import { buildMediaLibrary } from './features/merchant-media/testing/merchant-media-fixture';
+import { MerchantStoriesRepository } from './features/merchant-stories/data/merchant-stories.repository';
+import { buildStoryLibrary } from './features/merchant-stories/testing/merchant-story-fixture';
 import { MerchantOfferRepository } from './features/merchant-offers/data/merchant-offer.repository';
 import { FakeMerchantOfferRepository } from './features/merchant-offers/testing/fake-merchant-offer-repository';
 import { OwnerAccountRepository } from './features/merchant-settings/data/owner-account.repository';
@@ -62,6 +64,10 @@ describe('merchant routes', () => {
         {
           provide: MerchantMediaRepository,
           useValue: { getLibrary: () => of(buildMediaLibrary()) },
+        },
+        {
+          provide: MerchantStoriesRepository,
+          useValue: { getLibrary: () => of(buildStoryLibrary()) },
         },
         {
           provide: MerchantSubscriptionRepository,
@@ -159,6 +165,16 @@ describe('merchant routes', () => {
     expect(TestBed.inject(Location).path()).toBe('/merchant/media');
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelector('app-merchant-shell app-merchant-media-page')).toBeTruthy();
+  });
+
+  it('opens the stories page at /merchant/stories, inside the merchant shell', async () => {
+    TestBed.inject(AuthStore).startSession(MERCHANT);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/merchant/stories');
+
+    expect(TestBed.inject(Location).path()).toBe('/merchant/stories');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-merchant-shell app-merchant-stories-page')).toBeTruthy();
   });
 
   it('opens the offers page at /merchant/offers, inside the merchant shell', async () => {

@@ -1,0 +1,36 @@
+<!-- RTL: `start` is the right edge, where the frame hangs the status and the time left. -->
+<div data-role="frame" class="relative aspect-[9/16] w-full overflow-hidden bg-[#eceef0]">
+  <app-story-media [story]="card().story" [isPlaying]="isPlaying()" />
+  <span
+    data-role="gradient"
+    class="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.25)_50%,rgba(0,0,0,0.6)_100%)]"
+    aria-hidden="true"
+  ></span>
+
+  <app-story-status-pill
+    class="absolute start-4"
+    [class]="skin().statusTop"
+    [status]="card().story.status"
+    [label]="card().statusLabel"
+  />
+
+  @if (card().remainingText; as remaining) {
+    <span
+      data-role="remaining"
+      class="absolute start-4 top-14 flex items-center gap-1 rounded-xl bg-black/50 px-2 py-1 text-[11px]/[14px] text-white backdrop-blur-[6px]"
+    >
+      <app-icon name="clock-filled" [size]="12" aria-hidden="true" />
+      <span>{{ remaining }}</span>
+    </span>
+  }
+
+  @if (card().story.caption; as caption) {
+    <p
+      data-role="caption"
+      class="absolute inset-x-4 bottom-4 rounded-lg bg-black/40 p-3 text-start text-white backdrop-blur-[6px]"
+      [class]="skin().captionText"
+    >
+      {{ caption }}
+    </p>
+  }
+</div>

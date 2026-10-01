@@ -1,0 +1,19 @@
+<!-- Same gaps as the loaded page: quota cards 40px under the header, heading 32px, cards 16px. -->
+<p role="status" class="sr-only">جاري التحميل</p>
+
+<!-- RTL grid: the 8-column usage card takes the right-hand side, as on the loaded page. -->
+<div data-role="quota" class="mt-10 grid grid-cols-12 gap-2">
+  <app-skeleton class="col-span-12 xl:col-span-8" height="172px" />
+  <app-skeleton class="col-span-12 xl:col-span-4" height="172px" />
+</div>
+
+<div data-role="heading" class="mt-8 flex flex-col gap-1 pb-1">
+  <app-skeleton width="177px" height="32px" shape="text" />
+  <app-skeleton width="231px" height="14px" shape="text" />
+</div>
+
+<div data-role="cards" class="mt-4 flex flex-wrap gap-6">
+  @for (card of storyCards; track card) {
+    <app-skeleton width="298.66px" height="579px" />
+  }
+</div>

@@ -1,0 +1,66 @@
+<app-side-drawer title="عرض القصة" appearance="plain" footerTone="inset" (closed)="closed.emit()">
+  <div class="flex flex-col gap-6 px-6 pt-8 pb-6">
+    <div class="flex justify-center">
+      <app-story-visual class="w-[225px]" size="preview" [card]="detail().card" />
+    </div>
+
+    <!-- RTL: each label reads first on the right, its value ends the row on the left. -->
+    <dl class="flex flex-col gap-3.5 text-[14px]/[20px] text-text-primary">
+      <div
+        data-role="detail-row"
+        class="flex items-center justify-between gap-4 border-b border-[#e5e7eb] pb-3"
+      >
+        <dt>اسم المتجر</dt>
+        <dd class="truncate font-bold">{{ detail().placeName }}</dd>
+      </div>
+      <!-- Digits alone would be reordered by RTL, so both dates keep their own direction. -->
+      <div
+        data-role="detail-row"
+        class="flex items-center justify-between gap-4 border-b border-[#e5e7eb] pb-3"
+      >
+        <dt>تاريخ النشر</dt>
+        <dd dir="ltr">{{ detail().publishedText }}</dd>
+      </div>
+      <div
+        data-role="detail-row"
+        class="flex items-center justify-between gap-4 border-b border-[#e5e7eb] pb-3"
+      >
+        <dt>تاريخ الانتهاء</dt>
+        <dd dir="ltr">{{ detail().endsText }}</dd>
+      </div>
+      <div
+        data-role="detail-row"
+        class="flex items-center justify-between gap-4 border-b border-[#e5e7eb] pb-3"
+      >
+        <dt>المشاهدات</dt>
+        <dd class="flex items-center gap-1.5 font-bold">
+          <app-icon name="eye-small" [size]="15" aria-hidden="true" />
+          <span>{{ detail().card.viewsText }}</span>
+        </dd>
+      </div>
+      <div data-role="detail-row" class="flex items-center justify-between gap-4 pt-0.5">
+        <dt>الحالة</dt>
+        <dd class="flex items-center gap-1.5 py-1 pe-3 font-bold">
+          <span
+            data-role="status-dot"
+            class="size-1.5 rounded-full"
+            [class]="statusDot()"
+            aria-hidden="true"
+          ></span>
+          <span>{{ detail().card.statusLabel }}</span>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- RTL: the bin is written first, so it sits on the right of the label. -->
+  <button
+    drawerFooter
+    type="button"
+    class="flex h-9 w-full items-center justify-center gap-1 rounded bg-closed text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-closed/90"
+    (click)="remove.emit()"
+  >
+    <app-icon name="trash-outline" [size]="16" aria-hidden="true" />
+    <span>حذف القصة</span>
+  </button>
+</app-side-drawer>

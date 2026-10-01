@@ -7,7 +7,7 @@ export const CATALOG_DOMAIN: DbDomain = {
   id: 'db-catalog',
   name: 'Places and catalog',
   description:
-    'Categories, places, and what hangs off a place: hours, ordering apps, media and products.',
+    'Categories, places, and what hangs off a place: hours, ordering apps, media, stories and products.',
   layout: [
     ['categories', 'delivery_platforms'],
     ['places'],
@@ -16,6 +16,7 @@ export const CATALOG_DOMAIN: DbDomain = {
       'place_delivery_links',
       'delivery_referrals',
       'place_media',
+      'place_stories',
       'products',
     ],
   ],
@@ -190,6 +191,35 @@ export const CATALOG_DOMAIN: DbDomain = {
         { name: 'sort_order', type: 'smallint unsigned' },
         { name: 'created_at', type: 'timestamp' },
       ],
+    },
+    {
+      name: 'place_stories',
+      description:
+        'A picture or video, with an optional short text, that the app shows for 24 hours. Kept after it expires so the owner still sees it and its views.',
+      servedAs: '/owner/stories',
+      columns: [
+        ID,
+        foreignKey('place_id', 'places.id', 'Cascade on delete.'),
+        { name: 'type', type: "enum('image','video')" },
+        { name: 'path', type: 'varchar(255)' },
+        { name: 'poster_path', type: 'varchar(255)', isNullable: true, note: 'Videos only.' },
+        { name: 'mime_type', type: 'varchar(100)' },
+        { name: 'size_bytes', type: 'int unsigned' },
+        { name: 'caption', type: 'varchar(120)', isNullable: true },
+        {
+          name: 'view_count',
+          type: 'int unsigned',
+          note: 'Starts at 0. Add one each time an app user opens the story.',
+        },
+        { name: 'published_at', type: 'timestamp' },
+        {
+          name: 'expires_at',
+          type: 'timestamp',
+          note: 'published_at plus 24 hours. A story is active while now is before it.',
+        },
+        ...TIMESTAMPS,
+      ],
+      indexes: ['INDEX (place_id, expires_at)'],
     },
     {
       name: 'products',
