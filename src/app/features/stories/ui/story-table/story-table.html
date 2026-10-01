@@ -1,0 +1,95 @@
+<!-- Header text and row values sit a few pixels apart in most columns, as the frame draws them. -->
+<div class="overflow-x-auto rounded-xl bg-surface outline-1 -outline-offset-1 outline-border">
+  <table class="w-full min-w-[820px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-[59px] border-b border-border bg-surface-muted text-[13px] font-bold text-text-primary"
+      >
+        <th class="ps-[31px]">
+          <input
+            type="checkbox"
+            aria-label="تحديد الكل"
+            class="block size-[18px] rounded border border-placeholder bg-white accent-primary"
+            [checked]="areAllSelected()"
+            (change)="allToggle.emit()"
+          />
+        </th>
+        <th class="ps-[23px]">اسم المتجر</th>
+        <th class="ps-[22px]">القصة</th>
+        <th class="ps-[11px]">تاريخ النشر</th>
+        <th class="ps-[5px]">المشاهدات</th>
+        <th class="ps-[27px]">الحالة</th>
+        <th class="ps-[11px]">الإجراء</th>
+      </tr>
+    </thead>
+
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.story.id) {
+          <tr class="h-[89px] border-b border-border bg-surface text-[14px] last:border-0">
+            <td class="ps-[31px]">
+              <input
+                type="checkbox"
+                [attr.aria-label]="'تحديد قصة ' + row.story.place.name"
+                class="block size-[18px] rounded border border-placeholder bg-white accent-primary"
+                [checked]="selectedIdSet().has(row.story.id)"
+                (change)="rowToggle.emit(row.story.id)"
+              />
+            </td>
+            <td class="ps-4 pe-2">
+              <span class="line-clamp-1 font-bold text-text-primary">{{
+                row.story.place.name
+              }}</span>
+            </td>
+            <td class="ps-4">
+              <app-story-thumbnail
+                [imageUrl]="row.thumbnailUrl"
+                [label]="'عرض قصة ' + row.story.place.name"
+                (opened)="view.emit(row.story)"
+              />
+            </td>
+            <td class="ps-4 whitespace-nowrap text-text-secondary">
+              {{ row.story.publishedAt | arabicDate }}
+            </td>
+            <td class="ps-4">
+              <!-- RTL: the eye is written first, so it sits on the right of the count. -->
+              <span data-role="views" class="flex items-center gap-0.5 text-text-secondary">
+                <app-icon name="eye-wide" [size]="18" aria-hidden="true" />
+                <span>{{ row.viewsText }}</span>
+              </span>
+            </td>
+            <td class="ps-4">
+              <span
+                data-role="status-pill"
+                class="inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px]/[18px] whitespace-nowrap text-white"
+                [class]="row.pillClass"
+              >
+                {{ row.statusLabel }}
+              </span>
+            </td>
+            <!-- The frame hangs the dots 5px under where the menu's own padding centres them. -->
+            <td class="ps-[11px] pt-[10px]">
+              <app-story-row-menu
+                [visibilityAction]="row.visibilityAction"
+                (view)="view.emit(row.story)"
+                (visibilityChange)="changeVisibility(row)"
+                (remove)="remove.emit(row.story)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

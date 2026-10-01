@@ -26,6 +26,7 @@ import { REGIONS_FEATURE } from './endpoints/region-endpoints';
 import { REPORTS_FEATURE } from './endpoints/report-endpoints';
 import { REVIEWS_FEATURE } from './endpoints/review-endpoints';
 import { SETTINGS_FEATURE } from './endpoints/settings-endpoints';
+import { STORIES_FEATURE } from './endpoints/story-endpoints';
 import { SUBSCRIPTIONS_FEATURE } from './endpoints/subscription-endpoints';
 import { USERS_FEATURE } from './endpoints/user-endpoints';
 
@@ -40,6 +41,7 @@ export const API_FEATURES: readonly ApiFeature[] = [
   REVIEWS_FEATURE,
   OFFERS_FEATURE,
   ADS_FEATURE,
+  STORIES_FEATURE,
   SUBSCRIPTIONS_FEATURE,
   PAYMENTS_FEATURE,
   DELIVERY_PLATFORMS_FEATURE,

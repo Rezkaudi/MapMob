@@ -19,6 +19,7 @@ import { PlanMockDatabase } from './features/subscriptions/data/plan-mock-databa
 import { MOCK_PLANS } from './features/subscriptions/data/plan-mock-samples';
 import { SubscriptionMockDatabase } from './features/subscriptions/data/subscription-mock-database';
 import { SubscriptionMockRepository } from './features/subscriptions/data/subscription-mock.repository';
+import { StoryRepository } from './features/stories/data/story.repository';
 import { SubscriptionRepository } from './features/subscriptions/data/subscription.repository';
 
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
@@ -57,6 +58,14 @@ describe('app routes', () => {
                 activeCount: 0,
                 platformCount: 0,
               }),
+          },
+        },
+        {
+          provide: StoryRepository,
+          useValue: {
+            getStories: () => of({ items: [], totalCount: 0 }),
+            getSummary: () =>
+              of({ storyCount: 0, activeCount: 0, hiddenCount: 0, expiredCount: 0, viewCount: 0 }),
           },
         },
         {
@@ -188,6 +197,15 @@ describe('app routes', () => {
 
     expect(TestBed.inject(Location).path()).toBe('/admin/delivery-platforms');
     expect(harness.fixture.nativeElement.querySelector('app-delivery-platform-list')).toBeTruthy();
+  });
+
+  it('serves the stories page behind its nav link', async () => {
+    signIn();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/admin/stories');
+
+    expect(TestBed.inject(Location).path()).toBe('/admin/stories');
+    expect(harness.fixture.nativeElement.querySelector('app-story-list')).toBeTruthy();
   });
 
   it('serves the reports page behind its nav link', async () => {

@@ -11,8 +11,8 @@ import { Observable, tap } from 'rxjs';
 import { withSaveStatus } from '../../../shared/state/with-save-status';
 import { MerchantStoriesRepository } from '../data/merchant-stories.repository';
 import { MerchantStory } from '../models/merchant-story';
+import { MerchantStoryDetail } from '../models/merchant-story-detail';
 import { MerchantStoryLibrary } from '../models/merchant-story-library';
-import { StoryDetailView } from '../models/story-detail-view';
 import { StoryDialogRequest } from '../models/story-dialog-request';
 import { StoryDraft } from '../models/story-draft';
 import { StoryFormOptions } from '../models/story-form-options';
@@ -51,7 +51,7 @@ export function withStoryDialogs() {
         }
         return request?.kind === 'edit' ? { story: request.story, notice: null } : null;
       }),
-      detail: computed<StoryDetailView | null>(() => {
+      detail: computed<MerchantStoryDetail | null>(() => {
         const request = dialog();
         const now = readAt();
         return request?.kind === 'view' && now

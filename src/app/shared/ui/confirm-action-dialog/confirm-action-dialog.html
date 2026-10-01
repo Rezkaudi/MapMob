@@ -11,7 +11,7 @@
   >
     <div data-role="confirm-icon" [class]="iconSpacing()">
       <span class="flex size-16 items-center justify-center rounded-full" [class]="skin().halo">
-        <app-icon [name]="skin().icon" [size]="skin().iconSize" aria-hidden="true" />
+        <app-icon [name]="icon().name" [size]="icon().size" aria-hidden="true" />
       </span>
     </div>
 
@@ -22,10 +22,10 @@
       {{ copy().question }}
     </p>
     @if (copy().context; as context) {
-      <!-- RTL: the picture leads on the right. 11px padding plus the border keeps the frame's 68px. -->
+      <!-- RTL: the picture leads on the right. The frame fixes the card at 68px, tag row or not. -->
       <div
         data-role="confirm-context"
-        class="mt-1 flex items-center gap-3 rounded border border-border p-[11px] text-start"
+        class="mt-1 flex h-[68px] items-center gap-3 rounded border border-border p-[11px] text-start"
         [class]="boxWidth()"
       >
         <span
@@ -38,12 +38,22 @@
         </span>
         <span class="flex min-w-0 flex-1 flex-col gap-0.5 text-[14px]/[20px] text-[#1e293b]">
           @for (line of context.lines; track line) {
-            <span data-role="context-line" class="truncate">{{ line }}</span>
+            @if ($first && context.tag) {
+              <!-- RTL: the line is written first, so the tag ends the row on the left. -->
+              <span class="flex h-6 items-center justify-between gap-2">
+                <span data-role="context-line" class="min-w-0 truncate">{{ line }}</span>
+                <span data-role="context-tag" class="shrink-0 px-2">{{ context.tag }}</span>
+              </span>
+            } @else {
+              <span data-role="context-line" class="truncate">{{ line }}</span>
+            }
           }
         </span>
       </div>
     }
-    <p data-role="confirm-detail" [class]="detailClasses()">{{ copy().detail }}</p>
+    @if (copy().detail; as detail) {
+      <p data-role="confirm-detail" [class]="detailClasses()">{{ detail }}</p>
+    }
 
     <!-- RTL: the coloured action sits on the right, cancel on the left. -->
     <div class="flex w-full items-start gap-4" [class]="actionsClasses()">

@@ -1,0 +1,87 @@
+<!-- Header, the cards 20px below, the filters 40px under them, the table 32px on, paging 4px under it. -->
+<app-page-header
+  title="القصص"
+  description="إدارة ومتابعة القصص المنشورة من المتاجر ."
+  [isAddVisible]="false"
+  [isExportVisible]="true"
+  [isExporting]="store.isExporting()"
+  (exportRequested)="exportStories()"
+/>
+
+<!-- Four 246px cards 20px apart at 1440; RTL puts the first on the right. -->
+<div data-role="stat-cards" class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  @for (card of store.statCards(); track card.label) {
+    <app-stat-card
+      [isLoading]="store.isSummaryLoading()"
+      [icon]="card.icon"
+      [label]="card.label"
+      [value]="card.value"
+    />
+  }
+</div>
+
+<app-story-filter-bar
+  class="mt-10"
+  [chips]="store.statusChips()"
+  [selectedChip]="store.selectedChip()"
+  (searchChange)="store.setSearch($event)"
+  (statusChange)="store.setStatusFilter($event)"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-8" [message]="error" (retry)="reload()" />
+} @else {
+  <app-story-table
+    class="mt-8"
+    [rows]="store.rows()"
+    [selectedIdSet]="store.selectedIdSet()"
+    [areAllSelected]="store.areAllVisibleSelected()"
+    [isLoading]="store.isLoading()"
+    [hasNoResults]="store.hasNoResults()"
+    [emptyMessage]="store.emptyMessage()"
+    [rowCount]="store.pageSize()"
+    (rowToggle)="store.toggleSelected($event)"
+    (allToggle)="store.toggleAllVisible()"
+    (view)="store.openOverlay('view', $event)"
+    (hide)="store.openOverlay('hide', $event)"
+    (show)="store.openOverlay('show', $event)"
+    (remove)="store.openOverlay('delete', $event)"
+  />
+
+  <app-table-pagination
+    class="mt-1"
+    [pageIndex]="store.pageIndex()"
+    [pageSize]="store.pageSize()"
+    [totalCount]="store.totalCount()"
+    itemNoun="قصة"
+    (pageIndexChange)="store.changePage($event)"
+  />
+}
+
+@if (store.overlay(); as overlay) {
+  @if (store.detail(); as detail) {
+    <app-story-detail-drawer
+      [detail]="detail"
+      [visibilityAction]="store.drawerAction()"
+      (visibilityChange)="store.openOverlay(store.drawerAction() ?? 'view', overlay.story)"
+      (remove)="store.openOverlay('delete', overlay.story)"
+      (closed)="store.closeOverlay()"
+    />
+  } @else if (store.confirmCopy(); as copy) {
+    <app-confirm-action-dialog
+      [copy]="copy"
+      [isBusy]="store.isSaving()"
+      (confirmed)="store.confirmOverlay()"
+      (cancelled)="store.closeOverlay()"
+    />
+  }
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}

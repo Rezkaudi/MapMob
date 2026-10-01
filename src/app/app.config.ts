@@ -35,6 +35,7 @@ import { provideReportsFeature } from './features/reports/reports.providers';
 import { provideRegionsFeature } from './features/regions/regions.providers';
 import { provideReviewsFeature } from './features/reviews/reviews.providers';
 import { provideSettingsFeature } from './features/settings/settings.providers';
+import { provideStoriesFeature } from './features/stories/stories.providers';
 import { provideSubscriptionsFeature } from './features/subscriptions/subscriptions.providers';
 import { provideUsersFeature } from './features/users/users.providers';
 
@@ -60,6 +61,7 @@ export const appConfig: ApplicationConfig = {
     provideReportsFeature(),
     provideReviewsFeature(),
     provideSettingsFeature(),
+    provideStoriesFeature(),
     provideSubscriptionsFeature(),
     provideDashboardFeature(),
     provideUsersFeature(),

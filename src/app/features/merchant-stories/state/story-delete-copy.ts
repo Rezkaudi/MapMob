@@ -1,12 +1,8 @@
 import { ConfirmActionCopy } from '../../../shared/ui/confirm-action-dialog/confirm-action-copy';
+import { describeStoryDay } from '../../../shared/formatting/story-time-text';
+import { formatStoryViews } from '../../../shared/formatting/story-views-text';
+import { thumbnailOf } from '../../../shared/state/story-thumbnail';
 import { MerchantStory } from '../models/merchant-story';
-import { describeStoryDay } from './story-time-text';
-import { formatStoryViews } from './story-views-text';
-
-/** A video shows its still frame, when the server has one. */
-function pictureOf(story: MerchantStory): string | null {
-  return story.kind === 'image' ? story.url : story.posterUrl;
-}
 
 export function buildRemoveStoryCopy(
   story: MerchantStory,
@@ -25,7 +21,7 @@ export function buildRemoveStoryCopy(
         `${placeName} • قصة ${describeStoryDay(story.publishedAt, now)}`,
         `حصلت القصة على ${formatStoryViews(story.viewCount)}`,
       ],
-      imageUrl: pictureOf(story),
+      imageUrl: thumbnailOf(story),
     },
   };
 }

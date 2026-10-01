@@ -188,3 +188,73 @@ describe('ConfirmActionDialog context card from the story design', () => {
     expect(renderCopy(CRITICAL_COPY).querySelector('[data-role="confirm-context"]')).toBeNull();
   });
 });
+
+describe('ConfirmActionDialog hide and show dialogs from the admin story design', () => {
+  const SHOW_COPY: ConfirmActionCopy = {
+    title: 'إظهار القصة',
+    question: 'هل أنت متأكد من إظهار القصة مرة أخرى؟ ستصبح القصة مرئية للمستخدمين مجدداً.',
+    confirmLabel: 'إظهار القصة',
+    tone: 'success',
+    icon: { name: 'eye-clarity', size: 24 },
+    context: {
+      lines: ['صيدلية الشفاء • قصة اليوم', 'حصلت هذه القصة على 842 مشاهدة'],
+      imageUrl: null,
+      tag: 'الحالة: مخفية',
+    },
+  };
+
+  it('draws the icon the copy names instead of the one of its tone', () => {
+    const icon = renderCopy(SHOW_COPY).querySelector('[data-role="confirm-icon"] app-icon span');
+
+    expect((icon as HTMLElement).style.maskImage).toContain('eye-clarity.svg');
+    expect((icon as HTMLElement).style.width).toBe('24px');
+  });
+
+  it('keeps the icon of the tone when the copy names none', () => {
+    const icon = renderCopy(CRITICAL_COPY).querySelector(
+      '[data-role="confirm-icon"] app-icon span',
+    );
+
+    expect((icon as HTMLElement).style.maskImage).toContain('close-stroke.svg');
+  });
+
+  it('writes the tag after the first line, so RTL sets it at the left end of that row', () => {
+    const context = renderCopy(SHOW_COPY).querySelector('[data-role="confirm-context"]')!;
+    const tag = context.querySelector('[data-role="context-tag"]')!;
+
+    expect(tag.textContent?.trim()).toBe('الحالة: مخفية');
+    expect(tag.previousElementSibling?.textContent?.trim()).toBe('صيدلية الشفاء • قصة اليوم');
+    expect(tag.parentElement?.className).toContain('justify-between');
+  });
+
+  it('keeps the card 68px tall although the tag row is 24px', () => {
+    const context = renderCopy(SHOW_COPY).querySelector('[data-role="confirm-context"]')!;
+
+    expect(context.classList).toContain('h-[68px]');
+    expect(context.querySelector('[data-role="context-tag"]')?.parentElement?.classList).toContain(
+      'h-6',
+    );
+  });
+
+  it('draws no tag on a context card without one', () => {
+    const element = renderCopy({
+      ...CRITICAL_COPY,
+      context: { lines: ['صيدلية الشفاء • قصة اليوم'], imageUrl: null },
+    });
+
+    expect(element.querySelector('[data-role="context-tag"]')).toBeNull();
+  });
+
+  it('has no third line and sets the buttons 18px under the card when the copy has no detail', () => {
+    const element = renderCopy(SHOW_COPY);
+
+    expect(element.querySelector('[data-role="confirm-detail"]')).toBeNull();
+    expect(buttonNamed(element, 'إلغاء').parentElement?.classList).toContain('mt-[18px]');
+  });
+
+  it('wraps a long question inside 360px, as the frame does', () => {
+    const question = renderCopy(SHOW_COPY).querySelector('h2 + p')!;
+
+    expect(question.classList).toContain('max-w-[360px]');
+  });
+});

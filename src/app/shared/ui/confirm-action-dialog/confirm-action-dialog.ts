@@ -70,6 +70,18 @@ const CONTEXT_BOX_WIDTH = 'w-[calc(100%-8px)]';
 const ICON_SPACING = 'pb-4';
 const CONTEXT_ICON_SPACING = 'pb-3';
 
+/** With no detail line the buttons follow the context card, 18px under it in the story frames. */
+const NO_DETAIL_SKIN: DetailSkin = {
+  question: 'mt-2 pb-1',
+  detail: '',
+  actions: 'mt-[18px]',
+  followsTone: false,
+  isBoxed: false,
+};
+
+/** The story frames wrap their two-line question inside 360px. */
+const CONTEXT_QUESTION_WIDTH = 'max-w-[360px]';
+
 const DETAIL_SKINS: Record<ConfirmDetailAppearance, DetailSkin> = {
   muted: {
     question: 'pb-1',
@@ -108,12 +120,18 @@ export class ConfirmActionDialog {
   readonly cancelled = output<void>();
 
   protected readonly skin = computed(() => TONE_SKINS[this.copy().tone]);
-
-  private readonly detailSkin = computed(
-    () => DETAIL_SKINS[this.copy().detailAppearance ?? 'muted'],
+  protected readonly icon = computed(
+    () => this.copy().icon ?? { name: this.skin().icon, size: this.skin().iconSize },
   );
 
-  protected readonly questionClasses = computed(() => this.detailSkin().question);
+  private readonly detailSkin = computed(() =>
+    this.copy().detail ? DETAIL_SKINS[this.copy().detailAppearance ?? 'muted'] : NO_DETAIL_SKIN,
+  );
+
+  protected readonly questionClasses = computed(() => {
+    const width = this.copy().context ? ` ${CONTEXT_QUESTION_WIDTH}` : '';
+    return `${this.detailSkin().question}${width}`;
+  });
   protected readonly actionsClasses = computed(() => this.detailSkin().actions);
   protected readonly boxWidth = computed(() =>
     this.copy().context ? CONTEXT_BOX_WIDTH : FULL_BOX_WIDTH,

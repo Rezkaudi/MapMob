@@ -1,11 +1,17 @@
+import { formatStoryMoment } from '../../../shared/formatting/story-time-text';
 import { MerchantStory } from '../models/merchant-story';
-import { StoryDetailView } from '../models/story-detail-view';
+import { MerchantStoryDetail } from '../models/merchant-story-detail';
 import { toStoryCard } from './story-card-view';
-import { formatStoryMoment } from './story-time-text';
 
-export function toStoryDetail(story: MerchantStory, placeName: string, now: Date): StoryDetailView {
+export function toStoryDetail(
+  story: MerchantStory,
+  placeName: string,
+  now: Date,
+): MerchantStoryDetail {
+  const card = toStoryCard(story, now);
   return {
-    card: toStoryCard(story, now),
+    card,
+    viewsText: card.viewsText,
     placeName,
     publishedText: formatStoryMoment(story.publishedAt),
     endsText: formatStoryMoment(story.expiresAt),

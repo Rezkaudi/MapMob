@@ -1,5 +1,5 @@
-import { StoryMediaKind } from './story-media-kind';
-import { StoryStatus } from './story-status';
+import { StoryMediaKind } from '../../../shared/models/story-media-kind';
+import { MerchantStoryStatus } from './story-status';
 
 /** One story of the place: a picture or video the app shows for 24 hours. */
 export interface MerchantStory {
@@ -10,7 +10,7 @@ export interface MerchantStory {
   readonly posterUrl: string | null;
   /** The short text drawn over the story; null when the owner wrote none. */
   readonly caption: string | null;
-  readonly status: StoryStatus;
+  readonly status: MerchantStoryStatus;
   /** ISO moment. */
   readonly publishedAt: string;
   /** ISO moment, 24 hours after `publishedAt`. */

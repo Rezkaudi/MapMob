@@ -10,6 +10,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'التقييمات و المراجعات', route: '/admin/reviews', icon: 'reviews' },
   { label: 'العروض', route: '/admin/offers', icon: 'offers' },
   { label: 'الإعلانات', route: '/admin/ads', icon: 'ads' },
+  { label: 'القصص', route: '/admin/stories', icon: 'play-circle' },
   { label: 'الاشتراكات والباقات', route: '/admin/subscriptions', icon: 'subscriptions' },
   { label: 'المدفوعات', route: '/admin/payments', icon: 'payments' },
   { label: 'منصات الطلبات و التوصيل', route: '/admin/delivery-platforms', icon: 'delivery' },

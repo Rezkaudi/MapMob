@@ -13,6 +13,7 @@ describe('toStoryDetail', () => {
     expect(detail.placeName).toBe('صيدلية الشفاء');
     expect(detail.publishedText).toBe('30/09/2026 - 22:30');
     expect(detail.endsText).toBe('01/10/2026 - 22:30');
+    expect(detail.viewsText).toBe('348 مشاهدة');
     expect(detail.card.statusLabel).toBe('نشطة');
     expect(detail.card.remainingText).toBe('متبقي ساعتان');
   });

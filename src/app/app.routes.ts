@@ -71,6 +71,11 @@ export const routes: Routes = [
         loadChildren: () => import('./features/ads/ads.routes').then((m) => m.ADS_ROUTES),
       },
       {
+        path: 'stories',
+        loadChildren: () =>
+          import('./features/stories/stories.routes').then((m) => m.STORIES_ROUTES),
+      },
+      {
         path: 'subscriptions',
         loadChildren: () =>
           import('./features/subscriptions/subscriptions.routes').then(

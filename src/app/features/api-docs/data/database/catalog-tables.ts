@@ -195,8 +195,8 @@ export const CATALOG_DOMAIN: DbDomain = {
     {
       name: 'place_stories',
       description:
-        'A picture or video, with an optional short text, that the app shows for 24 hours. Kept after it expires so the owner still sees it and its views.',
-      servedAs: '/owner/stories',
+        'A picture or video, with an optional short text, that the app shows for 24 hours. Kept after it expires so the owner and the admins still see it and its views.',
+      servedAs: '/owner/stories, /stories',
       columns: [
         ID,
         foreignKey('place_id', 'places.id', 'Cascade on delete.'),
@@ -216,6 +216,12 @@ export const CATALOG_DOMAIN: DbDomain = {
           name: 'expires_at',
           type: 'timestamp',
           note: 'published_at plus 24 hours. A story is active while now is before it.',
+        },
+        {
+          name: 'hidden_at',
+          type: 'timestamp',
+          isNullable: true,
+          note: 'Set when an admin hides the story, cleared when one shows it again. The app skips stories that have it.',
         },
         ...TIMESTAMPS,
       ],

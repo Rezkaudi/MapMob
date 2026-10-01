@@ -36,7 +36,7 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(183);
+    expect(countEndpoints(API_FEATURES).total).toBe(188);
   });
 
   it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {
@@ -74,6 +74,37 @@ describe('the API reference data', () => {
       'DELETE /delivery-platforms/{id}',
       'GET /delivery-platforms/{id}/stores',
     ]);
+  });
+
+  it('lists the five calls of the admin stories screen, guarded by the places permissions', () => {
+    const storiesFeature = API_FEATURES.find((feature) => feature.id === 'stories');
+    const storyPaths = storiesFeature?.endpoints.map(
+      (endpoint) => `${endpoint.method} ${endpoint.path}`,
+    );
+
+    expect(storiesFeature?.screen).toBe('/admin/stories');
+    expect(storiesFeature?.permissionModule).toBe('places');
+    expect(storyPaths).toEqual([
+      'GET /stories',
+      'GET /stories/summary',
+      'PATCH /stories/{id}/visibility',
+      'DELETE /stories/{id}',
+      'GET /stories/export',
+    ]);
+  });
+
+  it('lists the stories screen right after the ads, as the sidebar does', () => {
+    const ids = API_FEATURES.map((feature) => feature.id);
+
+    expect(ids[ids.indexOf('ads') + 1]).toBe('stories');
+  });
+
+  it('stores when an admin hid a story', () => {
+    const stories = tables.find((table) => table.name === 'place_stories');
+    const hiddenAt = stories?.columns.find((column) => column.name === 'hidden_at');
+
+    expect(hiddenAt).toEqual(expect.objectContaining({ type: 'timestamp', isNullable: true }));
+    expect(stories?.servedAs).toContain('/stories');
   });
 
   it('lists the thirty-nine calls of the place owner area', () => {

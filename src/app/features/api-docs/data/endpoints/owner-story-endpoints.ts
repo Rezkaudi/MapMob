@@ -85,6 +85,7 @@ export const OWNER_STORIES_FEATURE: ApiFeature = {
       notes: [
         'The usage card counts active stories against activeStoryLimit. The two tiles count active stories and expired ones.',
         'A story expires by the clock alone. No call ends one early; the owner deletes it instead.',
+        'A story an admin has hidden (place_stories.hidden_at) still comes back here, with the status its clock gives it. See the open question on what the owner should be told.',
       ],
     },
     {

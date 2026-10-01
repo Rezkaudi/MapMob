@@ -11,6 +11,7 @@ describe('nav items', () => {
       'التقييمات و المراجعات',
       'العروض',
       'الإعلانات',
+      'القصص',
       'الاشتراكات والباقات',
       'المدفوعات',
       'منصات الطلبات و التوصيل',
@@ -24,6 +25,16 @@ describe('nav items', () => {
       label: 'إدارة المحتوى',
       route: '/admin/content',
       icon: 'content',
+    });
+  });
+
+  it('links the stories to their page with the play icon, right after the ads', () => {
+    const adsIndex = NAV_ITEMS.findIndex((item) => item.route === '/admin/ads');
+
+    expect(NAV_ITEMS[adsIndex + 1]).toEqual({
+      label: 'القصص',
+      route: '/admin/stories',
+      icon: 'play-circle',
     });
   });
 

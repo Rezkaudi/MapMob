@@ -11,7 +11,7 @@ import { MerchantStoriesStore } from '../../state/merchant-stories.store';
 import { ActiveStoryCard } from '../../ui/active-story-card/active-story-card';
 import { ExpiredStoryCard } from '../../ui/expired-story-card/expired-story-card';
 import { MerchantStoriesSkeleton } from '../../ui/merchant-stories-skeleton/merchant-stories-skeleton';
-import { StoryDetailDrawer } from '../../ui/story-detail-drawer/story-detail-drawer';
+import { StoryDetailDrawer } from '../../../../shared/ui/story-detail-drawer/story-detail-drawer';
 import { StoryFormDialog } from '../../ui/story-form-dialog/story-form-dialog';
 
 @Component({

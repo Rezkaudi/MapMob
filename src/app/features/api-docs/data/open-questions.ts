@@ -17,5 +17,7 @@ export const OPEN_QUESTIONS: readonly string[] = [
   'Do changes a place owner saves (PUT /owner/place, products, media) go live at once, or wait for an admin to check them?',
   'Stories need a plan limit (plans.limit_active_stories), but the admin plan form has no field for it and GET /owner/subscription does not list it. Add it to both, and what is the limit of each tier? The stories screen shows 5 on the free plan.',
   'How long are expired stories kept? GET /owner/stories returns all of them, unpaged. If they are kept for good, cap the answer (for example the last 30 days) or page the expired list.',
+  'The roles matrix has no "stories" module, so this reference guards /stories with the places permissions. Add its own module instead?',
+  'When an admin hides a story, what does its owner see? This reference still returns it from GET /owner/stories as active, and still counts it toward activeStoryLimit. Should the owner get status hidden and a notification, and should a hidden story free its room in the plan?',
   'Which call of the customer app counts a story view, and is it one view per user or one per open? This reference only reads place_stories.view_count.',
 ];

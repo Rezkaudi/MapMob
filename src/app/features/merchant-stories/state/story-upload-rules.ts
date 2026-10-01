@@ -1,7 +1,7 @@
 import { PICTURE_RULES } from '../../../shared/files/picture-rules';
 import { VIDEO_RULES } from '../../../shared/files/video-rules';
 import { findFileError } from '../../../shared/ui/media-picker/file-rules';
-import { StoryMediaKind } from '../models/story-media-kind';
+import { StoryMediaKind } from '../../../shared/models/story-media-kind';
 
 const VIDEO_TYPE_PREFIX = 'video/';
 const TYPE_MESSAGE = 'يُسمح بصور JPG و PNG وملفات الفيديو فقط';
