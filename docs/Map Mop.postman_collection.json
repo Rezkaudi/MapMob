@@ -24,11 +24,6 @@
                     "type": "text"
                   },
                   {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
                     "key": "Accept-Language",
                     "value": "en",
                     "type": "text"
@@ -39,16 +34,15 @@
                   "formdata": [
                     {
                       "key": "name",
-                      "value": "obedah",
+                      "value": "test",
                       "type": "text",
                       "uuid": "b929a338-9da9-4003-9ea4-50773f1e0c30"
                     },
                     {
                       "key": "email",
-                      "value": "obedah@gmail.com",
+                      "value": "obedah9600@gmail.com",
                       "type": "text",
-                      "uuid": "0b2eeb46-9c93-450a-bedb-765e4cdf0d35",
-                      "disabled": true
+                      "uuid": "0b2eeb46-9c93-450a-bedb-765e4cdf0d35"
                     },
                     {
                       "key": "password",
@@ -72,7 +66,8 @@
                       "key": "phone",
                       "value": "963936318327",
                       "type": "text",
-                      "uuid": "5ac08842-d30e-4c9c-b31e-23eaa98974ed"
+                      "uuid": "5ac08842-d30e-4c9c-b31e-23eaa98974ed",
+                      "disabled": true
                     }
                   ]
                 },
@@ -97,11 +92,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   },
@@ -147,30 +137,32 @@
                   ]
                 }
               },
-              "response": []
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const body = pm.response.json();",
+                      "if (body.data && body.data.token) {",
+                      "    pm.collectionVariables.set('token', body.data.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "verify-otp",
               "request": {
                 "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "noauth"
                 },
                 "method": "POST",
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -179,7 +171,7 @@
                   "mode": "formdata",
                   "formdata": [
                     {
-                      "key": "phone",
+                      "key": "identifier",
                       "value": "963936318327",
                       "type": "text",
                       "uuid": "fb7a67d8-8355-446d-842a-1bf5cadd5cae"
@@ -210,24 +202,12 @@
               "name": "forgotPassword",
               "request": {
                 "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "noauth"
                 },
                 "method": "POST",
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -237,7 +217,7 @@
                   "formdata": [
                     {
                       "key": "identifier",
-                      "value": "963936318327",
+                      "value": "obedah9600@gmail.com",
                       "type": "text",
                       "uuid": "5f10bb5a-2fdf-41ce-8e5f-00a323156885"
                     }
@@ -261,24 +241,12 @@
               "name": "resetPassword",
               "request": {
                 "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "noauth"
                 },
                 "method": "POST",
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -335,11 +303,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -386,11 +349,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -429,6 +387,41 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "logout",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/auth/logout",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -442,11 +435,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -517,12 +505,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{mapurl}}/api/location",
+                  "raw": "{{mapurl}}/api/auth/location",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
+                    "auth",
                     "location"
                   ]
                 }
@@ -565,12 +554,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{mapurl}}/api/location",
+                  "raw": "{{mapurl}}/api/auth/location",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
+                    "auth",
                     "location"
                   ]
                 }
@@ -593,12 +583,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{mapurl}}/api/location",
+                  "raw": "{{mapurl}}/api/auth/location",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
+                    "auth",
                     "location"
                   ]
                 }
@@ -621,12 +612,13 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{mapurl}}/api/location",
+                  "raw": "{{mapurl}}/api/auth/location",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
+                    "auth",
                     "location"
                   ]
                 }
@@ -655,11 +647,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -695,11 +682,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -789,11 +771,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -850,11 +827,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -920,11 +892,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -962,11 +929,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -982,6 +944,393 @@
                     "api",
                     "reports",
                     "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "region and city",
+          "item": [
+            {
+              "name": "regions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/regions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "regions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "region cities",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/regions/1/cities",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "regions",
+                    "1",
+                    "cities"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "map",
+          "item": [
+            {
+              "name": "stories in map",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/map/locations",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "map",
+                    "locations"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "categories",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/categories",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "favorites",
+          "item": [
+            {
+              "name": "favorite",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "store_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "b80c46c4-d34b-470f-a608-25500d61929e"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/api/favorites/toggle",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "favorites",
+                    "toggle"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "favorites",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/favorites",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "favorites"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "stores",
+          "item": [
+            {
+              "name": "store by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store reviews",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/1/reviews",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "1",
+                    "reviews"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store offers",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/1/offers",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "1",
+                    "offers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store media",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/1/media",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "1",
+                    "media"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "reviews",
+          "item": [
+            {
+              "name": "review",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "rating",
+                      "value": "4",
+                      "type": "text",
+                      "uuid": "82b56f77-a25e-4f0d-b235-6d1397006b50"
+                    },
+                    {
+                      "key": "comment",
+                      "value": "جميل",
+                      "type": "text",
+                      "uuid": "c6dce5e5-fdff-4ea2-926f-8edd7173b29d"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/api/auth/stores/1/reviews",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "stores",
+                    "1",
+                    "reviews"
                   ]
                 }
               },
@@ -1064,11 +1413,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1092,7 +1436,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{token}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -1101,11 +1445,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -1132,7 +1471,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{token}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -1176,7 +1515,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{token}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -1185,11 +1524,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -1280,11 +1614,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1317,11 +1646,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -1408,11 +1732,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1453,11 +1772,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -1490,7 +1804,7 @@
                     },
                     {
                       "key": "slug",
-                      "value": "restaurants 1",
+                      "value": "restaurants-1",
                       "type": "text"
                     },
                     {
@@ -1547,11 +1861,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -1660,11 +1969,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/vnd.api+json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1698,11 +2002,6 @@
                   {
                     "key": "Accept",
                     "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/vnd.api+json",
                     "type": "text"
                   }
                 ],
@@ -1738,11 +2037,6 @@
                   {
                     "key": "Accept",
                     "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/vnd.api+json",
                     "type": "text"
                   }
                 ],
@@ -1784,11 +2078,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -1800,53 +2089,64 @@
                       "type": "text"
                     },
                     {
-                      "key": "region_id",
-                      "value": "1",
-                      "type": "text"
-                    },
-                    {
-                      "key": "city_id",
-                      "value": "1",
-                      "type": "text"
-                    },
-                    {
-                      "key": "type",
-                      "value": "store",
-                      "type": "text"
-                    },
-                    {
                       "key": "name[ar]",
                       "value": "متجر دمشق المركزي",
                       "type": "text"
                     },
                     {
                       "key": "name[en]",
-                      "value": "damascusCentral Store",
-                      "type": "text"
-                    },
-                    {
-                      "key": "slug",
-                      "value": "damascus-central-store",
+                      "value": "Damascus Central Store",
                       "type": "text"
                     },
                     {
                       "key": "description[ar]",
-                      "value": "متجر لبيع المنتجات الغذائية والاستهلاكية في مدينة دمشق",
+                      "value": "متجر لبيع المواد الغذائية والتموين",
                       "type": "text"
                     },
                     {
                       "key": "description[en]",
-                      "value": "A store selling food and consumer products in damascus city",
+                      "value": "Grocery and food items store",
                       "type": "text"
                     },
                     {
-                      "key": "activity_type",
-                      "value": "مواد غذائية واستهلاكية",
+                      "key": "address[ar]",
+                      "value": "شارع الجلاء، بناء 4",
                       "type": "text"
                     },
                     {
-                      "key": "established_year",
-                      "value": "2020",
+                      "key": "address[en]",
+                      "value": "Al-Jalaa Street, Building 4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "mainCategoryId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "subCategoryId",
+                      "value": "7",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "governorateId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "areaId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "latitude",
+                      "value": "33.5138",
+                      "type": "text"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "36.2765",
                       "type": "text"
                     },
                     {
@@ -1855,38 +2155,13 @@
                       "type": "text"
                     },
                     {
-                      "key": "whatsapp",
-                      "value": "0931234567",
-                      "type": "text"
-                    },
-                    {
-                      "key": "email",
-                      "value": "damascus@example.com",
-                      "type": "text"
-                    },
-                    {
                       "key": "website",
                       "value": "https://example.com",
                       "type": "text"
                     },
                     {
-                      "key": "address[ar]",
-                      "value": "شارع الجمهورية، مدينة دمشق",
-                      "type": "text"
-                    },
-                    {
-                      "key": "address[en]",
-                      "value": "Al-Joumhourieh Street, damascus",
-                      "type": "text"
-                    },
-                    {
-                      "key": "latitude",
-                      "value": "34.8890",
-                      "type": "text"
-                    },
-                    {
-                      "key": "longitude",
-                      "value": "35.8866",
+                      "key": "whatsapp",
+                      "value": "0931234567",
                       "type": "text"
                     },
                     {
@@ -1895,31 +2170,79 @@
                       "type": "text"
                     },
                     {
-                      "key": "category_ids[]",
+                      "key": "workingHours[0][day]",
+                      "value": "saturday",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[0][isOpen]",
+                      "value": "false",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][day]",
+                      "value": "sunday",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][isOpen]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][openTime]",
+                      "value": "09:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][closeTime]",
+                      "value": "18:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[0][platformId]",
                       "value": "1",
                       "type": "text"
                     },
                     {
-                      "key": "category_ids[]",
-                      "value": "7",
-                      "type": "text",
-                      "disabled": true
+                      "key": "deliveryLinks[0][isEnabled]",
+                      "value": "true",
+                      "type": "text"
                     },
                     {
-                      "key": "primary_category_iduser_id",
-                      "value": "10",
-                      "type": "text",
-                      "disabled": true
+                      "key": "deliveryLinks[0][storeUrl]",
+                      "value": "https://beeorder.sy/store/damascus-central",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][name]",
+                      "value": "مرتديلا",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][price]",
+                      "value": "12000",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][currency]",
+                      "value": "SYP",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][isAvailable]",
+                      "value": "true",
+                      "type": "text"
                     },
                     {
                       "key": "logo",
                       "type": "file",
-                      "src": "/C:/Users/obedah/Downloads/مطعم.jpg"
+                      "src": "/C:/Users/obedah/Downloads/متجر السعادة.jpg"
                     },
                     {
                       "key": "cover_image",
                       "type": "file",
-                      "src": "/C:/Users/obedah/Downloads/الكمبيوتر وملحقاته.jpg"
+                      "src": "/C:/Users/obedah/Downloads/متجر السعادة 2.jpg"
                     }
                   ]
                 },
@@ -1944,7 +2267,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{token}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -1955,69 +2278,76 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
                     {
-                      "key": "user_id",
-                      "value": "12",
-                      "type": "text"
-                    },
-                    {
-                      "key": "region_id",
-                      "value": "2",
-                      "type": "text"
-                    },
-                    {
-                      "key": "city_id",
-                      "value": "5",
-                      "type": "text"
-                    },
-                    {
-                      "key": "type",
-                      "value": "supermarket",
-                      "type": "text"
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "0a347397-cee1-49c6-9273-d68559e552b9"
                     },
                     {
                       "key": "name[ar]",
-                      "value": "سوبر ماركت طرطوس المركزي",
+                      "value": "متجر دمشق المركزي - الفرع الرئيسي",
                       "type": "text"
                     },
                     {
                       "key": "name[en]",
-                      "value": "Tartous Central Supermarket",
+                      "value": "Damascus Central Store - Main Branch",
                       "type": "text"
                     },
                     {
-                      "key": "slug",
-                      "value": "tartous-central-supermarket",
+                      "key": "ownerName",
+                      "value": "عبيدة شعبان",
                       "type": "text"
                     },
                     {
-                      "key": "description[ar]",
-                      "value": "سوبر ماركت متكامل في مدينة طرطوس",
+                      "key": "ownerPhone",
+                      "value": "0931234567",
                       "type": "text"
                     },
                     {
-                      "key": "description[en]",
-                      "value": "A complete supermarket in Tartous city",
+                      "key": "mainCategoryId",
+                      "value": "1",
                       "type": "text"
                     },
                     {
-                      "key": "activity_type",
-                      "value": "مواد غذائية واستهلاكية",
+                      "key": "subCategoryId",
+                      "value": "7",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "governorateId",
+                      "value": "1",
                       "type": "text"
                     },
                     {
-                      "key": "established_year",
-                      "value": "2022",
+                      "key": "areaId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address[ar]",
+                      "value": "شارع الجلاء، بناء 4، المزة",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address[en]",
+                      "value": "Al-Jalaa Street, Building 4, Mazzeh",
+                      "type": "text"
+                    },
+                    {
+                      "key": "latitude",
+                      "value": "33.5138",
+                      "type": "text"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "36.2765",
                       "type": "text"
                     },
                     {
@@ -2026,38 +2356,28 @@
                       "type": "text"
                     },
                     {
-                      "key": "whatsapp",
-                      "value": "0931234567",
-                      "type": "text"
-                    },
-                    {
-                      "key": "email",
-                      "value": "tartous.central@example.com",
-                      "type": "text"
-                    },
-                    {
                       "key": "website",
                       "value": "https://example.com",
                       "type": "text"
                     },
                     {
-                      "key": "address[ar]",
-                      "value": "شارع الجمهورية، جانب ساحة طرطوس",
+                      "key": "whatsapp",
+                      "value": "0931234567",
                       "type": "text"
                     },
                     {
-                      "key": "address[en]",
-                      "value": "Al-Joumhourieh Street, near Tartous Square",
+                      "key": "description[ar]",
+                      "value": "تعديل وصف المتجر - أحدث المواد الغذائية",
                       "type": "text"
                     },
                     {
-                      "key": "latitude",
-                      "value": "34.8890",
+                      "key": "description[en]",
+                      "value": "Updated store description - Latest food items",
                       "type": "text"
                     },
                     {
-                      "key": "longitude",
-                      "value": "35.8866",
+                      "key": "planId",
+                      "value": "1",
                       "type": "text"
                     },
                     {
@@ -2066,35 +2386,191 @@
                       "type": "text"
                     },
                     {
-                      "key": "category_ids[]",
-                      "value": "809",
+                      "key": "isLogoRemoved",
+                      "value": "false",
                       "type": "text"
                     },
                     {
-                      "key": "category_ids[]",
-                      "value": "815",
+                      "key": "keptImageIds[0]",
+                      "value": "1",
                       "type": "text"
                     },
                     {
-                      "key": "primary_category_id",
-                      "value": "809",
+                      "key": "keptImageIds[1]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "keptVideoIds[0]",
+                      "value": "12",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "workingHours[0][day]",
+                      "value": "saturday",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[0][isOpen]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[0][openTime]",
+                      "value": "10:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[0][closeTime]",
+                      "value": "16:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][day]",
+                      "value": "sunday",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][isOpen]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][openTime]",
+                      "value": "09:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "workingHours[1][closeTime]",
+                      "value": "20:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[0][platformId]",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[0][isEnabled]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[0][storeUrl]",
+                      "value": "https://beeorder.sy/store/damascus-central",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[1][platformId]",
+                      "value": "3",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[1][isEnabled]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "deliveryLinks[1][storeUrl]",
+                      "value": "https://toters.app/store/damascus-central",
                       "type": "text"
                     },
                     {
                       "key": "logo",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "images[0]",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "videos[0]",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "products[0][id]",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][name][ar]",
+                      "value": "مرتديلا ممتاز",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][name][en]",
+                      "value": "Premium Mortadella",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][price]",
+                      "value": "13500",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][currency]",
+                      "value": "SYP",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][isAvailable]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[0][image]",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "products[1][name][ar]",
+                      "value": "جبنة قشقوان",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[1][name][en]",
+                      "value": "Kashkaval Cheese",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[1][price]",
+                      "value": "25000",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[1][currency]",
+                      "value": "SYP",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[1][isAvailable]",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "products[1][image]",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "logo",
                       "type": "file",
-                      "value": null
+                      "src": "/C:/Users/obedah/Downloads/مطعم.jpg",
+                      "disabled": true
                     },
                     {
                       "key": "cover_image",
                       "type": "file",
-                      "value": null
-                    },
-                    {
-                      "key": "_method",
-                      "value": "PUT",
-                      "type": "text",
-                      "uuid": "0a347397-cee1-49c6-9273-d68559e552b9"
+                      "src": "/C:/Users/obedah/Downloads/ألعاب الفيديو.jpg"
                     }
                   ]
                 },
@@ -2131,11 +2607,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -2168,11 +2639,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -2217,15 +2683,217 @@
                     "type": "text"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"ids\": [\r\n    \"12\",\r\n    \"40\"\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores/1",
+                  "raw": "{{mapurl}}/admin/stores",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "statuscounts",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/places/statuscounts",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "places",
+                    "statuscounts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "stores status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "ids[0]",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "561bf924-2b80-4d2e-b09a-842517cc5be0"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "description": "active ,inactive",
+                      "type": "text",
+                      "uuid": "517935d6-07eb-41eb-904d-4006b2edb129"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/status",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "stores",
-                    "1"
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "form options",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/formoptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "formoptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer items",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/offer-items",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "offer-items"
                   ]
                 }
               },
@@ -2244,7 +2912,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{admintoken}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -2264,7 +2932,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"day_of_week\": 0,\r\n    \"is_open\": true,\r\n    \"open_time\": \"09:00\",\r\n    \"close_time\": \"18:00\"\r\n}",
+                  "raw": "{\r\n    \"day_of_week\": 1,\r\n    \"is_open\": true,\r\n    \"open_time\": \"08:00\",\r\n    \"close_time\": \"18:00\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2294,7 +2962,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{admintoken}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -2345,7 +3013,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{admintoken}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -2356,20 +3024,15 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}admin//stores/1/working-hours",
+                  "raw": "{{mapurl}}/admin/stores/1/working-hours",
                   "host": [
-                    "{{mapurl}}admin"
+                    "{{mapurl}}"
                   ],
                   "path": [
-                    "",
+                    "admin",
                     "stores",
                     "1",
                     "working-hours"
@@ -2386,7 +3049,7 @@
                   "bearer": [
                     {
                       "key": "token",
-                      "value": "{{admintoken}}",
+                      "value": "{{admin_token}}",
                       "type": "string"
                     }
                   ]
@@ -2395,11 +3058,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -2442,11 +3100,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -2510,7 +3163,7 @@
                     },
                     {
                       "key": "discounted_price",
-                      "value": "20",
+                      "value": "80",
                       "type": "text",
                       "uuid": "57bb845e-76fa-4bb7-b760-bc3935e7f973"
                     },
@@ -2522,13 +3175,13 @@
                     },
                     {
                       "key": "starts_at",
-                      "value": "22-9-2026",
+                      "value": "2026-09-22",
                       "type": "text",
                       "uuid": "6cd06937-6e23-4b06-8bc7-c8427250f099"
                     },
                     {
                       "key": "ends_at",
-                      "value": "22-12-2026",
+                      "value": "2026-12-22",
                       "type": "text",
                       "uuid": "8d8fcf07-9a29-4809-9b92-e3b8f688db33"
                     },
@@ -2578,11 +3231,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -2617,11 +3265,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -2649,14 +3292,14 @@
                       "disabled": true
                     },
                     {
-                      "key": "title.ar",
+                      "key": "title[ar]",
                       "value": "",
                       "type": "text",
                       "uuid": "5e66d1e1-8832-47e9-854b-446089a01cc9",
                       "disabled": true
                     },
                     {
-                      "key": "title.en",
+                      "key": "title[en]",
                       "value": "",
                       "type": "text",
                       "uuid": "91c63030-5367-47b5-ab5c-bea75f2f6de7",
@@ -2670,14 +3313,14 @@
                       "disabled": true
                     },
                     {
-                      "key": "description.ar",
+                      "key": "description[ar]",
                       "value": "",
                       "type": "text",
                       "uuid": "2a3eb309-5f41-4bd9-b05a-a0963bd761f6",
                       "disabled": true
                     },
                     {
-                      "key": "description.en",
+                      "key": "description[en]",
                       "value": "",
                       "type": "text",
                       "uuid": "2e25b6d1-0dbc-49e2-8b5f-bf82800ea727",
@@ -2720,7 +3363,7 @@
                     },
                     {
                       "key": "starts_at",
-                      "value": "21-9-2026",
+                      "value": "2026-09-21",
                       "type": "text",
                       "uuid": "6cd06937-6e23-4b06-8bc7-c8427250f099"
                     },
@@ -2753,6 +3396,76 @@
                     }
                   ]
                 },
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
                 "url": {
                   "raw": "{{mapurl}}/admin/offers/1",
                   "host": [
@@ -2876,6 +3589,160 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "products",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/products",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "product",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "product update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "150",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "product",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -2889,11 +3756,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -2926,6 +3788,89 @@
                   ]
                 }
               },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const body = pm.response.json();",
+                      "if (body.data && body.data.token) {",
+                      "    pm.collectionVariables.set('admin_token', body.data.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "me",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/auth/me",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "logout",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/logout",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "logout"
+                  ]
+                }
+              },
               "response": []
             }
           ]
@@ -2950,11 +3895,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -3006,13 +3946,13 @@
                     },
                     {
                       "key": "starts_at",
-                      "value": "22-9-2026",
+                      "value": "2026-09-22",
                       "type": "text",
                       "uuid": "033b1d7f-5085-434c-9620-33a73870f573"
                     },
                     {
                       "key": "ends_at",
-                      "value": "22-12-2026",
+                      "value": "2026-12-22",
                       "type": "text",
                       "uuid": "422c701d-912f-4a82-b133-b691ca8bb521"
                     },
@@ -3122,11 +4062,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "body": {
@@ -3176,13 +4111,13 @@
                     },
                     {
                       "key": "starts_at",
-                      "value": "22-9-2026",
+                      "value": "2026-09-22",
                       "type": "text",
                       "uuid": "033b1d7f-5085-434c-9620-33a73870f573"
                     },
                     {
                       "key": "ends_at",
-                      "value": "22-12-2026",
+                      "value": "2026-12-22",
                       "type": "text",
                       "uuid": "422c701d-912f-4a82-b133-b691ca8bb521"
                     },
@@ -3299,11 +4234,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -3336,11 +4266,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -3376,11 +4301,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -3423,11 +4343,6 @@
                     "key": "Accept",
                     "value": "application/json",
                     "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
                   }
                 ],
                 "url": {
@@ -3460,11 +4375,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -3500,11 +4410,6 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  },
-                  {
-                    "key": "Content-Type",
                     "value": "application/json",
                     "type": "text"
                   }
@@ -3548,6 +4453,796 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "dashboard",
+          "item": [
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/dashboard/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "dashboard",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "action-items",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/dashboard/action-items",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "dashboard",
+                    "action-items"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recent-places",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/dashboard/recent-places",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "dashboard",
+                    "recent-places"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "revenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/dashboard/revenue",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "dashboard",
+                    "revenue"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "growth",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/dashboard/growth",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "dashboard",
+                    "growth"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "plans",
+          "item": [
+            {
+              "name": "plan",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"الباقة الذهبية\",\r\n  \"slug\": \"golden-plan\",\r\n  \"price\": 150000.00,\r\n  \"currency_code\": \"SYP\",\r\n  \"duration_days\": 30,\r\n  \"max_ads\": 10,\r\n  \"max_offers\": 5,\r\n  \"max_products\": 100,\r\n  \"max_images\": 20,\r\n  \"features\": [\r\n    \"دعم فني على مدار الساعة\",\r\n    \"إحصائيات متقدمة للمتجر\",\r\n    \"أولوية الظهور في نتائج البحث\"\r\n  ],\r\n  \"is_active\": true,\r\n  \"sort_order\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "plans",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "plan",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "plan update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "150000",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "plan",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "subscriptions",
+          "item": [
+            {
+              "name": "subscription",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"store_id\": 1,\r\n  \"plan_id\": 1,\r\n  \"starts_at\": \"2026-10-04 00:00:00\",\r\n  \"ends_at\": \"2026-11-03 23:59:59\",\r\n  \"status\": \"active\",\r\n  \"auto_renew\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "subscriptions",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "subscription",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "subscription",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "store media",
+          "item": [
+            {
+              "name": "media",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "image",
+                      "type": "text",
+                      "uuid": "42f0d9cb-938d-4897-ae05-7025f9aef5cb"
+                    },
+                    {
+                      "key": "media",
+                      "type": "file",
+                      "uuid": "c4deb0f7-3881-4a74-992f-1126e40f35c2",
+                      "src": "/C:/Users/obedah/Downloads/كنزة.jpg"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "e209a1af-9494-46fd-890b-f56fe83f4231"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/media",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "media"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "media list",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/media",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "media"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "media",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/media/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "media",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "users",
+          "item": [
+            {
+              "name": "users",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/users",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/users/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/users/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
@@ -3555,6 +5250,11 @@
   "variable": [
     {
       "key": "mapurl",
+      "value": "https://api.mapmob.com.co",
+      "type": "default"
+    },
+    {
+      "key": "token",
       "value": "",
       "type": "default"
     },
