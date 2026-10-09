@@ -497,7 +497,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"latitude\": 33.5138,\r\n    \"longitude\": 36.2765,\r\n    \"region_id\": 1,\r\n    \"city_id\": 1\r\n}",
+                  "raw": "{\n    \"latitude\": 31.5199,\n    \"longitude\": 36.2799,\n    \"region_id\": 1,\n    \"city_id\": 1\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -505,14 +505,14 @@
                   }
                 },
                 "url": {
-                  "raw": "{{mapurl}}/api/auth/location",
+                  "raw": "{{mapurl}}/api/auth/locations",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
                     "auth",
-                    "location"
+                    "locations"
                   ]
                 }
               },
@@ -546,7 +546,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{ \r\n    \"_method\":\"PUT\",\r\n    \"latitude\": 33.5200,\r\n    \"longitude\": 36.2900,\r\n    \"region_id\": 1,\r\n    \"city_id\": 1\r\n}",
+                  "raw": "{ \r\n    \"_method\":\"PUT\",\r\n    \"latitude\": 33.5200,\r\n    \"longitude\": 36.2900,\r\n    \"region_id\": 1,\r\n    \"city_id\": 1,\r\n    \"selected\":1\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -554,14 +554,15 @@
                   }
                 },
                 "url": {
-                  "raw": "{{mapurl}}/api/auth/location",
+                  "raw": "{{mapurl}}/api/auth/locations/5",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
                     "auth",
-                    "location"
+                    "locations",
+                    "5"
                   ]
                 }
               },
@@ -581,16 +582,22 @@
                   ]
                 },
                 "method": "GET",
-                "header": [],
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
                 "url": {
-                  "raw": "{{mapurl}}/api/auth/location",
+                  "raw": "{{mapurl}}/api/auth/locations",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
                     "auth",
-                    "location"
+                    "locations"
                   ]
                 }
               },
@@ -610,16 +617,23 @@
                   ]
                 },
                 "method": "DELETE",
-                "header": [],
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
                 "url": {
-                  "raw": "{{mapurl}}/api/auth/location",
+                  "raw": "{{mapurl}}/api/auth/locations/1",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
                     "auth",
-                    "location"
+                    "locations",
+                    "1"
                   ]
                 }
               },
@@ -1020,7 +1034,7 @@
           "name": "map",
           "item": [
             {
-              "name": "stories in map",
+              "name": "stores in map",
               "request": {
                 "method": "GET",
                 "header": [
@@ -1031,7 +1045,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/api/stores/map/locations",
+                  "raw": "{{mapurl}}/api/stores/map/locations?filter=nearest&lat=34.859&lng=35.8836",
                   "host": [
                     "{{mapurl}}"
                   ],
@@ -1040,6 +1054,22 @@
                     "stores",
                     "map",
                     "locations"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter",
+                      "value": "nearest"
+                    },
+                    {
+                      "key": "lat",
+                      "value": "34.859",
+                      "type": "text"
+                    },
+                    {
+                      "key": "lng",
+                      "value": "35.8836",
+                      "type": "text"
+                    }
                   ]
                 }
               },
@@ -1168,17 +1198,22 @@
                     "key": "Accept-Language",
                     "value": "ar",
                     "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/api/stores/1",
+                  "raw": "{{mapurl}}/api/stores/18",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "api",
                     "stores",
-                    "1"
+                    "18"
                   ]
                 }
               },
@@ -1337,6 +1372,118 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "store service",
+          "item": [
+            {
+              "name": "store service",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/1/services",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "1",
+                    "services"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mapurl}}/api/search?q=happ",
+              "host": [
+                "{{mapurl}}"
+              ],
+              "path": [
+                "api",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "happ"
+                },
+                {
+                  "key": "category_id",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "stores by category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mapurl}}/api/categories/1/stores",
+              "host": [
+                "{{mapurl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "1",
+                "stores"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1374,7 +1521,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"name\": {\r\n        \"ar\": \"محافظة دمشق \",\r\n        \"en\": \"Damascus Governorate\"\r\n    },\r\n    \"slug\": \"Damascus_governorate\",\r\n    \"is_active\": true,\r\n    \"sort_order\": 1\r\n}",
+                  "raw": "{\r\n    \"name\": {\r\n        \"ar\": \"محافظة طرطوس \",\r\n        \"en\": \"tartous Governorate\"\r\n    },\r\n    \"slug\": \"Tartous_governorate\",\r\n    \"is_active\": true,\r\n    \"sort_order\": 2\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1575,7 +1722,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"region_id\":1,\r\n    \"name\": {\r\n        \"ar\": \"داريا\",\r\n        \"en\": \"darayya\"\r\n    },\r\n    \"slug\":\"darayya\",\r\n    \"is_active\":1,\r\n    \"sort_order\":1\r\n}",
+                  "raw": "{\r\n    \"region_id\":6,\r\n    \"name\": {\r\n        \"ar\": \"مدينة طرطوس\",\r\n        \"en\": \"tartus city\"\r\n    },\r\n    \"slug\":\"tartus_city\",\r\n    \"is_active\":1,\r\n    \"sort_order\":2\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1780,31 +1927,32 @@
                     {
                       "key": "parent_id",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "name[ar]",
-                      "value": "مطاعم",
+                      "value": "متجر",
                       "type": "text"
                     },
                     {
                       "key": "name[en]",
-                      "value": "Restaurants",
+                      "value": "store",
                       "type": "text"
                     },
                     {
                       "key": "description[ar]",
-                      "value": "تصنيف المطاعم والمأكولات",
+                      "value": "تصميف المتاجر",
                       "type": "text"
                     },
                     {
                       "key": "description[en]",
-                      "value": "Restaurants and food category",
+                      "value": "store",
                       "type": "text"
                     },
                     {
                       "key": "slug",
-                      "value": "restaurants-1",
+                      "value": "store",
                       "type": "text"
                     },
                     {
@@ -1814,18 +1962,18 @@
                     },
                     {
                       "key": "sort_order",
-                      "value": "1",
+                      "value": "3",
                       "type": "text"
                     },
                     {
                       "key": "icon",
                       "type": "file",
                       "uuid": "1f9cc047-3eac-433d-a734-8e9501e5c432",
-                      "src": "/C:/Users/obedah/Downloads/resturant.jpg"
+                      "src": "/C:/Users/obedah/Downloads/متاجر.jpg"
                     },
                     {
                       "key": "icon_color",
-                      "value": "#FF8104",
+                      "value": "#FF8109",
                       "type": "text",
                       "uuid": "ed94e780-45c9-4cc9-88d5-b089009556e0"
                     }
@@ -2085,42 +2233,42 @@
                   "formdata": [
                     {
                       "key": "user_id",
-                      "value": "1",
+                      "value": "8",
                       "type": "text"
                     },
                     {
                       "key": "name[ar]",
-                      "value": "متجر دمشق المركزي",
+                      "value": "متجر طرطوس المركزي",
                       "type": "text"
                     },
                     {
                       "key": "name[en]",
-                      "value": "Damascus Central Store",
+                      "value": "tartus central store",
                       "type": "text"
                     },
                     {
                       "key": "description[ar]",
-                      "value": "متجر لبيع المواد الغذائية والتموين",
+                      "value": "المتجر الرئيسي لجميع انواع المنتجات",
                       "type": "text"
                     },
                     {
                       "key": "description[en]",
-                      "value": "Grocery and food items store",
+                      "value": "all product type",
                       "type": "text"
                     },
                     {
                       "key": "address[ar]",
-                      "value": "شارع الجلاء، بناء 4",
+                      "value": "طرطوس مقابل الكراج",
                       "type": "text"
                     },
                     {
                       "key": "address[en]",
-                      "value": "Al-Jalaa Street, Building 4",
+                      "value": "tartus center city",
                       "type": "text"
                     },
                     {
                       "key": "mainCategoryId",
-                      "value": "1",
+                      "value": "9",
                       "type": "text"
                     },
                     {
@@ -2141,27 +2289,27 @@
                     },
                     {
                       "key": "latitude",
-                      "value": "33.5138",
+                      "value": "34.5138",
                       "type": "text"
                     },
                     {
                       "key": "longitude",
-                      "value": "36.2765",
+                      "value": "35.2766",
                       "type": "text"
                     },
                     {
                       "key": "phone",
-                      "value": "0931234567",
+                      "value": "0931212356",
                       "type": "text"
                     },
                     {
                       "key": "website",
-                      "value": "https://example.com",
+                      "value": "https://store.com",
                       "type": "text"
                     },
                     {
                       "key": "whatsapp",
-                      "value": "0931234567",
+                      "value": "0931238888",
                       "type": "text"
                     },
                     {
@@ -2172,77 +2320,104 @@
                     {
                       "key": "workingHours[0][day]",
                       "value": "saturday",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "workingHours[0][isOpen]",
                       "value": "false",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "workingHours[1][day]",
                       "value": "sunday",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "workingHours[1][isOpen]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "workingHours[1][openTime]",
                       "value": "09:00",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "workingHours[1][closeTime]",
                       "value": "18:00",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][platformId]",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][isEnabled]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][storeUrl]",
                       "value": "https://beeorder.sy/store/damascus-central",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "products[0][name]",
                       "value": "مرتديلا",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "products[0][price]",
                       "value": "12000",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "products[0][currency]",
                       "value": "SYP",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "products[0][isAvailable]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "logo",
                       "type": "file",
-                      "src": "/C:/Users/obedah/Downloads/متجر السعادة.jpg"
+                      "src": "/C:/Users/obedah/Downloads/صورة متجر 1.jpg"
                     },
                     {
                       "key": "cover_image",
                       "type": "file",
-                      "src": "/C:/Users/obedah/Downloads/متجر السعادة 2.jpg"
+                      "src": "/C:/Users/obedah/Downloads/متجر3.jpg"
+                    },
+                    {
+                      "key": "activity_type",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "cad71fb5-42ae-406a-95bf-a306fda4d8c3",
+                      "disabled": true
+                    },
+                    {
+                      "key": "established_year",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "4f638c30-0143-4a25-bf80-5b0b00f79ad5",
+                      "disabled": true
                     }
                   ]
                 },
@@ -2610,13 +2785,26 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores",
+                  "raw": "{{mapurl}}/admin/stores?plan_tier=free",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "stores"
+                  ],
+                  "query": [
+                    {
+                      "key": "plan_tier",
+                      "value": "free",
+                      "description": "free ,golden-plan"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "name_asc",
+                      "description": "oldest,name_asc,name_desc,rating_desc,rating_asc",
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -2772,7 +2960,7 @@
                     },
                     {
                       "key": "status",
-                      "value": "active",
+                      "value": "inactive",
                       "description": "active ,inactive",
                       "type": "text",
                       "uuid": "517935d6-07eb-41eb-904d-4006b2edb129"
@@ -2932,7 +3120,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"day_of_week\": 1,\r\n    \"is_open\": true,\r\n    \"open_time\": \"08:00\",\r\n    \"close_time\": \"18:00\"\r\n}",
+                  "raw": "{\r\n    \"day_of_week\": 5,\r\n    \"is_open\": true,\r\n    \"open_time\": \"08:00\",\r\n    \"close_time\": \"23:00\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -3499,7 +3687,13 @@
                   ]
                 },
                 "method": "POST",
-                "header": [],
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
@@ -4584,7 +4778,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/dashboard/revenue",
+                  "raw": "{{mapurl}}/admin/dashboard/revenue?period=yearly",
                   "host": [
                     "{{mapurl}}"
                   ],
@@ -4592,6 +4786,12 @@
                     "admin",
                     "dashboard",
                     "revenue"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "yearly"
+                    }
                   ]
                 }
               },
@@ -4619,7 +4819,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/dashboard/growth",
+                  "raw": "{{mapurl}}/admin/dashboard/growth?period=weekly",
                   "host": [
                     "{{mapurl}}"
                   ],
@@ -4627,6 +4827,13 @@
                     "admin",
                     "dashboard",
                     "growth"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "weekly",
+                      "type": "text"
+                    }
                   ]
                 }
               },
@@ -5127,6 +5334,523 @@
                     "stores",
                     "1",
                     "media",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "store service",
+          "item": [
+            {
+              "name": "service",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/services",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "services"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "service",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "خدمة توصيل",
+                      "type": "text",
+                      "uuid": "5227329b-244a-46f2-922d-32d0bc044d27"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "delivery service",
+                      "type": "text",
+                      "uuid": "6e55cdea-21e2-49b6-a560-d8ae26c281cc"
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "نقوم بتوصيل المنتجات",
+                      "type": "text",
+                      "uuid": "2fa24dbe-9bbf-460b-9857-05b0a50f2ddc"
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "deliver the products",
+                      "type": "text",
+                      "uuid": "f9f4e150-a310-4a15-a4d9-b4bf704974e8"
+                    },
+                    {
+                      "key": "icon",
+                      "type": "file",
+                      "uuid": "6659dd70-fb06-443f-8716-107b680e7795",
+                      "src": "/C:/Users/obedah/Downloads/الالكترونيات.jpg"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "09fb240f-357f-4988-b0aa-d577bbcf93df"
+                    },
+                    {
+                      "key": "store_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "dc5784ac-0280-46aa-b1f5-4632c34eba89"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/services",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "services"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "service",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/services/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "services",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "service update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    },
+                    {
+                      "key": "store_id",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[ar]",
+                      "value": "خدمة توصيل",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "delivery service",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/services/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "services",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "service",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/services/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "services",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "StoreDeliveryLink",
+          "item": [
+            {
+              "name": "delivery link",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "platform",
+                      "value": "tawseel",
+                      "type": "text",
+                      "uuid": "6347e185-80fa-49d0-a231-8be06e00ddf1"
+                    },
+                    {
+                      "key": "url",
+                      "value": "https://tawseel.com",
+                      "type": "text",
+                      "uuid": "9cb59caf-bc1d-4f8d-80bc-730bc62f8422"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "4c99af72-a68b-43a7-850c-da4cb4f67b81"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "6e2e2654-794b-4eb7-91d1-9bb042939e24"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/delivery-links",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "delivery-links"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delivery link update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "platform",
+                      "value": "tawseel",
+                      "type": "text",
+                      "uuid": "6347e185-80fa-49d0-a231-8be06e00ddf1"
+                    },
+                    {
+                      "key": "url",
+                      "value": "https://tawseel.com",
+                      "type": "text",
+                      "uuid": "9cb59caf-bc1d-4f8d-80bc-730bc62f8422"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "4c99af72-a68b-43a7-850c-da4cb4f67b81"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "6e2e2654-794b-4eb7-91d1-9bb042939e24"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "5604ebbd-06aa-41f9-b0b5-64699519541e"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/delivery-links/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "delivery-links",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store delivery links",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/delivery-links",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "delivery-links"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store delivery link",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/delivery-links/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "delivery-links",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete delivery link",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/1/delivery-links/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "1",
+                    "delivery-links",
                     "1"
                   ]
                 }
