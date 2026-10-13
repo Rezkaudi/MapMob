@@ -56,12 +56,15 @@ describe('PlaceHttpRepository', () => {
     expect(await response).toEqual({ items: [], totalCount: 0 });
   });
 
-  it('sends no sort for newest or rating, which the server does not sort by', () => {
+  it('asks for the best rated first, and sends no sort for newest', () => {
     repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'rating' }).subscribe();
+    repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'newest' }).subscribe();
 
-    const request = http.expectOne((candidate) => candidate.url === STORES_URL);
-    expect(request.request.params.has('sort_by')).toBe(false);
-    request.flush({ items: [], totalCount: 0 });
+    const [byRating, newest] = http.match((candidate) => candidate.url === STORES_URL);
+    expect(byRating.request.params.get('sort_by')).toBe('rating_desc');
+    expect(newest.request.params.has('sort_by')).toBe(false);
+    byRating.flush({ items: [], totalCount: 0 });
+    newest.flush({ items: [], totalCount: 0 });
   });
 
   it('reads the status counts', async () => {

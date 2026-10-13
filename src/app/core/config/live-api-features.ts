@@ -4,6 +4,8 @@ import { ApiFeatureName } from './api-feature-name';
 export const LIVE_API_FEATURES: readonly ApiFeatureName[] = [
   'auth',
   'dashboard',
-  'regions',
+  'offers',
   'places',
+  'regions',
+  'users',
 ];

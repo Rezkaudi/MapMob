@@ -1676,14 +1676,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/regions/3",
+                  "raw": "{{mapurl}}/admin/regions/6",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "regions",
-                    "3"
+                    "6"
                   ]
                 }
               },
@@ -2024,15 +2024,13 @@
                     },
                     {
                       "key": "name[ar]",
-                      "value": "مطاعم سورية",
-                      "type": "text",
-                      "disabled": true
+                      "value": "مطاعم 1",
+                      "type": "text"
                     },
                     {
                       "key": "name[en]",
-                      "value": "Syrian Restaurants",
-                      "type": "text",
-                      "disabled": true
+                      "value": "Restaurants 1",
+                      "type": "text"
                     },
                     {
                       "key": "description[ar]",
@@ -2074,25 +2072,27 @@
                       "key": "icon",
                       "type": "file",
                       "uuid": "63374f36-1ee0-424f-bd70-56ba19a9a75a",
-                      "src": "/C:/Users/obedah/Downloads/هنا عرض.jpg"
+                      "src": "/C:/Users/obedah/Downloads/هنا عرض.jpg",
+                      "disabled": true
                     },
                     {
                       "key": "icon_color",
                       "value": "#FF8104",
                       "type": "text",
-                      "uuid": "ee2ca780-8971-48e4-a746-1693793eaba6"
+                      "uuid": "ee2ca780-8971-48e4-a746-1693793eaba6",
+                      "disabled": true
                     }
                   ]
                 },
                 "url": {
-                  "raw": "{{mapurl}}/admin/categories/2",
+                  "raw": "{{mapurl}}/admin/categories/1",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "categories",
-                    "2"
+                    "1"
                   ]
                 }
               },
@@ -2127,6 +2127,26 @@
                   "path": [
                     "admin",
                     "categories"
+                  ],
+                  "query": [
+                    {
+                      "key": "parent_id",
+                      "value": "",
+                      "description": "null or value",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -2785,7 +2805,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores?plan_tier=free",
+                  "raw": "{{mapurl}}/admin/stores?search=happy",
                   "host": [
                     "{{mapurl}}"
                   ],
@@ -2797,13 +2817,19 @@
                     {
                       "key": "plan_tier",
                       "value": "free",
-                      "description": "free ,golden-plan"
+                      "description": "free ,golden-plan",
+                      "disabled": true
                     },
                     {
                       "key": "sort_by",
                       "value": "name_asc",
                       "description": "oldest,name_asc,name_desc,rating_desc,rating_asc",
                       "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "happy",
+                      "type": "text"
                     }
                   ]
                 }
@@ -3429,6 +3455,53 @@
                   "path": [
                     "admin",
                     "offers"
+                  ],
+                  "query": [
+                    {
+                      "key": "store_id",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "product_id",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_featured",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "starts_from",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "starts_to",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "ends_from",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "ends_to",
+                      "value": null,
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -3599,6 +3672,148 @@
               "response": []
             },
             {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "formoptions",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/formoptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "formoptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "pause offer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/1/pause",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "1",
+                    "pause"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer resume",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/1/resume",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "1",
+                    "resume"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "offer",
               "request": {
                 "auth": {
@@ -3628,6 +3843,41 @@
                     "admin",
                     "offers",
                     "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export offers",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/offers/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "offers",
+                    "export"
                   ]
                 }
               },
@@ -3741,7 +3991,7 @@
                     },
                     {
                       "key": "currency_code",
-                      "value": "ل.س",
+                      "value": "SYP",
                       "type": "text",
                       "uuid": "ed20a556-d680-4820-b1ae-17983a5ddced"
                     },
@@ -3813,6 +4063,31 @@
                   "path": [
                     "admin",
                     "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "store_id",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "category_id",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "description": "active,inactive",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -5443,59 +5718,21 @@
                     },
                     {
                       "key": "store_id",
-                      "value": "1",
+                      "value": "4",
                       "type": "text",
                       "uuid": "dc5784ac-0280-46aa-b1f5-4632c34eba89"
                     }
                   ]
                 },
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores/1/services",
+                  "raw": "{{mapurl}}/admin/stores/services",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "stores",
-                    "1",
                     "services"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "service",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{admin_token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "url": {
-                  "raw": "{{mapurl}}/admin/stores/1/services/1",
-                  "host": [
-                    "{{mapurl}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "stores",
-                    "1",
-                    "services",
-                    "1"
                   ]
                 }
               },
@@ -5528,16 +5765,12 @@
                     {
                       "key": "_method",
                       "value": "PUT",
-                      "type": "text"
-                    },
-                    {
-                      "key": "store_id",
-                      "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "uuid": "0a124352-b3d1-485a-a92b-0f479099e33f"
                     },
                     {
                       "key": "name[ar]",
-                      "value": "خدمة توصيل",
+                      "value": "خدمة توصيل1",
                       "type": "text"
                     },
                     {
@@ -5546,23 +5779,74 @@
                       "type": "text"
                     },
                     {
+                      "key": "description[ar]",
+                      "value": "نقوم بتوصيل المنتجات",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "deliver the products",
+                      "type": "text"
+                    },
+                    {
                       "key": "is_active",
+                      "value": "1",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "store_id",
                       "value": "1",
                       "type": "text"
                     }
                   ]
                 },
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores/1/services/1",
+                  "raw": "{{mapurl}}/admin/stores/services/3",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "stores",
-                    "1",
                     "services",
-                    "1"
+                    "3"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "service",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stores/services/3",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stores",
+                    "services",
+                    "3"
                   ]
                 }
               },
@@ -5590,16 +5874,15 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/stores/1/services/1",
+                  "raw": "{{mapurl}}/admin/stores/services/3",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "stores",
-                    "1",
                     "services",
-                    "1"
+                    "3"
                   ]
                 }
               },
@@ -5897,6 +6180,95 @@
               "response": []
             },
             {
+              "name": "users export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/users/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "status",
+                      "value": "suspended",
+                      "description": "active ,suspended",
+                      "type": "text",
+                      "uuid": "a150d850-7fd3-44c6-9f36-2cb9b5292622"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PATCH",
+                      "type": "text",
+                      "uuid": "fc0b139a-81d5-4e55-8d07-4859fafc8b3c"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/users/5/status",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "5",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "user",
               "request": {
                 "auth": {
@@ -5918,14 +6290,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/users/1",
+                  "raw": "{{mapurl}}/admin/users/5",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "users",
-                    "1"
+                    "5"
                   ]
                 }
               },
@@ -5953,13 +6325,339 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/users/1",
+                  "raw": "{{mapurl}}/admin/users/999999",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "users",
+                    "999999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "reviews",
+          "item": [
+            {
+              "name": "reviews",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "reviews summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "reviews export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "review",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "report-accept",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "admin_notes",
+                      "value": "حسنا انا موافق",
+                      "type": "text",
+                      "uuid": "f498a1b4-058a-4023-81e1-2af97f792fff"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/1/report/accept",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "1",
+                    "report",
+                    "accept"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "report-reject",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "admin_notes",
+                      "value": "غير مقبول ",
+                      "type": "text",
+                      "uuid": "f498a1b4-058a-4023-81e1-2af97f792fff"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/1/report/reject",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "1",
+                    "report",
+                    "reject"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "review status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "_method",
+                      "value": "PATCH",
+                      "type": "text"
+                    },
+                    {
+                      "key": "status",
+                      "value": "hidden",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/1/status",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
+                    "1",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "review",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reviews/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reviews",
                     "1"
                   ]
                 }

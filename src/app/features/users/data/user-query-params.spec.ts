@@ -1,34 +1,39 @@
-import { toUserQueryParams } from './user-query-params';
+import { toUserFilterParams, toUserQueryParams } from './user-query-params';
 
 describe('toUserQueryParams', () => {
-  it('sends the page and only the filters that are set', () => {
+  it('sends the page from 1, the page size and the filters the server knows', () => {
     const params = toUserQueryParams({
       pageIndex: 2,
       pageSize: 6,
       search: 'أحمد',
       sort: 'newest',
-      accountType: 'visitor',
       status: 'suspended',
       registeredFrom: '2026-08-01',
       registeredTo: '2026-09-02',
     });
 
     expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
-      ['pageIndex', '2'],
-      ['pageSize', '6'],
+      ['role', 'customer'],
       ['search', 'أحمد'],
-      ['sort', 'newest'],
-      ['accountType', 'visitor'],
       ['status', 'suspended'],
-      ['registeredFrom', '2026-08-01'],
-      ['registeredTo', '2026-09-02'],
+      ['page', '3'],
+      ['per_page', '6'],
     ]);
   });
 
   it('leaves out filters that are not set', () => {
     expect(toUserQueryParams({ pageIndex: 0, pageSize: 6 }).keys()).toEqual([
-      'pageIndex',
-      'pageSize',
+      'role',
+      'page',
+      'per_page',
     ]);
+  });
+});
+
+describe('toUserFilterParams', () => {
+  it('keeps the filters and drops the page, for the export', () => {
+    const params = toUserFilterParams({ pageIndex: 4, pageSize: 6, status: 'active' });
+
+    expect(params.keys()).toEqual(['role', 'status']);
   });
 });

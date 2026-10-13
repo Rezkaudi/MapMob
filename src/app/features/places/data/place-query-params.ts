@@ -3,12 +3,12 @@ import { PlaceQuery } from '../models/place-query';
 import { PlaceSort } from '../models/place-sort';
 import { toLivePlaceStatus } from './live-place-mapping';
 
-// Newest first is the server default, and it cannot sort by rating yet.
+// Newest first is the server default.
 const LIVE_SORT: Record<PlaceSort, string | null> = {
   newest: null,
   oldest: 'oldest',
   name: 'name_asc',
-  rating: null,
+  rating: 'rating_desc',
 };
 
 /** The filters the list and the export share. */

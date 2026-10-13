@@ -3,11 +3,24 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { buildUser, buildUserDetail } from '../testing/user-fixture';
+import { CLOCK } from '../../../core/config/clock';
+import { LiveUser } from './live-user';
+import { toAppUser, toUserDetail } from './live-user-mapping';
 import { UserHttpRepository } from './user-http.repository';
 
 const BASE_URL = 'https://api.test';
-const AHMAD = buildUser();
+const USERS_URL = `${BASE_URL}/admin/users`;
+const NOW = new Date('2026-10-13T12:00:00.000Z');
+const LIVE_USER: LiveUser = {
+  id: 5,
+  name: 'obedah',
+  email: null,
+  phone: '963936318327',
+  status: 'suspended',
+  'SELECTED LOCATION': 'محافظة دمشق',
+  lastActiveAt: null,
+  created_at: '2026-09-25T17:55:30.000000Z',
+};
 
 describe('UserHttpRepository', () => {
   let repository: UserHttpRepository;
@@ -20,6 +33,7 @@ describe('UserHttpRepository', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: API_BASE_URL, useValue: BASE_URL },
+        { provide: CLOCK, useValue: () => NOW },
       ],
     });
     repository = TestBed.inject(UserHttpRepository);
@@ -28,63 +42,85 @@ describe('UserHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for a page of users with the filters', async () => {
-    const page = { items: [AHMAD], totalCount: 1 };
+  it('asks for a page of app users and turns the rows into users', async () => {
     const response = firstValueFrom(
-      repository.getUsers({ pageIndex: 0, pageSize: 6, status: 'active' }),
+      repository.getUsers({ pageIndex: 1, pageSize: 6, status: 'suspended' }),
     );
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/users`);
-    expect(request.request.params.get('status')).toBe('active');
-    request.flush(page);
-    expect(await response).toEqual(page);
+    const request = http.expectOne((candidate) => candidate.url === USERS_URL);
+    expect(request.request.params.get('role')).toBe('customer');
+    expect(request.request.params.get('status')).toBe('suspended');
+    expect(request.request.params.get('page')).toBe('2');
+    request.flush({ data: [LIVE_USER], meta: { totalCount: 7 } });
+
+    expect(await response).toEqual({ items: [toAppUser(LIVE_USER)], totalCount: 7 });
   });
 
-  it('reads the summary and one user in detail', async () => {
-    const summary = {
-      totalUserCount: 3,
-      activeUserCount: 2,
+  it('answers an empty page for visitors without a call, since the server keeps none', async () => {
+    const page = await firstValueFrom(
+      repository.getUsers({ pageIndex: 0, pageSize: 6, accountType: 'visitor' }),
+    );
+
+    expect(page).toEqual({ items: [], totalCount: 0 });
+  });
+
+  it('builds the summary from two list calls, since the server has no summary route', async () => {
+    const response = firstValueFrom(repository.getSummary());
+
+    const [newest, suspended] = http.match((candidate) => candidate.url === USERS_URL);
+    expect(newest.request.params.get('per_page')).toBe('100');
+    expect(newest.request.params.has('status')).toBe(false);
+    expect(suspended.request.params.get('status')).toBe('suspended');
+    newest.flush({
+      data: [{ ...LIVE_USER, created_at: '2026-10-10T10:00:00.000000Z' }, LIVE_USER],
+      meta: { totalCount: 12 },
+    });
+    suspended.flush({ data: [LIVE_USER], meta: { totalCount: 1 } });
+
+    expect(await response).toEqual({
+      totalUserCount: 12,
+      activeUserCount: 11,
       suspendedUserCount: 1,
-      newUserCount: 1,
-    };
-    const detail = buildUserDetail();
-    const summaryResponse = firstValueFrom(repository.getSummary());
-    const detailResponse = firstValueFrom(repository.getUserDetail('user-1'));
+      newUserCount: 2,
+    });
+  });
 
-    http.expectOne(`${BASE_URL}/users/summary`).flush(summary);
-    http.expectOne(`${BASE_URL}/users/user-1`).flush(detail);
+  it('reads one user in detail', async () => {
+    const response = firstValueFrom(repository.getUserDetail('5'));
 
-    expect(await summaryResponse).toEqual(summary);
-    expect(await detailResponse).toEqual(detail);
+    http.expectOne(`${USERS_URL}/5`).flush({ data: LIVE_USER });
+
+    expect(await response).toEqual(toUserDetail(LIVE_USER));
   });
 
   it('changes the status with a PATCH and deletes with a DELETE', async () => {
-    const statusResponse = firstValueFrom(repository.setUserStatus('user-1', 'suspended'));
-    const deleteResponse = firstValueFrom(repository.deleteUser('user-1'), {
+    const statusResponse = firstValueFrom(repository.setUserStatus('5', 'active'));
+    const deleteResponse = firstValueFrom(repository.deleteUser('5'), {
       defaultValue: undefined,
     });
 
-    const patch = http.expectOne(`${BASE_URL}/users/user-1/status`);
+    const patch = http.expectOne(`${USERS_URL}/5/status`);
     expect(patch.request.method).toBe('PATCH');
-    expect(patch.request.body).toEqual({ status: 'suspended' });
-    patch.flush(buildUser({ status: 'suspended' }));
-    const remove = http.expectOne(`${BASE_URL}/users/user-1`);
+    expect(patch.request.body).toEqual({ status: 'active' });
+    patch.flush({ data: { ...LIVE_USER, status: 'active' } });
+    const remove = http.expectOne(`${USERS_URL}/5`);
     expect(remove.request.method).toBe('DELETE');
-    remove.flush(null);
+    remove.flush({ data: null });
 
-    expect((await statusResponse).status).toBe('suspended');
-    await deleteResponse;
+    expect((await statusResponse).status).toBe('active');
+    expect(await deleteResponse).toBeUndefined();
   });
 
-  it('downloads the export as a file with the same filters', async () => {
+  it('downloads the export as a file with the same filters and no page', async () => {
     const file = new Blob(['csv'], { type: 'text/csv' });
     const response = firstValueFrom(
-      repository.exportUsers({ pageIndex: 0, pageSize: 6, accountType: 'registered' }),
+      repository.exportUsers({ pageIndex: 3, pageSize: 6, status: 'active' }),
     );
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/users/export`);
+    const request = http.expectOne((candidate) => candidate.url === `${USERS_URL}/export`);
     expect(request.request.responseType).toBe('blob');
-    expect(request.request.params.get('accountType')).toBe('registered');
+    expect(request.request.params.get('status')).toBe('active');
+    expect(request.request.params.has('page')).toBe(false);
     request.flush(file);
     expect(await response).toBe(file);
   });
