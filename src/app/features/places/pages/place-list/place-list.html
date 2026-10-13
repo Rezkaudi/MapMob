@@ -45,7 +45,7 @@
     </app-empty-state>
   } @else {
     <app-place-filters
-      [categories]="categoryOptions"
+      [categories]="store.categoryOptions()"
       [packages]="packageOptions"
       [sorts]="sortOptions"
       [statusChips]="statusChips()"

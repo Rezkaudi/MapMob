@@ -8,4 +8,8 @@ describe('formatShortEnglishDate', () => {
   it('reads the day in UTC, so a late-evening moment keeps its date', () => {
     expect(formatShortEnglishDate('2026-01-05T23:30:00.000Z')).toBe('Jan 5, 2026');
   });
+
+  it('writes a dash when there is no date, such as a place on the free plan', () => {
+    expect(formatShortEnglishDate('')).toBe('—');
+  });
 });

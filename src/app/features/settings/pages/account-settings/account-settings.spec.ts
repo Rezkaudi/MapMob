@@ -23,19 +23,19 @@ function render(overrides: Partial<AccountRepository> = {}) {
     },
     ...overrides,
   };
-  const signOut = vi.fn();
+  const revokeSession = vi.fn();
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
       { provide: AccountRepository, useValue: repository },
-      { provide: AuthStore, useValue: { signOut } },
+      { provide: AuthStore, useValue: { revokeSession } },
     ],
   });
   const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
   const fixture = TestBed.createComponent(AccountSettings);
   fixture.detectChanges();
   const element = fixture.nativeElement as HTMLElement;
-  return { fixture, element, savedProfiles, passwordChanges, signOut, navigate };
+  return { fixture, element, savedProfiles, passwordChanges, revokeSession, navigate };
 }
 
 function type(element: HTMLElement, selector: string, value: string): void {
@@ -145,11 +145,11 @@ describe('AccountSettings', () => {
   });
 
   it('signs out and goes to the login page', () => {
-    const { element, signOut, navigate } = render();
+    const { element, revokeSession, navigate } = render();
 
     buttonNamed(element, 'تسجيل الخروج').click();
 
-    expect(signOut).toHaveBeenCalledOnce();
+    expect(revokeSession).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith('/login?role=admin');
   });
 });

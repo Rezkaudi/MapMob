@@ -1,16 +1,18 @@
 import { EnvironmentProviders, Provider, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { AccountRepository } from '../settings/data/account.repository';
 import { OwnerAccountHttpRepository } from './data/owner-account-http.repository';
 import { OwnerAccountMockRepository } from './data/owner-account-mock.repository';
 import { OwnerAccountRepository } from './data/owner-account.repository';
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock repository once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock repository once the API exists. */
 export function provideMerchantSettingsFeature(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {
       provide: OwnerAccountRepository,
-      useClass: environment.useMockApi ? OwnerAccountMockRepository : OwnerAccountHttpRepository,
+      useClass: isMockApiUsed('merchant-settings')
+        ? OwnerAccountMockRepository
+        : OwnerAccountHttpRepository,
     },
   ]);
 }

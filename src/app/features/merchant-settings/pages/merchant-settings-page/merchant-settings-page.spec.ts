@@ -6,7 +6,7 @@ import { AccountRepository } from '../../../settings/data/account.repository';
 import { MerchantSettingsPage } from './merchant-settings-page';
 
 function render() {
-  const signOut = vi.fn();
+  const revokeSession = vi.fn();
   const repository: Partial<AccountRepository> = {
     getProfile: () => of({ fullName: 'محمد احمد', email: 'mmmm.mo@mapmob.com', roleName: null }),
   };
@@ -14,13 +14,13 @@ function render() {
     providers: [
       provideRouter([]),
       { provide: AccountRepository, useValue: repository },
-      { provide: AuthStore, useValue: { signOut } },
+      { provide: AuthStore, useValue: { revokeSession } },
     ],
   });
   const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
   const fixture = TestBed.createComponent(MerchantSettingsPage);
   fixture.detectChanges();
-  return { element: fixture.nativeElement as HTMLElement, signOut, navigate };
+  return { element: fixture.nativeElement as HTMLElement, revokeSession, navigate };
 }
 
 describe('MerchantSettingsPage', () => {
@@ -58,14 +58,14 @@ describe('MerchantSettingsPage', () => {
   });
 
   it('signs out to the merchant tab of the login page', () => {
-    const { element, signOut, navigate } = render();
+    const { element, revokeSession, navigate } = render();
 
     const button = Array.from(element.querySelectorAll('button')).find(
       (candidate) => candidate.textContent?.trim() === 'تسجيل الخروج',
     ) as HTMLButtonElement;
     button.click();
 
-    expect(signOut).toHaveBeenCalledOnce();
+    expect(revokeSession).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith('/login?role=merchant');
   });
 });

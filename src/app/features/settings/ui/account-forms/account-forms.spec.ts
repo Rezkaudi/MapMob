@@ -10,13 +10,13 @@ import { AccountForms } from './account-forms';
 const MERCHANT_LOGIN_URL = '/login?role=merchant';
 
 function render(profile: AccountProfile, signOutDescription: string | null = null) {
-  const signOut = vi.fn();
+  const revokeSession = vi.fn();
   const repository: Partial<AccountRepository> = { getProfile: () => of(profile) };
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
       { provide: AccountRepository, useValue: repository },
-      { provide: AuthStore, useValue: { signOut } },
+      { provide: AuthStore, useValue: { revokeSession } },
     ],
   });
   const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
@@ -24,7 +24,7 @@ function render(profile: AccountProfile, signOutDescription: string | null = nul
   fixture.componentRef.setInput('signOutUrl', MERCHANT_LOGIN_URL);
   fixture.componentRef.setInput('signOutDescription', signOutDescription);
   fixture.detectChanges();
-  return { element: fixture.nativeElement as HTMLElement, signOut, navigate };
+  return { element: fixture.nativeElement as HTMLElement, revokeSession, navigate };
 }
 
 function buttonNamed(element: HTMLElement, label: string): HTMLButtonElement {
@@ -75,11 +75,11 @@ describe('AccountForms', () => {
   });
 
   it('signs out and goes to the login page it was given', () => {
-    const { element, signOut, navigate } = render(buildAccountProfile());
+    const { element, revokeSession, navigate } = render(buildAccountProfile());
 
     buttonNamed(element, 'تسجيل الخروج').click();
 
-    expect(signOut).toHaveBeenCalledOnce();
+    expect(revokeSession).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith(MERCHANT_LOGIN_URL);
   });
 });

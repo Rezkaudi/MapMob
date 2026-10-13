@@ -1,6 +1,6 @@
 import { LOCALE_ID, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import localeAr from '@angular/common/locales/ar';
 
@@ -8,6 +8,9 @@ import { routes } from './app.routes';
 import { provideApiBaseUrl } from './core/config/api-base-url';
 import { provideMerchantSupportUrl } from './core/config/merchant-support-url';
 import { provideUseMockApi } from './core/config/use-mock-api';
+import { apiErrorInterceptor } from './core/http/api-error.interceptor';
+import { authTokenInterceptor } from './features/auth/data/auth-token.interceptor';
+import { sessionExpiryInterceptor } from './features/auth/data/session-expiry.interceptor';
 import { provideAdsFeature } from './features/ads/ads.providers';
 import { provideAuthFeature } from './features/auth/auth.providers';
 import { provideCategoriesFeature } from './features/categories/categories.providers';
@@ -45,7 +48,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withFetch()),
+    // The error interceptor comes first so it sees the 401 only after the session check.
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([apiErrorInterceptor, authTokenInterceptor, sessionExpiryInterceptor]),
+    ),
     { provide: LOCALE_ID, useValue: 'ar' },
     provideApiBaseUrl(),
     provideUseMockApi(),

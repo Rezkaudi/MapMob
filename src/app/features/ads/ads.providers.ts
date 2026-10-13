@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { AdHttpRepository } from './data/ad-http.repository';
 import { AdMockDatabase } from './data/ad-mock-database';
 import { buildAdSeed } from './data/ad-mock-seed';
@@ -9,9 +9,9 @@ import { AdRepository } from './data/ad.repository';
 /** The design's summary counts 100 ads. */
 const MOCK_AD_COUNT = 100;
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock files once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock files once the API exists. */
 export function provideAdsFeature(): EnvironmentProviders {
-  if (!environment.useMockApi) {
+  if (!isMockApiUsed('ads')) {
     return makeEnvironmentProviders([{ provide: AdRepository, useClass: AdHttpRepository }]);
   }
   return makeEnvironmentProviders([

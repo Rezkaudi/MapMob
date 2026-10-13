@@ -6,6 +6,11 @@ const SHORT_ENGLISH_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
   timeZone: 'UTC',
 });
 
+const NO_DATE = '—';
+
 export function formatShortEnglishDate(value: string): string {
+  if (!value) {
+    return NO_DATE;
+  }
   return SHORT_ENGLISH_DATE_FORMAT.format(new Date(value));
 }

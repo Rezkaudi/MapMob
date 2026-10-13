@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { AreaHttpRepository } from './data/area-http.repository';
 import { AreaMockRepository } from './data/area-mock.repository';
 import { AreaRepository } from './data/area.repository';
@@ -9,9 +9,9 @@ import { GovernorateRepository } from './data/governorate.repository';
 import { RegionMockDatabase } from './data/region-mock-database';
 import { REGION_MOCK_SEED } from './data/region-mock-seed';
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock files once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock files once the API exists. */
 export function provideRegionsFeature(): EnvironmentProviders {
-  if (!environment.useMockApi) {
+  if (!isMockApiUsed('regions')) {
     return makeEnvironmentProviders([
       { provide: GovernorateRepository, useClass: GovernorateHttpRepository },
       { provide: AreaRepository, useClass: AreaHttpRepository },

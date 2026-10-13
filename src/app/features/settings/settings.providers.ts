@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { AdminsHttpRepository } from './data/admins-http.repository';
 import { AdminsMockRepository } from './data/admins-mock.repository';
 import { AdminsRepository } from './data/admins.repository';
@@ -20,9 +20,9 @@ import { PlatformSettingsMockRepository } from './data/platform-settings-mock.re
 import { PlatformSettingsRepository } from './data/platform-settings.repository';
 import { SettingsMockDatabaseLoader } from './data/settings-mock-database-loader';
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock files once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock files once the API exists. */
 export function provideSettingsFeature(): EnvironmentProviders {
-  if (!environment.useMockApi) {
+  if (!isMockApiUsed('settings')) {
     return makeEnvironmentProviders([
       { provide: AccountRepository, useClass: AccountHttpRepository },
       { provide: PlatformSettingsRepository, useClass: PlatformSettingsHttpRepository },

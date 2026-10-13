@@ -46,7 +46,6 @@ const STATUS_DOT: Record<PlaceStatus, string> = {
 /** Tick box, seven data columns and the action column. */
 const TABLE_COLUMN_COUNT = 9;
 
-const CATEGORIES = ['صيدلية', 'مطعم', 'مقهى', 'سوبر ماركت', 'عيادة'];
 const ALL_STATUSES: readonly PlaceStatus[] = ['active', 'pending', 'suspended'];
 
 function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] {
@@ -88,10 +87,6 @@ export class PlaceList {
   protected readonly tableColumnCount = TABLE_COLUMN_COUNT;
   protected readonly statusTone = STATUS_TONE;
 
-  protected readonly categoryOptions: SelectOption[] = CATEGORIES.map((category) => ({
-    value: category,
-    label: category,
-  }));
   protected readonly packageOptions = toOptions<PlacePackage>(PLACE_PACKAGE_LABEL);
   protected readonly sortOptions = toOptions<PlaceSort>(PLACE_SORT_LABEL);
 
@@ -122,6 +117,7 @@ export class PlaceList {
   constructor() {
     this.store.loadPlaces();
     this.store.loadStatusCounts();
+    this.store.loadCategoryOptions();
   }
 
   protected reload(): void {

@@ -6,7 +6,7 @@ import { DashboardStore } from './dashboard.store';
 
 const SUMMARY = {
   revenue: 23000,
-  pendingReviewCount: 73,
+  pendingPlaceCount: 73,
   placeCount: 3000,
   newPlaceCount: 20,
   userCount: 173000,

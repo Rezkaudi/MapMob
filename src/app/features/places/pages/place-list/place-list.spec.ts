@@ -15,7 +15,11 @@ function configure(repository: Partial<PlaceRepository>) {
       provideRouter([]),
       {
         provide: PlaceRepository,
-        useValue: { getStatusCounts: () => of(COUNTS), ...repository },
+        useValue: {
+          getStatusCounts: () => of(COUNTS),
+          getCategoryOptions: () => of([{ value: 'مطعم', label: 'مطعم' }]),
+          ...repository,
+        },
       },
     ],
   });

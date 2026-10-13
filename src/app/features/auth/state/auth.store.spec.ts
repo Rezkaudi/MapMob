@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
 import { AuthRepository } from '../data/auth.repository';
 import { AuthStorage } from '../data/auth-storage';
 import { AuthStore } from './auth.store';
@@ -99,5 +100,37 @@ describe('AuthStore', () => {
 
     expect(store.user()).toEqual(USER);
     expect(store.isSignedIn()).toBe(true);
+  });
+
+  it('revokeSession revokes the admin token on the server and signs out', () => {
+    const signOut = vi.fn(() => of(undefined));
+    const store = createStore({ signOut });
+    store.startSession(USER);
+
+    store.revokeSession();
+
+    expect(signOut).toHaveBeenCalled();
+    expect(store.isSignedIn()).toBe(false);
+    expect(TestBed.inject(AuthStorage).read()).toBeNull();
+  });
+
+  it('revokeSession still signs out when the server cannot be reached', () => {
+    const store = createStore({ signOut: () => throwError(() => new Error('offline')) });
+    store.startSession(USER);
+
+    store.revokeSession();
+
+    expect(store.isSignedIn()).toBe(false);
+  });
+
+  it('revokeSession leaves the admin server alone for a merchant', () => {
+    const signOut = vi.fn(() => of(undefined));
+    const store = createStore({ signOut });
+    store.startSession(MERCHANT);
+
+    store.revokeSession();
+
+    expect(signOut).not.toHaveBeenCalled();
+    expect(store.isSignedIn()).toBe(false);
   });
 });

@@ -44,7 +44,7 @@ export class UserMenu {
 
   protected signOut(): void {
     this.close();
-    this.store.signOut();
+    this.store.revokeSession();
     this.router.navigateByUrl(this.loginRoute());
   }
 

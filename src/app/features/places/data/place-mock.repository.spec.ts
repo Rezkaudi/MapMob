@@ -103,4 +103,10 @@ describe('PlaceMockRepository', () => {
     expect(allRows.length).toBeGreaterThan(oneRows.length);
     expect(oneRows.length).toBe(2);
   });
+
+  it('offers the seed categories, filtered by name', async () => {
+    const options = await firstValueFrom(repository.getCategoryOptions());
+
+    expect(options).toContainEqual({ value: 'صيدلية', label: 'صيدلية' });
+  });
 });

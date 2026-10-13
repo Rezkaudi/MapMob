@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { OfferHttpRepository } from './data/offer-http.repository';
 import { OfferMockDatabase } from './data/offer-mock-database';
 import { buildOfferSeed } from './data/offer-mock-seed';
@@ -9,9 +9,9 @@ import { OfferRepository } from './data/offer.repository';
 /** Enough offers for several pages of four rows. */
 const MOCK_OFFER_COUNT = 60;
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock files once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock files once the API exists. */
 export function provideOffersFeature(): EnvironmentProviders {
-  if (!environment.useMockApi) {
+  if (!isMockApiUsed('offers')) {
     return makeEnvironmentProviders([{ provide: OfferRepository, useClass: OfferHttpRepository }]);
   }
   return makeEnvironmentProviders([

@@ -3,11 +3,13 @@ import { Observable, from, switchMap } from 'rxjs';
 import { mockRequest } from '../../../../mock/mock-delay';
 import { PagedResult } from '../../../core/models/paged-result';
 import { ActivationStatus } from '../../../shared/models/activation-status';
+import { SelectOption } from '../../../shared/ui/select-field/select-option';
 import { Place } from '../models/place';
 import { PlaceDetail } from '../models/place-detail';
 import { PlaceExportRequest } from '../models/place-export-request';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceStatusCounts } from '../models/place-status-counts';
+import { MOCK_PLACE_CATEGORIES } from './place-mock-categories';
 import { PlaceMockDatabase } from './place-mock-database';
 import { countPlacesByStatus, filterPlaces, queryPlaces } from './place-mock-query';
 import { PlaceRepository } from './place.repository';
@@ -55,5 +57,9 @@ export class PlaceMockRepository implements PlaceRepository {
     }
     const ticked = new Set(ids);
     return matching.filter((place) => ticked.has(place.id));
+  }
+
+  getCategoryOptions(): Observable<readonly SelectOption[]> {
+    return mockRequest(() => MOCK_PLACE_CATEGORIES.map((name) => ({ value: name, label: name })));
   }
 }

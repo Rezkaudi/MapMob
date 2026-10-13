@@ -1,11 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { AreaHttpRepository } from './area-http.repository';
 
 const BASE_URL = 'https://api.test';
-const DRAFT = { name: 'صافيتا', status: 'active' as const };
+const CITIES_URL = `${BASE_URL}/admin/cities`;
+const DRAFT = { name: 'الصالحية', status: 'active' as const };
+const LIVE_CITY = {
+  id: 7,
+  region_id: 6,
+  name: 'الصالحية',
+  is_active: true,
+  stores_count: 3,
+  updated_at: '2026-10-08T09:38:58.000000Z',
+};
 
 describe('AreaHttpRepository', () => {
   let repository: AreaHttpRepository;
@@ -26,50 +36,69 @@ describe('AreaHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for a page of the areas inside one governorate', () => {
-    repository
-      .getAreas({ governorateId: 'gov-1', pageIndex: 0, pageSize: 5, search: 'صا', sort: 'oldest' })
-      .subscribe();
-
-    const request = http.expectOne(
-      (candidate) => candidate.url === `${BASE_URL}/governorates/gov-1/areas`,
+  it('asks the cities route for one governorate and turns the rows into areas', async () => {
+    const response = firstValueFrom(
+      repository.getAreas({ governorateId: '6', pageIndex: 0, pageSize: 5, search: 'صا' }),
     );
-    expect(request.request.params.get('pageSize')).toBe('5');
+
+    const request = http.expectOne((candidate) => candidate.url === CITIES_URL);
+    expect(request.request.params.get('region_id')).toBe('6');
+    expect(request.request.params.get('page')).toBe('1');
+    expect(request.request.params.get('per_page')).toBe('5');
     expect(request.request.params.get('search')).toBe('صا');
-    expect(request.request.params.get('sort')).toBe('oldest');
-    request.flush({ items: [], totalCount: 0 });
+    request.flush({ data: [LIVE_CITY], meta: { total: 1 } });
+
+    expect(await response).toEqual({
+      items: [
+        {
+          id: '7',
+          governorateId: '6',
+          name: 'الصالحية',
+          subAreaCount: 0,
+          placeCount: 3,
+          status: 'active',
+          updatedAt: '2026-10-08T09:38:58.000000Z',
+        },
+      ],
+      totalCount: 1,
+    });
   });
 
   it('creates an area inside its governorate', () => {
-    repository.createArea('gov-1', DRAFT).subscribe();
+    repository.createArea('6', DRAFT).subscribe();
 
-    const request = http.expectOne({
-      method: 'POST',
-      url: `${BASE_URL}/governorates/gov-1/areas`,
+    const request = http.expectOne({ method: 'POST', url: CITIES_URL });
+    expect(request.request.body).toEqual({
+      region_id: 6,
+      name: { ar: 'الصالحية', en: 'الصالحية' },
+      slug: 'الصالحية',
+      is_active: true,
     });
-    expect(request.request.body).toEqual(DRAFT);
-    request.flush({});
+    request.flush({ data: LIVE_CITY });
   });
 
   it('updates an area', () => {
-    repository.updateArea('area-1', DRAFT).subscribe();
+    repository.updateArea('7', DRAFT).subscribe();
 
-    const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/areas/area-1` });
-    expect(request.request.body).toEqual(DRAFT);
-    request.flush({});
+    const request = http.expectOne({ method: 'PUT', url: `${CITIES_URL}/7` });
+    expect(request.request.body).toEqual({
+      name: { ar: 'الصالحية', en: 'الصالحية' },
+      is_active: true,
+    });
+    request.flush({ data: LIVE_CITY });
   });
 
-  it('changes the status of an area', () => {
-    repository.setAreaStatus('area-1', 'active').subscribe();
+  it('changes only the status of an area', () => {
+    repository.setAreaStatus('7', 'suspended').subscribe();
 
-    const request = http.expectOne({ method: 'PATCH', url: `${BASE_URL}/areas/area-1/status` });
-    expect(request.request.body).toEqual({ status: 'active' });
-    request.flush({});
+    const request = http.expectOne({ method: 'PUT', url: `${CITIES_URL}/7` });
+    expect(request.request.body).toEqual({ is_active: false });
+    request.flush({ data: LIVE_CITY });
   });
 
   it('deletes an area', () => {
-    repository.deleteArea('area-1').subscribe();
+    repository.deleteArea('7').subscribe();
 
-    http.expectOne({ method: 'DELETE', url: `${BASE_URL}/areas/area-1` }).flush(null);
+    http.expectOne({ method: 'DELETE', url: `${CITIES_URL}/7` }).flush({});
   });
 });

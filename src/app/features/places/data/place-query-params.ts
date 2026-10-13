@@ -1,19 +1,36 @@
 import { HttpParams } from '@angular/common/http';
 import { PlaceQuery } from '../models/place-query';
+import { PlaceSort } from '../models/place-sort';
+import { toLivePlaceStatus } from './live-place-mapping';
 
-export function toPlaceQueryParams(query: PlaceQuery): HttpParams {
-  let params = new HttpParams().set('pageIndex', query.pageIndex).set('pageSize', query.pageSize);
+// Newest first is the server default, and it cannot sort by rating yet.
+const LIVE_SORT: Record<PlaceSort, string | null> = {
+  newest: null,
+  oldest: 'oldest',
+  name: 'name_asc',
+  rating: null,
+};
+
+/** The filters the list and the export share. */
+export function toPlaceFilterParams(query: PlaceQuery): HttpParams {
   const filters = {
     search: query.search,
-    status: query.status,
-    category: query.category,
-    package: query.package,
-    sort: query.sort,
+    status: query.status ? toLivePlaceStatus(query.status) : undefined,
+    category_id: query.category,
+    plan_tier: query.package,
+    sort_by: query.sort ? LIVE_SORT[query.sort] : null,
   };
+  let params = new HttpParams();
   for (const [name, value] of Object.entries(filters)) {
     if (value) {
       params = params.set(name, value);
     }
   }
   return params;
+}
+
+export function toPlaceQueryParams(query: PlaceQuery): HttpParams {
+  return toPlaceFilterParams(query)
+    .set('page', query.pageIndex + 1)
+    .set('per_page', query.pageSize);
 }

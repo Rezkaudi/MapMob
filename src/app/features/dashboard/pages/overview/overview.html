@@ -27,7 +27,7 @@
         [isLoading]="store.isLoading()"
         icon="clock"
         label="بانتظار المراجعة"
-        [value]="store.summary()?.pendingReviewCount ?? 0"
+        [value]="store.summary()?.pendingPlaceCount ?? 0"
       />
       <app-stat-card
         [isLoading]="store.isLoading()"

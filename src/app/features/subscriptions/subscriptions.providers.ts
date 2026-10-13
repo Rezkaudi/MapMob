@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { isMockApiUsed } from '../../core/config/mock-api-switch';
 import { PlanMockDatabase } from './data/plan-mock-database';
 import { MOCK_PLANS } from './data/plan-mock-samples';
 import { SubscriptionHttpRepository } from './data/subscription-http.repository';
@@ -11,9 +11,9 @@ import { SubscriptionRepository } from './data/subscription.repository';
 /** The design's pagination counts 3000 subscribed companies. */
 const MOCK_SUBSCRIPTION_COUNT = 3000;
 
-/** ⚠ The `useMockApi` branch is temporary — delete it and the mock files once the API exists. */
+/** ⚠ The mock branch is temporary — delete it and the mock files once the API exists. */
 export function provideSubscriptionsFeature(): EnvironmentProviders {
-  if (!environment.useMockApi) {
+  if (!isMockApiUsed('subscriptions')) {
     return makeEnvironmentProviders([
       { provide: SubscriptionRepository, useClass: SubscriptionHttpRepository },
     ]);

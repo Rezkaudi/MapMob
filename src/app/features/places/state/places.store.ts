@@ -10,6 +10,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, pipe, switchMap, tap, catchError, lastValueFrom, of } from 'rxjs';
 import { ActivationStatus } from '../../../shared/models/activation-status';
+import { SelectOption } from '../../../shared/ui/select-field/select-option';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { withPagination } from '../../../shared/state/with-pagination';
 import { withSaveStatus } from '../../../shared/state/with-save-status';
@@ -31,6 +32,7 @@ interface PlacesState {
   readonly sort: PlaceSort | null;
   readonly statusCounts: PlaceStatusCounts;
   readonly isExporting: boolean;
+  readonly categoryOptions: readonly SelectOption[];
 }
 
 /** The design lists eight places per page. */
@@ -47,6 +49,7 @@ const initialState: PlacesState = {
   sort: null,
   statusCounts: EMPTY_STATUS_COUNTS,
   isExporting: false,
+  categoryOptions: [],
 };
 
 export const PlacesStore = signalStore(
@@ -96,6 +99,16 @@ export const PlacesStore = signalStore(
                 store.setError(error.message);
                 return of(null);
               }),
+            ),
+          ),
+        ),
+      ),
+      loadCategoryOptions: rxMethod<void>(
+        pipe(
+          switchMap(() =>
+            repository.getCategoryOptions().pipe(
+              tap((categoryOptions) => patchState(store, { categoryOptions })),
+              catchError(() => of(null)),
             ),
           ),
         ),

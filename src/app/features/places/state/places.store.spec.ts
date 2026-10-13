@@ -208,4 +208,13 @@ describe('PlacesStore writes', () => {
     expect(await store.exportPlaces([])).toBeNull();
     expect(store.saveError()).toBe('تعذر التصدير');
   });
+
+  it('loads the category filter choices', () => {
+    const options = [{ value: '9', label: 'متجر' }];
+    const store = createStore({ getCategoryOptions: () => of(options) });
+
+    store.loadCategoryOptions();
+
+    expect(store.categoryOptions()).toEqual(options);
+  });
 });

@@ -129,7 +129,7 @@ export class AccountForms {
   }
 
   protected signOut(): void {
-    this.authStore.signOut();
+    this.authStore.revokeSession();
     void this.router.navigateByUrl(this.signOutUrl());
   }
 }

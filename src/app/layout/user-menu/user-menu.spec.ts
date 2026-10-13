@@ -6,6 +6,7 @@ import { AuthRepository } from '../../features/auth/data/auth.repository';
 import { AuthStore } from '../../features/auth/state/auth.store';
 import { UserMenu } from './user-menu';
 
+const signOutOnServer = vi.fn(() => of(undefined));
 const USER = { id: 'user-admin', name: 'أحمد', role: 'Admin', avatarUrl: null, token: 'token' };
 
 @Component({
@@ -37,7 +38,7 @@ describe('UserMenu', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
-        { provide: AuthRepository, useValue: { signIn: () => of(USER) } },
+        { provide: AuthRepository, useValue: { signIn: () => of(USER), signOut: signOutOnServer } },
       ],
     });
   });
@@ -144,6 +145,7 @@ describe('UserMenu', () => {
     fixture.detectChanges();
 
     expect(store.isSignedIn()).toBe(false);
+    expect(signOutOnServer).toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/login?role=admin');
     expect(menu(fixture)).toBeNull();
   });

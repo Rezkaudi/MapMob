@@ -38,6 +38,13 @@ private readonly apiBaseUrl = inject(API_BASE_URL);
 Add a new setting in three places: `.env.example`, the script, and the token
 file that exposes it.
 
+The live server is `https://api.mapmob.com.co` (admin routes under `/admin`).
+With `NG_APP_USE_MOCK_API=false`, only the features listed in
+`src/app/core/config/live-api-features.ts` call it; every other feature keeps its
+mock. Each `*.providers.ts` asks `isMockApiUsed('<feature>')`. When a feature's
+server calls work, map the server shapes in its `*-http.repository.ts` (live types
+in `data/live-*.ts`), then add the feature to that list.
+
 ## CI
 
 `.github/workflows/ci.yml` runs on every push to `main`/`master` and on every
