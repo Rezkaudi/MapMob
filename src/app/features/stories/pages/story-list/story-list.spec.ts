@@ -19,7 +19,7 @@ function render(overrides: Partial<StoryRepository> = {}) {
   const repository: Partial<StoryRepository> = {
     getStories: vi.fn(() => of({ items: [ACTIVE, HIDDEN], totalCount: 2 })),
     getSummary: () => of(buildStorySummary()),
-    setStoryHidden: vi.fn(() => of(HIDDEN)),
+    setStoryHidden: vi.fn(() => of(undefined)),
     deleteStory: vi.fn((): Observable<void> => of(undefined)),
     exportStories: vi.fn(() => of(FILE)),
     ...overrides,

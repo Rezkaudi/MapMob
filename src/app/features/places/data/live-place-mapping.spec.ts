@@ -1,4 +1,14 @@
-import { toLivePlaceStatus, toPlace, toPlacePackage, toPlaceStatus } from './live-place-mapping';
+import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
+import {
+  toLivePlaceStatus,
+  toLivePlanSlug,
+  toPlace,
+  toPlacePackage,
+  toPlaceStatus,
+} from './live-place-mapping';
+
+const LIVE_SILVER_PLAN = { ...LIVE_GOLD_PLAN, id: 3, slug: 'silver', price: 50000 };
+const PLANS = [LIVE_GOLD_PLAN, LIVE_SILVER_PLAN];
 
 const LIVE_ROW = {
   id: '4',
@@ -17,7 +27,7 @@ const LIVE_ROW = {
 
 describe('live place mapping', () => {
   it('turns a server row into a table row', () => {
-    expect(toPlace(LIVE_ROW)).toEqual({
+    expect(toPlace(LIVE_ROW, PLANS)).toEqual({
       id: '4',
       code: 'PL-0004',
       name: 'happy store',
@@ -40,10 +50,18 @@ describe('live place mapping', () => {
     expect(toLivePlaceStatus('active')).toBe('active');
   });
 
-  it('reads the plan tier, treating any other paid plan as basic', () => {
-    expect(toPlacePackage('free')).toBe('free');
-    expect(toPlacePackage(null)).toBe('free');
-    expect(toPlacePackage('featured')).toBe('premium');
-    expect(toPlacePackage('golden-plan')).toBe('basic');
+  it('reads the plan slug as a package by its price among the plans', () => {
+    expect(toPlacePackage('free', PLANS)).toBe('free');
+    expect(toPlacePackage(null, PLANS)).toBe('free');
+    expect(toPlacePackage('golden-plan', PLANS)).toBe('premium');
+    expect(toPlacePackage('silver', PLANS)).toBe('basic');
+    expect(toPlacePackage('gone-plan', PLANS)).toBe('basic');
+  });
+
+  it('turns a package filter into the slug of a plan of that level', () => {
+    expect(toLivePlanSlug('free', PLANS)).toBe('free');
+    expect(toLivePlanSlug('premium', PLANS)).toBe('golden-plan');
+    expect(toLivePlanSlug('basic', PLANS)).toBe('silver');
+    expect(toLivePlanSlug('basic', [LIVE_GOLD_PLAN])).toBe('basic');
   });
 });

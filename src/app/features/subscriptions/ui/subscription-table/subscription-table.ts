@@ -48,7 +48,6 @@ export class SubscriptionTable {
 
   readonly rowToggle = output<string>();
   readonly allToggle = output<void>();
-  readonly statusChange = output<Subscription>();
   readonly remove = output<Subscription>();
 
   protected readonly columnWidths = COLUMN_WIDTHS;

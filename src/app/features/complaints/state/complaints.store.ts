@@ -1,5 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withProps,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, lastValueFrom, of, pipe, switchMap, tap } from 'rxjs';
 import { CLOCK } from '../../../core/config/clock';
@@ -39,6 +46,9 @@ export const ComplaintsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withListTable<Complaint>({ pageSize: COMPLAINTS_PAGE_SIZE }),
+  withProps(() => ({
+    canDeleteComplaints: inject(ComplaintRepository).canDeleteComplaints,
+  })),
   withComputed(({ entries, filters, search, summary, hasSummaryFailed, hasNoEntries }) => {
     const activeFilterCount = computed(() => countActiveComplaintFilters(filters()));
     return {

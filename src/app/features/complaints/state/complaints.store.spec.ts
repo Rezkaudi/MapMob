@@ -20,6 +20,7 @@ function createStore(overrides: Partial<ComplaintRepository> = {}) {
   const requestedQueries: ComplaintQuery[] = [];
   const deletedIds: string[] = [];
   const repository: Partial<ComplaintRepository> = {
+    canDeleteComplaints: true,
     getComplaints: (query) => {
       requestedQueries.push(query);
       return of({ items: [SHAM], totalCount: 1 });
@@ -45,6 +46,10 @@ describe('ComplaintsStore', () => {
   it('draws four rows per page, as the design does', () => {
     expect(createStore().store.pageSize()).toBe(COMPLAINTS_PAGE_SIZE);
     expect(COMPLAINTS_PAGE_SIZE).toBe(4);
+  });
+
+  it('tells the page whether the server can delete complaints', () => {
+    expect(createStore({ canDeleteComplaints: false }).store.canDeleteComplaints).toBe(false);
   });
 
   it('loads a page and the summary, then builds the rows and stat cards', () => {

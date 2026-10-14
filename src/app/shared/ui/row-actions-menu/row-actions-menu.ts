@@ -30,6 +30,8 @@ export class RowActionsMenu {
   readonly isStatusChangeVisible = input<boolean>(true);
   /** Notifications open their details first, then still offer an edit straight from the row. */
   readonly isEditVisible = input<boolean>(false);
+  /** Off when the server has no delete route for the row. */
+  readonly isRemoveVisible = input<boolean>(true);
   /** Names a view item under the primary one, e.g. "عرض المتاجر المرتبطة"; empty leaves it out. */
   readonly viewLabel = input<string>('');
   /** Names the copy item, e.g. "نسخ الإشعار"; empty leaves it out. */

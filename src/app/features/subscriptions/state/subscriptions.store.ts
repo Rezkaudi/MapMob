@@ -96,6 +96,12 @@ export const SubscriptionsStore = signalStore(
       store.clearSelection();
       store.loadSubscriptions();
     },
+    /** Resolves `true` once the subscription is cancelled and the rows are read again. */
+    cancelSubscription(id: string): Promise<boolean> {
+      return store.saveThenRefresh(repository.cancelSubscription(id), () =>
+        store.loadSubscriptions(),
+      );
+    },
     /** Resolves the file to save, or `null` when the export failed and `saveError` says why. */
     async exportSubscriptions(): Promise<Blob | null> {
       patchState(store, { isExporting: true, saveError: null });

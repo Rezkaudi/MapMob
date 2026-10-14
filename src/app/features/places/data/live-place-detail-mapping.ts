@@ -1,3 +1,4 @@
+import { LivePlan } from '../../../shared/data/live-plan';
 import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { CurrencyCode } from '../../../shared/money/currency-code';
 import { formatArabicRelativeTime } from '../../../shared/formatting/arabic-relative-time';
@@ -17,7 +18,11 @@ import { toWorkingHoursRows } from './live-working-hours';
 
 const ACTIVE_OFFER = 'active';
 
-export function toPlaceDetail(live: LivePlaceDetail, now: Date): PlaceDetail {
+export function toPlaceDetail(
+  live: LivePlaceDetail,
+  now: Date,
+  plans: readonly LivePlan[],
+): PlaceDetail {
   const status = toPlaceStatus(live.status);
   return {
     id: live.id,
@@ -34,7 +39,7 @@ export function toPlaceDetail(live: LivePlaceDetail, now: Date): PlaceDetail {
       phone: live.owner?.phone ?? '',
       extraPhone: live.owner?.extraPhone ?? '',
     },
-    subscription: toSubscription(live, status),
+    subscription: toSubscription(live, status, plans),
     activity: {
       addedAt: live.createdAt,
       updatedLabel: formatArabicRelativeTime(live.updatedAt, now),
@@ -69,12 +74,16 @@ export function toPlaceDetail(live: LivePlaceDetail, now: Date): PlaceDetail {
   };
 }
 
-function toSubscription(live: LivePlaceDetail, placeStatus: PlaceSubscription['status']) {
+function toSubscription(
+  live: LivePlaceDetail,
+  placeStatus: PlaceSubscription['status'],
+  plans: readonly LivePlan[],
+) {
   if (!live.subscription) {
     return { package: 'free', status: placeStatus, renewsAt: '' } satisfies PlaceSubscription;
   }
   return {
-    package: toPlacePackage(live.subscription.plan.tier),
+    package: toPlacePackage(live.subscription.plan.tier, plans),
     status: toPlaceStatus(live.subscription.status),
     renewsAt: live.subscription.endsOn ?? '',
   } satisfies PlaceSubscription;

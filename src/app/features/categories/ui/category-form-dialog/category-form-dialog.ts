@@ -11,7 +11,6 @@ import { FormMode } from '../../../../shared/models/form-mode';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { CategoryDraft } from '../../models/category-draft';
-import { CategoryColor } from '../../models/category-color';
 import { CategoryIcon } from '../../models/category-icon';
 import { CategoryKind } from '../../models/category-kind';
 import { CategoryFormCopy } from '../category-form-copy';
@@ -37,7 +36,7 @@ export class CategoryFormDialog {
   protected readonly name = linkedSignal(() => this.initialDraft().name);
   protected readonly kind = linkedSignal<CategoryKind>(() => this.initialDraft().kind);
   protected readonly icon = linkedSignal<CategoryIcon>(() => this.initialDraft().icon);
-  protected readonly color = linkedSignal<CategoryColor>(() => this.initialDraft().color);
+  protected readonly color = linkedSignal<string>(() => this.initialDraft().color);
   /** A new sub category starts under the first main category, as the design shows. */
   protected readonly parentId = linkedSignal<string | null>(
     () => this.initialDraft().parentId ?? this.parentOptions()[0]?.value ?? null,

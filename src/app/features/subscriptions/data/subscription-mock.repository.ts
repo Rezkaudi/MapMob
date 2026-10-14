@@ -9,7 +9,7 @@ import { SubscriptionQuery } from '../models/subscription-query';
 import { SubscriptionSummary } from '../models/subscription-summary';
 import { PlanMockDatabase } from './plan-mock-database';
 import { SubscriptionMockDatabase } from './subscription-mock-database';
-import { filterSubscriptions, querySubscriptions } from './subscription-mock-query';
+import { filterSubscriptions, querySubscriptions } from './subscription-list-query';
 import { SubscriptionRepository } from './subscription.repository';
 import { buildSubscriptionsCsvFile } from './subscriptions-csv';
 
@@ -26,6 +26,10 @@ export class SubscriptionMockRepository implements SubscriptionRepository {
     return mockRequest(() => this.database.listPlans());
   }
 
+  createPlan(draft: PlanDraft): Observable<PackagePlan> {
+    return mockRequest(() => this.database.add(draft));
+  }
+
   updatePlan(id: string, draft: PlanDraft): Observable<PackagePlan> {
     return mockRequest(() => this.database.update(id, draft));
   }
@@ -36,6 +40,10 @@ export class SubscriptionMockRepository implements SubscriptionRepository {
 
   deletePlan(id: string): Observable<void> {
     return mockRequest(() => this.database.remove(id));
+  }
+
+  cancelSubscription(id: string): Observable<void> {
+    return mockRequest(() => this.subscriptions.remove(id));
   }
 
   getSubscriptions(query: SubscriptionQuery): Observable<PagedResult<Subscription>> {

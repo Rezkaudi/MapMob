@@ -1,3 +1,6 @@
+import { LivePlan } from '../../../shared/data/live-plan';
+import { toPlanTier } from '../../../shared/data/live-plan-tier';
+import { PlanTier } from '../../../shared/models/plan-tier';
 import { Place } from '../models/place';
 import { PlacePackage } from '../models/place-package';
 import { PlaceStatus } from '../models/place-status';
@@ -5,8 +8,7 @@ import { LivePlaceRow } from './live-place-row';
 
 // The server rejects "suspended" when saving and keeps a suspended place as "inactive".
 const LIVE_SUSPENDED = 'inactive';
-const FREE_TIER = 'free';
-const FEATURED_TIER = 'featured';
+const FREE_PLAN_SLUG = 'free';
 
 export function toPlaceStatus(liveStatus: string): PlaceStatus {
   if (liveStatus === 'active' || liveStatus === 'pending') {
@@ -19,15 +21,34 @@ export function toLivePlaceStatus(status: PlaceStatus): string {
   return status === 'suspended' ? LIVE_SUSPENDED : status;
 }
 
-/** The server sends a plan slug here; only free and featured have a fixed meaning yet. */
-export function toPlacePackage(tier: string | null): PlacePackage {
-  if (!tier || tier === FREE_TIER) {
+const PACKAGE_OF_TIER: Record<PlanTier, PlacePackage> = {
+  free: 'free',
+  basic: 'basic',
+  featured: 'premium',
+};
+
+/** The server sends a plan slug; its level comes from the plan's price among all plans. */
+export function toPlacePackage(slug: string | null, plans: readonly LivePlan[]): PlacePackage {
+  if (!slug || slug === FREE_PLAN_SLUG) {
     return 'free';
   }
-  return tier === FEATURED_TIER ? 'premium' : 'basic';
+  const plan = plans.find((candidate) => candidate.slug === slug);
+  return plan ? PACKAGE_OF_TIER[toPlanTier(plan, plans)] : 'basic';
 }
 
-export function toPlace(row: LivePlaceRow): Place {
+/** The filter takes one slug, so a level with several plans filters by the first. */
+export function toLivePlanSlug(placePackage: PlacePackage, plans: readonly LivePlan[]): string {
+  if (placePackage === 'free') {
+    return FREE_PLAN_SLUG;
+  }
+  const plan = plans.find(
+    (candidate) =>
+      candidate.price > 0 && PACKAGE_OF_TIER[toPlanTier(candidate, plans)] === placePackage,
+  );
+  return plan?.slug ?? placePackage;
+}
+
+export function toPlace(row: LivePlaceRow, plans: readonly LivePlan[]): Place {
   return {
     id: row.id,
     code: row.code,
@@ -38,7 +59,7 @@ export function toPlace(row: LivePlaceRow): Place {
     city: row.governorate?.name ?? '',
     rating: row.rating,
     status: toPlaceStatus(row.status),
-    package: toPlacePackage(row.planTier),
+    package: toPlacePackage(row.planTier, plans),
     joinedAt: row.createdAt,
   };
 }

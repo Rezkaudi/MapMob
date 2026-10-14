@@ -41,6 +41,21 @@ describe('RowActionsMenu', () => {
     expect(labels).toEqual(['عرض التفاصيل', 'حذف']);
   });
 
+  it('can leave out "حذف" and its divider when the server cannot delete the row', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('primaryAction', 'view');
+    fixture.componentRef.setInput('isStatusChangeVisible', false);
+    fixture.componentRef.setInput('isRemoveVisible', false);
+    fixture.detectChanges();
+
+    const panel = openPanel(fixture);
+    const labels = Array.from(panel.querySelectorAll('button'), (button) =>
+      button.textContent?.trim(),
+    );
+    expect(labels).toEqual(['عرض التفاصيل']);
+    expect(panel.querySelector('span.h-px')).toBeNull();
+  });
+
   it('reports each pick', () => {
     const fixture = render();
     const edit = vi.fn();

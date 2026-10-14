@@ -11,7 +11,7 @@ import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentQuery } from '../models/payment-query';
 import { PaymentSummary } from '../models/payment-summary';
 import { PaymentMockDataLoader } from './payment-mock-data-loader';
-import { filterPayments, queryPayments } from './payment-mock-query';
+import { filterPayments, queryPayments } from './payment-list-query';
 import { buildPaymentsCsvFile } from './payments-csv';
 import { PaymentRepository } from './payment.repository';
 
@@ -50,7 +50,10 @@ export class PaymentMockRepository implements PaymentRepository {
 }
 
 function recordPayment(
-  { payments, formOptions }: { payments: readonly PaymentDetail[]; formOptions: PaymentFormOptions },
+  {
+    payments,
+    formOptions,
+  }: { payments: readonly PaymentDetail[]; formOptions: PaymentFormOptions },
   draft: NewPaymentDraft,
 ): Payment {
   const merchant = formOptions.merchants.find((candidate) => candidate.id === draft.merchantId);

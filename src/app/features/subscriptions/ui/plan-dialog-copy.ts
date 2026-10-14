@@ -1,5 +1,6 @@
 import { ConfirmActionCopy } from '../../../shared/ui/confirm-action-dialog/confirm-action-copy';
 import { PackagePlan } from '../models/package-plan';
+import { Subscription } from '../models/subscription';
 
 export function buildPlanDeleteCopy(plan: PackagePlan): ConfirmActionCopy {
   return {
@@ -27,5 +28,15 @@ export function buildPlanStatusCopy(plan: PackagePlan): ConfirmActionCopy {
     detail: 'تعود الباقة للظهور في صفحة الاشتراك ويمكن للمتاجر الاشتراك بها من جديد.',
     confirmLabel: 'تفعيل الباقة',
     tone: 'success',
+  };
+}
+
+export function buildSubscriptionCancelCopy(entry: Subscription): ConfirmActionCopy {
+  return {
+    title: 'إلغاء الاشتراك',
+    question: `هل أنت متأكد من إلغاء اشتراك "${entry.companyName}" في ${entry.planName}؟`,
+    detail: 'ينتهي الاشتراك الآن ويُحذف من السجل، ولا يمكن التراجع عن ذلك.',
+    confirmLabel: 'إلغاء الاشتراك',
+    tone: 'danger',
   };
 }

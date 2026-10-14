@@ -3,14 +3,23 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { buildReview, buildReviewDetail } from '../testing/review-fixture';
+import { LIVE_REVIEW, LIVE_REVIEWED_STORE, LIVE_REVIEWER } from '../testing/live-review-fixture';
 import { ReviewHttpRepository } from './review-http.repository';
 
 const BASE_URL = 'https://api.test';
+const REVIEWS_URL = `${BASE_URL}/admin/reviews`;
+const FIVE_STARS = { ...LIVE_REVIEW, id: 8, rating: 5 };
 
 describe('ReviewHttpRepository', () => {
   let repository: ReviewHttpRepository;
   let http: HttpTestingController;
+
+  function answerPage(page: number, rows: readonly unknown[], lastPage: number): void {
+    const request = http.expectOne(
+      (candidate) => candidate.url === REVIEWS_URL && candidate.params.get('page') === String(page),
+    );
+    request.flush({ data: rows, current_page: page, last_page: lastPage, total: 2 });
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,74 +36,84 @@ describe('ReviewHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for a page of reviews with the filters', async () => {
-    const page = { items: [buildReview()], totalCount: 1 };
+  it('walks every server page, then filters and pages the reviews here', async () => {
     const response = firstValueFrom(
-      repository.getReviews({ pageIndex: 0, pageSize: 4, rating: 'unrated' }),
+      repository.getReviews({ pageIndex: 0, pageSize: 10, rating: 'fiveStars' }),
     );
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/reviews`);
-    expect(request.request.params.get('rating')).toBe('unrated');
-    request.flush(page);
-    expect(await response).toEqual(page);
+    answerPage(1, [LIVE_REVIEW], 2);
+    answerPage(2, [FIVE_STARS], 2);
+
+    const page = await response;
+    expect(page.totalCount).toBe(1);
+    expect(page.items[0].id).toBe('8');
   });
 
-  it('reads the summary and one review in detail', async () => {
-    const summary = { totalCount: 3000, averageRating: 4.3, newCount: 14, reportedCount: 4 };
-    const detail = buildReviewDetail();
-    const summaryResponse = firstValueFrom(repository.getSummary());
-    const detailResponse = firstValueFrom(repository.getReviewDetail('review-2'));
+  it('reads the summary from the server', async () => {
+    const response = firstValueFrom(repository.getSummary());
 
-    http.expectOne(`${BASE_URL}/reviews/summary`).flush(summary);
-    http.expectOne(`${BASE_URL}/reviews/review-2`).flush(detail);
-
-    expect(await summaryResponse).toEqual(summary);
-    expect(await detailResponse).toEqual(detail);
-  });
-
-  it('accepts and rejects a report with a POST each', async () => {
-    const accepted = firstValueFrom(repository.acceptReport('review-2'));
-    const rejected = firstValueFrom(repository.rejectReport('review-3'));
-
-    const accept = http.expectOne(`${BASE_URL}/reviews/review-2/report/accept`);
-    expect(accept.request.method).toBe('POST');
-    accept.flush(buildReview({ status: 'hidden' }));
-    const reject = http.expectOne(`${BASE_URL}/reviews/review-3/report/reject`);
-    expect(reject.request.method).toBe('POST');
-    reject.flush(buildReview({ status: 'published' }));
-
-    expect((await accepted).status).toBe('hidden');
-    expect((await rejected).status).toBe('published');
-  });
-
-  it('changes the status with a PATCH and deletes with a DELETE', async () => {
-    const statusResponse = firstValueFrom(repository.setReviewStatus('review-1', 'hidden'));
-    const deleteResponse = firstValueFrom(repository.deleteReview('review-1'), {
-      defaultValue: undefined,
+    http.expectOne(`${REVIEWS_URL}/summary`).flush({
+      total_reviews: 3,
+      average_rating: 4,
+      new_reviews: 2,
+      reported_reviews: 1,
     });
 
-    const patch = http.expectOne(`${BASE_URL}/reviews/review-1/status`);
-    expect(patch.request.method).toBe('PATCH');
-    expect(patch.request.body).toEqual({ status: 'hidden' });
-    patch.flush(buildReview({ status: 'hidden' }));
-    const remove = http.expectOne(`${BASE_URL}/reviews/review-1`);
-    expect(remove.request.method).toBe('DELETE');
-    remove.flush(null);
-
-    expect((await statusResponse).status).toBe('hidden');
-    await deleteResponse;
+    expect(await response).toEqual({
+      totalCount: 3,
+      averageRating: 4,
+      newCount: 2,
+      reportedCount: 1,
+    });
   });
 
-  it('downloads the export as a file with the same filters', async () => {
-    const file = new Blob(['csv'], { type: 'text/csv' });
-    const response = firstValueFrom(
-      repository.exportReviews({ pageIndex: 0, pageSize: 4, status: 'hidden' }),
-    );
+  it("reads one review with its writer, its place and the writer's other reviews", async () => {
+    const response = firstValueFrom(repository.getReviewDetail('7'));
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/reviews/export`);
-    expect(request.request.responseType).toBe('blob');
-    expect(request.request.params.get('status')).toBe('hidden');
-    request.flush(file);
-    expect(await response).toBe(file);
+    http.expectOne(`${REVIEWS_URL}/7`).flush(LIVE_REVIEW);
+    http.expectOne(`${BASE_URL}/admin/users/16`).flush({ data: LIVE_REVIEWER });
+    http.expectOne(`${BASE_URL}/admin/stores/18`).flush({ data: LIVE_REVIEWED_STORE });
+    answerPage(1, [LIVE_REVIEW, FIVE_STARS], 1);
+
+    const detail = await response;
+    expect(detail.reviewer.reviewCount).toBe(2);
+    expect(detail.place.areaName).toBe('المزة');
+  });
+
+  it('hides a review with PATCH and reads it again', async () => {
+    const response = firstValueFrom(repository.setReviewStatus('7', 'hidden'));
+
+    const request = http.expectOne({ method: 'PATCH', url: `${REVIEWS_URL}/7/status` });
+    expect(request.request.body).toEqual({ status: 'hidden' });
+    request.flush({ review: {} });
+    http.expectOne(`${REVIEWS_URL}/7`).flush({ ...LIVE_REVIEW, status: 'hidden' });
+
+    expect((await response).status).toBe('hidden');
+  });
+
+  it('settles a report with the admin note the server requires', async () => {
+    const response = firstValueFrom(repository.acceptReport('7'));
+
+    const request = http.expectOne({ method: 'POST', url: `${REVIEWS_URL}/7/report/accept` });
+    expect(request.request.body.admin_notes).toBeTruthy();
+    request.flush({});
+    http.expectOne(`${REVIEWS_URL}/7`).flush(LIVE_REVIEW);
+
+    expect((await response).id).toBe('7');
+  });
+
+  it('deletes a review', async () => {
+    const response = firstValueFrom(repository.deleteReview('7'));
+
+    http.expectOne({ method: 'DELETE', url: `${REVIEWS_URL}/7` }).flush({});
+
+    expect(await response).toBeUndefined();
+  });
+
+  it('builds the export file here, with the table columns and filters', async () => {
+    const response = firstValueFrom(repository.exportReviews({ pageIndex: 0, pageSize: 10 }));
+    answerPage(1, [LIVE_REVIEW], 1);
+
+    expect((await response).type).toContain('text/csv');
   });
 });

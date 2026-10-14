@@ -46,7 +46,14 @@
             <td>
               <!-- RTL: the 24px icon leads on the right, 6px before the name. -->
               <div class="flex items-center gap-1.5 pe-2">
-                @if (row.icon; as icon) {
+                @if (row.category.iconUrl; as iconUrl) {
+                  <img
+                    data-testid="category-icon"
+                    class="size-6 shrink-0 rounded object-contain"
+                    [src]="iconUrl"
+                    alt=""
+                  />
+                } @else if (row.icon; as icon) {
                   <svg
                     data-testid="category-icon"
                     class="shrink-0"

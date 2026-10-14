@@ -25,6 +25,24 @@ function render(entries: readonly Subscription[] = [entry()]) {
 }
 
 describe('SubscriptionTable', () => {
+  it('offers only "حذف" in the row menu, since a subscription has no status to change by hand', () => {
+    const fixture = render();
+    const trigger = fixture.nativeElement.querySelector(
+      'button[aria-haspopup]',
+    ) as HTMLButtonElement;
+
+    trigger.click();
+    fixture.detectChanges();
+    const labels = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        '[data-testid="action-menu-panel"] button',
+      ),
+      (item) => item.textContent?.trim(),
+    );
+
+    expect(labels).toEqual(['حذف']);
+  });
+
   it('heads the columns the design lists, right to left', () => {
     const headers = [...render().nativeElement.querySelectorAll('th')].map((th: HTMLElement) =>
       th.textContent?.trim(),

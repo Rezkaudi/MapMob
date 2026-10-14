@@ -1,4 +1,4 @@
-import { paginate } from '../../../../mock/paginate';
+import { paginate } from '../../../shared/lists/paginate';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Place } from '../models/place';
 import { PlaceQuery } from '../models/place-query';

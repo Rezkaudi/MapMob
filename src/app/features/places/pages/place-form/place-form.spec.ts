@@ -4,14 +4,23 @@ import { TestBed } from '@angular/core/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { PlaceRepository } from '../../data/place.repository';
+import { PLACE_MOCK_FORM_CHOICES } from '../../data/place-mock-form-choices';
 import { PlaceDetail } from '../../models/place-detail';
+import { PlaceSaveRequest } from '../../models/place-save-request';
 import { createPlaceDetail } from '../../testing/place-detail-fixture';
 import { PlaceForm } from './place-form';
+
+const savedRequests: { id: string | null; request: PlaceSaveRequest }[] = [];
 
 function render(id: string | undefined = '', getPlace?: (id: string) => Observable<PlaceDetail>) {
   TestBed.resetTestingModule();
   const repository: Partial<PlaceRepository> = {
     getPlace: getPlace ?? ((placeId) => of(createPlaceDetail({ id: placeId }))),
+    getPlaceFormChoices: () => of(PLACE_MOCK_FORM_CHOICES),
+    savePlace: (placeId, request) => {
+      savedRequests.push({ id: placeId, request });
+      return of(placeId ?? 'place-new');
+    },
   };
   TestBed.configureTestingModule({
     providers: [provideRouter([]), { provide: PlaceRepository, useValue: repository }],
@@ -153,14 +162,39 @@ describe('PlaceForm', () => {
     expect(switches.every((toggle) => toggle.getAttribute('aria-checked') === 'true')).toBe(true);
   });
 
-  it('confirms with a toast once the place is saved', () => {
+  it('confirms with a toast once the place is saved', async () => {
     const fixture = render();
     fillRequiredFields(fixture);
     submit(fixture);
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
 
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('تم حفظ المكان بنجاح');
     expect(text).toContain('تمت إضافة المكان بنجاح وسيظهر في قائمة الشركات والمتاجر.');
+  });
+
+  it('sends the fields, the week, the gallery and the products to be saved', async () => {
+    savedRequests.length = 0;
+    const fixture = render();
+    fillRequiredFields(fixture);
+    submit(fixture);
+    await fixture.whenStable();
+
+    expect(savedRequests).toHaveLength(1);
+    const [{ id, request }] = savedRequests;
+    expect(id).toBeNull();
+    expect(request.value.name).toBe('صيدلية الحياة');
+    expect(request.week).toHaveLength(7);
+    expect(request.previousPackage).toBeNull();
+  });
+
+  it('offers only the regions of the picked city', () => {
+    const fixture = render();
+    fixture.componentInstance['form'].controls.city.setValue('طرطوس');
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance['regions']()).toContain('المركز');
   });
 
   it('does not claim the place was saved while required fields are empty', () => {
@@ -450,7 +484,10 @@ describe('PlaceForm sections', () => {
         provideRouter([]),
         {
           provide: PlaceRepository,
-          useValue: { getPlace: (id: string) => of(createPlaceDetail({ id })) },
+          useValue: {
+            getPlace: (id: string) => of(createPlaceDetail({ id })),
+            getPlaceFormChoices: () => of(PLACE_MOCK_FORM_CHOICES),
+          },
         },
         { provide: ActivatedRoute, useValue: { fragment: of(fragment) } },
       ],

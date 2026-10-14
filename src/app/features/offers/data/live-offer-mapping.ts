@@ -1,3 +1,4 @@
+import { toIsoDay } from '../../../shared/formatting/iso-day';
 import { LiveReference } from '../../../core/http/live-reference';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { CampaignSummary } from '../../../shared/models/campaign-summary';
@@ -11,18 +12,12 @@ import { LiveOfferFormOptions } from './live-offer-form-options';
 import { LIVE_ACTIVE_OFFER_STATUS } from './live-offer-status';
 import { LiveOfferSummary } from './live-offer-summary';
 
-const ISO_DAY_LENGTH = 10;
-
-function toDay(moment: string): string {
-  return moment.slice(0, ISO_DAY_LENGTH);
-}
-
 function toOfferStatus(offer: LiveOffer, today: string): CampaignStatus {
   if (offer.status !== LIVE_ACTIVE_OFFER_STATUS) {
     return 'paused';
   }
   return resolveRunningStatus(
-    { startsOn: toDay(offer.starts_at), endsOn: toDay(offer.ends_at) },
+    { startsOn: toIsoDay(offer.starts_at), endsOn: toIsoDay(offer.ends_at) },
     today,
   );
 }
@@ -39,8 +34,8 @@ export function toOffer(offer: LiveOffer, today: string): Offer {
     title: offer.title,
     placeName: offer.store_name,
     categoryName: '',
-    startsOn: toDay(offer.starts_at),
-    endsOn: toDay(offer.ends_at),
+    startsOn: toIsoDay(offer.starts_at),
+    endsOn: toIsoDay(offer.ends_at),
     status: toOfferStatus(offer, today),
   };
 }

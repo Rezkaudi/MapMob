@@ -1,6 +1,6 @@
 import { ComplaintDetail } from '../models/complaint-detail';
 import { ComplaintReview } from '../models/complaint-review';
-import { ComplaintStatus } from '../models/complaint-status';
+import { summarizeComplaints } from './summarize-complaints';
 import { ComplaintSummary } from '../models/complaint-summary';
 
 /** In-memory store behind the mock repository, so saved reviews and deletes stick. */
@@ -24,15 +24,7 @@ export class ComplaintMockDatabase {
   }
 
   summarize(): ComplaintSummary {
-    const countOf = (status: ComplaintStatus) =>
-      this.complaints.filter((complaint) => complaint.status === status).length;
-    return {
-      totalCount: this.complaints.length,
-      newCount: countOf('new'),
-      inReviewCount: countOf('inReview'),
-      resolvedCount: countOf('resolved'),
-      rejectedCount: countOf('rejected'),
-    };
+    return summarizeComplaints(this.complaints);
   }
 
   saveReview(id: string, review: ComplaintReview): ComplaintDetail {

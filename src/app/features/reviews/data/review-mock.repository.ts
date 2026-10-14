@@ -9,7 +9,7 @@ import { ReviewQuery } from '../models/review-query';
 import { ModeratedReviewStatus } from '../models/review-status';
 import { ReviewSummary } from '../models/review-summary';
 import { ReviewMockDatabase } from './review-mock-database';
-import { filterReviews, queryReviews, summarizeReviews } from './review-mock-query';
+import { filterReviews, queryReviews, summarizeReviews } from './review-list-query';
 import { ReviewRepository } from './review.repository';
 import { buildReviewsCsvFile } from './reviews-csv';
 

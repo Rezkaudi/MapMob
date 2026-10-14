@@ -23,6 +23,17 @@ describe('PlanFormDialog', () => {
     expect(element(render()).textContent).toContain('«أساسية»');
   });
 
+  it('says it adds a package when it opens for a new one', () => {
+    const fixture = TestBed.createComponent(PlanFormDialog);
+    fixture.componentRef.setInput('plan', basic);
+    fixture.componentRef.setInput('mode', 'create');
+    fixture.detectChanges();
+
+    const text = element(fixture).textContent ?? '';
+    expect(text).toContain('إضافة باقة جديدة');
+    expect(text).not.toContain('تعديل الباقة');
+  });
+
   it('fills the name field from the package', () => {
     const input = element(render()).querySelector<HTMLInputElement>('input[formControlName=name]');
 

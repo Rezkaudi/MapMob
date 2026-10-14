@@ -10,6 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyCode } from '../../../../shared/money/currency-code';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { PackagePlan } from '../../models/package-plan';
+import { FormMode } from '../../../../shared/models/form-mode';
 import { PlanDraft } from '../../models/plan-draft';
 import { buildPlanFormGroup, toPlanDraft } from '../../state/plan-form-group';
 import { LimitStepper } from '../limit-stepper/limit-stepper';
@@ -28,6 +29,7 @@ const PERCENT = 100;
 })
 export class PlanFormDialog {
   readonly plan = input.required<PackagePlan>();
+  readonly mode = input<FormMode>('edit');
   readonly isBusy = input<boolean>(false);
   readonly saved = output<PlanDraft>();
   readonly cancelled = output<void>();
@@ -35,8 +37,13 @@ export class PlanFormDialog {
   /** A fresh form per package, so reopening the dialog forgets the last edit. */
   protected readonly form = computed(() => buildPlanFormGroup(this.plan()));
   protected readonly limitFields = PLAN_LIMIT_FIELDS;
-  protected readonly subtitle = computed(
-    () => `تعديل تفاصيل وأسعار «${this.plan().name}» في المنصة`,
+  protected readonly title = computed(() =>
+    this.mode() === 'create' ? 'إضافة باقة جديدة' : 'تعديل الباقة',
+  );
+  protected readonly subtitle = computed(() =>
+    this.mode() === 'create'
+      ? 'أدخل تفاصيل وأسعار الباقة الجديدة'
+      : `تعديل تفاصيل وأسعار «${this.plan().name}» في المنصة`,
   );
 
   /** Both cycle cards share one currency, so either picker sets it for the plan. */

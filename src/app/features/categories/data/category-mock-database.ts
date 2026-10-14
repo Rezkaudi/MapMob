@@ -28,6 +28,7 @@ export class CategoryMockDatabase {
     const category: Category = {
       id: `category-${crypto.randomUUID()}`,
       ...this.placeUnderParent(draft),
+      iconUrl: null,
       placeCount: NEW_CATEGORY_PLACE_COUNT,
       status: 'active',
       updatedAt: now(),
@@ -61,7 +62,7 @@ export class CategoryMockDatabase {
 
   private placeUnderParent(
     draft: CategoryDraft,
-  ): Omit<Category, 'id' | 'placeCount' | 'status' | 'updatedAt'> {
+  ): Omit<Category, 'id' | 'placeCount' | 'status' | 'updatedAt' | 'iconUrl'> {
     if (draft.kind === 'main') {
       return { ...draft, parentId: null, parentName: null };
     }

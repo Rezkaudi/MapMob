@@ -42,6 +42,10 @@ class FakeRepository implements SubscriptionRepository {
     return of({ ...MOCK_PLANS[1], id, name: draft.name });
   }
 
+  createPlan(draft: PlanDraft): Observable<PackagePlan> {
+    return of({ ...MOCK_PLANS[1], id: 'new-plan', name: draft.name });
+  }
+
   setPlanActive(id: string, isActive: boolean): Observable<PackagePlan> {
     return of({ ...MOCK_PLANS[0], id, isActive });
   }
@@ -54,6 +58,10 @@ class FakeRepository implements SubscriptionRepository {
   // The records tab has its own store; these are here only to satisfy the contract.
   getSubscriptions(): Observable<PagedResult<Subscription>> {
     return of({ items: [], totalCount: 0 });
+  }
+
+  cancelSubscription(): Observable<void> {
+    return of(undefined);
   }
 
   exportSubscriptions(): Observable<Blob> {
@@ -98,6 +106,16 @@ describe('PackagesStore', () => {
     store.load();
 
     expect(store.hasNoPlans()).toBe(true);
+  });
+
+  it('adds a created package to the end of the list', async () => {
+    const { store } = setUp();
+    store.load();
+
+    const saved = await store.createPlan({ ...editDraft(), name: 'فضية' });
+
+    expect(saved).toBe(true);
+    expect(store.plans().at(-1)?.name).toBe('فضية');
   });
 
   it('puts an edited package back in the list', async () => {

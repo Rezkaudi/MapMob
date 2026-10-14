@@ -1,5 +1,5 @@
-import { paginate } from '../../../../mock/paginate';
-import { sortListEntries } from '../../../../mock/sort-list-entries';
+import { paginate } from '../../../shared/lists/paginate';
+import { sortListEntries } from '../../../shared/lists/sort-list-entries';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Offer } from '../models/offer';
 import { OfferQuery } from '../models/offer-query';

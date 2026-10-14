@@ -8,6 +8,7 @@ export function buildCategory(overrides: Partial<Category> = {}): Category {
     parentId: null,
     parentName: null,
     icon: 'utensils-crossed',
+    iconUrl: null,
     color: '#0583EC',
     placeCount: 50,
     status: 'active',

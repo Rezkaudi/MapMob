@@ -1,13 +1,33 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CLOCK } from '../../../core/config/clock';
+import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
+import { LIVE_PLACE_FORM_OPTIONS } from '../testing/live-place-choices-fixture';
+import { buildPlaceSaveRequest } from '../testing/place-save-request-fixture';
 import { PlaceHttpRepository } from './place-http.repository';
+import { PlaceWriter } from './place-writer';
 
 const BASE_URL = 'https://api.test';
 const STORES_URL = `${BASE_URL}/admin/stores`;
+const PLANS_URL = `${BASE_URL}/admin/plans`;
+
+const LIVE_ROW = {
+  id: '4',
+  code: 'PL-0004',
+  name: 'happy store',
+  publicUrl: null,
+  logoUrl: null,
+  category: null,
+  governorate: null,
+  rating: 4,
+  reviewCount: 0,
+  status: 'active',
+  planTier: 'free',
+  createdAt: '2026-10-03T19:59:36Z',
+};
 
 describe('PlaceHttpRepository', () => {
   let repository: PlaceHttpRepository;
@@ -29,6 +49,10 @@ describe('PlaceHttpRepository', () => {
 
   afterEach(() => http.verify());
 
+  function answerPlans(): void {
+    http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
+  }
+
   it('asks the stores route for a page with the server filter names', async () => {
     const response = firstValueFrom(
       repository.getPlaces({
@@ -42,6 +66,7 @@ describe('PlaceHttpRepository', () => {
       }),
     );
 
+    answerPlans();
     const request = http.expectOne((candidate) => candidate.url === STORES_URL);
     const params = request.request.params;
     expect(params.get('page')).toBe('2');
@@ -56,9 +81,33 @@ describe('PlaceHttpRepository', () => {
     expect(await response).toEqual({ items: [], totalCount: 0 });
   });
 
+  it('filters by the slug of the premium plan and reads it back as premium', async () => {
+    const response = firstValueFrom(
+      repository.getPlaces({ pageIndex: 0, pageSize: 8, package: 'premium' }),
+    );
+
+    answerPlans();
+    const request = http.expectOne((candidate) => candidate.url === STORES_URL);
+    expect(request.request.params.get('plan_tier')).toBe('golden-plan');
+    request.flush({ items: [{ ...LIVE_ROW, planTier: 'golden-plan' }], totalCount: 1 });
+
+    expect((await response).items[0].package).toBe('premium');
+  });
+
+  it('loads the plans once for many pages', () => {
+    repository.getPlaces({ pageIndex: 0, pageSize: 8 }).subscribe();
+    answerPlans();
+    http.expectOne((candidate) => candidate.url === STORES_URL).flush({ items: [], totalCount: 0 });
+
+    repository.getPlaces({ pageIndex: 1, pageSize: 8 }).subscribe();
+    http.expectNone(PLANS_URL);
+    http.expectOne((candidate) => candidate.url === STORES_URL).flush({ items: [], totalCount: 0 });
+  });
+
   it('asks for the best rated first, and sends no sort for newest', () => {
     repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'rating' }).subscribe();
     repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'newest' }).subscribe();
+    answerPlans();
 
     const [byRating, newest] = http.match((candidate) => candidate.url === STORES_URL);
     expect(byRating.request.params.get('sort_by')).toBe('rating_desc');
@@ -78,6 +127,7 @@ describe('PlaceHttpRepository', () => {
 
   it('reads one place', async () => {
     const response = firstValueFrom(repository.getPlace('1'));
+    answerPlans();
 
     http.expectOne(`${STORES_URL}/1`).flush({
       data: {
@@ -134,6 +184,7 @@ describe('PlaceHttpRepository', () => {
       }),
     );
 
+    answerPlans();
     const request = http.expectOne((candidate) => candidate.url === `${STORES_URL}/export`);
     expect(request.request.responseType).toBe('blob');
     expect(request.request.params.get('category_id')).toBe('9');
@@ -142,6 +193,30 @@ describe('PlaceHttpRepository', () => {
     request.flush(new Blob(['name']));
 
     expect(await response).toBeInstanceOf(Blob);
+  });
+
+  it('reads the form choices from the store form options', async () => {
+    const response = firstValueFrom(repository.getPlaceFormChoices());
+
+    http.expectOne(`${STORES_URL}/formoptions`).flush({ data: LIVE_PLACE_FORM_OPTIONS });
+
+    expect((await response).governorates[0].areas[0].name).toBe('tartus city');
+  });
+
+  it('saves a place through the writer with the form choices and the plans', async () => {
+    const saves: unknown[] = [];
+    TestBed.inject(PlaceWriter).save = (...args: unknown[]) => {
+      saves.push(args);
+      return of('52');
+    };
+    const request = buildPlaceSaveRequest();
+    const response = firstValueFrom(repository.savePlace(null, request));
+
+    http.expectOne(`${STORES_URL}/formoptions`).flush({ data: LIVE_PLACE_FORM_OPTIONS });
+    answerPlans();
+
+    expect(await response).toBe('52');
+    expect(saves).toHaveLength(1);
   });
 
   it('reads the category filter choices from the form options', async () => {

@@ -38,6 +38,7 @@ export class ComplaintTable {
   readonly hasNoResults = input<boolean>(false);
   readonly emptyMessage = input<string>('');
   readonly rowCount = input<number>(DEFAULT_ROW_COUNT);
+  readonly isRemoveVisible = input<boolean>(true);
 
   readonly rowToggle = output<string>();
   readonly allToggle = output<void>();

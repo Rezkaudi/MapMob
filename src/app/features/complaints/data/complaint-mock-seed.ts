@@ -2,7 +2,7 @@ import { MOCK_PLACES } from '../../../../mock/mock-places';
 import { createSeededRandom, pickOne, randomInt } from '../../../../mock/random';
 import { addCalendarDays, toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { ComplaintDetail } from '../models/complaint-detail';
-import { ComplaintReason } from '../models/complaint-reason';
+import { COMPLAINT_REASON_LABELS, ComplaintReason } from '../models/complaint-reason';
 import { ComplaintReporter } from '../models/complaint-reporter';
 import { ComplaintStatus } from '../models/complaint-status';
 import { ReportedPlace } from '../models/reported-place';
@@ -91,7 +91,7 @@ export function buildComplaintSeed(today: Date, count: number): readonly Complai
     return {
       id: `complaint-${index + 1}`,
       reference: `#${FIRST_REFERENCE_NUMBER + index}`,
-      reason,
+      reason: COMPLAINT_REASON_LABELS[reason],
       status: STATUS_CYCLE[index % STATUS_CYCLE.length],
       reportedOn: addCalendarDays(lastDay, -randomInt(next, 0, LONGEST_DAY_GAP)),
       reporter: REPORTERS[index % REPORTERS.length],

@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, from, shareReplay, switchMap } from 'rxjs';
 import { mockRequest } from '../../../../mock/mock-delay';
 import { CLOCK } from '../../../core/config/clock';
-import { StoryEntry } from '../models/story-entry';
 import { StoryExportRequest } from '../models/story-export-request';
 import { StoryPage } from '../models/story-page';
 import { StoryQuery } from '../models/story-query';
@@ -24,8 +23,10 @@ export class StoryMockRepository implements StoryRepository {
     return this.run((database) => database.summary());
   }
 
-  setStoryHidden(id: string, isHidden: boolean): Observable<StoryEntry> {
-    return this.run((database) => database.setHidden(id, isHidden));
+  setStoryHidden(id: string, isHidden: boolean): Observable<void> {
+    return this.run((database) => {
+      database.setHidden(id, isHidden);
+    });
   }
 
   deleteStory(id: string): Observable<void> {

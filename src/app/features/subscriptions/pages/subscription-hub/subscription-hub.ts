@@ -10,12 +10,19 @@ import { PageHeader } from '../../../../shared/ui/page-header/page-header';
 import { StatCard } from '../../../../shared/ui/stat-card/stat-card';
 import { TablePagination } from '../../../../shared/ui/table-pagination/table-pagination';
 import { Toast } from '../../../../shared/ui/toast/toast';
+import { FormMode } from '../../../../shared/models/form-mode';
+import { Subscription } from '../../models/subscription';
+import { NEW_PLAN_TEMPLATE } from '../../models/new-plan-template';
 import { PackagePlan } from '../../models/package-plan';
 import { PlanDraft } from '../../models/plan-draft';
 import { SubscriptionTab } from '../../models/subscription-tab';
 import { PackagesStore } from '../../state/packages.store';
 import { SubscriptionsStore } from '../../state/subscriptions.store';
-import { buildPlanDeleteCopy, buildPlanStatusCopy } from '../../ui/plan-dialog-copy';
+import {
+  buildPlanDeleteCopy,
+  buildPlanStatusCopy,
+  buildSubscriptionCancelCopy,
+} from '../../ui/plan-dialog-copy';
 import { BillingCycle } from '../../../../shared/models/billing-cycle';
 import { BillingCycleToggle } from '../../../../shared/ui/billing-cycle-toggle/billing-cycle-toggle';
 import { PlanCard } from '../../ui/plan-card/plan-card';
@@ -63,7 +70,17 @@ export class SubscriptionHub {
   /** The package the edit dialog is open on, if any. */
   protected readonly editedPlan = signal<PackagePlan | null>(null);
 
+  protected readonly isConfirmBusy = computed(
+    () => this.store.isSaving() || this.records.isSaving(),
+  );
+  /** The subscription waiting on the admin to confirm its cancel. */
+  protected readonly subscriptionToCancel = signal<Subscription | null>(null);
+
   protected readonly confirmCopy = computed<ConfirmActionCopy | null>(() => {
+    const toCancel = this.subscriptionToCancel();
+    if (toCancel) {
+      return buildSubscriptionCancelCopy(toCancel);
+    }
     const pending = this.pendingAction();
     if (!pending) {
       return null;
@@ -78,6 +95,15 @@ export class SubscriptionHub {
     this.records.loadSubscriptions();
   }
 
+  protected readonly isCreatingPlan = computed(() => this.editedPlan() === NEW_PLAN_TEMPLATE);
+  protected readonly planDialogMode = computed<FormMode>(() =>
+    this.isCreatingPlan() ? 'create' : 'edit',
+  );
+
+  protected addPlan(): void {
+    this.editedPlan.set(NEW_PLAN_TEMPLATE);
+  }
+
   protected editPlan(plan: PackagePlan): void {
     this.editedPlan.set(plan);
   }
@@ -89,7 +115,13 @@ export class SubscriptionHub {
 
   protected async savePlan(draft: PlanDraft): Promise<void> {
     const plan = this.editedPlan();
-    if (plan && (await this.store.savePlan(plan.id, draft))) {
+    if (!plan) {
+      return;
+    }
+    const isSaved = this.isCreatingPlan()
+      ? await this.store.createPlan(draft)
+      : await this.store.savePlan(plan.id, draft);
+    if (isSaved) {
       this.editedPlan.set(null);
     }
   }
@@ -102,12 +134,26 @@ export class SubscriptionHub {
     this.pendingAction.set({ plan, kind: 'delete' });
   }
 
+  protected askToCancelSubscription(entry: Subscription): void {
+    this.subscriptionToCancel.set(entry);
+  }
+
   protected cancelPendingAction(): void {
     this.pendingAction.set(null);
+    this.subscriptionToCancel.set(null);
     this.store.clearSaveError();
+    this.records.clearSaveError();
   }
 
   protected async confirmPendingAction(): Promise<void> {
+    const toCancel = this.subscriptionToCancel();
+    if (toCancel) {
+      if (await this.records.cancelSubscription(toCancel.id)) {
+        this.subscriptionToCancel.set(null);
+        this.store.load();
+      }
+      return;
+    }
     const pending = this.pendingAction();
     if (!pending) {
       return;

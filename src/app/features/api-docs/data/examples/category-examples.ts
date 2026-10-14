@@ -2,6 +2,9 @@ import type { Category } from '../../../categories/models/category';
 import type { CategoryPage } from '../../../categories/models/category-page';
 import type { MainCategory } from '../../../categories/models/main-category';
 
+// The icon picture URL is only how the panel reads the live server, not part of the contract.
+type ContractCategory = Omit<Category, 'iconUrl'>;
+
 export const CATEGORY_ROW = {
   id: '1',
   name: 'مطاعم',
@@ -13,7 +16,7 @@ export const CATEGORY_ROW = {
   placeCount: 34,
   status: 'active',
   updatedAt: '2026-09-22T19:01:50Z',
-} satisfies Category;
+} satisfies ContractCategory;
 
 export const SUB_CATEGORY_ROW = {
   id: '9',
@@ -26,13 +29,13 @@ export const SUB_CATEGORY_ROW = {
   placeCount: 12,
   status: 'active',
   updatedAt: '2026-09-23T08:40:12Z',
-} satisfies Category;
+} satisfies ContractCategory;
 
 export const CATEGORY_PAGE = {
   items: [CATEGORY_ROW, SUB_CATEGORY_ROW],
   totalCount: 61,
   kindCounts: { all: 61, main: 12, sub: 49 },
-} satisfies CategoryPage;
+} satisfies Omit<CategoryPage, 'items'> & { items: ContractCategory[] };
 
 export const MAIN_CATEGORIES = [
   { id: '1', name: 'مطاعم' },

@@ -8,12 +8,13 @@ import { ComplaintQuery } from '../models/complaint-query';
 import { ComplaintReview } from '../models/complaint-review';
 import { ComplaintSummary } from '../models/complaint-summary';
 import { ComplaintMockDatabase } from './complaint-mock-database';
-import { filterComplaints, queryComplaints } from './complaint-mock-query';
+import { filterComplaints, queryComplaints } from './complaint-list-query';
 import { buildComplaintsCsvFile } from './complaints-csv';
 import { ComplaintRepository } from './complaint.repository';
 
 @Injectable()
 export class ComplaintMockRepository implements ComplaintRepository {
+  readonly canDeleteComplaints = true;
   private readonly database = inject(ComplaintMockDatabase);
 
   getComplaints(query: ComplaintQuery): Observable<PagedResult<Complaint>> {

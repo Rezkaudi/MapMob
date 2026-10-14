@@ -7,6 +7,8 @@ import { ComplaintReview } from '../models/complaint-review';
 import { ComplaintSummary } from '../models/complaint-summary';
 
 export abstract class ComplaintRepository {
+  /** The live server has no delete route for reports. */
+  abstract readonly canDeleteComplaints: boolean;
   abstract getComplaints(query: ComplaintQuery): Observable<PagedResult<Complaint>>;
   abstract getSummary(): Observable<ComplaintSummary>;
   abstract getComplaint(id: string): Observable<ComplaintDetail>;

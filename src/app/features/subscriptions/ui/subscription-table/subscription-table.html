@@ -70,7 +70,7 @@
             <td class="text-center">
               <app-row-actions-menu
                 [isPrimaryVisible]="false"
-                (statusChange)="statusChange.emit(entry)"
+                [isStatusChangeVisible]="false"
                 (remove)="remove.emit(entry)"
               />
             </td>

@@ -8,7 +8,7 @@ import { CategoryQuery } from '../models/category-query';
 import { CategoryStatus } from '../models/category-status';
 import { MainCategory } from '../models/main-category';
 import { CategoryMockDatabase } from './category-mock-database';
-import { queryCategories } from './category-mock-query';
+import { queryCategories } from './category-list-query';
 import { CategoryRepository } from './category.repository';
 
 @Injectable()

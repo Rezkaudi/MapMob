@@ -13,7 +13,7 @@ const TICK: LucideIconData = { name: 'check', node: Check };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryColorPicker {
-  readonly value = input.required<CategoryColor>();
+  readonly value = input.required<string>();
   readonly valueChange = output<CategoryColor>();
 
   protected readonly colors = CATEGORY_COLORS;

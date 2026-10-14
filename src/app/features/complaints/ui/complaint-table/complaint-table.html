@@ -82,6 +82,7 @@
               <app-row-actions-menu
                 primaryAction="view"
                 [isStatusChangeVisible]="false"
+                [isRemoveVisible]="isRemoveVisible()"
                 (view)="view.emit(row.complaint)"
                 (remove)="remove.emit(row.complaint)"
               />

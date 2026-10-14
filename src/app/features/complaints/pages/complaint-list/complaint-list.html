@@ -46,6 +46,7 @@
       [hasNoResults]="store.hasNoResults()"
       [emptyMessage]="store.emptyMessage()"
       [rowCount]="store.pageSize()"
+      [isRemoveVisible]="store.canDeleteComplaints"
       (rowToggle)="store.toggleSelected($event)"
       (allToggle)="store.toggleAllVisible()"
       (view)="openComplaint($event)"

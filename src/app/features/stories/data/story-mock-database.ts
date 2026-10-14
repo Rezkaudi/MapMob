@@ -1,4 +1,4 @@
-import { paginate } from '../../../../mock/paginate';
+import { paginate } from '../../../shared/lists/paginate';
 import { Clock } from '../../../core/config/clock';
 import { StoryStatus } from '../../../shared/models/story-status';
 import { StoryEntry } from '../models/story-entry';

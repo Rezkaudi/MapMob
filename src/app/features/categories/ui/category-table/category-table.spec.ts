@@ -66,6 +66,19 @@ describe('CategoryTable', () => {
     expect(cellTexts(first).slice(1, 6)).toEqual(['مطاعم', 'رئيسي', '_', '50', 'نشط']);
   });
 
+  it('shows the uploaded icon picture when the category has one', () => {
+    const fixture = TestBed.createComponent(CategoryTable);
+    fixture.componentRef.setInput('entries', [
+      buildCategory({ icon: '', iconUrl: 'https://api.test/icons/a.jpg' }),
+    ]);
+    fixture.detectChanges();
+
+    const row = rowsOf(fixture.nativeElement)[0];
+    const picture = row.querySelector('img[data-testid="category-icon"]') as HTMLImageElement;
+    expect(picture.src).toBe('https://api.test/icons/a.jpg');
+    expect(row.querySelector('svg[data-testid="category-icon"]')).toBeNull();
+  });
+
   it('draws a sub category with its parent, icon and status', () => {
     const second = rowsOf(render().nativeElement)[1];
 

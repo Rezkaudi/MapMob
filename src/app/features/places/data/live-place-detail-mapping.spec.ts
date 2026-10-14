@@ -1,3 +1,4 @@
+import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
 import { toPlaceDetail } from './live-place-detail-mapping';
 import { LivePlaceDetail } from './live-place-detail';
 
@@ -37,7 +38,7 @@ const LIVE_DETAIL: LivePlaceDetail = {
     { day: 1, isOpen: false, openTime: null, closeTime: null },
   ],
   subscription: {
-    plan: { id: '1', name: 'الذهبية', tier: 'featured' },
+    plan: { id: '1', name: 'الذهبية', tier: 'golden-plan' },
     status: 'active',
     startsOn: '2026-10-04',
     endsOn: '2026-11-03',
@@ -72,7 +73,7 @@ const LIVE_DETAIL: LivePlaceDetail = {
 };
 
 describe('toPlaceDetail', () => {
-  const detail = toPlaceDetail(LIVE_DETAIL, NOW);
+  const detail = toPlaceDetail(LIVE_DETAIL, NOW, [LIVE_GOLD_PLAN]);
 
   it('keeps the plain fields and fills missing text with empty strings', () => {
     expect(detail.id).toBe('1');
@@ -108,7 +109,9 @@ describe('toPlaceDetail', () => {
   });
 
   it('gives a free plan with no end date when the place has no subscription', () => {
-    expect(toPlaceDetail({ ...LIVE_DETAIL, subscription: null }, NOW).subscription).toEqual({
+    expect(
+      toPlaceDetail({ ...LIVE_DETAIL, subscription: null }, NOW, [LIVE_GOLD_PLAN]).subscription,
+    ).toEqual({
       package: 'free',
       status: 'suspended',
       renewsAt: '',

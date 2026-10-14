@@ -19,6 +19,19 @@ export class PlanMockDatabase {
     return this.plans;
   }
 
+  add(draft: PlanDraft): PackagePlan {
+    const plan: PackagePlan = {
+      id: `plan-${crypto.randomUUID()}`,
+      tier: 'basic',
+      tagline: '',
+      badge: null,
+      subscriberCount: 0,
+      ...draft,
+    };
+    this.plans = [...this.plans, plan];
+    return plan;
+  }
+
   update(id: string, draft: PlanDraft): PackagePlan {
     return this.replace(id, (plan) => ({
       ...plan,

@@ -92,6 +92,24 @@ describe('ComplaintTable', () => {
     expect(opened).toEqual([ZAWIYA.complaint]);
   });
 
+  it('leaves delete out of the row menu when the server cannot delete', () => {
+    const fixture = render();
+    fixture.componentRef.setInput('isRemoveVisible', false);
+    fixture.detectChanges();
+    const trigger = rowsOf(fixture)[0].querySelector('button[aria-haspopup]') as HTMLButtonElement;
+
+    trigger.click();
+    fixture.detectChanges();
+    const labels = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        '[data-testid="action-menu-panel"] button',
+      ),
+      (item) => item.textContent?.trim(),
+    );
+
+    expect(labels).toEqual(['عرض التفاصيل']);
+  });
+
   it('offers details and delete from the row menu', () => {
     const fixture = render();
     const opened: Complaint[] = [];

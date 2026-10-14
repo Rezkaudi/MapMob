@@ -1,3 +1,4 @@
+import { toIsoDay } from '../../../shared/formatting/iso-day';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { CampaignSummary } from '../../../shared/models/campaign-summary';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';
@@ -13,17 +14,12 @@ import {
 } from './live-ad-status';
 import { LiveAdSummary } from './live-ad-summary';
 
-const ISO_DAY_LENGTH = 10;
 const LOWEST_PRIORITY = 1;
 const HIGHEST_PRIORITY = 5;
 const VIDEO_MEDIA_TYPE = 'video';
 // The server has no banner position and no editor name; only admins edit ads.
 const DEFAULT_POSITION = 'topBanner';
 const EDITOR_NAME = 'Admin';
-
-function toDay(moment: string): string {
-  return moment.slice(0, ISO_DAY_LENGTH);
-}
 
 // The server allows any number; the panel ranks 1 to 5.
 function toAdPriority(priority: number): AdPriority {
@@ -38,7 +34,7 @@ function toAdStatus(ad: LiveAd, today: string): CampaignStatus {
     return 'paused';
   }
   return resolveRunningStatus(
-    { startsOn: toDay(ad.starts_at), endsOn: ad.ends_at === null ? null : toDay(ad.ends_at) },
+    { startsOn: toIsoDay(ad.starts_at), endsOn: ad.ends_at === null ? null : toIsoDay(ad.ends_at) },
     today,
   );
 }
@@ -54,8 +50,8 @@ export function toAd(ad: LiveAd, today: string): Ad {
     contentType: ad.media?.[0]?.type === VIDEO_MEDIA_TYPE ? 'video' : 'image',
     placement: toAdPlacement(ad.placement),
     priority: toAdPriority(ad.priority),
-    startsOn: toDay(ad.starts_at),
-    endsOn: ad.ends_at === null ? null : toDay(ad.ends_at),
+    startsOn: toIsoDay(ad.starts_at),
+    endsOn: ad.ends_at === null ? null : toIsoDay(ad.ends_at),
     status: toAdStatus(ad, today),
   };
 }
@@ -67,8 +63,8 @@ export function toAdDetail(ad: LiveAd, today: string): AdDetail {
     position: DEFAULT_POSITION,
     text: ad.description ?? '',
     mediaUrl: ad.media?.[0]?.url ?? null,
-    createdOn: toDay(ad.created_at),
-    updatedOn: toDay(ad.updated_at),
+    createdOn: toIsoDay(ad.created_at),
+    updatedOn: toIsoDay(ad.updated_at),
     updatedBy: EDITOR_NAME,
     // The server does not count unique viewers yet.
     metrics: {

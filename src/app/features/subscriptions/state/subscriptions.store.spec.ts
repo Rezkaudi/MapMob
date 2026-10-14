@@ -35,6 +35,13 @@ class FakeRepository {
     return of({ items: this.items, totalCount: this.items.length });
   }
 
+  readonly cancelled: string[] = [];
+
+  cancelSubscription(id: string): Observable<void> {
+    this.cancelled.push(id);
+    return of(undefined);
+  }
+
   exportSubscriptions(): Observable<Blob> {
     return this.exportError
       ? throwError(() => new Error(this.exportError!))
@@ -124,5 +131,17 @@ describe('SubscriptionsStore', () => {
 
     expect(await store.exportSubscriptions()).toBeNull();
     expect(store.saveError()).toBe('تعذر تصدير الاشتراكات');
+  });
+
+  it('cancels a subscription, then reloads the rows', async () => {
+    const { repository, store } = setUp();
+    store.loadSubscriptions();
+    repository.lastQuery = null;
+
+    const isCancelled = await store.cancelSubscription('a');
+
+    expect(isCancelled).toBe(true);
+    expect(repository.cancelled).toEqual(['a']);
+    expect(repository.lastQuery).not.toBeNull();
   });
 });

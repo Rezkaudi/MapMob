@@ -1,5 +1,5 @@
-import { paginate } from '../../../../mock/paginate';
-import { sortListEntries } from '../../../../mock/sort-list-entries';
+import { paginate } from '../../../shared/lists/paginate';
+import { sortListEntries } from '../../../shared/lists/sort-list-entries';
 import { ListQuery } from '../../../shared/models/list-query';
 import { DeliveryPlatformEntry } from '../models/delivery-platform-entry';
 import { DeliveryPlatformPage } from '../models/delivery-platform-page';

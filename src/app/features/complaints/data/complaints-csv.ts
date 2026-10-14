@@ -1,6 +1,5 @@
 import { CsvRow, buildCsvFile } from '../../../shared/files/csv-file';
 import { Complaint } from '../models/complaint';
-import { COMPLAINT_REASON_LABELS } from '../models/complaint-reason';
 import { COMPLAINT_STATUS_LABELS } from '../models/complaint-status';
 
 const HEADER: CsvRow = [
@@ -19,7 +18,7 @@ function toRow(complaint: Complaint): CsvRow {
     complaint.reporter.name,
     complaint.reporter.email,
     complaint.place.name,
-    COMPLAINT_REASON_LABELS[complaint.reason],
+    complaint.reason,
     complaint.reportedOn,
     COMPLAINT_STATUS_LABELS[complaint.status],
   ];

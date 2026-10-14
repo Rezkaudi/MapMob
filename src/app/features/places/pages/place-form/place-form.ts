@@ -26,7 +26,9 @@ import { PACKAGE_MEDIA_LIMIT } from '../../models/package-media-limit';
 import { PACKAGE_PRODUCT_LIMIT } from '../../models/package-product-limit';
 import { PlaceDetail } from '../../models/place-detail';
 import { EMPTY_PRODUCT_DRAFT } from '../../../../shared/models/empty-product-draft';
+import { EditedPlaceProduct } from '../../models/edited-place-product';
 import { PlaceProduct } from '../../models/place-product';
+import { PlaceSaveRequest } from '../../models/place-save-request';
 import { ProductDraft } from '../../../../shared/models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
 import { createPlaceFormGroup } from '../../state/place-form-group';
@@ -42,12 +44,6 @@ import { PlaceBasicInfoSection } from './place-basic-info-section/place-basic-in
 import { PlaceDeliverySection } from './place-delivery-section/place-delivery-section';
 import { PlaceDetailsSection } from './place-details-section/place-details-section';
 import { PlaceFormActions } from './place-form-actions/place-form-actions';
-import {
-  CATEGORY_OPTIONS,
-  CITY_OPTIONS,
-  DELIVERY_PLATFORM_OPTIONS,
-  REGION_OPTIONS,
-} from './place-form-options';
 import { PlaceLocationSection } from './place-location-section/place-location-section';
 import { PlaceMediaSection } from './place-media-section/place-media-section';
 import { PlaceSubscriptionSection } from './place-subscription-section/place-subscription-section';
@@ -96,21 +92,39 @@ export class PlaceForm {
   protected readonly store = inject(PlaceFormStore);
   protected readonly form = createPlaceFormGroup(inject(FormBuilder));
 
+  /** The control's value only reaches a computed through its value stream. */
+  private readonly selectedCity = toSignal(this.form.controls.city.valueChanges, {
+    initialValue: this.form.controls.city.value,
+  });
+
   /** The saved value joins the list when the list does not already offer it. */
   protected readonly categories = computed(() =>
-    withSavedOption(CATEGORY_OPTIONS, this.store.editedPlace()?.mainCategory),
+    withSavedOption(
+      this.store.choices()?.mainCategories.map((category) => category.name) ?? [],
+      this.store.editedPlace()?.mainCategory,
+    ),
   );
   protected readonly cities = computed(() =>
-    withSavedOption(CITY_OPTIONS, this.store.editedPlace()?.location.city),
+    withSavedOption(
+      this.store.choices()?.governorates.map((governorate) => governorate.name) ?? [],
+      this.store.editedPlace()?.location.city,
+    ),
   );
-  protected readonly regions = computed(() =>
-    withSavedOption(REGION_OPTIONS, this.store.editedPlace()?.location.region),
-  );
+  protected readonly regions = computed(() => {
+    const governorate = this.store
+      .choices()
+      ?.governorates.find((candidate) => candidate.name === this.selectedCity());
+    return withSavedOption(
+      governorate?.areas.map((area) => area.name) ?? [],
+      this.store.editedPlace()?.location.region,
+    );
+  });
   /** A saved place lists the apps it came with; a new one is offered every app, switched off. */
   protected readonly deliveryPlatforms = computed(
     () =>
       this.store.editedPlace()?.deliveryLinks.map((link) => link.platform) ??
-      DELIVERY_PLATFORM_OPTIONS,
+      this.store.choices()?.deliveryPlatforms ??
+      [],
   );
 
   protected readonly hasSaved = signal(false);
@@ -121,7 +135,7 @@ export class PlaceForm {
 
   protected readonly week = signal<readonly WorkingDay[]>(createDefaultWeek());
   protected readonly images = signal<readonly MediaFile[]>([]);
-  protected readonly products = signal<readonly PlaceProduct[]>([]);
+  protected readonly products = signal<readonly EditedPlaceProduct[]>([]);
   protected readonly isAddingProduct = signal(false);
   /** The product the dialog is changing, or `null` while one is being added. */
   protected readonly editedProduct = signal<PlaceProduct | null>(null);
@@ -157,7 +171,6 @@ export class PlaceForm {
   private readonly injector = inject(Injector);
 
   constructor() {
-    resetDeliveryLinks(this.form.controls.deliveryLinks, DELIVERY_PLATFORM_OPTIONS);
     // The add route binds no id, and its empty string means "adding", the same as none.
     this.store.load(computed(() => this.id() || null));
     effect(() => {
@@ -168,8 +181,13 @@ export class PlaceForm {
     });
     effect(() => {
       const place = this.store.editedPlace();
+      const choices = this.store.choices();
       if (place) {
         untracked(() => this.fillFrom(place));
+      } else if (choices) {
+        untracked(() =>
+          resetDeliveryLinks(this.form.controls.deliveryLinks, choices.deliveryPlatforms),
+        );
       }
     });
   }
@@ -235,13 +253,46 @@ export class PlaceForm {
     );
   }
 
-  /** The write endpoint is not built yet, so saving only validates and confirms. */
-  protected save(): void {
+  protected async save(): Promise<void> {
     this.form.markAllAsTouched();
-    if (this.form.invalid) {
+    if (this.form.invalid || this.store.isSaving()) {
+      return;
+    }
+    const id = this.id() || null;
+    const savedId = await this.store.save(id, this.buildSaveRequest());
+    if (!savedId) {
       return;
     }
     this.hasSaved.set(true);
+    if (id) {
+      this.store.load(id);
+    } else {
+      this.startOver();
+    }
+  }
+
+  private buildSaveRequest(): PlaceSaveRequest {
+    return {
+      value: this.form.getRawValue(),
+      week: this.week(),
+      images: this.images(),
+      videos: this.videos(),
+      products: this.products(),
+      previousPackage: this.store.editedPlace()?.subscription.package ?? null,
+    };
+  }
+
+  /** A new place is saved once; the form empties so the next one starts clean. */
+  private startOver(): void {
+    this.form.reset();
+    resetDeliveryLinks(
+      this.form.controls.deliveryLinks,
+      this.store.choices()?.deliveryPlatforms ?? [],
+    );
+    this.week.set(createDefaultWeek());
+    this.images.set([]);
+    this.videos.set([]);
+    this.products.set([]);
   }
 
   protected dismissSavedToast(): void {
@@ -253,6 +304,6 @@ export class PlaceForm {
     this.week.set(toWorkingWeek(place.workingHours));
     this.images.set(toSavedMediaFiles(place.images));
     this.videos.set(toSavedVideoFiles(place.videos));
-    this.products.set(place.products);
+    this.products.set(place.products.map((product) => ({ ...product, imageFile: null })));
   }
 }

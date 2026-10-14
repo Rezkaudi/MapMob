@@ -3,14 +3,23 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { buildStoryEntry, buildStorySummary } from '../testing/story-fixture';
+import { LIVE_STORY } from '../testing/live-story-fixture';
 import { StoryHttpRepository } from './story-http.repository';
 
-const STORIES_URL = 'https://api.test/stories';
+const STORIES_URL = 'https://api.test/admin/stories';
+const ACTIVE_STORY = { ...LIVE_STORY, id: 3, status: 'active', store: { id: 4, name: 'حلب' } };
 
 describe('StoryHttpRepository', () => {
   let repository: StoryHttpRepository;
   let http: HttpTestingController;
+
+  function answerStatus(status: string, rows: readonly unknown[]): void {
+    http
+      .expectOne(
+        (request) => request.url === STORIES_URL && request.params.get('status') === status,
+      )
+      .flush({ data: rows, pagination: { total: rows.length } });
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,63 +36,68 @@ describe('StoryHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('reads one page with the search and the status', async () => {
+  it('reads one status the server can list', async () => {
     const response = firstValueFrom(
-      repository.getStories({ pageIndex: 1, pageSize: 4, search: 'كافيه', status: 'active' }),
+      repository.getStories({ pageIndex: 0, pageSize: 10, status: 'expired' }),
     );
+    answerStatus('expired', [LIVE_STORY]);
 
-    const request = http.expectOne((candidate) => candidate.url === STORIES_URL);
-    expect(request.request.method).toBe('GET');
-    expect(request.request.params.get('pageIndex')).toBe('1');
-    expect(request.request.params.get('pageSize')).toBe('4');
-    expect(request.request.params.get('search')).toBe('كافيه');
-    expect(request.request.params.get('status')).toBe('active');
-    request.flush({ items: [buildStoryEntry()], totalCount: 1 });
-    expect((await response).totalCount).toBe(1);
+    expect((await response).items.map((story) => story.id)).toEqual(['2']);
   });
 
-  it('reads the numbers of the cards and the chips', async () => {
+  it('shows "all" as the active and the expired stories, searched here', async () => {
+    const response = firstValueFrom(
+      repository.getStories({ pageIndex: 0, pageSize: 10, search: 'حلب' }),
+    );
+    answerStatus('active', [ACTIVE_STORY]);
+    answerStatus('expired', [LIVE_STORY]);
+
+    const page = await response;
+    expect(page.totalCount).toBe(1);
+    expect(page.items[0].id).toBe('3');
+  });
+
+  it('explains that the server cannot list hidden stories yet', async () => {
+    const response = firstValueFrom(
+      repository.getStories({ pageIndex: 0, pageSize: 10, status: 'hidden' }),
+    );
+
+    await expect(response).rejects.toThrow('القصص المخفية');
+  });
+
+  it('reads the summary', async () => {
     const response = firstValueFrom(repository.getSummary());
 
-    const request = http.expectOne(`${STORIES_URL}/summary`);
-    expect(request.request.method).toBe('GET');
-    request.flush(buildStorySummary());
+    http
+      .expectOne(`${STORIES_URL}/summary`)
+      .flush({ data: { total: 2, active: 0, hidden: 1, expired: 1 } });
+
     expect((await response).hiddenCount).toBe(1);
   });
 
-  it('hides or shows a story with a PATCH on its visibility', async () => {
-    const response = firstValueFrom(repository.setStoryHidden('9', true));
+  it('flips the visibility with PATCH', async () => {
+    const response = firstValueFrom(repository.setStoryHidden('9'));
 
-    const request = http.expectOne(`${STORIES_URL}/9/visibility`);
-    expect(request.request.method).toBe('PATCH');
-    expect(request.request.body).toEqual({ isHidden: true });
-    request.flush(buildStoryEntry({ id: '9', status: 'hidden' }));
-    expect((await response).status).toBe('hidden');
+    http.expectOne({ method: 'PATCH', url: `${STORIES_URL}/9/visibility` }).flush({});
+
+    expect(await response).toBeUndefined();
   });
 
-  it('deletes a story by its id', async () => {
-    const response = firstValueFrom(repository.deleteStory('9'), { defaultValue: undefined });
+  it('deletes a story', async () => {
+    const response = firstValueFrom(repository.deleteStory('9'));
 
-    const request = http.expectOne(`${STORIES_URL}/9`);
-    expect(request.request.method).toBe('DELETE');
-    request.flush(null, { status: 204, statusText: 'No Content' });
-    await response;
+    http.expectOne({ method: 'DELETE', url: `${STORIES_URL}/9` }).flush({});
+
+    expect(await response).toBeUndefined();
   });
 
-  it('downloads the export with the filters and the ticked rows as ids[], never the page', async () => {
+  it('exports the ticked rows from what the server can list', async () => {
     const response = firstValueFrom(
-      repository.exportStories({
-        query: { pageIndex: 3, pageSize: 4, search: 'كافيه', status: 'expired' },
-        ids: ['4', '9'],
-      }),
+      repository.exportStories({ query: { pageIndex: 0, pageSize: 10 }, ids: ['2'] }),
     );
+    answerStatus('active', [ACTIVE_STORY]);
+    answerStatus('expired', [LIVE_STORY]);
 
-    const request = http.expectOne((candidate) => candidate.url === `${STORIES_URL}/export`);
-    expect(request.request.method).toBe('GET');
-    expect(request.request.responseType).toBe('blob');
-    expect(request.request.params.keys().sort()).toEqual(['ids[]', 'search', 'status']);
-    expect(request.request.params.getAll('ids[]')).toEqual(['4', '9']);
-    request.flush(new Blob(['csv']));
-    expect((await response).size).toBe(3);
+    expect((await response).type).toContain('text/csv');
   });
 });

@@ -18,6 +18,7 @@ const SUMMARY = {
 function createPage(overrides: Partial<ComplaintRepository> = {}) {
   const deletedIds: string[] = [];
   const repository: Partial<ComplaintRepository> = {
+    canDeleteComplaints: true,
     getComplaints: () =>
       of({
         items: [buildComplaintDetail(), buildComplaintDetail({ id: 'complaint-2' })],

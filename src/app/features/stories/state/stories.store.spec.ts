@@ -28,7 +28,7 @@ function createStore(overrides: Partial<StoryRepository> = {}) {
       return of(PAGE);
     },
     getSummary: vi.fn(() => of(buildStorySummary())),
-    setStoryHidden: vi.fn(() => of(HIDDEN)),
+    setStoryHidden: vi.fn(() => of(undefined)),
     deleteStory: vi.fn((): Observable<void> => of(undefined)),
     exportStories: (request) => {
       exports.push(request);

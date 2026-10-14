@@ -4,7 +4,7 @@ export function buildComplaintDetail(overrides: Partial<ComplaintDetail> = {}): 
   return {
     id: 'complaint-1',
     reference: '#1023',
-    reason: 'wrongInformation',
+    reason: 'معلومات خاطئة',
     status: 'new',
     reportedOn: '2026-09-09',
     reporter: {

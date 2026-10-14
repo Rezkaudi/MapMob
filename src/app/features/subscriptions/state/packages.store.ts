@@ -31,15 +31,19 @@ export const PackagesStore = signalStore(
     hasNoPlans: computed(() => hasLoaded() && plans().length === 0),
   })),
   withMethods((store, repository = inject(SubscriptionRepository)) => {
-    /** Writes that answer with the saved package put it straight back in the list. */
-    const runWrite = async (request: Observable<PackagePlan>): Promise<boolean> => {
+    const replaceSaved = (saved: PackagePlan) =>
+      store.plans().map((plan) => (plan.id === saved.id ? saved : plan));
+    const appendSaved = (saved: PackagePlan) => [...store.plans(), saved];
+
+    /** Writes that answer with the saved package put it straight in the list. */
+    const runWrite = async (
+      request: Observable<PackagePlan>,
+      placeSaved: (saved: PackagePlan) => readonly PackagePlan[] = replaceSaved,
+    ): Promise<boolean> => {
       patchState(store, { isSaving: true, saveError: null });
       try {
         const saved = await lastValueFrom(request);
-        patchState(store, {
-          plans: store.plans().map((plan) => (plan.id === saved.id ? saved : plan)),
-          isSaving: false,
-        });
+        patchState(store, { plans: placeSaved(saved), isSaving: false });
         return true;
       } catch (error) {
         patchState(store, { isSaving: false, saveError: (error as Error).message });
@@ -68,6 +72,11 @@ export const PackagesStore = signalStore(
           ),
         ),
       ),
+
+      /** Resolves `true` once the new package is saved, so the dialog can close. */
+      createPlan(draft: PlanDraft): Promise<boolean> {
+        return runWrite(repository.createPlan(draft), appendSaved);
+      },
 
       /** Resolves `true` once the package is saved, so the dialog can close. */
       savePlan(id: string, draft: PlanDraft): Promise<boolean> {

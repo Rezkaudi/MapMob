@@ -10,6 +10,8 @@ import { PlaceExportRequest } from '../models/place-export-request';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceStatusCounts } from '../models/place-status-counts';
 import { MOCK_PLACE_CATEGORIES } from './place-mock-categories';
+import { PlaceFormChoices } from '../models/place-form-choices';
+import { PLACE_MOCK_FORM_CHOICES } from './place-mock-form-choices';
 import { PlaceMockDatabase } from './place-mock-database';
 import { countPlacesByStatus, filterPlaces, queryPlaces } from './place-mock-query';
 import { PlaceRepository } from './place.repository';
@@ -17,6 +19,8 @@ import { buildPlacesCsvFile } from './places-csv';
 
 /** The sample detail page is loaded on first use, so its copy stays out of the initial bundle. */
 const loadDetailBuilder = () => from(import('./place-mock-detail'));
+
+const MOCK_NEW_PLACE_ID = 'place-new';
 
 @Injectable()
 export class PlaceMockRepository implements PlaceRepository {
@@ -57,6 +61,15 @@ export class PlaceMockRepository implements PlaceRepository {
     }
     const ticked = new Set(ids);
     return matching.filter((place) => ticked.has(place.id));
+  }
+
+  getPlaceFormChoices(): Observable<PlaceFormChoices> {
+    return mockRequest(() => PLACE_MOCK_FORM_CHOICES);
+  }
+
+  /** The mock keeps no new places, so saving only answers with an id. */
+  savePlace(id: string | null): Observable<string> {
+    return mockRequest(() => id ?? MOCK_NEW_PLACE_ID);
   }
 
   getCategoryOptions(): Observable<readonly SelectOption[]> {

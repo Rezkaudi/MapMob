@@ -9,9 +9,12 @@ import { SubscriptionSummary } from '../models/subscription-summary';
 export abstract class SubscriptionRepository {
   abstract getSummary(): Observable<SubscriptionSummary>;
   abstract getPlans(): Observable<readonly PackagePlan[]>;
+  abstract createPlan(draft: PlanDraft): Observable<PackagePlan>;
   abstract updatePlan(id: string, draft: PlanDraft): Observable<PackagePlan>;
   abstract setPlanActive(id: string, isActive: boolean): Observable<PackagePlan>;
   abstract deletePlan(id: string): Observable<void>;
+  /** Ends the subscription; the server keeps no other way to stop one. */
+  abstract cancelSubscription(id: string): Observable<void>;
   abstract getSubscriptions(query: SubscriptionQuery): Observable<PagedResult<Subscription>>;
   /** Every subscription matching the filters, not just one page. */
   abstract exportSubscriptions(query: SubscriptionQuery): Observable<Blob>;

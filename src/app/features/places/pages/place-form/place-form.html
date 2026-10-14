@@ -76,6 +76,15 @@
   />
 }
 
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر حفظ المكان"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
+}
+
 @if (isAddingProduct()) {
   <app-product-dialog
     [mode]="productDialogMode()"

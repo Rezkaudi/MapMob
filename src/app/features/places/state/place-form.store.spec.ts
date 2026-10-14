@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { PlaceRepository } from '../data/place.repository';
 import { createPlaceDetail } from '../testing/place-detail-fixture';
+import { PLACE_MOCK_FORM_CHOICES } from '../data/place-mock-form-choices';
+import { buildPlaceSaveRequest } from '../testing/place-save-request-fixture';
 import { PlaceFormStore } from './place-form.store';
 
 function createStore(overrides: Partial<PlaceRepository> = {}) {
@@ -11,6 +13,7 @@ function createStore(overrides: Partial<PlaceRepository> = {}) {
       asked.push(id);
       return of(createPlaceDetail({ id }));
     },
+    getPlaceFormChoices: () => of(PLACE_MOCK_FORM_CHOICES),
     ...overrides,
   };
   TestBed.configureTestingModule({
@@ -56,5 +59,41 @@ describe('PlaceFormStore', () => {
     store.retry();
     expect(store.error()).toBeNull();
     expect(store.editedPlace()?.id).toBe('place-7');
+  });
+
+  it('loads the form choices with the place', () => {
+    const { store } = createStore();
+
+    store.load(null);
+
+    expect(store.choices()).toEqual(PLACE_MOCK_FORM_CHOICES);
+  });
+
+  it('saves the form and answers with the saved id', async () => {
+    const saved: (string | null)[] = [];
+    const { store } = createStore({
+      savePlace: (id) => {
+        saved.push(id);
+        return of('52');
+      },
+    });
+
+    const savedId = await store.save('52', buildPlaceSaveRequest());
+
+    expect(savedId).toBe('52');
+    expect(saved).toEqual(['52']);
+    expect(store.isSaving()).toBe(false);
+  });
+
+  it('keeps the save error to show it, and answers null', async () => {
+    const { store } = createStore({
+      savePlace: () => throwError(() => new Error('تعذر الحفظ')),
+    });
+
+    expect(await store.save(null, buildPlaceSaveRequest())).toBeNull();
+    expect(store.saveError()).toBe('تعذر الحفظ');
+
+    store.clearSaveError();
+    expect(store.saveError()).toBeNull();
   });
 });

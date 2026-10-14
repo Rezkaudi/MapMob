@@ -5,6 +5,8 @@ import { SelectOption } from '../../../shared/ui/select-field/select-option';
 import { Place } from '../models/place';
 import { PlaceDetail } from '../models/place-detail';
 import { PlaceExportRequest } from '../models/place-export-request';
+import { PlaceFormChoices } from '../models/place-form-choices';
+import { PlaceSaveRequest } from '../models/place-save-request';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceStatusCounts } from '../models/place-status-counts';
 
@@ -18,4 +20,7 @@ export abstract class PlaceRepository {
   abstract exportPlaces(request: PlaceExportRequest): Observable<Blob>;
   /** The choices of the category filter; the value is what `PlaceQuery.category` sends. */
   abstract getCategoryOptions(): Observable<readonly SelectOption[]>;
+  abstract getPlaceFormChoices(): Observable<PlaceFormChoices>;
+  /** Creates the place when `id` is null; resolves the saved place's id. */
+  abstract savePlace(id: string | null, request: PlaceSaveRequest): Observable<string>;
 }

@@ -7,6 +7,7 @@
     addLabel="إضافة باقة جديد"
     [isExportVisible]="selectedTab() === 'records'"
     [isExporting]="records.isExporting()"
+    (add)="addPlan()"
     (exportRequested)="exportSubscriptions()"
   />
 
@@ -81,6 +82,7 @@
         [rowCount]="records.pageSize()"
         (rowToggle)="records.toggleSelected($event)"
         (allToggle)="records.toggleAllVisible()"
+        (remove)="askToCancelSubscription($event)"
       />
 
       <app-table-pagination
@@ -98,6 +100,7 @@
 @if (editedPlan(); as plan) {
   <app-plan-form-dialog
     [plan]="plan"
+    [mode]="planDialogMode()"
     [isBusy]="store.isSaving()"
     (saved)="savePlan($event)"
     (cancelled)="cancelEdit()"
@@ -107,7 +110,7 @@
 @if (confirmCopy(); as copy) {
   <app-confirm-action-dialog
     [copy]="copy"
-    [isBusy]="store.isSaving()"
+    [isBusy]="isConfirmBusy()"
     (confirmed)="confirmPendingAction()"
     (cancelled)="cancelPendingAction()"
   />

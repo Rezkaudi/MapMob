@@ -1,4 +1,3 @@
-import { CategoryColor } from './category-color';
 import { CategoryIcon } from './category-icon';
 import { CategoryKind } from './category-kind';
 import { CategoryStatus } from './category-status';
@@ -10,8 +9,12 @@ export interface Category {
   /** Set only on a sub category. */
   readonly parentId: string | null;
   readonly parentName: string | null;
+  /** Empty when only the uploaded picture is known. */
   readonly icon: CategoryIcon;
-  readonly color: CategoryColor;
+  /** The picture the live server keeps for the icon. */
+  readonly iconUrl: string | null;
+  /** Any hex colour; the picker offers a fixed set. */
+  readonly color: string;
   readonly placeCount: number;
   readonly status: CategoryStatus;
   readonly updatedAt: string;
