@@ -7,6 +7,7 @@ export const LIVE_API_FEATURES: readonly ApiFeatureName[] = [
   'categories',
   'complaints',
   'dashboard',
+  'delivery-platforms',
   'offers',
   'payments',
   'places',

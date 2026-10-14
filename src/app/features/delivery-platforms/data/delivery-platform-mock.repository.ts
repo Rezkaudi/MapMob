@@ -14,6 +14,7 @@ import { DeliveryPlatformRepository } from './delivery-platform.repository';
 
 @Injectable()
 export class DeliveryPlatformMockRepository implements DeliveryPlatformRepository {
+  readonly keepsWebsiteUrl = true;
   private readonly clock = inject(CLOCK);
   // Loaded on first use, so the seed stays out of the initial bundle.
   private readonly database$ = from(this.openDatabase()).pipe(shareReplay(1));

@@ -58,9 +58,9 @@ describe('live place parts', () => {
     expect(form.get('sort_order')).toBe('2');
   });
 
-  it('writes a delivery link', () => {
-    expect(toLiveDeliveryLinkBody('talabat', 'https://talabat.com/x', 1)).toEqual({
-      platform: 'talabat',
+  it('writes a delivery link by the id of the admin platform', () => {
+    expect(toLiveDeliveryLinkBody('3', 'https://talabat.com/x', 1)).toEqual({
+      delivery_platform_id: '3',
       url: 'https://talabat.com/x',
       is_active: true,
       sort_order: 1,

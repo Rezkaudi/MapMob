@@ -2,6 +2,12 @@ import { formatGroupedNumber } from '../../../shared/formatting/grouped-number';
 import { DeliveryPlatformSummary } from '../models/delivery-platform-summary';
 
 const NO_PLATFORM_LABEL = '—';
+const UNKNOWN_COUNT_LABEL = '—';
+
+/** Zero before the summary loads; a dash when the server does not count it. */
+function formatCount(count: number | null | undefined): string {
+  return count === null ? UNKNOWN_COUNT_LABEL : formatGroupedNumber(count ?? 0);
+}
 
 export interface DeliveryPlatformStatCard {
   readonly label: string;
@@ -16,7 +22,7 @@ export function buildDeliveryPlatformStatCards(
   return [
     {
       label: 'التحويلات إلى منصات التوصيل',
-      value: formatGroupedNumber(summary?.referralCount ?? 0),
+      value: formatCount(summary?.referralCount),
       icon: 'external-link-feather',
     },
     {
@@ -26,12 +32,12 @@ export function buildDeliveryPlatformStatCards(
     },
     {
       label: 'المتاجر المرتبطة بمنصات طلبات',
-      value: formatGroupedNumber(summary?.linkedStoreCount ?? 0),
+      value: formatCount(summary?.linkedStoreCount),
       icon: 'building',
     },
     {
       label: 'عدد المنصات النشطة',
-      value: formatGroupedNumber(summary?.activeCount ?? 0),
+      value: formatCount(summary?.activeCount),
       icon: 'bell-feather',
     },
   ];

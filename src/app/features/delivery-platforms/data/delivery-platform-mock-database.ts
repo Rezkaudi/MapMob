@@ -7,7 +7,7 @@ import { DeliveryPlatformStatus } from '../models/delivery-platform-status';
 import { DeliveryPlatformSummary } from '../models/delivery-platform-summary';
 import { LinkedStore } from '../models/linked-store';
 import { DeliveryPlatformMockSeed, SeedPlatform } from './delivery-platform-mock-seed';
-import { queryDeliveryPlatforms } from './delivery-platform-mock-query';
+import { queryDeliveryPlatforms } from './delivery-platform-list-query';
 import { summarizeDeliveryPlatforms } from './delivery-platform-mock-summary';
 
 const DUPLICATE_NAME_MESSAGE = 'توجد منصة بهذا الاسم مسبقاً';

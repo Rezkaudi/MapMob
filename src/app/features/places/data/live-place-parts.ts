@@ -64,6 +64,6 @@ export function toLiveMediaForm(file: File, type: LiveMediaType, sortOrder: numb
   return form;
 }
 
-export function toLiveDeliveryLinkBody(platform: string, url: string, sortOrder: number) {
-  return { platform, url, is_active: true, sort_order: sortOrder };
+export function toLiveDeliveryLinkBody(platformId: string, url: string, sortOrder: number) {
+  return { delivery_platform_id: platformId, url, is_active: true, sort_order: sortOrder };
 }

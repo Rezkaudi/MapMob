@@ -6275,8 +6275,8 @@
                   "mode": "formdata",
                   "formdata": [
                     {
-                      "key": "platform",
-                      "value": "tawseel",
+                      "key": "delivery_platform_id",
+                      "value": "1",
                       "type": "text",
                       "uuid": "6347e185-80fa-49d0-a231-8be06e00ddf1"
                     },
@@ -6340,8 +6340,8 @@
                   "mode": "formdata",
                   "formdata": [
                     {
-                      "key": "platform",
-                      "value": "tawseel",
+                      "key": "delivery_platform_id",
+                      "value": "1",
                       "type": "text",
                       "uuid": "6347e185-80fa-49d0-a231-8be06e00ddf1"
                     },
@@ -7288,6 +7288,359 @@
                   "path": [
                     "admin",
                     "payments",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "delivery platforms",
+          "item": [
+            {
+              "name": "deliveryplatforms",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "منصة اكس",
+                      "type": "text",
+                      "uuid": "038bc4c8-8978-42ce-b76e-c041dcd16912"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "x",
+                      "type": "text",
+                      "uuid": "a849ee69-e223-4a44-9856-3af45fafbc44"
+                    },
+                    {
+                      "key": "logo",
+                      "type": "file",
+                      "uuid": "16370718-9a9a-4efd-b05e-69997f4343d4",
+                      "src": "/C:/Users/obedah/Downloads/ألعاب الفيديو.jpg"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "81028b68-b55a-4c58-9e0a-2d6d0c1d4138"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "339ffec0-cb0f-4c8d-85e2-c3c14baaffb0"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deliveryplatforms",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deliveryplatform",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deliveryplatform update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "منصة اكس",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "x delivery",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "1",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "bb72f870-fcbc-4210-bca3-9def5ecf1f1f"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "change status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/1/status",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
+                    "1",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "stores",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/1/stores",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
+                    "1",
+                    "stores"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deliveryplatform",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/deliveryplatforms/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "deliveryplatforms",
                     "1"
                   ]
                 }

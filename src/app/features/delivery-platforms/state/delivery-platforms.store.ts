@@ -1,5 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withProps,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Observable, catchError, of, pipe, switchMap, tap } from 'rxjs';
 import { ListSort } from '../../../shared/models/list-sort';
@@ -30,6 +37,9 @@ export const DeliveryPlatformsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withListTable<DeliveryPlatformEntry>({ pageSize: PLATFORM_PAGE_SIZE }),
+  withProps(() => ({
+    keepsWebsiteUrl: inject(DeliveryPlatformRepository).keepsWebsiteUrl,
+  })),
   withComputed(({ search, summary }) => ({
     statCards: computed(() => buildDeliveryPlatformStatCards(summary())),
     emptyMessage: computed(() => (search().trim() ? NO_MATCHES_MESSAGE : NO_PLATFORMS_MESSAGE)),

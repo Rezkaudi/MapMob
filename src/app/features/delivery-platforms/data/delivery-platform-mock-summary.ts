@@ -7,11 +7,12 @@ export function summarizeDeliveryPlatforms(
   linkedStores: readonly LinkedStore[],
 ): DeliveryPlatformSummary {
   const mostUsed = platforms.reduce<DeliveryPlatformEntry | null>(
-    (best, platform) => (platform.referralCount > (best?.referralCount ?? 0) ? platform : best),
+    (best, platform) =>
+      (platform.referralCount ?? 0) > (best?.referralCount ?? 0) ? platform : best,
     null,
   );
   return {
-    referralCount: platforms.reduce((total, platform) => total + platform.referralCount, 0),
+    referralCount: platforms.reduce((total, platform) => total + (platform.referralCount ?? 0), 0),
     mostUsedPlatform: mostUsed
       ? { id: mostUsed.id, name: mostUsed.name, latinName: mostUsed.latinName }
       : null,

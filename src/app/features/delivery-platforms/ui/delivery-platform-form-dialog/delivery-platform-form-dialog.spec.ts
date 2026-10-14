@@ -160,4 +160,17 @@ describe('DeliveryPlatformFormDialog', () => {
 
     expect((field(fixture, 'submit-platform') as unknown as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it('hides the web address when the server does not keep it', () => {
+    const fixture = render({ isWebsiteShown: false });
+    const sent: DeliveryPlatformDraft[] = [];
+    fixture.componentInstance.submitted.subscribe((draft) => sent.push(draft));
+
+    typeInto(fixture, 'platform-name', 'طلبات');
+    typeInto(fixture, 'platform-latin-name', 'talabat');
+    submit(fixture);
+
+    expect(field(fixture, 'platform-website')).toBeNull();
+    expect(sent[0].websiteUrl).toBe('');
+  });
 });

@@ -17,12 +17,14 @@
         <span data-role="platform-name" class="truncate text-[12px]/[16px] font-bold">
           {{ item.platform.name }}
         </span>
-        <span
-          data-role="platform-latin-name"
-          class="shrink-0 text-[11px]/[16px] font-medium"
-          dir="ltr"
-          >({{ item.platform.latinName }})</span
-        >
+        @if (hasLatinName()) {
+          <span
+            data-role="platform-latin-name"
+            class="shrink-0 text-[11px]/[16px] font-medium"
+            dir="ltr"
+            >({{ item.platform.latinName }})</span
+          >
+        }
       </h3>
     </div>
 

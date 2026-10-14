@@ -40,12 +40,14 @@ export class DeliveryPlatformFormDialog {
   /** Shown as the position placeholder and used when that box is left empty. */
   readonly suggestedSortOrder = input.required<number>();
   readonly isBusy = input<boolean>(false);
+  /** Off when the server does not keep a web address. */
+  readonly isWebsiteShown = input<boolean>(true);
   readonly submitted = output<DeliveryPlatformDraft>();
   readonly cancelled = output<void>();
 
   protected readonly statusChoices = STATUS_CHOICES;
   protected readonly copy = computed(() => DELIVERY_PLATFORM_FORM_COPY[this.mode()]);
-  protected readonly form = computed(() => createDeliveryPlatformFormGroup(this.initialDraft()));
+  protected readonly form = computed(() => createDeliveryPlatformFormGroup(this.initialDraft(), this.isWebsiteShown()));
   protected readonly logoUrl = linkedSignal(() => this.initialDraft()?.logoUrl ?? null);
   private readonly logoFile = signal<File | null>(null);
   /** Goes up on every change of the form, so the OnPush messages follow it. */

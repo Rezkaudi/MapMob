@@ -1,3 +1,4 @@
+import { DeliveryLink } from '../../../shared/models/delivery-link';
 import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
 import { toPlaceDetail } from './live-place-detail-mapping';
 import { LivePlaceDetail } from './live-place-detail';
@@ -67,13 +68,20 @@ const LIVE_DETAIL: LivePlaceDetail = {
       imageUrl: null,
     },
   ],
-  deliveryLinks: [{ platform: 'tawseel', isEnabled: true, storeUrl: 'https://tawseel.com' }],
   createdAt: '2026-10-03T19:59:36+00:00',
   updatedAt: '2026-10-09T10:00:00+00:00',
 };
 
+const DELIVERY_LINKS: readonly DeliveryLink[] = [
+  {
+    platform: { id: '1', name: 'tawseel', latinName: 'tawseel', logoUrl: null },
+    isEnabled: true,
+    storeUrl: 'https://tawseel.com',
+  },
+];
+
 describe('toPlaceDetail', () => {
-  const detail = toPlaceDetail(LIVE_DETAIL, NOW, [LIVE_GOLD_PLAN]);
+  const detail = toPlaceDetail(LIVE_DETAIL, NOW, [LIVE_GOLD_PLAN], DELIVERY_LINKS);
 
   it('keeps the plain fields and fills missing text with empty strings', () => {
     expect(detail.id).toBe('1');
@@ -110,7 +118,7 @@ describe('toPlaceDetail', () => {
 
   it('gives a free plan with no end date when the place has no subscription', () => {
     expect(
-      toPlaceDetail({ ...LIVE_DETAIL, subscription: null }, NOW, [LIVE_GOLD_PLAN]).subscription,
+      toPlaceDetail({ ...LIVE_DETAIL, subscription: null }, NOW, [LIVE_GOLD_PLAN], []).subscription,
     ).toEqual({
       package: 'free',
       status: 'suspended',
@@ -144,13 +152,7 @@ describe('toPlaceDetail', () => {
         isActive: true,
       },
     ]);
-    expect(detail.deliveryLinks).toEqual([
-      {
-        platform: { id: 'tawseel', name: 'tawseel', latinName: 'tawseel', logoUrl: null },
-        isEnabled: true,
-        storeUrl: 'https://tawseel.com',
-      },
-    ]);
+    expect(detail.deliveryLinks).toBe(DELIVERY_LINKS);
   });
 
   it('says when the place was added and how long ago it changed', () => {

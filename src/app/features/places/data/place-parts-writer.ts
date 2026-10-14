@@ -29,7 +29,7 @@ interface LiveProductRow extends LiveRow {
   readonly store_id: number | string;
 }
 interface LiveLinkRow extends LiveRow {
-  readonly platform: string;
+  readonly deliveryPlatformId: number | string;
 }
 
 type DeliveryLinkValue = PlaceFormValue['deliveryLinks'][number];
@@ -140,7 +140,9 @@ export class PlacePartsWriter {
       switchMap((rows) =>
         inTurn(
           links.flatMap((link, index) => {
-            const row = rows.find((candidate) => candidate.platform === link.platformId);
+            const row = rows.find(
+              (candidate) => String(candidate.deliveryPlatformId) === link.platformId,
+            );
             if (!link.isEnabled || !link.storeUrl) {
               return row ? [this.httpClient.delete(`${url}/${row.id}`)] : [];
             }

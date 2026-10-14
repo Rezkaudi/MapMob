@@ -7,12 +7,7 @@ import { PlaceDetail } from '../models/place-detail';
 import { PlaceOffer } from '../models/place-offer';
 import { PlaceProduct } from '../models/place-product';
 import { PlaceSubscription } from '../models/place-subscription';
-import {
-  LiveDeliveryLink,
-  LivePlaceDetail,
-  LivePlaceOffer,
-  LivePlaceProduct,
-} from './live-place-detail';
+import { LivePlaceDetail, LivePlaceOffer, LivePlaceProduct } from './live-place-detail';
 import { toPlacePackage, toPlaceStatus } from './live-place-mapping';
 import { toWorkingHoursRows } from './live-working-hours';
 
@@ -22,6 +17,7 @@ export function toPlaceDetail(
   live: LivePlaceDetail,
   now: Date,
   plans: readonly LivePlan[],
+  deliveryLinks: readonly DeliveryLink[],
 ): PlaceDetail {
   const status = toPlaceStatus(live.status);
   return {
@@ -69,7 +65,7 @@ export function toPlaceDetail(
       posterUrl: video.posterUrl ?? '',
       duration: video.duration ?? '',
     })),
-    deliveryLinks: live.deliveryLinks.map(toDeliveryLink),
+    deliveryLinks,
     isOpenNow: live.isOpenNow,
   };
 }
@@ -109,14 +105,5 @@ function toOffer(offer: LivePlaceOffer): PlaceOffer {
     dateRange: `${formatLatinDigitDate(offer.startsOn)} - ${formatLatinDigitDate(offer.endsOn)}`,
     imageUrl: offer.imageUrl ?? '',
     isActive: offer.status === ACTIVE_OFFER,
-  };
-}
-
-// The server keeps the app as free text, not as one of the admin's delivery platforms.
-function toDeliveryLink(link: LiveDeliveryLink): DeliveryLink {
-  return {
-    platform: { id: link.platform, name: link.platform, latinName: link.platform, logoUrl: null },
-    isEnabled: link.isEnabled,
-    storeUrl: link.storeUrl,
   };
 }

@@ -7,5 +7,4 @@ export interface LivePlaceFormOptions {
   readonly governorates?: readonly (LiveReference & {
     readonly areas?: readonly LiveReference[];
   })[];
-  readonly deliveryPlatforms?: readonly { readonly platform: string }[];
 }

@@ -16,7 +16,7 @@ import { PlaceWriter } from './place-writer';
 
 const ADMIN_URL = 'https://api.test/admin';
 const STORE_URL = `${ADMIN_URL}/stores/52`;
-const CHOICES = toPlaceFormChoices(LIVE_PLACE_FORM_OPTIONS);
+const CHOICES = toPlaceFormChoices(LIVE_PLACE_FORM_OPTIONS, []);
 const NEW_PICTURE = new File(['x'], 'a.jpg', { type: 'image/jpeg' });
 
 describe('PlaceWriter', () => {
@@ -60,7 +60,7 @@ describe('PlaceWriter', () => {
       value: {
         ...buildPlaceSaveRequest().value,
         package: 'premium',
-        deliveryLinks: [{ platformId: 'talabat', isEnabled: true, storeUrl: 'https://t.com/a' }],
+        deliveryLinks: [{ platformId: '3', isEnabled: true, storeUrl: 'https://t.com/a' }],
       },
       images: [{ id: 'n', name: 'a.jpg', sizeInBytes: 1, file: NEW_PICTURE, previewUrl: 'blob:a' }],
       products: [
@@ -88,7 +88,7 @@ describe('PlaceWriter', () => {
     const product = next('POST', `${ADMIN_URL}/products`, { data: { id: 3 } });
     expect((product.request.body as FormData).get('category_id')).toBe('8');
     const link = next('POST', `${STORE_URL}/delivery-links`, { data: { id: '4' } });
-    expect(link.request.body.platform).toBe('talabat');
+    expect(link.request.body.delivery_platform_id).toBe('3');
     const plan = next('POST', `${ADMIN_URL}/subscriptions`, { data: { id: 9 } });
     expect(plan.request.body).toEqual({
       store_id: '52',
@@ -106,7 +106,7 @@ describe('PlaceWriter', () => {
     const request = buildPlaceSaveRequest({
       value: {
         ...buildPlaceSaveRequest().value,
-        deliveryLinks: [{ platformId: 'tawseel', isEnabled: false, storeUrl: 'https://x.com' }],
+        deliveryLinks: [{ platformId: '1', isEnabled: false, storeUrl: 'https://x.com' }],
       },
       images: [
         {
@@ -161,7 +161,7 @@ describe('PlaceWriter', () => {
     const update = next('POST', `${ADMIN_URL}/products/3`);
     expect((update.request.body as FormData).get('_method')).toBe('PUT');
     next('DELETE', `${ADMIN_URL}/products/4`);
-    next('GET', `${STORE_URL}/delivery-links`, { data: [{ id: '7', platform: 'tawseel' }] });
+    next('GET', `${STORE_URL}/delivery-links`, { data: [{ id: '7', deliveryPlatformId: '1' }] });
     next('DELETE', `${STORE_URL}/delivery-links/7`);
 
     expect(await saved).toBe('52');

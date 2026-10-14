@@ -153,4 +153,12 @@ describe('DeliveryPlatformTable', () => {
       'لا توجد نتائج مطابقة لبحثك',
     );
   });
+
+  it('shows a dash and no link when the platform has no web address', () => {
+    const fixture = render({ entries: [buildDeliveryPlatform({ websiteUrl: '' })] });
+    const [row] = rowsOf(fixture.nativeElement);
+
+    expect(cellTexts(row)[3]).toBe('—');
+    expect(row.querySelector('a')).toBeNull();
+  });
 });

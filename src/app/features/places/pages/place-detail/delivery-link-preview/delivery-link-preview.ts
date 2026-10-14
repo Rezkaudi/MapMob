@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  computed,
   inject,
   input,
   signal,
 } from '@angular/core';
 import { ClipboardWriter } from '../../../../../shared/browser/clipboard-writer';
+import { hasSeparateLatinName } from '../../../../../shared/formatting/platform-name';
 import { DeliveryLink } from '../../../../../shared/models/delivery-link';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 
@@ -27,6 +29,7 @@ export class DeliveryLinkPreview {
   private copiedNoticeTimer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly hasCopied = signal(false);
+  protected readonly hasLatinName = computed(() => hasSeparateLatinName(this.link().platform));
 
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.copiedNoticeTimer));

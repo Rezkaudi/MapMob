@@ -62,14 +62,18 @@
             </td>
             <td class="ps-[30px] text-text-primary">{{ row.storeCountLabel }}</td>
             <td class="px-2 text-center">
-              <a
-                dir="ltr"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block truncate text-text-secondary hover:text-primary hover:underline"
-                [href]="row.platform.websiteUrl"
-                >{{ row.platform.websiteUrl }}</a
-              >
+              @if (row.platform.websiteUrl) {
+                <a
+                  dir="ltr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block truncate text-text-secondary hover:text-primary hover:underline"
+                  [href]="row.platform.websiteUrl"
+                  >{{ row.platform.websiteUrl }}</a
+                >
+              } @else {
+                <span class="text-text-secondary">—</span>
+              }
             </td>
             <td class="text-center text-text-secondary">{{ row.referralLabel }}</td>
             <td class="text-center whitespace-nowrap text-text-secondary">

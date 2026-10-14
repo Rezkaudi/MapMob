@@ -5,6 +5,7 @@ import {
   findDeliveryLinkError,
   setDeliveryLinkEnabled,
 } from '../../../../../shared/forms/delivery-link-form';
+import { formatPlatformName } from '../../../../../shared/formatting/platform-name';
 import { DeliveryPlatform } from '../../../../../shared/models/delivery-platform';
 import { AppIcon } from '../../../../../shared/ui/app-icon/app-icon';
 import { FormSection } from '../../../../../shared/ui/form-section/form-section';
@@ -14,6 +15,7 @@ const MISSING_LINK_MESSAGE = 'أدخل رابط المتجر على المنصة
 
 interface PlatformRow {
   readonly platform: DeliveryPlatform;
+  readonly displayName: string;
   readonly link: DeliveryLinkFormGroup;
   readonly isEnabled: boolean;
   readonly inputId: string;
@@ -42,6 +44,7 @@ export class PlaceDeliverySection {
       const link = links.at(index);
       return {
         platform,
+        displayName: formatPlatformName(platform),
         link,
         isEnabled: link.controls.isEnabled.value,
         inputId: `delivery-link-${platform.id}`,

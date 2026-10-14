@@ -28,11 +28,15 @@ function textControl(value: string, maxLength: number, ...extra: ValidatorFn[]) 
   });
 }
 
-/** `null` opens the add dialog: every field empty and the platform switched on. */
+/**
+ * `null` opens the add dialog: every field empty and the platform switched on.
+ * Without `isWebsiteKept` the web address is switched off, so it neither shows nor blocks a save.
+ */
 export function createDeliveryPlatformFormGroup(
   draft: DeliveryPlatformDraft | null,
+  isWebsiteKept = true,
 ): DeliveryPlatformFormGroup {
-  return new FormGroup({
+  const form: DeliveryPlatformFormGroup = new FormGroup({
     name: textControl(draft?.name ?? '', NAME_MAX_LENGTH),
     latinName: textControl(
       draft?.latinName ?? '',
@@ -48,6 +52,10 @@ export function createDeliveryPlatformFormGroup(
       validators: [Validators.pattern(SORT_ORDER_PATTERN)],
     }),
   });
+  if (!isWebsiteKept) {
+    form.controls.websiteUrl.disable();
+  }
+  return form;
 }
 
 export function readDeliveryPlatformFields(

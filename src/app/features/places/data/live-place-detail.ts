@@ -41,12 +41,6 @@ export interface LivePlaceVideo {
   readonly duration?: string | null;
 }
 
-export interface LiveDeliveryLink {
-  readonly platform: string;
-  readonly isEnabled: boolean;
-  readonly storeUrl: string | null;
-}
-
 type LiveText = string | null;
 
 export interface LivePlaceDetail {
@@ -84,7 +78,6 @@ export interface LivePlaceDetail {
   readonly videos: readonly LivePlaceVideo[];
   readonly products: readonly LivePlaceProduct[];
   readonly offers: readonly LivePlaceOffer[];
-  readonly deliveryLinks: readonly LiveDeliveryLink[];
   readonly createdAt: string;
   readonly updatedAt: string;
 }

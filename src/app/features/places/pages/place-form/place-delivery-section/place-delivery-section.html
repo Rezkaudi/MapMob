@@ -19,7 +19,7 @@
         <!-- RTL: the name comes first so it sits on the right, the switch on the left. -->
         <div class="flex items-center justify-between gap-4">
           <span data-role="platform-name" class="text-[14px]/[20px] text-[#191c1e]">
-            {{ row.platform.name }} ({{ row.platform.latinName }})
+            {{ row.displayName }}
           </span>
           <app-toggle-switch
             [isOn]="row.isEnabled"

@@ -78,4 +78,13 @@ describe('DeliveryLinkPreview', () => {
       'copy-link',
     ]);
   });
+
+  it('leaves out the brackets when the platform has no separate Latin name', () => {
+    const { find } = render({
+      ...BEE_ORDER_LINK,
+      platform: { id: '1', name: 'tawseel', latinName: 'tawseel', logoUrl: null },
+    });
+
+    expect(find('platform-latin-name')).toBeNull();
+  });
 });

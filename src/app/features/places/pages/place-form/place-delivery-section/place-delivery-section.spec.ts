@@ -84,4 +84,19 @@ describe('PlaceDeliverySection', () => {
     expect(talabat.classList).toContain('bg-[rgba(247,249,251,0.5)]');
     expect(yallaGo.classList).toContain('border-[rgba(192,199,213,0.6)]');
   });
+
+  it('says a platform name once when it has no separate Latin name', () => {
+    const links = new FormArray([createDeliveryLinkGroup()]);
+    const fixture = TestBed.createComponent(PlaceDeliverySection);
+    fixture.componentRef.setInput('platforms', [
+      { id: '1', name: 'tawseel', latinName: 'tawseel', logoUrl: null },
+    ]);
+    fixture.componentRef.setInput('links', links);
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('[data-role="platform-name"]')?.textContent?.trim()).toBe(
+      'tawseel',
+    );
+  });
 });

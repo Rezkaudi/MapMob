@@ -4,6 +4,7 @@
     [initialDraft]="form.draft"
     [suggestedSortOrder]="suggestedSortOrder()"
     [isBusy]="isBusy()"
+    [isWebsiteShown]="isWebsiteShown()"
     (submitted)="draftSubmitted.emit($event)"
     (cancelled)="closed.emit()"
   />

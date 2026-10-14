@@ -7,10 +7,12 @@ export interface DeliveryPlatformEntry {
   readonly name: string;
   readonly latinName: string;
   readonly logoUrl: string | null;
+  /** Empty when the server does not keep one. */
   readonly websiteUrl: string;
-  readonly linkedStoreCount: number;
+  /** `null` when the server does not count them. */
+  readonly linkedStoreCount: number | null;
   /** Times app users were sent from a place page to this app. */
-  readonly referralCount: number;
+  readonly referralCount: number | null;
   readonly status: DeliveryPlatformStatus;
   /** 1 is shown first in the lists of the app and the owner dashboard. */
   readonly sortOrder: number;

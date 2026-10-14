@@ -31,4 +31,12 @@ describe('buildDeliveryPlatformStatCards', () => {
       '0',
     ]);
   });
+
+  it('shows a dash for the counts the server does not keep', () => {
+    const cards = buildDeliveryPlatformStatCards(
+      buildDeliveryPlatformSummary({ referralCount: null, linkedStoreCount: null }),
+    );
+
+    expect([cards[0].value, cards[2].value]).toEqual(['—', '—']);
+  });
 });

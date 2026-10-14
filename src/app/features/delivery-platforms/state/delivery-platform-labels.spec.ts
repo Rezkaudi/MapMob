@@ -16,4 +16,12 @@ describe('describeDeliveryPlatform', () => {
 
     expect([one.storeCountLabel, two.storeCountLabel]).toEqual(['متجر واحد', 'متجران']);
   });
+
+  it('shows a dash for counts the server does not keep', () => {
+    const labels = describeDeliveryPlatform(
+      buildDeliveryPlatform({ linkedStoreCount: null, referralCount: null }),
+    );
+
+    expect([labels.storeCountLabel, labels.referralLabel]).toEqual(['—', '—']);
+  });
 });

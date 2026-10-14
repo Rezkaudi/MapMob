@@ -16,6 +16,7 @@ export class DeliveryPlatformDialogs {
   readonly request = input.required<CrudDialogRequest<DeliveryPlatformEntry> | null>();
   readonly suggestedSortOrder = input.required<number>();
   readonly isBusy = input<boolean>(false);
+  readonly isWebsiteShown = input<boolean>(true);
   readonly draftSubmitted = output<DeliveryPlatformDraft>();
   readonly confirmed = output<void>();
   readonly closed = output<void>();

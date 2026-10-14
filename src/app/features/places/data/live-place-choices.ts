@@ -1,5 +1,6 @@
-import { DeliveryPlatform } from '../../../shared/models/delivery-platform';
-import { KNOWN_DELIVERY_PLATFORMS } from '../models/known-delivery-platforms';
+import { LiveDeliveryPlatform } from '../../../shared/data/live-delivery-platform';
+import { toDeliveryPlatform } from '../../../shared/data/to-delivery-platform';
+import { listOfferedPlatforms } from './offered-delivery-platforms';
 import { PlaceChoice, PlaceFormChoices } from '../models/place-form-choices';
 import { LivePlaceFormOptions } from './live-place-form-options';
 
@@ -17,24 +18,10 @@ interface PickedNames {
   readonly region: string;
 }
 
-// The server names an ordering app by one Latin word, e.g. "talabat".
-function toServerWord(latinName: string): string {
-  return latinName.toLowerCase().replace(/\s+/g, '');
-}
-
-function toDeliveryPlatforms(options: LivePlaceFormOptions): readonly DeliveryPlatform[] {
-  const known = KNOWN_DELIVERY_PLATFORMS.map((platform) => ({
-    ...platform,
-    id: toServerWord(platform.latinName),
-  }));
-  const knownIds = new Set(known.map((platform) => platform.id));
-  const extra = [...new Set((options.deliveryPlatforms ?? []).map((link) => link.platform))]
-    .filter((word) => !knownIds.has(word))
-    .map((word) => ({ id: word, name: word, latinName: word, logoUrl: null }));
-  return [...known, ...extra];
-}
-
-export function toPlaceFormChoices(options: LivePlaceFormOptions): PlaceFormChoices {
+export function toPlaceFormChoices(
+  options: LivePlaceFormOptions,
+  platforms: readonly LiveDeliveryPlatform[],
+): PlaceFormChoices {
   return {
     mainCategories: options.mainCategories.map((category) => ({
       id: category.id,
@@ -46,7 +33,7 @@ export function toPlaceFormChoices(options: LivePlaceFormOptions): PlaceFormChoi
       name: governorate.name,
       areas: governorate.areas ?? [],
     })),
-    deliveryPlatforms: toDeliveryPlatforms(options),
+    deliveryPlatforms: listOfferedPlatforms(platforms).map(toDeliveryPlatform),
   };
 }
 

@@ -3,6 +3,7 @@ import { formatGroupedNumber } from '../../../shared/formatting/grouped-number';
 import { DeliveryPlatformEntry } from '../models/delivery-platform-entry';
 import { DELIVERY_PLATFORM_STATUS_LABEL } from '../models/delivery-platform-status';
 
+const UNKNOWN_COUNT_LABEL = '—';
 const STORE_WORDS: CountWords = { one: 'متجر واحد', two: 'متجران', few: 'متاجر', many: 'متجر' };
 
 export interface DeliveryPlatformLabels {
@@ -14,8 +15,14 @@ export interface DeliveryPlatformLabels {
 /** The words the table and the details dialog both put on a platform. */
 export function describeDeliveryPlatform(platform: DeliveryPlatformEntry): DeliveryPlatformLabels {
   return {
-    storeCountLabel: formatArabicCount(platform.linkedStoreCount, STORE_WORDS),
-    referralLabel: formatGroupedNumber(platform.referralCount),
+    storeCountLabel:
+      platform.linkedStoreCount === null
+        ? UNKNOWN_COUNT_LABEL
+        : formatArabicCount(platform.linkedStoreCount, STORE_WORDS),
+    referralLabel:
+      platform.referralCount === null
+        ? UNKNOWN_COUNT_LABEL
+        : formatGroupedNumber(platform.referralCount),
     statusLabel: DELIVERY_PLATFORM_STATUS_LABEL[platform.status],
   };
 }

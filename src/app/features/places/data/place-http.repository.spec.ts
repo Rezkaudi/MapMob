@@ -4,7 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CLOCK } from '../../../core/config/clock';
+import { buildLiveDeliveryPlatform } from '../../../shared/testing/live-delivery-platform-fixture';
 import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
+import { buildLiveStoreDeliveryLink } from '../../../shared/testing/live-store-delivery-link-fixture';
 import { LIVE_PLACE_FORM_OPTIONS } from '../testing/live-place-choices-fixture';
 import { buildPlaceSaveRequest } from '../testing/place-save-request-fixture';
 import { PlaceHttpRepository } from './place-http.repository';
@@ -13,6 +15,8 @@ import { PlaceWriter } from './place-writer';
 const BASE_URL = 'https://api.test';
 const STORES_URL = `${BASE_URL}/admin/stores`;
 const PLANS_URL = `${BASE_URL}/admin/plans`;
+const PLATFORMS_URL = `${BASE_URL}/admin/deliveryplatforms`;
+const TAWSEEL = buildLiveDeliveryPlatform({ id: 1, name: 'tawseel' });
 
 const LIVE_ROW = {
   id: '4',
@@ -51,6 +55,18 @@ describe('PlaceHttpRepository', () => {
 
   function answerPlans(): void {
     http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
+  }
+
+  function answerPlatforms(): void {
+    http
+      .expectOne((candidate) => candidate.url === PLATFORMS_URL)
+      .flush({ data: [TAWSEEL], meta: { current_page: 1, last_page: 1 } });
+  }
+
+  function answerList(path: string, rows: readonly object[]): void {
+    http
+      .expectOne((candidate) => candidate.url === `${BASE_URL}/admin/${path}`)
+      .flush({ data: rows, meta: { current_page: 1, last_page: 1 } });
   }
 
   it('asks the stores route for a page with the server filter names', async () => {
@@ -147,13 +163,20 @@ describe('PlaceHttpRepository', () => {
         videos: [],
         products: [],
         offers: [],
-        deliveryLinks: [],
         createdAt: '2026-10-03T19:59:36+00:00',
         updatedAt: '2026-10-11T09:00:00+00:00',
       },
     });
+    http
+      .expectOne(`${STORES_URL}/1/delivery-links`)
+      .flush({ data: [buildLiveStoreDeliveryLink({ url: 'https://tawseel.com/1' })] });
+    answerPlatforms();
 
-    expect((await response).name).toBe('متجر');
+    const place = await response;
+    expect(place.name).toBe('متجر');
+    expect(place.deliveryLinks.map((link) => [link.platform.name, link.storeUrl])).toEqual([
+      ['tawseel', 'https://tawseel.com/1'],
+    ]);
   });
 
   it('suspends places with the word the server keeps for it', async () => {
@@ -195,12 +218,31 @@ describe('PlaceHttpRepository', () => {
     expect(await response).toBeInstanceOf(Blob);
   });
 
-  it('reads the form choices from the store form options', async () => {
+  it('reads the form choices from the store form options and the admin platforms', async () => {
     const response = firstValueFrom(repository.getPlaceFormChoices());
 
     http.expectOne(`${STORES_URL}/formoptions`).flush({ data: LIVE_PLACE_FORM_OPTIONS });
+    answerPlatforms();
 
-    expect((await response).governorates[0].areas[0].name).toBe('tartus city');
+    const choices = await response;
+    expect(choices.governorates[0].areas[0].name).toBe('tartus city');
+    expect(choices.deliveryPlatforms.map((platform) => platform.id)).toEqual(['1']);
+  });
+
+  it('builds the choices from the category, region and city lists when the form options fail', async () => {
+    const response = firstValueFrom(repository.getPlaceFormChoices());
+
+    http
+      .expectOne(`${STORES_URL}/formoptions`)
+      .flush({ message: 'Column not found' }, { status: 500, statusText: 'Server Error' });
+    answerPlatforms();
+    answerList('categories', [{ id: 8, parent_id: null, name: 'صيدلية' }]);
+    answerList('regions', [{ id: 6, name: { ar: 'طرطوس', en: 'Tartous' } }]);
+    answerList('cities', [{ id: 7, region_id: 6, name: 'tartus city' }]);
+
+    const choices = await response;
+    expect(choices.mainCategories.map((category) => category.name)).toEqual(['صيدلية']);
+    expect(choices.governorates[0].areas).toEqual([{ id: '7', name: 'tartus city' }]);
   });
 
   it('saves a place through the writer with the form choices and the plans', async () => {
@@ -213,6 +255,7 @@ describe('PlaceHttpRepository', () => {
     const response = firstValueFrom(repository.savePlace(null, request));
 
     http.expectOne(`${STORES_URL}/formoptions`).flush({ data: LIVE_PLACE_FORM_OPTIONS });
+    answerPlatforms();
     answerPlans();
 
     expect(await response).toBe('52');

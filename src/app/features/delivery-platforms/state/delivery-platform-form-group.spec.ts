@@ -87,4 +87,14 @@ describe('readDeliveryPlatformFields', () => {
 
     expect(readDeliveryPlatformFields(form, SUGGESTED_SORT_ORDER).sortOrder).toBe(8);
   });
+
+  it('leaves the web address out when the server does not keep it', () => {
+    const form = createDeliveryPlatformFormGroup(
+      buildDeliveryPlatformDraft({ websiteUrl: '' }),
+      false,
+    );
+
+    expect(form.controls.websiteUrl.disabled).toBe(true);
+    expect(form.valid).toBe(true);
+  });
 });
