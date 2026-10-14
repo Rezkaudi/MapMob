@@ -4787,6 +4787,183 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/ads/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ads",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "formoptions",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/ads/formoptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ads",
+                    "formoptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/ads/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ads",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ad pause",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/ads/1/pause",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ads",
+                    "1",
+                    "pause"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ad resume",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/ads/1/resume",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ads",
+                    "1",
+                    "resume"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -5609,6 +5786,186 @@
                     "stores",
                     "1",
                     "media",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "stories",
+          "item": [
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stories/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stories",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stories/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stories",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "stories",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stories",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "change visibility",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stories/1/visibility",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stories",
+                    "1",
+                    "visibility"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "story",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/stories/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stories",
                     "1"
                   ]
                 }
@@ -6658,6 +7015,279 @@
                   "path": [
                     "admin",
                     "reviews",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "form-options",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments/form-options",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments",
+                    "form-options"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "payments",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "store_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "0965e5a4-be70-46cb-98bf-8ff4fe093f33"
+                    },
+                    {
+                      "key": "subscription_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "63de24ba-213c-4702-b15d-854ff64ec8d9"
+                    },
+                    {
+                      "key": "amount",
+                      "value": "1000",
+                      "type": "text",
+                      "uuid": "0bf7b808-a81c-464a-a4d9-60e3624db142"
+                    },
+                    {
+                      "key": "currency_code",
+                      "value": "SYP",
+                      "type": "text",
+                      "uuid": "c65e81f3-9484-499c-b0be-f4fd5378a039"
+                    },
+                    {
+                      "key": "paid_at",
+                      "value": "2026-10-13",
+                      "type": "text",
+                      "uuid": "33515152-834d-448f-9c70-128309a0e2c8"
+                    },
+                    {
+                      "key": "payment_method",
+                      "value": "cash",
+                      "type": "text",
+                      "uuid": "e8dd5417-d970-4186-b36a-fd0603158af3"
+                    },
+                    {
+                      "key": "receipt_number",
+                      "value": "986hmk56",
+                      "type": "text",
+                      "uuid": "d61d4064-4531-44ca-98b1-0a8e315973c6"
+                    },
+                    {
+                      "key": "notes",
+                      "value": "تم القبض",
+                      "type": "text",
+                      "uuid": "1a5102cb-267a-480c-9a74-a856f6ad159e"
+                    },
+                    {
+                      "key": "status",
+                      "value": "paid",
+                      "description": "pending,paid,failed,refunded",
+                      "type": "text",
+                      "uuid": "8fbd7a2a-4b12-467a-be39-80c992fcf958"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/payments/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "payments",
                     "1"
                   ]
                 }
