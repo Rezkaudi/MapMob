@@ -155,11 +155,9 @@ describe('NotificationHttpRepository', () => {
 
     http.expectOne(`${NOTIFICATIONS_URL}/5/duplicate`).flush({ data: live({ id: 'n9' }) });
     http.expectOne(`${NOTIFICATIONS_URL}/9/reschedule`).flush({ sendAt: '2030-01-01T10:00' });
-    http
-      .expectOne(`${NOTIFICATIONS_URL}/9`)
-      .flush({
-        data: live({ id: 'n9', status: 'scheduled', sendAt: '2030-01-01T10:00:00+00:00' }),
-      });
+    http.expectOne(`${NOTIFICATIONS_URL}/9`).flush({
+      data: live({ id: 'n9', status: 'scheduled', sendAt: '2030-01-01T10:00:00+00:00' }),
+    });
 
     expect((await response).id).toBe('n9');
   });

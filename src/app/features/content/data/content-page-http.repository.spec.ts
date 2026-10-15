@@ -53,17 +53,15 @@ describe('ContentPageHttpRepository', () => {
   it('reads the about page', async () => {
     const response = firstValueFrom(repository.getAboutPage());
 
-    http
-      .expectOne(`${PAGES_URL}/about`)
-      .flush(
-        livePage('عن التطبيق', {
-          bannerUrl: null,
-          summary: '<p>x</p>',
-          phone: null,
-          email: null,
-          address: null,
-        }),
-      );
+    http.expectOne(`${PAGES_URL}/about`).flush(
+      livePage('عن التطبيق', {
+        bannerUrl: null,
+        summary: '<p>x</p>',
+        phone: null,
+        email: null,
+        address: null,
+      }),
+    );
 
     expect((await response).summary).toBe('<p>x</p>');
   });
