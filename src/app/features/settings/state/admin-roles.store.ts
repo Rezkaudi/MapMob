@@ -1,5 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withProps,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, of, pipe, switchMap, tap } from 'rxjs';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
@@ -31,6 +38,7 @@ export const AdminRolesStore = signalStore(
   withState(initialState),
   withRequestStatus(),
   withSaveStatus(),
+  withProps(() => ({ savesRoleDetails: inject(RolesRepository).savesRoleDetails })),
   withComputed(({ isDeleting, saveError }) => ({
     /** A refused delete closes the confirmation, so its reason floats up as a toast instead. */
     deleteError: computed(() => (isDeleting() ? saveError() : null)),

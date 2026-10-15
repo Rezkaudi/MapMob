@@ -1,44 +1,35 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { HttpTestingController } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
+import { SETTINGS_URL, setUpSettingsRepository } from '../testing/settings-http-testing';
 import { NotificationAlertsHttpRepository } from './notification-alerts-http.repository';
-
-const BASE_URL = 'https://api.test';
 
 describe('NotificationAlertsHttpRepository', () => {
   let repository: NotificationAlertsHttpRepository;
   let http: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        NotificationAlertsHttpRepository,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: BASE_URL },
-      ],
-    });
-    repository = TestBed.inject(NotificationAlertsHttpRepository);
-    http = TestBed.inject(HttpTestingController);
-  });
+  beforeEach(
+    () => ({ repository, http } = setUpSettingsRepository(NotificationAlertsHttpRepository)),
+  );
 
   afterEach(() => http.verify());
 
-  it('asks for the admin alerts', () => {
-    repository.getAlerts().subscribe();
+  it('reads the alerts', async () => {
+    const alerts = [{ kind: 'new-complaint', isEnabled: true }];
+    const response = firstValueFrom(repository.getAlerts());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/settings/notifications` }).flush([]);
+    http.expectOne(`${SETTINGS_URL}/notifications`).flush(alerts);
+
+    expect(await response).toEqual(alerts);
   });
 
-  it('turns one alert on or off', () => {
-    repository.setAlertEnabled('review-reported', false).subscribe();
+  it('switches one alert and answers with its new state, as the server answers only true', async () => {
+    const response = firstValueFrom(repository.setAlertEnabled('review-reported', true));
 
-    const request = http.expectOne({
-      method: 'PUT',
-      url: `${BASE_URL}/settings/notifications/review-reported`,
-    });
-    expect(request.request.body).toEqual({ isEnabled: false });
-    request.flush({ kind: 'review-reported', isEnabled: false });
+    const request = http.expectOne(`${SETTINGS_URL}/notifications/review-reported`);
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).toEqual({ isEnabled: true });
+    request.flush({ status: true });
+
+    expect(await response).toEqual({ kind: 'review-reported', isEnabled: true });
   });
 });

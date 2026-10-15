@@ -5097,6 +5097,111 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "report",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/8",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "8"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -7642,6 +7747,2339 @@
                     "admin",
                     "deliveryplatforms",
                     "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Statistics",
+          "item": [
+            {
+              "name": "categoryshares",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/categoryshares",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "categoryshares"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "governorateactivity",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/governorateactivity",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "governorateactivity"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-growth",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/user-growth?period=monthly",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "user-growth"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "monthly"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "usage",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/usage?period=monthly",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "usage"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "monthly"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "revenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/reports/revenue?period=monthly",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports",
+                    "revenue"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "monthly"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "content",
+          "item": [
+            {
+              "name": "pages",
+              "item": [
+                {
+                  "name": "pages-about",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "title[ar]",
+                          "value": "عن التطبيق",
+                          "type": "text",
+                          "uuid": "b6e91572-a6e7-49fb-a769-143ef0249d45"
+                        },
+                        {
+                          "key": "title[en]",
+                          "value": "About The App",
+                          "type": "text",
+                          "uuid": "88630076-d71f-45d2-8438-6988cb70218f"
+                        },
+                        {
+                          "key": "summary[ar]",
+                          "value": "ماب موب دليلك إلى أقرب الأماكن.",
+                          "type": "text",
+                          "uuid": "4a452543-07fc-4324-bc8c-a3a897bdd469"
+                        },
+                        {
+                          "key": "summary[en]",
+                          "value": "MapMob is your guide to nearby places.",
+                          "type": "text",
+                          "uuid": "e2aad651-ce6b-4558-8691-275059f4ab4e"
+                        },
+                        {
+                          "key": "phone",
+                          "value": "0936318327",
+                          "type": "text",
+                          "uuid": "186b381f-44fa-444e-ab5f-4d054c00cfbe"
+                        },
+                        {
+                          "key": "email",
+                          "value": "info@mapmob.com",
+                          "type": "text",
+                          "uuid": "01b35dd6-819a-4367-88a5-d4c94642ca1e"
+                        },
+                        {
+                          "key": "address",
+                          "value": "سوريا-طرطوس",
+                          "type": "text",
+                          "uuid": "d369cc86-b376-4f32-8a83-f84f270a90b3"
+                        },
+                        {
+                          "key": "status",
+                          "value": "published",
+                          "type": "text",
+                          "uuid": "51a6fead-e8e9-4d30-ada3-623b6b36c39d"
+                        },
+                        {
+                          "key": "banner",
+                          "type": "file",
+                          "uuid": "ae120540-b75a-43fe-a2d4-a3cadf3a64fc",
+                          "src": "/C:/Users/obedah/Downloads/صورة متجر 1.jpg"
+                        },
+                        {
+                          "key": "_method",
+                          "value": "PUT",
+                          "type": "text",
+                          "uuid": "18f5b960-45fc-4fe3-833f-dd3d8823de1f"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/about",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "about"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages about",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/about",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "about"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages contact",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"title\": {\r\n    \"ar\": \"تواصل معنا\",\r\n    \"en\": \"Contact Us\"\r\n  },\r\n  \"introduction\": {\r\n    \"ar\": \"<p>نحن هنا لمساعدتك في أي وقت، لا تتردد في مراسلتنا.</p>\",\r\n    \"en\": \"<p>We are here to help you anytime, feel free to contact us.</p>\"\r\n  },\r\n  \"supportPhone\": \"0936318327\",\r\n  \"supportEmail\": \"support@mapmob.com\",\r\n  \"facebookUrl\": \"https://facebook.com/mapmob\",\r\n  \"instagramUrl\": \"https://instagram.com/mapmob\",\r\n  \"telegramUrl\": \"https://t.me/mapmob\",\r\n  \"whatsappUrl\": \"https://wa.me/963936318327\",\r\n  \"status\": \"published\",\r\n  \"_method\":\"PUT\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/contact",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "contact"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages contact",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/contact",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "contact"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages kind",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"title\": {\r\n    \"ar\": \"الشروط والأحكام\",\r\n    \"en\": \"Terms and Conditions\"\r\n  },\r\n  \"body\": {\r\n    \"ar\": \"<h2>مقدمة</h2><p>باستخدامك التطبيق فإنك توافق على كافة الشروط والأحكام الخاصة بنا...</p>\",\r\n    \"en\": \"<h2>Introduction</h2><p>By using the application, you agree to all our terms and conditions...</p>\"\r\n  },\r\n  \"status\": \"published\",\r\n  \"_method\":\"PUT\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/terms",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "terms"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "pages kind",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/pages/terms",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "pages",
+                        "terms"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "FAQ",
+              "item": [
+                {
+                  "name": "faq",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"question\": {\r\n    \"ar\": \"كيف أضيف متجري؟\",\r\n    \"en\": \"How do I add my store?\"\r\n  },\r\n  \"answer\": {\r\n    \"ar\": \"<p>من صفحة التسجيل في التطبيق.</p>\",\r\n    \"en\": \"<p>From the registration page in the app.</p>\"\r\n  },\r\n  \"sort_order\": 1\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/faq",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "faq"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "faq",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/faq",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "faq"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "faq update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"question\": {\r\n    \"ar\": \"كيف أضيف متجري؟\",\r\n    \"en\": \"How do I add my store?\"\r\n  },\r\n  \"answer\": {\r\n    \"ar\": \"<p>من صفحة التسجيل في التطبيق.</p>\",\r\n    \"en\": \"<p>From the registration page in the app.</p>\"\r\n  },\r\n  \"sort_order\": 1,\r\n  \"_method\":\"PUT\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/faq/1",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "faq",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "faq",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{mapurl}}/admin/content/faq/1",
+                      "host": [
+                        "{{mapurl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "content",
+                        "faq",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "notifications",
+          "item": [
+            {
+              "name": "notifications",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "formoptions",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/formoptions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "formoptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recipients",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/recipients",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "recipients"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "audience-estimate",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/audience-estimate",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "audience-estimate"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "notification",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "notification",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "title[ar]",
+                      "value": "تحديث جديد",
+                      "type": "text"
+                    },
+                    {
+                      "key": "title[en]",
+                      "value": "New Update",
+                      "type": "text"
+                    },
+                    {
+                      "key": "body[ar]",
+                      "value": "نسخة جديدة من التطبيق متوفرة الآن",
+                      "type": "text"
+                    },
+                    {
+                      "key": "body[en]",
+                      "value": "A new version of the app is available now",
+                      "type": "text"
+                    },
+                    {
+                      "key": "audience",
+                      "value": "users",
+                      "type": "text"
+                    },
+                    {
+                      "key": "recipientMode",
+                      "value": "location",
+                      "type": "text"
+                    },
+                    {
+                      "key": "intent",
+                      "value": "schedule",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sendAt",
+                      "value": "2026-10-20 20:00:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "governorateId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "areaId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "eb6f9756-c464-4a33-a7c4-062c0798044c",
+                      "disabled": true
+                    },
+                    {
+                      "key": "isImageRemoved",
+                      "value": "0",
+                      "type": "text",
+                      "uuid": "11931425-2146-4ff9-b530-8e5bcf04b7c3"
+                    },
+                    {
+                      "key": "recipientIds[0]",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "03786897-53e4-447c-9990-b01660674900",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "notification update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "title[ar]",
+                      "value": "تحديث جديد",
+                      "type": "text"
+                    },
+                    {
+                      "key": "title[en]",
+                      "value": "New Update",
+                      "type": "text"
+                    },
+                    {
+                      "key": "body[ar]",
+                      "value": "نسخة جديدة من التطبيق متوفرة الآن",
+                      "type": "text"
+                    },
+                    {
+                      "key": "body[en]",
+                      "value": "A new version of the app is available now",
+                      "type": "text"
+                    },
+                    {
+                      "key": "audience",
+                      "value": "users",
+                      "type": "text"
+                    },
+                    {
+                      "key": "recipientMode",
+                      "value": "location",
+                      "type": "text"
+                    },
+                    {
+                      "key": "intent",
+                      "value": "schedule",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sendAt",
+                      "value": "2026-10-20 20:00:00",
+                      "type": "text"
+                    },
+                    {
+                      "key": "governorateId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "areaId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "isImageRemoved",
+                      "value": "0",
+                      "type": "text"
+                    },
+                    {
+                      "key": "recipientIds[0]",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "a0e6ba1c-3471-4291-aed0-b351af323c49"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "notification",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "duplicate",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1/duplicate",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1",
+                    "duplicate"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "reschedule",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1/reschedule",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1",
+                    "reschedule"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "resend",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/notifications/1/resend",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "notifications",
+                    "1",
+                    "resend"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "settings",
+          "item": [
+            {
+              "name": "update account",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "fullName",
+                      "value": "map mop",
+                      "type": "text",
+                      "uuid": "767b5bd2-eb77-4b40-b8ff-1b0f40e7ce7e"
+                    },
+                    {
+                      "key": "email",
+                      "value": "obedah@gmail.com",
+                      "type": "text",
+                      "uuid": "cc635d7d-cda1-4a27-b3bc-5e3a63079a69"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "5fd286bd-f481-4e4d-a356-fe3bde1f1435"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/account",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "account"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "account",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/account",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "account"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update password",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "currentPassword",
+                      "value": "12345678",
+                      "type": "text",
+                      "uuid": "0d0989f6-98e4-4e00-b07a-db6ddc79c1db"
+                    },
+                    {
+                      "key": "newPassword",
+                      "value": "123456789",
+                      "type": "text",
+                      "uuid": "57304dca-f4d1-4638-a0af-97edd5af2df2"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "8952b8de-4939-4cb2-a562-6ef72c5c4b6c"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/account/password",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "account",
+                    "password"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "admins",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/admins",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "admins"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "roles",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/roles",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "fullName",
+                      "value": "basel dali",
+                      "type": "text",
+                      "uuid": "ed8e9a1b-1179-4f6c-bd90-954a48ba8909"
+                    },
+                    {
+                      "key": "email",
+                      "value": "basel@gmail.com",
+                      "type": "text",
+                      "uuid": "ca720c7d-c5c8-4d5d-bfbc-42ee0057151b"
+                    },
+                    {
+                      "key": "roleId",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "fbdf06ea-7a16-4466-b239-544a0d5144c9"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/admins",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "admins"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "super admin notifications",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/notifications",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "notifications by kind",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "isEnabled",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "8712d887-abec-4a65-87a3-820cf8e36f53"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "732d2021-c8dc-40b7-b924-b31f92cdb128"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/notifications/new-complaint",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "notifications",
+                    "new-complaint"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "paymentmethods",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/paymentmethods",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "paymentmethods"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "paymentmethods",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "cash",
+                      "type": "text",
+                      "uuid": "c49b7819-7d56-479e-8cb0-1aab9fe65917"
+                    },
+                    {
+                      "key": "kind",
+                      "value": "manual",
+                      "type": "text",
+                      "uuid": "2b005c06-5868-4521-9885-6ab1ece10f4d"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "type": "text",
+                      "uuid": "f3c1e47d-3c1e-44e8-885b-b5c66b4f892f"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/paymentmethods",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "paymentmethods"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "paymentmethods update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "cash",
+                      "type": "text",
+                      "uuid": "c49b7819-7d56-479e-8cb0-1aab9fe65917"
+                    },
+                    {
+                      "key": "kind",
+                      "value": "manual",
+                      "type": "text",
+                      "uuid": "2b005c06-5868-4521-9885-6ab1ece10f4d"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "type": "text",
+                      "uuid": "f3c1e47d-3c1e-44e8-885b-b5c66b4f892f"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "6413b831-3828-4b46-a4f7-3c57bc1dc2f2"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/paymentmethods/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "paymentmethods",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "platform",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/platform",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "platform"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "platform update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "appName",
+                      "value": "MapMob",
+                      "type": "text",
+                      "uuid": "918da412-285b-49f2-beea-916bfa4d6c26"
+                    },
+                    {
+                      "key": "supportEmail",
+                      "value": "support@mapmob.com",
+                      "type": "text",
+                      "uuid": "1c7fc9e2-0c35-407c-bfb0-05ca1d0c9be4"
+                    },
+                    {
+                      "key": "supportPhone",
+                      "value": "0931234567",
+                      "type": "text",
+                      "uuid": "7ec0d1bc-c7a8-4e45-b4a2-cff87fa58c72"
+                    },
+                    {
+                      "key": "logo",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "a16a71f2-40c9-488c-badf-9ec8857fed2d",
+                      "disabled": true
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "3efbad4d-31f2-4275-8044-708dced93c90"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/platform/general",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "platform",
+                    "general"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "map update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "distanceUnit",
+                      "value": "kilometer",
+                      "type": "text",
+                      "uuid": "3361b9e4-f4e9-48d5-a5d6-dc53d19c1a81"
+                    },
+                    {
+                      "key": "searchRadiusKm",
+                      "value": "10",
+                      "type": "text",
+                      "uuid": "c49f7bdd-80a2-4173-9245-c469ca1fb412"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "375dfd29-0193-478a-97f8-b7a8ef88bf2a"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/platform/map",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "platform",
+                    "map"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "language update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "defaultLanguage",
+                      "value": "ar",
+                      "type": "text",
+                      "uuid": "e9f14dfa-ddaf-4b80-a48a-2d79326c3e41"
+                    },
+                    {
+                      "key": "detectsDeviceLanguage",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "76ddf46c-5c07-47d1-8cb2-83f29fecb0fa"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "843bc9e6-d618-4668-ac51-524457acfeb0"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/platform/language",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "platform",
+                    "language"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "currency update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "currency",
+                      "value": "SYP",
+                      "type": "text",
+                      "uuid": "e9f14dfa-ddaf-4b80-a48a-2d79326c3e41"
+                    },
+                    {
+                      "key": "currencySymbol",
+                      "value": "ل.س",
+                      "type": "text",
+                      "uuid": "76ddf46c-5c07-47d1-8cb2-83f29fecb0fa"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "843bc9e6-d618-4668-ac51-524457acfeb0"
+                    },
+                    {
+                      "key": "decimalPlaces",
+                      "value": "0",
+                      "type": "text",
+                      "uuid": "4eb75c59-5d91-4784-a8ce-bac2df1f5c6f"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/settings/platform/currency",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings",
+                    "platform",
+                    "currency"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "roles",
+          "item": [
+            {
+              "name": "roles",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/roles",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "role",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "tester",
+                      "type": "text",
+                      "uuid": "dc0fdde1-0f23-4e7d-b833-35f77c354fec"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/roles",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "role",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/roles/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "role update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "tester",
+                      "type": "text",
+                      "uuid": "dc0fdde1-0f23-4e7d-b833-35f77c354fec"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "uuid": "bfb5bfc3-58c7-4236-8b01-359fa517e988"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/roles/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "role",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/roles/999999",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "999999"
                   ]
                 }
               },

@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { ReportsHttpRepository } from './reports-http.repository';
 
-const BASE_URL = 'https://api.test';
+const REPORTS_URL = 'https://api.test/admin/reports';
 
 describe('ReportsHttpRepository', () => {
   let repository: ReportsHttpRepository;
@@ -16,7 +17,7 @@ describe('ReportsHttpRepository', () => {
         ReportsHttpRepository,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: BASE_URL },
+        { provide: API_BASE_URL, useValue: 'https://api.test' },
       ],
     });
     repository = TestBed.inject(ReportsHttpRepository);
@@ -25,41 +26,67 @@ describe('ReportsHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for the category shares', () => {
-    repository.getCategoryShares().subscribe();
+  it('reads the category shares by name and percent', async () => {
+    const response = firstValueFrom(repository.getCategoryShares());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/reports/category-shares` }).flush([]);
+    http
+      .expectOne({ method: 'GET', url: `${REPORTS_URL}/categoryshares` })
+      .flush([{ category: { id: '1', name: 'مطاعم' }, placeCount: 2, sharePercent: 40 }]);
+
+    expect(await response).toEqual([{ categoryName: 'مطاعم', share: 40 }]);
   });
 
-  it('asks for the governorate activity', () => {
-    repository.getGovernorateActivities().subscribe();
+  it('reads the visits per governorate', async () => {
+    const response = firstValueFrom(repository.getGovernorateActivities());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/reports/governorate-activity` }).flush([]);
+    http
+      .expectOne({ method: 'GET', url: `${REPORTS_URL}/governorateactivity` })
+      .flush([{ governorate: { id: '1', name: 'دمشق' }, visitCount: 12, sharePercent: 60 }]);
+
+    expect(await response).toEqual([{ governorateName: 'دمشق', visitCount: 12, share: 60 }]);
   });
 
-  it('asks for the user growth of a period', () => {
-    repository.getGrowthSeries('weekly').subscribe();
+  it('puts the active users first and labels the points for the period', async () => {
+    const response = firstValueFrom(repository.getGrowthSeries('yearly'));
 
-    const request = http.expectOne(
-      (candidate) => candidate.url === `${BASE_URL}/reports/user-growth`,
-    );
-    expect(request.request.params.get('period')).toBe('weekly');
-    request.flush([]);
+    const request = http.expectOne((candidate) => candidate.url === `${REPORTS_URL}/user-growth`);
+    expect(request.request.params.get('period')).toBe('yearly');
+    request.flush([
+      { key: 'newUsers', name: 'مستخدمون جدد', points: [{ periodStart: '2026-09-01', value: 9 }] },
+      {
+        key: 'activeUsers',
+        name: 'مستخدمون نشطون',
+        points: [{ periodStart: '2026-09-01', value: 20 }],
+      },
+    ]);
+
+    expect(await response).toEqual([
+      { name: 'مستخدمون نشطون', points: [{ label: '2026', value: 20 }] },
+      { name: 'مستخدمون جدد', points: [{ label: '2026', value: 9 }] },
+    ]);
   });
 
-  it('asks for the usage metrics of a period', () => {
-    repository.getUsageMetrics('monthly').subscribe();
+  it('reads the usage of a period by label, count and percent', async () => {
+    const response = firstValueFrom(repository.getUsageMetrics('monthly'));
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/reports/usage`);
+    const request = http.expectOne((candidate) => candidate.url === `${REPORTS_URL}/usage`);
     expect(request.request.params.get('period')).toBe('monthly');
-    request.flush([]);
+    request.flush([{ key: 'search', label: 'عمليات البحث', count: 18, sharePercent: 63 }]);
+
+    expect(await response).toEqual([{ label: 'عمليات البحث', count: 18, share: 63 }]);
   });
 
-  it('asks for the revenue of a period', () => {
-    repository.getRevenueSeries('daily').subscribe();
+  it('reads the revenue of a period', async () => {
+    const response = firstValueFrom(repository.getRevenueSeries('yearly'));
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/reports/revenue`);
-    expect(request.request.params.get('period')).toBe('daily');
-    request.flush({ name: '', points: [] });
+    const request = http.expectOne((candidate) => candidate.url === `${REPORTS_URL}/revenue`);
+    expect(request.request.params.get('period')).toBe('yearly');
+    request.flush({
+      name: 'الإيرادات',
+      currency: 'SYP',
+      points: [{ periodStart: '2026-09-01', value: 1000 }],
+    });
+
+    expect(await response).toEqual({ name: 'الإيرادات', points: [{ label: '2026', value: 1000 }] });
   });
 });

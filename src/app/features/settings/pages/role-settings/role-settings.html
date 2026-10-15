@@ -36,6 +36,7 @@
     [dialog]="dialog"
     [isBusy]="store.isSaving()"
     [saveError]="store.saveError()"
+    [isNameOnly]="!store.savesRoleDetails"
     (saved)="store.saveRole($event)"
     (closed)="store.closeDialog()"
   />

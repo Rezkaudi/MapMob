@@ -22,10 +22,4 @@ export interface LiveRecentPlace {
   readonly createdAt: string;
 }
 
-export interface LiveChartSeries {
-  readonly key?: string;
-  readonly name: string;
-  readonly points: readonly { readonly periodStart: string; readonly value: number }[];
-}
-
 export type LiveActionItem = ActionItem;

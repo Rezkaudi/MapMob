@@ -98,4 +98,8 @@ describe('AdminRolesStore', () => {
     store.clearSaveError();
     expect(store.deleteError()).toBeNull();
   });
+
+  it('tells whether the server keeps more than the role name', () => {
+    expect(createStore({ savesRoleDetails: false }).savesRoleDetails).toBe(false);
+  });
 });

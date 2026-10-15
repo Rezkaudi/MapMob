@@ -1,11 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { buildContactPage } from '../testing/content-fixture';
 import { ContentPageHttpRepository } from './content-page-http.repository';
 
-const BASE_URL = 'https://api.test';
+const PAGES_URL = 'https://api.test/admin/content/pages';
+const SAVED_AT = '2026-10-15T18:09:59+00:00';
+
+function livePage(title: string, extra: object = {}) {
+  return { data: { title, status: 'published', updatedAt: SAVED_AT, ...extra } };
+}
 
 describe('ContentPageHttpRepository', () => {
   let repository: ContentPageHttpRepository;
@@ -17,7 +23,7 @@ describe('ContentPageHttpRepository', () => {
         ContentPageHttpRepository,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: BASE_URL },
+        { provide: API_BASE_URL, useValue: 'https://api.test' },
       ],
     });
     repository = TestBed.inject(ContentPageHttpRepository);
@@ -26,53 +32,90 @@ describe('ContentPageHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for the list of pages', () => {
-    repository.getPages().subscribe();
+  it('builds the table from each page, then the questions row with no date', async () => {
+    const response = firstValueFrom(repository.getPages());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/content/pages` }).flush([]);
+    http.expectOne(`${PAGES_URL}/about`).flush(livePage('عن التطبيق'));
+    http.expectOne(`${PAGES_URL}/terms`).flush(livePage('الشروط'));
+    http.expectOne(`${PAGES_URL}/privacy`).flush(livePage('الخصوصية'));
+    http.expectOne(`${PAGES_URL}/contact`).flush(livePage('تواصل معنا'));
+
+    const pages = await response;
+    expect(pages.map((page) => [page.kind, page.title, page.updatedOn])).toEqual([
+      ['about', 'عن التطبيق', '2026-10-15'],
+      ['terms', 'الشروط', '2026-10-15'],
+      ['privacy', 'الخصوصية', '2026-10-15'],
+      ['contact', 'تواصل معنا', '2026-10-15'],
+      ['faq', 'الأسئلة الشائعة', null],
+    ]);
   });
 
-  it('loads and saves the about page as multipart, so the banner travels with it', () => {
-    repository.getAboutPage().subscribe();
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/content/pages/about` }).flush({});
+  it('reads the about page', async () => {
+    const response = firstValueFrom(repository.getAboutPage());
 
-    repository
-      .saveAboutPage({
+    http
+      .expectOne(`${PAGES_URL}/about`)
+      .flush(
+        livePage('عن التطبيق', {
+          bannerUrl: null,
+          summary: '<p>x</p>',
+          phone: null,
+          email: null,
+          address: null,
+        }),
+      );
+
+    expect((await response).summary).toBe('<p>x</p>');
+  });
+
+  it('saves the about page as multipart, with PUT inside the POST', async () => {
+    const response = firstValueFrom(
+      repository.saveAboutPage({
         title: 'عن التطبيق',
-        summary: '<p>نبذة</p>',
-        phone: '+963',
-        email: 'a@b.c',
-        address: 'طرطوس',
+        summary: '<p>x</p>',
+        phone: '',
+        email: '',
+        address: '',
+        status: 'published',
         banner: null,
         isBannerRemoved: false,
-        status: 'published',
-      })
-      .subscribe();
-    const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/content/pages/about` });
-    expect(request.request.body).toBeInstanceOf(FormData);
-    request.flush({});
+      }),
+    );
+
+    const request = http.expectOne(`${PAGES_URL}/about`);
+    expect(request.request.method).toBe('POST');
+    expect((request.request.body as FormData).get('_method')).toBe('PUT');
+    request.flush(livePage('عن التطبيق', { bannerUrl: null, summary: '<p>x</p>' }));
+
+    expect((await response).title).toBe('عن التطبيق');
   });
 
-  it('loads and saves a legal page by its kind', () => {
-    repository.getLegalPage('privacy').subscribe();
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/content/pages/privacy` }).flush({});
+  it('reads and saves a legal page by its kind', async () => {
+    const read = firstValueFrom(repository.getLegalPage('privacy'));
+    http.expectOne(`${PAGES_URL}/privacy`).flush(livePage('privacy', { body: null }));
+    expect(await read).toEqual({ title: 'privacy', body: '' });
 
-    repository
-      .saveLegalPage('terms', { title: 'الشروط', body: '<p>نص</p>', status: 'draft' })
-      .subscribe();
-    const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/content/pages/terms` });
-    expect(request.request.body).toEqual({ title: 'الشروط', body: '<p>نص</p>', status: 'draft' });
-    request.flush({});
+    const saved = firstValueFrom(
+      repository.saveLegalPage('terms', { title: 'الشروط', body: '<p>نص</p>', status: 'draft' }),
+    );
+    const request = http.expectOne(`${PAGES_URL}/terms`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body.title).toEqual({ ar: 'الشروط', en: 'الشروط' });
+    request.flush(livePage('الشروط', { body: '<p>نص</p>' }));
+    expect((await saved).body).toBe('<p>نص</p>');
   });
 
-  it('loads and saves the contact page', () => {
-    repository.getContactPage().subscribe();
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/content/pages/contact` }).flush({});
+  it('reads and saves the contact page', async () => {
+    const contact = buildContactPage();
+    const read = firstValueFrom(repository.getContactPage());
+    http.expectOne(`${PAGES_URL}/contact`).flush(livePage(contact.title, contact));
+    expect(await read).toEqual(contact);
 
-    const draft = { ...buildContactPage(), status: 'published' as const };
-    repository.saveContactPage(draft).subscribe();
-    const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/content/pages/contact` });
-    expect(request.request.body).toEqual(draft);
-    request.flush({});
+    const saved = firstValueFrom(repository.saveContactPage({ ...contact, status: 'published' }));
+    const request = http.expectOne(`${PAGES_URL}/contact`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body._method).toBe('PUT');
+    request.flush(livePage(contact.title, contact));
+    expect((await saved).supportEmail).toBe(contact.supportEmail);
   });
 });

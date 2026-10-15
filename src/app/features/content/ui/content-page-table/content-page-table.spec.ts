@@ -96,4 +96,10 @@ describe('ContentPageTable title', () => {
       '/admin/content/faq',
     ]);
   });
+
+  it('shows a dash for a page with no saved date', () => {
+    const { element } = render({ pages: [buildContentPage({ kind: 'faq', updatedOn: null })] });
+
+    expect(element.querySelectorAll('tbody tr td')[2].textContent?.trim()).toBe('—');
+  });
 });

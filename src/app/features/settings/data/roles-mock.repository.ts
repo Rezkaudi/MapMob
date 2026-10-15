@@ -7,6 +7,7 @@ import { SettingsMockDatabaseLoader } from './settings-mock-database-loader';
 
 @Injectable()
 export class RolesMockRepository implements RolesRepository {
+  readonly savesRoleDetails = true;
   private readonly loader = inject(SettingsMockDatabaseLoader);
 
   getRoles(): Observable<readonly AdminRole[]> {

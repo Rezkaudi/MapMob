@@ -1,5 +1,5 @@
 import { buildNotification } from '../testing/notification-fixture';
-import { queryNotifications } from './notification-mock-query';
+import { queryNotifications } from './notification-list-query';
 
 const SENT = buildNotification({
   id: 'n1',

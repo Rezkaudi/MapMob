@@ -20,7 +20,7 @@ import {
 } from './notification-mock-audience';
 import { NotificationMockDatabase } from './notification-mock-database';
 import { searchRecipients } from './notification-mock-recipients';
-import { queryNotifications } from './notification-mock-query';
+import { queryNotifications } from './notification-list-query';
 import { NotificationRepository } from './notification.repository';
 
 @Injectable()

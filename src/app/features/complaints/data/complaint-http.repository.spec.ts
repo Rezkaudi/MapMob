@@ -33,8 +33,17 @@ describe('ComplaintHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('says the server cannot delete reports', () => {
-    expect(repository.canDeleteComplaints).toBe(false);
+  it('lets the admin delete reports', () => {
+    expect(repository.canDeleteComplaints).toBe(true);
+  });
+
+  it('deletes one report by its id', async () => {
+    const response = firstValueFrom(repository.deleteComplaint('11'), { defaultValue: undefined });
+
+    const request = http.expectOne(`${REPORTS_URL}/11`);
+    expect(request.request.method).toBe('DELETE');
+    request.flush({ status_code: 200 });
+    await response;
   });
 
   it('reads every report once and filters and pages them on this side', async () => {
@@ -57,9 +66,12 @@ describe('ComplaintHttpRepository', () => {
     expect((await response).items.map((complaint) => complaint.id)).toEqual(['11']);
   });
 
-  it('counts the summary from the list', async () => {
+  it('reads the five counts from the summary route', async () => {
     const response = firstValueFrom(repository.getSummary());
-    answerList();
+    http.expectOne(`${REPORTS_URL}/summary`).flush({
+      status_code: 200,
+      data: { totalCount: 2, newCount: 1, inReviewCount: 1, resolvedCount: 0, rejectedCount: 0 },
+    });
 
     expect(await response).toEqual({
       totalCount: 2,

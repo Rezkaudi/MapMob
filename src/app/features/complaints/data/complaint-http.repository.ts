@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
@@ -15,14 +15,11 @@ import { buildComplaintsCsvFile } from './complaints-csv';
 import { LiveReport } from './live-report';
 import { toComplaint, toComplaintDetail, toLiveReportStatus } from './live-report-mapping';
 import { LiveReportedStore } from './live-reported-store';
-import { summarizeComplaints } from './summarize-complaints';
 
-const NO_DELETE_MESSAGE = 'حذف البلاغات غير متاح على الخادم.';
-
-/** The server sends every report at once and has no filters, summary or export for them. */
+/** The list comes all at once with no filters, so it is searched and paged here. */
 @Injectable()
 export class ComplaintHttpRepository implements ComplaintRepository {
-  readonly canDeleteComplaints = false;
+  readonly canDeleteComplaints = true;
   private readonly httpClient = inject(HttpClient);
   private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
   private readonly reportsUrl = `${this.adminUrl}/reports`;
@@ -32,7 +29,9 @@ export class ComplaintHttpRepository implements ComplaintRepository {
   }
 
   getSummary(): Observable<ComplaintSummary> {
-    return this.loadAll().pipe(map(summarizeComplaints));
+    return this.httpClient
+      .get<LiveEnvelope<ComplaintSummary>>(`${this.reportsUrl}/summary`)
+      .pipe(map(({ data }) => data));
   }
 
   getComplaint(id: string): Observable<ComplaintDetail> {
@@ -52,8 +51,8 @@ export class ComplaintHttpRepository implements ComplaintRepository {
       .pipe(switchMap(({ data }) => this.withStore(data)));
   }
 
-  deleteComplaint(): Observable<void> {
-    return throwError(() => new Error(NO_DELETE_MESSAGE));
+  deleteComplaint(id: string): Observable<void> {
+    return this.httpClient.delete(`${this.reportsUrl}/${id}`).pipe(map(() => undefined));
   }
 
   exportComplaints(query: ComplaintQuery): Observable<Blob> {

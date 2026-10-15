@@ -65,7 +65,7 @@
               <app-toggle-switch
                 label="حالة الدور"
                 [isOn]="form.controls.isActive.value"
-                [isDisabled]="isReadOnly()"
+                [isDisabled]="areDetailsLocked()"
                 (toggled)="setActive($event)"
               />
             </div>
@@ -96,7 +96,7 @@
                 حدد أذونات العرض، الإضافة، التعديل والحذف لكل وحدة في النظام
               </p>
             </div>
-            @if (!isReadOnly()) {
+            @if (!areDetailsLocked()) {
               <div class="flex items-center gap-1">
                 <button
                   type="button"
@@ -115,12 +115,17 @@
               </div>
             }
           </div>
+          @if (isNameOnly()) {
+            <p class="text-start text-[12px]/[16px] text-text-secondary">
+              الخادم يحفظ اسم الدور فقط حالياً، فالحالة والوصف والصلاحيات لا تُحفظ.
+            </p>
+          }
           @if (grantsError; as message) {
             <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
           }
           <app-permission-matrix
             [grants]="form.controls.grants.value"
-            [isReadOnly]="isReadOnly()"
+            [isReadOnly]="areDetailsLocked()"
             (grantToggled)="toggle($event)"
           />
         </section>

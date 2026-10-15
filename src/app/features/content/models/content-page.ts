@@ -5,7 +5,7 @@ import { ContentPageStatus } from './content-page-status';
 export interface ContentPage {
   readonly kind: ContentPageKind;
   readonly title: string;
-  /** A calendar day written `yyyy-mm-dd`. */
-  readonly updatedOn: string;
+  /** A calendar day written `yyyy-mm-dd`; `null` when the server keeps no date for the page. */
+  readonly updatedOn: string | null;
   readonly status: ContentPageStatus;
 }

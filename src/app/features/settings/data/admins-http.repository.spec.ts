@@ -1,42 +1,56 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { HttpTestingController } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
+import { SETTINGS_URL, setUpSettingsRepository } from '../testing/settings-http-testing';
 import { AdminsHttpRepository } from './admins-http.repository';
 
-const BASE_URL = 'https://api.test';
+const ADMIN = {
+  id: '1',
+  fullName: 'map mop',
+  email: 'obedah@gmail.com',
+  roleId: '5',
+  roleName: 'super_admin',
+  status: 'active',
+  lastSignInAt: '2026-10-15T08:00:00+00:00',
+};
+const CUSTOMER = { ...ADMIN, id: '2', email: null, roleId: '1', roleName: 'customer' };
+const VENDOR = { ...ADMIN, id: '3', roleId: '2', roleName: 'vendor' };
 
 describe('AdminsHttpRepository', () => {
   let repository: AdminsHttpRepository;
   let http: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        AdminsHttpRepository,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: BASE_URL },
-      ],
-    });
-    repository = TestBed.inject(AdminsHttpRepository);
-    http = TestBed.inject(HttpTestingController);
-  });
+  beforeEach(() => ({ repository, http } = setUpSettingsRepository(AdminsHttpRepository)));
 
   afterEach(() => http.verify());
 
-  it('asks for the dashboard admins', () => {
-    repository.getAdmins().subscribe();
+  it('lists the dashboard team only, as the server also sends app users and store owners', async () => {
+    const response = firstValueFrom(repository.getAdmins());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/settings/admins` }).flush([]);
+    http.expectOne(`${SETTINGS_URL}/admins`).flush([ADMIN, CUSTOMER, VENDOR]);
+
+    expect(await response).toEqual([
+      {
+        id: '1',
+        fullName: 'map mop',
+        email: 'obedah@gmail.com',
+        roleId: '5',
+        roleName: 'super_admin',
+        status: 'active',
+        lastSignInOn: '2026-10-15',
+      },
+    ]);
   });
 
-  it('invites an admin', () => {
-    const invitation = { fullName: 'يوسف محمد', email: 'yousef@mapmob.com', roleId: 'role-2' };
-    repository.inviteAdmin(invitation).subscribe();
+  it('invites an admin', async () => {
+    const invitation = { fullName: 'مشرف', email: 'admin@example.com', roleId: '3' };
+    const response = firstValueFrom(repository.inviteAdmin(invitation));
 
-    const request = http.expectOne({ method: 'POST', url: `${BASE_URL}/settings/admins` });
+    const request = http.expectOne(`${SETTINGS_URL}/admins`);
+    expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual(invitation);
-    request.flush({});
+    request.flush({ data: { ...ADMIN, id: '30', ...invitation, lastSignInAt: null } });
+
+    const admin = await response;
+    expect([admin.id, admin.lastSignInOn]).toEqual(['30', null]);
   });
 });

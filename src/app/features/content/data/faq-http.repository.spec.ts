@@ -1,11 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { FaqHttpRepository } from './faq-http.repository';
 
-const BASE_URL = 'https://api.test';
+const FAQ_URL = 'https://api.test/admin/content/faq';
 const DRAFT = { question: 'سؤال؟', answer: 'جواب' };
+const SAVED = { id: '2', ...DRAFT };
+const IN_BOTH_LANGUAGES = {
+  question: { ar: 'سؤال؟', en: 'سؤال؟' },
+  answer: { ar: 'جواب', en: 'جواب' },
+};
 
 describe('FaqHttpRepository', () => {
   let repository: FaqHttpRepository;
@@ -17,7 +23,7 @@ describe('FaqHttpRepository', () => {
         FaqHttpRepository,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: API_BASE_URL, useValue: BASE_URL },
+        { provide: API_BASE_URL, useValue: 'https://api.test' },
       ],
     });
     repository = TestBed.inject(FaqHttpRepository);
@@ -26,31 +32,39 @@ describe('FaqHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for the questions', () => {
-    repository.getQuestions().subscribe();
+  it('reads the questions', async () => {
+    const response = firstValueFrom(repository.getQuestions());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/content/faq` }).flush([]);
+    http.expectOne({ method: 'GET', url: FAQ_URL }).flush({ data: [SAVED] });
+
+    expect(await response).toEqual([SAVED]);
   });
 
-  it('adds a question', () => {
-    repository.addQuestion(DRAFT).subscribe();
+  it('adds a question in both languages', async () => {
+    const response = firstValueFrom(repository.addQuestion(DRAFT));
 
-    const request = http.expectOne({ method: 'POST', url: `${BASE_URL}/content/faq` });
-    expect(request.request.body).toEqual(DRAFT);
-    request.flush({});
+    const request = http.expectOne({ method: 'POST', url: FAQ_URL });
+    expect(request.request.body).toEqual(IN_BOTH_LANGUAGES);
+    request.flush({ data: SAVED });
+
+    expect(await response).toEqual(SAVED);
   });
 
-  it('updates a question', () => {
-    repository.updateQuestion('faq-2', DRAFT).subscribe();
+  it('updates a question with PUT inside the POST', async () => {
+    const response = firstValueFrom(repository.updateQuestion('2', DRAFT));
 
-    const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/content/faq/faq-2` });
-    expect(request.request.body).toEqual(DRAFT);
-    request.flush({});
+    const request = http.expectOne({ method: 'POST', url: `${FAQ_URL}/2` });
+    expect(request.request.body).toEqual({ ...IN_BOTH_LANGUAGES, _method: 'PUT' });
+    request.flush({ data: SAVED });
+
+    expect(await response).toEqual(SAVED);
   });
 
-  it('deletes a question', () => {
-    repository.deleteQuestion('faq-2').subscribe();
+  it('deletes a question', async () => {
+    const response = firstValueFrom(repository.deleteQuestion('2'), { defaultValue: undefined });
 
-    http.expectOne({ method: 'DELETE', url: `${BASE_URL}/content/faq/faq-2` }).flush(null);
+    http.expectOne({ method: 'DELETE', url: `${FAQ_URL}/2` }).flush({ status: true });
+
+    await response;
   });
 });

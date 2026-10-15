@@ -33,6 +33,8 @@ export class RoleDialog implements OnInit {
   readonly dialog = input.required<RoleDialogState>();
   readonly isBusy = input<boolean>(false);
   readonly saveError = input<string | null>(null);
+  /** On when the server keeps only a role's name, so nothing else can be changed. */
+  readonly isNameOnly = input<boolean>(false);
   readonly saved = output<RoleDraft>();
   readonly closed = output<void>();
 
@@ -47,9 +49,15 @@ export class RoleDialog implements OnInit {
   });
   protected readonly copy = computed(() => roleDialogCopy(this.dialog()));
   protected readonly isReadOnly = computed(() => this.dialog().mode === 'view');
+  protected readonly areDetailsLocked = computed(() => this.isReadOnly() || this.isNameOnly());
   protected readonly inputClasses = SETTINGS_DIALOG_INPUT_CLASSES;
 
   ngOnInit(): void {
+    if (this.isNameOnly()) {
+      this.form.controls.description.disable();
+      this.form.controls.isActive.disable();
+      this.form.controls.grants.disable();
+    }
     const dialog = this.dialog();
     if (dialog.mode === 'add') {
       return;

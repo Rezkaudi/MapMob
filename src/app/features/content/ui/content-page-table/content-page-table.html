@@ -47,7 +47,11 @@
               </a>
             </td>
             <td class="pe-5 text-[14px]/[17px] whitespace-nowrap text-text-secondary">
-              {{ page.updatedOn | latinDigitDate }}
+              @if (page.updatedOn; as updatedOn) {
+                {{ updatedOn | latinDigitDate }}
+              } @else {
+                —
+              }
             </td>
             <!-- The design lets the pill run 34px into the date column, centred under "الحالة". -->
             <td class="pe-0.5">

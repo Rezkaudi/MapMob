@@ -1,4 +1,4 @@
-import { ChartPeriod } from '../../../shared/models/chart-period';
+import { ChartPeriod } from '../models/chart-period';
 
 const MONTH_NAME = new Intl.DateTimeFormat('ar', { month: 'long', timeZone: 'UTC' });
 

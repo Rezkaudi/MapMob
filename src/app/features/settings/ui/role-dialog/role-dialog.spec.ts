@@ -110,4 +110,23 @@ describe('RoleDialog', () => {
     buttonNamed(element, 'إغلاق').click();
     expect(closes()).toBe(1);
   });
+
+  it('saves only the name when the server keeps nothing else, and says so', () => {
+    const fixture = TestBed.createComponent(RoleDialog);
+    fixture.componentRef.setInput('dialog', { mode: 'add' });
+    fixture.componentRef.setInput('isNameOnly', true);
+    const saved: RoleDraft[] = [];
+    fixture.componentInstance.saved.subscribe((draft) => saved.push(draft));
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.textContent).toContain('الخادم يحفظ اسم الدور فقط');
+    expect((element.querySelector('#role-description') as HTMLTextAreaElement).disabled).toBe(true);
+    expect(buttonNamed(element, 'تحديد كل الصلاحيات')).toBeUndefined();
+
+    type(element, '#role-name', 'مشرف');
+    buttonNamed(element, 'إضافة الدور').click();
+
+    expect(saved.map((draft) => draft.name)).toEqual(['مشرف']);
+  });
 });

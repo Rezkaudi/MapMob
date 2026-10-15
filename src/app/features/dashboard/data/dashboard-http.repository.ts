@@ -8,14 +8,10 @@ import { ChartSeries } from '../../../shared/models/chart-series';
 import { ActionItem } from '../models/action-item';
 import { DashboardSummary } from '../models/dashboard-summary';
 import { RecentPlace } from '../models/recent-place';
-import { chartPointLabel } from './chart-point-label';
+import { LiveChartSeries } from '../../../shared/data/live-chart-series';
+import { toChartSeries } from '../../../shared/data/to-chart-series';
 import { DashboardRepository } from './dashboard.repository';
-import {
-  LiveActionItem,
-  LiveChartSeries,
-  LiveDashboardSummary,
-  LiveRecentPlace,
-} from './live-dashboard-response';
+import { LiveActionItem, LiveDashboardSummary, LiveRecentPlace } from './live-dashboard-response';
 
 const PLACES_SERIES_KEY = 'places';
 
@@ -67,16 +63,6 @@ function toRecentPlace(place: LiveRecentPlace): RecentPlace {
     status: place.status,
     joinedAt: place.createdAt,
     logoUrl: place.logoUrl,
-  };
-}
-
-function toChartSeries(series: LiveChartSeries, period: ChartPeriod): ChartSeries {
-  return {
-    name: series.name,
-    points: series.points.map((point) => ({
-      label: chartPointLabel(point.periodStart, period),
-      value: point.value,
-    })),
   };
 }
 
