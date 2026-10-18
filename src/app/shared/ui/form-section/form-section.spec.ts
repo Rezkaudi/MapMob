@@ -60,4 +60,14 @@ describe('FormSection', () => {
     fixture.detectChanges();
     expect(body().classList).not.toContain('p-6');
   });
+
+  it('leaves the icon out when none is given, as the game form draws its cards', () => {
+    const fixture = TestBed.createComponent(FormSection);
+    fixture.componentRef.setInput('heading', 'المعلومات العامة للعبة');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('header app-icon')).toBeNull();
+    expect(fixture.nativeElement.querySelector('h2').textContent.trim()).toBe(
+      'المعلومات العامة للعبة',
+    );
+  });
 });

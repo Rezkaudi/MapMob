@@ -18,6 +18,7 @@ import { provideComplaintsFeature } from './features/complaints/complaints.provi
 import { provideContentFeature } from './features/content/content.providers';
 import { provideDashboardFeature } from './features/dashboard/dashboard.providers';
 import { provideDeliveryPlatformsFeature } from './features/delivery-platforms/delivery-platforms.providers';
+import { provideGamesFeature } from './features/games/games.providers';
 import { provideInboxFeature } from './features/inbox/inbox.providers';
 import { provideMerchantAuthFeature } from './features/merchant-auth/merchant-auth.providers';
 import { provideMerchantMediaFeature } from './features/merchant-media/merchant-media.providers';
@@ -65,6 +66,7 @@ export const appConfig: ApplicationConfig = {
     provideOffersFeature(),
     providePaymentsFeature(),
     provideDeliveryPlatformsFeature(),
+    provideGamesFeature(),
     provideReportsFeature(),
     provideReviewsFeature(),
     provideSettingsFeature(),

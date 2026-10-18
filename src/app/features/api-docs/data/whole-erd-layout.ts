@@ -27,4 +27,5 @@ export const WHOLE_ERD_LAYOUT: DbDomain['layout'] = [
     'payments',
     'payment_methods',
   ],
+  ['games', 'game_questions', 'game_options', 'game_votes', 'game_winners'],
 ];

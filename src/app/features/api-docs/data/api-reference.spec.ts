@@ -36,7 +36,7 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(188);
+    expect(countEndpoints(API_FEATURES).total).toBe(197);
   });
 
   it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {
@@ -74,6 +74,41 @@ describe('the API reference data', () => {
       'DELETE /delivery-platforms/{id}',
       'GET /delivery-platforms/{id}/stores',
     ]);
+  });
+
+  it('lists the nine calls of the games screen and its add and edit pages, right after payments', () => {
+    const gamesFeature = API_FEATURES.find((feature) => feature.id === 'games');
+    const ids = API_FEATURES.map((feature) => feature.id);
+
+    expect(gamesFeature?.screen).toBe('/admin/games');
+    expect(gamesFeature?.permissionModule).toBe('offers');
+    expect(ids[ids.indexOf('payments') + 1]).toBe('games');
+    expect(
+      gamesFeature?.endpoints.map((endpoint) => `${endpoint.method} ${endpoint.path}`),
+    ).toEqual([
+      'GET /games',
+      'GET /games/summary',
+      'GET /games/{id}',
+      'POST /games',
+      'PUT /games/{id}',
+      'DELETE /games/{id}',
+      'GET /games/winners',
+      'PATCH /games/winners/{id}/delivery',
+      'GET /games/winners/export',
+    ]);
+  });
+
+  it('stores the games, their questions, votes and winners', () => {
+    const names = tables.map((table) => table.name);
+    expect(names).toEqual(
+      expect.arrayContaining([
+        'games',
+        'game_questions',
+        'game_options',
+        'game_votes',
+        'game_winners',
+      ]),
+    );
   });
 
   it('lists the five calls of the admin stories screen, guarded by the places permissions', () => {

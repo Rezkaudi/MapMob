@@ -88,6 +88,10 @@ export const routes: Routes = [
           import('./features/payments/payments.routes').then((m) => m.PAYMENTS_ROUTES),
       },
       {
+        path: 'games',
+        loadChildren: () => import('./features/games/games.routes').then((m) => m.GAMES_ROUTES),
+      },
+      {
         path: 'delivery-platforms',
         loadChildren: () =>
           import('./features/delivery-platforms/delivery-platforms.routes').then(

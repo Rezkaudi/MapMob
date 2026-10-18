@@ -1,0 +1,122 @@
+<!-- RTL: the heading on the right, its count pill 8px to its left. -->
+<div class="flex items-center gap-2">
+  <h3 class="text-[16px]/[24px] font-bold text-text-primary">أسئلة و أجوبة اللعبة</h3>
+  <span
+    data-role="count"
+    class="rounded-full bg-[#f0f7ff] px-2.5 py-0.5 text-[12px]/[16px] font-bold text-primary"
+    >{{ countText() }}</span
+  >
+</div>
+
+<ol class="mt-6 flex flex-col gap-3">
+  @for (question of questions(); track question.id) {
+    @let isExpanded = expandedIds().includes(question.id);
+    <li
+      data-role="question"
+      class="overflow-hidden rounded-xl border border-border bg-surface shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+    >
+      <!-- RTL: the number and question on the right; the vote time and chevron on the left. -->
+      <button
+        type="button"
+        class="flex w-full items-center justify-between gap-4 bg-[rgba(248,250,252,0.7)] p-4 text-start"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle.emit(question.id)"
+      >
+        <span class="flex items-center gap-3">
+          <span
+            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[12px]/[16px] font-bold text-primary"
+            >{{ question.number }}</span
+          >
+          <span class="flex flex-col gap-[5px]">
+            <span class="text-[12px]/[16px] font-bold text-primary">{{
+              question.ordinalLabel
+            }}</span>
+            <span class="text-[14px]/[20px] font-bold text-text-primary">{{ question.text }}</span>
+          </span>
+        </span>
+        <span class="flex shrink-0 items-center gap-3">
+          <span
+            class="rounded-md bg-[#f1f5f9] px-2 py-0.5 text-[11px]/[17px] font-medium text-text-primary"
+            >{{ question.voteSecondsText }}</span
+          >
+          <app-icon
+            [name]="isExpanded ? 'chevron-up-line' : 'chevron-down-line'"
+            [size]="20"
+            class="text-text-secondary"
+            aria-hidden="true"
+          />
+        </span>
+      </button>
+
+      @if (isExpanded) {
+        <ul
+          data-role="options"
+          class="flex flex-col gap-2.5 border-t border-[#f1f5f9] px-4 pt-3 pb-4"
+        >
+          @for (option of question.options; track option.id) {
+            <li
+              data-role="option"
+              [attr.data-leading]="option.isLeading"
+              class="flex flex-col gap-1.5 rounded-xl p-3"
+              [class]="
+                option.isLeading
+                  ? 'border-2 border-primary bg-[rgba(239,246,255,0.6)]'
+                  : 'border border-border bg-surface-muted'
+              "
+            >
+              <!-- RTL: the letter and choice on the right, the share and votes on the left. -->
+              <div class="flex items-center justify-between gap-4">
+                <span class="flex items-center gap-2">
+                  <span
+                    class="flex size-5 shrink-0 items-center justify-center rounded-full text-[11px]/[17px] font-bold"
+                    [class]="
+                      option.isLeading
+                        ? 'bg-primary text-white'
+                        : question.hasResults
+                          ? 'bg-border text-text-primary'
+                          : 'bg-border text-[#334155]'
+                    "
+                    >{{ option.letter }}</span
+                  >
+                  <span
+                    class="text-[12px]/[16px] text-text-primary"
+                    [class]="option.isLeading ? 'font-bold' : 'font-medium'"
+                    >{{ option.text }}</span
+                  >
+                </span>
+                @if (question.hasResults) {
+                  <span class="flex items-baseline gap-px">
+                    <span
+                      class="text-[12px]/[16px] font-bold"
+                      [class]="option.isLeading ? 'text-primary' : 'text-[#334155]'"
+                      >{{ option.percentText }}</span
+                    >
+                    <span
+                      class="text-[10px]/[16px]"
+                      [class]="option.isLeading ? 'text-text-secondary' : 'text-[#94a3b8]'"
+                      >{{ option.votesText }}</span
+                    >
+                  </span>
+                }
+              </div>
+              @if (question.hasResults) {
+                <!-- The fill grows from the right edge, the start of an RTL line. -->
+                <span
+                  class="block h-2 overflow-hidden rounded-full"
+                  [class]="option.isLeading ? 'bg-[#dbeafe]' : 'bg-border'"
+                >
+                  <span
+                    data-role="bar-fill"
+                    class="block h-full rounded-full"
+                    [class]="option.isLeading ? 'bg-primary' : 'bg-[#94a3b8]'"
+                    [style.width]="option.percentText"
+                  ></span>
+                </span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </li>
+  }
+</ol>

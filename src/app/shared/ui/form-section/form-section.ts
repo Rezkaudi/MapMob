@@ -27,7 +27,8 @@ const HEADING_CLASSES: Record<FormSectionAppearance, string> = {
 })
 export class FormSection {
   readonly heading = input.required<string>();
-  readonly icon = input.required<string>();
+  /** `null` leaves the icon out, as the game form's cards do. */
+  readonly icon = input<string | null>(null);
   readonly appearance = input<FormSectionAppearance>('rounded');
   /** The place form draws its info icon at 24px and the other section icons at 20px. */
   readonly iconSize = input<number>(24);

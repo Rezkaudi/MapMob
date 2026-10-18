@@ -13,6 +13,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'القصص', route: '/admin/stories', icon: 'play-circle' },
   { label: 'الاشتراكات والباقات', route: '/admin/subscriptions', icon: 'subscriptions' },
   { label: 'المدفوعات', route: '/admin/payments', icon: 'payments' },
+  { label: 'الألعاب', route: '/admin/games', icon: 'games' },
   { label: 'منصات الطلبات و التوصيل', route: '/admin/delivery-platforms', icon: 'delivery' },
   { label: 'الإحصائيات و التقارير', route: '/admin/reports', icon: 'reports' },
   { label: 'إدارة المحتوى', route: '/admin/content', icon: 'content' },

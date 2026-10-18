@@ -1,0 +1,43 @@
+<section aria-label="اللعبة القادمة" class="rounded-xl border border-border bg-surface py-2">
+  <!-- RTL: the trophy and the facts on the right, the two actions on the left. -->
+  <div
+    class="flex flex-wrap items-center justify-between gap-6 rounded-xl px-6 py-2 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
+  >
+    <div class="flex items-center gap-5">
+      <app-icon name="trophy-large" [size]="64" class="text-accent" aria-hidden="true" />
+      <div class="flex flex-col items-start gap-1.5 text-[14px]/[20px]">
+        <p data-role="status" class="py-0.5 font-bold text-status-success">
+          {{ view().statusText }}
+        </p>
+        <h2 data-role="title" class="text-text-primary">{{ view().title }}</h2>
+        <p class="flex items-center gap-2 text-[#1e293b]">
+          <app-icon name="clock-small" [size]="13" aria-hidden="true" />
+          <span data-role="schedule">{{ view().scheduleText }}</span>
+        </p>
+        <p class="flex items-center gap-1.5 text-[#1e293b]">
+          <app-icon name="banknote" [size]="15" aria-hidden="true" />
+          <span data-role="prize">{{ view().prizeText }}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- RTL: "تعديل الموعد" sits right of the blue button, its pen on the right of the words. -->
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        class="flex h-9 items-center rounded-xl px-4 text-[14px]/[20px] text-primary hover:bg-primary-soft"
+        (click)="reschedule.emit()"
+      >
+        <app-icon name="pen-line" [size]="18" aria-hidden="true" />
+        <span>تعديل الموعد</span>
+      </button>
+      <button
+        type="button"
+        class="h-9 rounded-lg bg-primary px-5 text-[14px]/[20px] text-white hover:bg-primary-hover"
+        (click)="viewDetails.emit()"
+      >
+        عرض تفاصيل اللعبة
+      </button>
+    </div>
+  </div>
+</section>

@@ -6,6 +6,7 @@ import { COMPLAINTS_FEATURE } from './endpoints/complaint-endpoints';
 import { CONTENT_FEATURE } from './endpoints/content-endpoints';
 import { DASHBOARD_FEATURE } from './endpoints/dashboard-endpoints';
 import { DELIVERY_PLATFORMS_FEATURE } from './endpoints/delivery-platform-endpoints';
+import { GAMES_FEATURE } from './endpoints/game-endpoints';
 import { INBOX_FEATURE } from './endpoints/inbox-endpoints';
 import { NOTIFICATIONS_FEATURE } from './endpoints/notification-endpoints';
 import { OFFERS_FEATURE } from './endpoints/offer-endpoints';
@@ -44,6 +45,7 @@ export const API_FEATURES: readonly ApiFeature[] = [
   STORIES_FEATURE,
   SUBSCRIPTIONS_FEATURE,
   PAYMENTS_FEATURE,
+  GAMES_FEATURE,
   DELIVERY_PLATFORMS_FEATURE,
   REPORTS_FEATURE,
   CONTENT_FEATURE,

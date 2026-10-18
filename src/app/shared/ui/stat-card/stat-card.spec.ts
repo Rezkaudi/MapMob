@@ -209,3 +209,24 @@ describe('StatCard dot', () => {
     expect(label.textContent!.trim()).toBe('320 جديد');
   });
 });
+
+@Component({
+  imports: [StatCard],
+  template: `<app-stat-card
+    icon="games"
+    label="إجمالي الألعاب"
+    value="20"
+    note="منذ انطلاق التطبيق"
+  />`,
+})
+class HostWithNoteComponent {}
+
+describe('StatCard note', () => {
+  it('writes the note on the value line, after the value', () => {
+    const fixture = TestBed.createComponent(HostWithNoteComponent);
+    fixture.detectChanges();
+    const note: HTMLElement = fixture.nativeElement.querySelector('[data-role="note"]');
+    expect(note.textContent?.trim()).toBe('منذ انطلاق التطبيق');
+    expect(note.previousElementSibling?.getAttribute('data-role')).toBe('value');
+  });
+});

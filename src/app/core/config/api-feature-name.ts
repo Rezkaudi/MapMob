@@ -6,6 +6,7 @@ export type ApiFeatureName =
   | 'content'
   | 'dashboard'
   | 'delivery-platforms'
+  | 'games'
   | 'inbox'
   | 'merchant-auth'
   | 'merchant-media'

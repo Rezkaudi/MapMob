@@ -1,0 +1,112 @@
+<div class="fixed inset-0 z-50 overflow-y-auto bg-[rgba(25,28,29,0.3)] backdrop-blur-[4px]">
+  <div
+    class="flex min-h-full items-center justify-center p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="game-detail-title"
+    (click)="closed.emit()"
+  >
+    <div
+      class="flex max-h-[calc(100dvh-48px)] w-full max-w-[896px] flex-col overflow-hidden rounded-2xl border border-[#f1f5f9] bg-surface shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="flex shrink-0 flex-col gap-4 bg-surface px-6 pt-6 pb-4">
+        <!-- RTL: the title on the right, the cross on the left. -->
+        <div class="flex items-center justify-between">
+          <h2 id="game-detail-title" class="text-[20px]/[28px] font-bold text-text-primary">
+            تفاصيل اللعبة
+          </h2>
+          <button
+            type="button"
+            aria-label="إغلاق النافذة"
+            class="flex size-8 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-muted"
+            (click)="closed.emit()"
+          >
+            <app-icon name="close-sharp" [size]="14" aria-hidden="true" />
+          </button>
+        </div>
+        @if (store.view(); as view) {
+          <app-game-detail-summary [view]="view" />
+        }
+      </header>
+
+      <!-- A thin scrollbar keeps the body as wide as the header, as the frame scrolls it. -->
+      <div class="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6 [scrollbar-width:thin]">
+        @if (store.error(); as error) {
+          <app-error-state [message]="error" (retry)="store.retry()" />
+        } @else if (store.view(); as view) {
+          @if (view.isFinished) {
+            <app-game-stat-tiles [tiles]="view.tiles" />
+          }
+          <app-icon-tabs
+            [tabs]="store.tabs()"
+            [selected]="store.tab()"
+            (selectedChange)="pickTab($event)"
+          />
+          @if (store.tab() === 'winners') {
+            <app-game-winner-list
+              [rows]="store.winnerRows()"
+              [countText]="view.winnerCountText"
+              [isLoading]="store.isWinnersLoading()"
+              (searchChange)="store.setWinnerSearch($event)"
+            />
+          } @else {
+            <app-game-question-list
+              [questions]="view.questions"
+              [countText]="view.listedQuestionCountText"
+              [expandedIds]="store.expandedQuestionIds()"
+              (toggle)="store.toggleQuestion($event)"
+            />
+          }
+        } @else {
+          <app-skeleton height="124px" />
+          <app-skeleton height="320px" />
+        }
+      </div>
+
+      @if (store.view(); as view) {
+        <!-- RTL: justify-end packs the buttons on the left; the first in markup sits on the right. -->
+        <footer
+          class="flex shrink-0 items-center justify-end gap-3 border-t border-[#f1f5f9] bg-surface-muted px-6 py-4"
+        >
+          @if (view.canChange) {
+            <button
+              type="button"
+              class="h-[46px] rounded border border-closed px-4 text-[14px]/[20px] font-medium text-closed hover:bg-closed/5"
+              (click)="remove.emit()"
+            >
+              حذف اللعبة
+            </button>
+            <button
+              type="button"
+              class="h-11 w-[190px] rounded-lg border border-primary bg-primary px-5 text-[14px]/[14px] font-bold text-surface-muted hover:bg-primary-hover"
+              (click)="edit.emit()"
+            >
+              تعديل اللعبة
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary hover:bg-surface-muted"
+              (click)="closed.emit()"
+            >
+              إلغاء
+            </button>
+            @if (store.tab() === 'winners') {
+              <button
+                type="button"
+                class="flex h-11 items-center justify-center gap-2.5 rounded-lg border border-primary bg-primary px-5 text-[14px]/[14px] font-bold text-surface-muted hover:bg-primary-hover disabled:opacity-60"
+                [disabled]="store.isExporting()"
+                [attr.aria-busy]="store.isExporting()"
+                (click)="exportRequested.emit()"
+              >
+                <app-icon name="download-tray" [size]="16" aria-hidden="true" />
+                تصدير قائمة الفائزين
+              </button>
+            }
+          }
+        </footer>
+      }
+    </div>
+  </div>
+</div>

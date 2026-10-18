@@ -11,6 +11,8 @@ import { AppIcon } from '../app-icon/app-icon';
 })
 export class ListSearchField {
   readonly placeholder = input.required<string>();
+  /** The detail modal draws a 32px box instead of 40px. */
+  readonly isCompact = input<boolean>(false);
   readonly searchChange = output<string>();
 
   protected onSearchInput(event: Event): void {

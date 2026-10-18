@@ -1,0 +1,72 @@
+<!-- Values sit a few pixels in from their headers in some columns, as the frame draws them. -->
+<div class="overflow-x-auto bg-surface">
+  <table class="w-full min-w-[900px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-11 border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-4">اسم اللعبة والمعرف</th>
+        <th>موعد البدء</th>
+        <th>عدد الأسئلة</th>
+        <th>الجائزة المرصودة</th>
+        <th>المشاركون</th>
+        <th>الحالة</th>
+        <th>الإجراء</th>
+      </tr>
+    </thead>
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.game.id) {
+          <tr class="h-20 border-b border-border text-[14px] last:border-0">
+            <td class="ps-4 pe-2">
+              <!-- The name opens the details, the same as "عرض التفاصيل" in the row menu. -->
+              <button
+                type="button"
+                class="block max-w-full text-start font-bold text-text-primary hover:text-primary hover:underline"
+                [attr.aria-label]="'عرض تفاصيل ' + row.game.name + ' — ' + row.roundLabel"
+                (click)="view.emit(row.game)"
+              >
+                <span class="block truncate leading-[17px]">{{ row.game.name }}</span>
+                <span class="block leading-[17px]">{{ row.roundLabel }}</span>
+              </button>
+            </td>
+            <td class="ps-0.5 pe-2 leading-5 text-text-primary">
+              <span class="block">{{ row.dayText }}</span>
+              <span class="block">{{ row.timeText }}</span>
+            </td>
+            <td class="ps-5 text-text-primary">{{ row.game.questionCount }}</td>
+            <td class="ps-[9px] whitespace-nowrap text-text-secondary">{{ row.prizeText }}</td>
+            <td class="ps-5 text-text-secondary">{{ row.participantsText }}</td>
+            <td>
+              <span
+                data-role="status-pill"
+                class="inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px]/[18px] whitespace-nowrap text-white"
+                [class]="row.pillClass"
+                >{{ row.statusLabel }}</span
+              >
+            </td>
+            <!-- The dots end 17px in from the header's edge, as the frame draws them. -->
+            <td class="ps-[13px]">
+              <app-game-row-menu
+                [canChange]="row.canChange"
+                (view)="view.emit(row.game)"
+                (edit)="edit.emit(row.game)"
+                (remove)="remove.emit(row.game)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

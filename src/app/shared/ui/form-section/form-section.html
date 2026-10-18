@@ -4,7 +4,9 @@
     [class]="headerClasses()"
   >
     <div class="flex items-center text-accent" [class]="headingClasses()">
-      <app-icon aria-hidden="true" [name]="icon()" [size]="iconSize()" />
+      @if (icon(); as iconName) {
+        <app-icon aria-hidden="true" [name]="iconName" [size]="iconSize()" />
+      }
       <h2
         class="text-[18px]/[28px]"
         [class.font-bold]="appearance() === 'rounded'"

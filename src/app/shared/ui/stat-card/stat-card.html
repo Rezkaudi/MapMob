@@ -20,6 +20,12 @@
           class="text-[18px]/[28px] font-bold text-text-primary"
           >{{ value() }}</span
         >
+        @if (note(); as noteText) {
+          <!-- The frame sits the note on the value's baseline, 4px to its left. -->
+          <span data-role="note" class="self-end pb-[3px] text-[10px]/[11px] text-text-secondary">{{
+            noteText
+          }}</span>
+        }
         @if (delta(); as deltaLabel) {
           <span
             data-role="delta"

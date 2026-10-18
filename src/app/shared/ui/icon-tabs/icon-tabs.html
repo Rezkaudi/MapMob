@@ -1,0 +1,19 @@
+<!-- RTL: the row hugs the right edge, so the first tab leads; each tab's icon sits on its right. -->
+<div role="tablist" class="flex justify-start border-b border-border">
+  <div class="flex gap-8">
+    @for (tab of tabs(); track tab.value) {
+      @let isSelected = tab.value === selected();
+      <button
+        type="button"
+        role="tab"
+        class="-mb-px flex items-center gap-2 border-b-2 px-1 py-3 text-[14px]/[20px] font-bold"
+        [class]="isSelected ? selectedClasses : idleClasses"
+        [attr.aria-selected]="isSelected"
+        (click)="selectedChange.emit(tab.value)"
+      >
+        <app-icon [name]="tab.icon" [size]="tab.iconSize" aria-hidden="true" />
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+</div>

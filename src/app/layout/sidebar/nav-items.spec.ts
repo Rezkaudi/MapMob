@@ -14,6 +14,7 @@ describe('nav items', () => {
       'القصص',
       'الاشتراكات والباقات',
       'المدفوعات',
+      'الألعاب',
       'منصات الطلبات و التوصيل',
       'الإحصائيات و التقارير',
       'إدارة المحتوى',
@@ -52,5 +53,15 @@ describe('nav items', () => {
       'البلاغات',
       'الإعدادات',
     ]);
+  });
+
+  it('links the games to their page with the controller icon, right after the payments', () => {
+    const paymentsIndex = NAV_ITEMS.findIndex((item) => item.route === '/admin/payments');
+
+    expect(NAV_ITEMS[paymentsIndex + 1]).toEqual({
+      label: 'الألعاب',
+      route: '/admin/games',
+      icon: 'games',
+    });
   });
 });

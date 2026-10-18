@@ -1,0 +1,140 @@
+<!-- Header, the cards 24px below, the banner 32px on, the tabs 45px on, then the card 24px under them. -->
+<app-page-header
+  title="لعبة الأكثرية و الأقلية"
+  description="إدارة اللعبة والجوائز  ومتابعة تسليم الفائزين ."
+  descriptionSize="small"
+  addLabel="إنشاء لعبة جديدة"
+  (add)="addGame()"
+/>
+
+<!-- Four 246px cards 20px apart at 1440; RTL puts the first on the right. -->
+<div data-role="stat-cards" class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  @for (card of games.statCards(); track card.label) {
+    <app-stat-card
+      [isLoading]="games.isSummaryLoading()"
+      [icon]="card.icon"
+      [label]="card.label"
+      [value]="card.value"
+      [note]="card.note"
+    />
+  }
+</div>
+
+@if (games.upcomingGame(); as upcoming) {
+  <app-upcoming-game-banner
+    class="mt-8"
+    [view]="upcoming"
+    (viewDetails)="detail.open(upcoming.gameId)"
+    (reschedule)="editGame(upcoming.gameId)"
+  />
+}
+
+<app-icon-tabs
+  class="mt-[45px]"
+  [tabs]="tabs"
+  [selected]="tab()"
+  (selectedChange)="pickTab($event)"
+/>
+
+@if (tab() === 'sessions') {
+  @if (games.error(); as error) {
+    <app-error-state class="mt-6" [message]="error" (retry)="games.loadGames()" />
+  } @else {
+    <section
+      aria-label="جلسات الألعاب"
+      class="mt-6 overflow-hidden rounded-xl border border-border"
+    >
+      <app-game-toolbar
+        [chips]="games.statusChips()"
+        [selectedChip]="games.selectedChip()"
+        (searchChange)="games.setSearch($event)"
+        (sortChange)="games.setSort($event)"
+        (statusChange)="games.setStatusFilter($event)"
+      />
+      <app-game-table
+        [rows]="games.rows()"
+        [isLoading]="games.isLoading()"
+        [hasNoResults]="games.hasNoResults()"
+        [emptyMessage]="games.emptyMessage()"
+        [rowCount]="games.pageSize()"
+        (view)="detail.open($event.id)"
+        (edit)="editGame($event.id)"
+        (remove)="games.askToDelete($event)"
+      />
+    </section>
+    <app-table-pagination
+      class="mt-1"
+      [pageIndex]="games.pageIndex()"
+      [pageSize]="games.pageSize()"
+      [totalCount]="games.totalCount()"
+      itemNoun="جولة لعب"
+      (pageIndexChange)="games.changePage($event)"
+    />
+  }
+} @else {
+  @if (winners.error(); as error) {
+    <app-error-state class="mt-6" [message]="error" (retry)="winners.loadWinners()" />
+  } @else {
+    <section aria-label="الفائزون" class="mt-6 overflow-hidden rounded-xl border border-border">
+      <app-winner-toolbar
+        [isExporting]="winners.isExporting()"
+        (searchChange)="winners.setSearch($event)"
+        (sortChange)="winners.setSort($event)"
+        (exportRequested)="exportAllWinners()"
+      />
+      <app-winner-table
+        [rows]="winners.rows()"
+        [isLoading]="winners.isLoading()"
+        [hasNoResults]="winners.hasNoResults()"
+        [emptyMessage]="winners.emptyMessage()"
+        [rowCount]="winners.pageSize()"
+        (view)="openWinnerGame($event)"
+        (statusChange)="winners.askToChangeDelivery($event)"
+      />
+    </section>
+    <app-table-pagination
+      class="mt-1"
+      [pageIndex]="winners.pageIndex()"
+      [pageSize]="winners.pageSize()"
+      [totalCount]="winners.totalCount()"
+      itemNoun="فائز"
+      (pageIndexChange)="winners.changePage($event)"
+    />
+  }
+}
+
+@if (detail.isOpen()) {
+  <app-game-detail-dialog
+    (closed)="detail.close()"
+    (edit)="editOpenGame()"
+    (remove)="deleteOpenGame()"
+    (exportRequested)="exportOpenGameWinners()"
+  />
+}
+
+@if (games.deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="games.isSaving()"
+    (confirmed)="games.confirmDelete()"
+    (cancelled)="games.cancelDelete()"
+  />
+}
+
+@if (winners.deliveryCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="winners.isSaving()"
+    (confirmed)="confirmDeliveryChange()"
+    (cancelled)="winners.cancelDeliveryChange()"
+  />
+}
+
+@if (games.saveError() ?? winners.saveError() ?? detail.exportError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="games.clearSaveError(); winners.clearSaveError(); detail.clearExportError()"
+  />
+}

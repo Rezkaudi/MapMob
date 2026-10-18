@@ -27,4 +27,12 @@ describe('ListSearchField', () => {
 
     expect(searchChange).toHaveBeenCalledWith('أحمد');
   });
+
+  it('draws the 32px box of the detail modal when compact', () => {
+    const fixture = TestBed.createComponent(ListSearchField);
+    fixture.componentRef.setInput('placeholder', 'ابحث');
+    fixture.componentRef.setInput('isCompact', true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('input').classList).toContain('h-8');
+  });
 });

@@ -1,0 +1,72 @@
+<div class="overflow-x-auto bg-surface">
+  <table class="w-full min-w-[900px] table-fixed text-right">
+    <colgroup>
+      @for (width of columnWidths; track $index) {
+        <col [style.width]="width" />
+      }
+    </colgroup>
+    <thead>
+      <tr
+        class="h-11 border-b border-border bg-surface-muted text-[13px]/[16px] font-bold text-text-primary"
+      >
+        <th class="ps-4">الفائز</th>
+        <th>رقم الهاتف</th>
+        <th>رقم الجائزة</th>
+        <th>الجائزة</th>
+        <th>تاريخ الفوز</th>
+        <th>حالة الجائزة</th>
+        <th>الإجراء</th>
+      </tr>
+    </thead>
+    @if (isLoading()) {
+      <tbody app-table-skeleton [columnCount]="columnCount" [rowCount]="rowCount()"></tbody>
+    } @else {
+      <tbody>
+        @for (row of rows(); track row.winner.id) {
+          <tr class="h-14 border-b border-border text-[14px]/[17px] last:border-0">
+            <td class="ps-4 pe-2">
+              <!-- The name opens the details, the same as "عرض تفاصيل الفائز" in the row menu. -->
+              <button
+                type="button"
+                class="block max-w-full truncate text-start font-bold text-text-primary hover:text-primary hover:underline"
+                [attr.aria-label]="'عرض تفاصيل الفائز ' + row.winner.user.name"
+                (click)="view.emit(row.winner)"
+              >
+                {{ row.winner.user.name }}
+              </button>
+            </td>
+            <td class="ps-0.5 text-text-primary">
+              <span dir="ltr">{{ row.contactText }}</span>
+            </td>
+            <td class="ps-[19px] text-text-secondary">
+              <span dir="ltr">{{ row.roundText }}</span>
+            </td>
+            <td class="truncate pe-2 text-text-secondary" [title]="row.prizeText">
+              {{ row.prizeText }}
+            </td>
+            <td class="ps-1 text-text-secondary">
+              <span dir="ltr">{{ row.wonOnText }}</span>
+            </td>
+            <td>
+              <span
+                data-role="status-pill"
+                class="inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px]/[18px] whitespace-nowrap text-white"
+                [class]="row.pillClass"
+                >{{ row.statusLabel }}</span
+              >
+            </td>
+            <td class="ps-6">
+              <app-winner-row-menu
+                (view)="view.emit(row.winner)"
+                (statusChange)="statusChange.emit(row.winner)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+  @if (hasNoResults()) {
+    <app-table-empty [message]="emptyMessage()" />
+  }
+</div>

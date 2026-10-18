@@ -1,0 +1,89 @@
+<fieldset
+  class="flex flex-col gap-4 rounded-lg border border-border bg-surface-muted p-5"
+  [formGroup]="group()"
+>
+  <!-- RTL: the number and title on the right, "حذف السؤال" on the left. -->
+  <legend class="sr-only">السؤال {{ index() + 1 }}</legend>
+  <div class="flex items-center justify-between border-b border-border pb-3">
+    <span class="flex items-center gap-2">
+      <span
+        class="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[12px]/[16px] font-bold text-primary"
+        >{{ index() + 1 }}</span
+      >
+      <span class="text-[12px]/[16px] font-bold text-text-primary">السؤال {{ index() + 1 }}</span>
+    </span>
+    @if (canRemove()) {
+      <button
+        type="button"
+        data-role="remove-question"
+        class="flex items-center gap-1 text-[12px]/[16px] font-medium text-[#ef4444] hover:underline"
+        (click)="remove.emit()"
+      >
+        <app-icon name="trash-outline" [size]="16" aria-hidden="true" />
+        حذف السؤال
+      </button>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label
+      [for]="'game-question-' + index() + '-text'"
+      class="flex text-[12px]/[16px] font-medium text-text-primary"
+    >
+      نص السؤال<span class="text-[11px]/[14px] text-closed" aria-hidden="true">*</span>
+    </label>
+    <input
+      [id]="'game-question-' + index() + '-text'"
+      type="text"
+      formControlName="text"
+      placeholder="اكتب نص السؤال"
+      [class]="controlClasses"
+      [attr.aria-invalid]="errors().text !== null"
+    />
+    @if (errors().text; as message) {
+      <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+    }
+  </div>
+
+  <!-- RTL: the first choice on the right, the second on the left. -->
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label
+        [for]="'game-question-' + index() + '-first'"
+        class="flex text-[12px]/[16px] font-medium text-[#334155]"
+      >
+        الخيار الأول<span class="text-[11px]/[14px] text-closed" aria-hidden="true">*</span>
+      </label>
+      <input
+        [id]="'game-question-' + index() + '-first'"
+        type="text"
+        formControlName="firstOption"
+        placeholder="اكتب الخيار الأول"
+        [class]="controlClasses"
+        [attr.aria-invalid]="errors().firstOption !== null"
+      />
+      @if (errors().firstOption; as message) {
+        <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+      }
+    </div>
+    <div class="flex flex-col gap-1">
+      <label
+        [for]="'game-question-' + index() + '-second'"
+        class="flex text-[12px]/[16px] font-medium text-[#334155]"
+      >
+        الخيار الثاني<span class="text-[12px]/[16px] text-[#ef4444]" aria-hidden="true">*</span>
+      </label>
+      <input
+        [id]="'game-question-' + index() + '-second'"
+        type="text"
+        formControlName="secondOption"
+        placeholder="اكتب الخيار الثاني"
+        [class]="controlClasses"
+        [attr.aria-invalid]="errors().secondOption !== null"
+      />
+      @if (errors().secondOption; as message) {
+        <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+      }
+    </div>
+  </div>
+</fieldset>

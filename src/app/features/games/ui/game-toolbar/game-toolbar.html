@@ -1,0 +1,17 @@
+<!-- RTL: the 390px search on the right, the sort on the left; the chips start at the right 24px below. -->
+<div class="flex flex-col gap-6 border-b border-border bg-surface p-4">
+  <div class="flex items-center justify-between gap-4">
+    <app-list-search-field
+      class="w-full max-w-[390px]"
+      placeholder="ابحث برقم الجولة...."
+      (searchChange)="searchChange.emit($event)"
+    />
+    <app-sort-select class="shrink-0" (sortChange)="sortChange.emit($event)" />
+  </div>
+  <app-filter-chips
+    class="overflow-x-auto"
+    [options]="chips()"
+    [selected]="selectedChip()"
+    (selectedChange)="pickChip($event)"
+  />
+</div>

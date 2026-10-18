@@ -1,0 +1,30 @@
+<!-- RTL: the title block on the right, "تصدير الكشف" on the left. -->
+<header
+  class="flex items-center justify-between gap-4 border-b border-[#f1f5f9] bg-surface px-6 py-4"
+>
+  <div class="flex flex-col gap-1 text-[14px]/[20px]">
+    <h2 class="font-bold text-text-primary">الفائزون وحالة تسليم الجوائز</h2>
+    <p class="text-text-secondary">
+      متابعة الفائزين وحالة تسليم الجوائز و توثيق التسليم بالتواريخ الرسمية
+    </p>
+  </div>
+  <button
+    type="button"
+    data-role="export"
+    class="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px]/[16px] text-[#334155] hover:bg-surface-muted disabled:opacity-60"
+    [disabled]="isExporting()"
+    [attr.aria-busy]="isExporting()"
+    (click)="exportRequested.emit()"
+  >
+    <app-icon name="download-small" [size]="11" aria-hidden="true" />
+    <span>تصدير الكشف</span>
+  </button>
+</header>
+<div class="flex items-center justify-between gap-4 border-b border-border bg-surface p-4">
+  <app-list-search-field
+    class="w-full max-w-[390px]"
+    placeholder="ابحث باسم الفائز أو برقم الهاتف...."
+    (searchChange)="searchChange.emit($event)"
+  />
+  <app-sort-select class="shrink-0" (sortChange)="sortChange.emit($event)" />
+</div>
