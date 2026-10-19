@@ -6,7 +6,7 @@ import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
   selector: 'app-place-select-frame',
   imports: [AppIcon],
   templateUrl: './place-select-frame.html',
-  host: { class: 'relative block' },
+  host: { class: 'relative block [&:has(select:disabled)>app-icon]:opacity-50' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceSelectFrame {}

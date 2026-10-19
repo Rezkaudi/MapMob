@@ -16,4 +16,5 @@ import { PlaceSelectFrame } from '../../../ui/place-select-frame/place-select-fr
 export class PlaceBasicInfoSection {
   readonly form = input.required<PlaceFormGroup>();
   readonly categories = input.required<readonly string[]>();
+  readonly subCategories = input.required<readonly string[]>();
 }

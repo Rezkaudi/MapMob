@@ -12,7 +12,12 @@
 } @else {
   <!-- The frame's form area starts 23px under the description and pads its cards 24px more. -->
   <form [formGroup]="form" (ngSubmit)="save()" class="mt-[47px] flex flex-col gap-6">
-    <app-place-basic-info-section id="basic-info" [form]="form" [categories]="categories()" />
+    <app-place-basic-info-section
+      id="basic-info"
+      [form]="form"
+      [categories]="categories()"
+      [subCategories]="subCategories()"
+    />
     <app-place-location-section
       id="location"
       [form]="form"

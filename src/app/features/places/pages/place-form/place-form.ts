@@ -35,6 +35,7 @@ import { createPlaceFormGroup } from '../../state/place-form-group';
 import { fillPlaceForm } from '../../state/place-form-mapping';
 import { toSavedVideoFiles } from '../../state/place-video-files';
 import { PlaceFormStore } from '../../state/place-form.store';
+import { syncSubCategoryControl } from '../../state/sync-sub-category-control';
 import { withSavedOption } from '../../state/with-saved-option';
 import { toWorkingWeek } from '../../state/working-week-from-rows';
 import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
@@ -97,6 +98,11 @@ export class PlaceForm {
     initialValue: this.form.controls.city.value,
   });
 
+  private readonly selectedMainCategory = toSignal(
+    this.form.controls.mainCategory.valueChanges,
+    { initialValue: this.form.controls.mainCategory.value },
+  );
+
   /** The saved value joins the list when the list does not already offer it. */
   protected readonly categories = computed(() =>
     withSavedOption(
@@ -104,6 +110,17 @@ export class PlaceForm {
       this.store.editedPlace()?.mainCategory,
     ),
   );
+  protected readonly subCategories = computed(() => {
+    const mainCategory = this.selectedMainCategory();
+    const choice = this.store
+      .choices()
+      ?.mainCategories.find((candidate) => candidate.name === mainCategory);
+    const editedPlace = this.store.editedPlace();
+    return withSavedOption(
+      choice?.subCategories.map((subCategory) => subCategory.name) ?? [],
+      editedPlace?.mainCategory === mainCategory ? editedPlace.subCategory : undefined,
+    );
+  });
   protected readonly cities = computed(() =>
     withSavedOption(
       this.store.choices()?.governorates.map((governorate) => governorate.name) ?? [],
@@ -178,6 +195,10 @@ export class PlaceForm {
       if (section && this.store.isReady()) {
         untracked(() => this.scrollToSection(section));
       }
+    });
+    effect(() => {
+      const subCategories = this.subCategories();
+      untracked(() => syncSubCategoryControl(this.form.controls.subCategory, subCategories));
     });
     effect(() => {
       const place = this.store.editedPlace();

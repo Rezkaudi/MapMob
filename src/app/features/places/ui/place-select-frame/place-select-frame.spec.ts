@@ -19,4 +19,12 @@ describe('PlaceSelectFrame', () => {
     expect(chevron.classList).toContain('left-4');
     expect(chevron.getAttribute('aria-hidden')).toBe('true');
   });
+
+  it('fades the chevron with a turned-off select', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const frame: HTMLElement = fixture.nativeElement.querySelector('app-place-select-frame');
+
+    expect(frame.classList).toContain('[&:has(select:disabled)>app-icon]:opacity-50');
+  });
 });

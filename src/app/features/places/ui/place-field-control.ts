@@ -4,7 +4,7 @@ import { Directive, ElementRef, computed, inject, input } from '@angular/core';
 export type PlaceFieldTone = 'strong' | 'soft';
 
 const BASE_CLASSES =
-  'w-full rounded border bg-white px-4 text-[14px] text-text-primary outline-none transition-colors placeholder:text-[#94a3b8] focus:border-primary focus:ring-2 focus:ring-primary/20 [&.ng-touched.ng-invalid]:border-closed';
+  'w-full rounded border bg-white px-4 text-[14px] text-text-primary outline-none transition-colors placeholder:text-[#94a3b8] focus:border-primary focus:ring-2 focus:ring-primary/20 [&.ng-touched.ng-invalid]:border-closed disabled:cursor-not-allowed disabled:bg-[#f1f5f9] disabled:opacity-50';
 
 const TONE_CLASSES: Record<PlaceFieldTone, string> = {
   strong: 'border-[#64748b]',

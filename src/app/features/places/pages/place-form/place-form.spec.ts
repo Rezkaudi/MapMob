@@ -6,17 +6,30 @@ import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { PlaceRepository } from '../../data/place.repository';
 import { PLACE_MOCK_FORM_CHOICES } from '../../data/place-mock-form-choices';
 import { PlaceDetail } from '../../models/place-detail';
+import { PlaceFormChoices } from '../../models/place-form-choices';
 import { PlaceSaveRequest } from '../../models/place-save-request';
 import { createPlaceDetail } from '../../testing/place-detail-fixture';
 import { PlaceForm } from './place-form';
 
 const savedRequests: { id: string | null; request: PlaceSaveRequest }[] = [];
 
-function render(id: string | undefined = '', getPlace?: (id: string) => Observable<PlaceDetail>) {
+const CHOICES_WITH_SUB_CATEGORIES: PlaceFormChoices = {
+  ...PLACE_MOCK_FORM_CHOICES,
+  mainCategories: [
+    { id: '8', name: 'صيدلية', subCategories: [{ id: '20', name: 'صيدلية ليلية' }] },
+    { id: '9', name: 'مطعم', subCategories: [] },
+  ],
+};
+
+function render(
+  id: string | undefined = '',
+  getPlace?: (id: string) => Observable<PlaceDetail>,
+  choices: PlaceFormChoices = PLACE_MOCK_FORM_CHOICES,
+) {
   TestBed.resetTestingModule();
   const repository: Partial<PlaceRepository> = {
     getPlace: getPlace ?? ((placeId) => of(createPlaceDetail({ id: placeId }))),
-    getPlaceFormChoices: () => of(PLACE_MOCK_FORM_CHOICES),
+    getPlaceFormChoices: () => of(choices),
     savePlace: (placeId, request) => {
       savedRequests.push({ id: placeId, request });
       return of(placeId ?? 'place-new');
@@ -197,6 +210,46 @@ describe('PlaceForm', () => {
     expect(fixture.componentInstance['regions']()).toContain('المركز');
   });
 
+  it('offers the sub categories of the picked main category in a list', () => {
+    const fixture = render('', undefined, CHOICES_WITH_SUB_CATEGORIES);
+    fixture.componentInstance['form'].controls.mainCategory.setValue('صيدلية');
+    fixture.detectChanges();
+
+    const subCategory: HTMLSelectElement = fixture.nativeElement.querySelector(
+      'select#sub-category',
+    );
+    expect(subCategory.disabled).toBe(false);
+    expect(Array.from(subCategory.options).map((option) => option.value)).toEqual([
+      '',
+      'صيدلية ليلية',
+    ]);
+  });
+
+  it('turns the sub category off and empties it when the main category has none', () => {
+    const fixture = render('', undefined, CHOICES_WITH_SUB_CATEGORIES);
+    const controls = fixture.componentInstance['form'].controls;
+    controls.mainCategory.setValue('صيدلية');
+    fixture.detectChanges();
+    controls.subCategory.setValue('صيدلية ليلية');
+    controls.mainCategory.setValue('مطعم');
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement.querySelector('select#sub-category') as HTMLSelectElement).disabled,
+    ).toBe(true);
+    expect(controls.subCategory.value).toBe('');
+  });
+
+  it('fades the sub category label with its field', () => {
+    const label: HTMLElement = render()
+      .nativeElement.querySelector('label[for="sub-category"]')
+      .closest('app-field-label');
+
+    expect(label.parentElement?.classList).toContain(
+      '[&:has(:disabled)>app-field-label]:opacity-50',
+    );
+  });
+
   it('does not claim the place was saved while required fields are empty', () => {
     const fixture = render();
     submit(fixture);
@@ -258,7 +311,7 @@ describe('PlaceForm', () => {
     expect(fieldValue(fixture, 'input#owner-phone')).toBe(detail.owner.phone);
     expect(fieldValue(fixture, 'input#owner-extra-phone')).toBe(detail.owner.extraPhone);
     expect(fieldValue(fixture, 'select#main-category')).toBe(detail.mainCategory);
-    expect(fieldValue(fixture, 'input#sub-category')).toBe(detail.subCategory);
+    expect(fieldValue(fixture, 'select#sub-category')).toBe(detail.subCategory);
     expect(fieldValue(fixture, 'select#city')).toBe(detail.location.city);
     expect(fieldValue(fixture, 'select#region')).toBe(detail.location.region);
     expect(fieldValue(fixture, 'input#address')).toBe(detail.location.address);
@@ -442,6 +495,7 @@ describe('PlaceForm', () => {
 
     expect(selects.map((select) => select.id)).toEqual([
       'main-category',
+      'sub-category',
       'city',
       'region',
       'package',

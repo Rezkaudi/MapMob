@@ -62,15 +62,21 @@
         </select>
       </app-place-select-frame>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 [&:has(:disabled)>app-field-label]:opacity-50">
       <app-field-label text="التصنيف الفرعي" forId="sub-category" />
-      <input
-        id="sub-category"
-        type="text"
-        formControlName="subCategory"
-        appPlaceFieldControl
-        fieldTone="strong"
-      />
+      <app-place-select-frame>
+        <select
+          id="sub-category"
+          formControlName="subCategory"
+          appPlaceFieldControl
+          fieldTone="strong"
+        >
+          <option value="">اختر التصنيف الفرعي...</option>
+          @for (subCategory of subCategories(); track subCategory) {
+            <option [value]="subCategory">{{ subCategory }}</option>
+          }
+        </select>
+      </app-place-select-frame>
     </div>
   </div>
 </app-form-section>

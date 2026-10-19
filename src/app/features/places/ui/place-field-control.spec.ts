@@ -52,6 +52,14 @@ describe('PlaceFieldControl', () => {
     expect(city.classList).toContain('pl-10');
   });
 
+  it('fades a turned-off field so it reads as not in use', () => {
+    const classes = render()('city').classList;
+
+    expect(classes).toContain('disabled:opacity-50');
+    expect(classes).toContain('disabled:cursor-not-allowed');
+    expect(classes).toContain('disabled:bg-[#f1f5f9]');
+  });
+
   it('greys a select out while its empty prompt is picked, like a placeholder', () => {
     expect(render()('city').classList).toContain("has-[option[value='']:checked]:text-[#94a3b8]");
   });
