@@ -30,7 +30,7 @@ describe('CategoryToolbar', () => {
     const [sort, status, parent] = selectsOf(element);
 
     expect((element.querySelector('input') as HTMLInputElement).placeholder).toBe(
-      'ابحث برقم البلاغ أو اسم المكان...',
+      'ابحث باسم التصنيف...',
     );
     expect(optionLabels(sort)).toEqual(['ترتيب حسب', 'الأحدث', 'الأقدم', 'الاسم']);
     expect(optionLabels(status)).toEqual(['الحالة', 'نشط', 'معطل']);
