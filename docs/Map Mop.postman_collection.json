@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "910fbdc9-d9cb-4766-9689-fa0c53535e23",
+    "_postman_id": "18c35c51-cdf5-488d-abd8-b6eb8d2112df",
     "name": "Map Mop",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "37601824",
-    "_collection_link": "https://go.postman.co/collection/37601824-910fbdc9-d9cb-4766-9689-fa0c53535e23?source=collection_link"
+    "_exporter_id": "59042285",
+    "_collection_link": "https://go.postman.co/collection/59042285-18c35c51-cdf5-488d-abd8-b6eb8d2112df?source=collection_link"
   },
   "item": [
     {
@@ -945,10 +945,6 @@
                     "type": "text"
                   }
                 ],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": []
-                },
                 "url": {
                   "raw": "{{mapurl}}/api/reports/1",
                   "host": [
@@ -1405,6 +1401,261 @@
           ]
         },
         {
+          "name": "notifications",
+          "item": [
+            {
+              "name": "user notifications",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/notifications/private",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    "private"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "",
+                      "type": "text",
+                      "id": 0,
+                      "disabled": true
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "id": 1,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "general",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/notifications/general?per_page=5",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    "general"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "5",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "id": 1,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "search",
+          "item": [
+            {
+              "name": "history",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/search/history",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "search",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "save history",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/search/history",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "search",
+                    "history"
+                  ]
+                },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "query",
+                      "value": "search",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete all",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/search/history",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "search",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/search/history/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "search",
+                    "history",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "search",
           "request": {
             "method": "GET",
@@ -1416,7 +1667,7 @@
               }
             ],
             "url": {
-              "raw": "{{mapurl}}/api/search?q=happ",
+              "raw": "{{mapurl}}/api/search?q=happ&is_open=1&has_offers=1&sort_by=rating",
               "host": [
                 "{{mapurl}}"
               ],
@@ -1427,21 +1678,78 @@
               "query": [
                 {
                   "key": "q",
-                  "value": "happ"
+                  "value": "happ",
+                  "id": 0
                 },
                 {
                   "key": "category_id",
                   "value": null,
+                  "id": 1,
                   "disabled": true
                 },
                 {
                   "key": "page",
                   "value": null,
+                  "id": 2,
                   "disabled": true
                 },
                 {
                   "key": "per_page",
                   "value": null,
+                  "id": 3,
+                  "disabled": true
+                },
+                {
+                  "key": "region_id",
+                  "value": "",
+                  "type": "text",
+                  "id": 4,
+                  "disabled": true
+                },
+                {
+                  "key": "city_id",
+                  "value": "",
+                  "type": "text",
+                  "id": 5,
+                  "disabled": true
+                },
+                {
+                  "key": "rating",
+                  "value": "",
+                  "type": "text",
+                  "id": 6,
+                  "disabled": true
+                },
+                {
+                  "key": "is_open",
+                  "value": "1",
+                  "type": "text",
+                  "id": 7
+                },
+                {
+                  "key": "has_offers",
+                  "value": "1",
+                  "type": "text",
+                  "id": 8
+                },
+                {
+                  "key": "sort_by",
+                  "value": "rating",
+                  "type": "text",
+                  "id": 9
+                },
+                {
+                  "key": "latitude",
+                  "value": "",
+                  "type": "text",
+                  "id": 10,
+                  "disabled": true
+                },
+                {
+                  "key": "longitude",
+                  "value": "",
+                  "type": "text",
+                  "id": 11,
                   "disabled": true
                 }
               ]
@@ -5657,6 +5965,80 @@
               "response": []
             },
             {
+              "name": "summary",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/subscriptions/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subscriptions",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "subscriptions",
               "request": {
                 "auth": {
@@ -6636,6 +7018,41 @@
                   "path": [
                     "admin",
                     "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "users summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/users/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "summary"
                   ]
                 }
               },
@@ -10086,6 +10503,3257 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "games",
+          "item": [
+            {
+              "name": "games",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "games summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "مسابقة معلومات عامة",
+                      "type": "text",
+                      "uuid": "dc0fdde1-0f23-4e7d-b833-35f77c354fec",
+                      "id": 0
+                    },
+                    {
+                      "key": "description",
+                      "value": "أجب عن الأسئلة واربح الجائزة",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "starts_at",
+                      "value": "2026-11-01 18:00:00",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "ends_at",
+                      "value": "2026-11-01 19:00:00",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Asia/Damascus",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "answer_time_seconds",
+                      "value": "10",
+                      "type": "text",
+                      "id": 5
+                    },
+                    {
+                      "key": "status",
+                      "value": "scheduled",
+                      "type": "text",
+                      "id": 6
+                    },
+                    {
+                      "key": "prize_type",
+                      "value": "cash",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "prize_value",
+                      "value": "50000",
+                      "type": "text",
+                      "id": 8
+                    },
+                    {
+                      "key": "currency_code",
+                      "value": "SYP",
+                      "type": "text",
+                      "id": 9
+                    },
+                    {
+                      "key": "max_winners",
+                      "value": "3",
+                      "type": "text",
+                      "id": 10
+                    },
+                    {
+                      "key": "questions[0][question]",
+                      "value": "ما هي عاصمة العراق؟",
+                      "type": "text",
+                      "id": 11
+                    },
+                    {
+                      "key": "questions[0][options][0][option]",
+                      "value": "بغداد",
+                      "type": "text",
+                      "id": 12
+                    },
+                    {
+                      "key": "questions[0][options][0][is_correct]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 13
+                    },
+                    {
+                      "key": "questions[0][options][1][option]",
+                      "value": "دمشق",
+                      "type": "text",
+                      "id": 14
+                    },
+                    {
+                      "key": "questions[0][options][1][is_correct]",
+                      "value": "0",
+                      "type": "text",
+                      "id": 15
+                    },
+                    {
+                      "key": "questions[1][question]",
+                      "value": "كم عدد أيام الأسبوع؟",
+                      "type": "text",
+                      "id": 16
+                    },
+                    {
+                      "key": "questions[1][options][0][option]",
+                      "value": "سبعة",
+                      "type": "text",
+                      "id": 17
+                    },
+                    {
+                      "key": "questions[1][options][0][is_correct]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 18
+                    },
+                    {
+                      "key": "questions[1][options][1][option]",
+                      "value": "ثمانية",
+                      "type": "text",
+                      "id": 19
+                    },
+                    {
+                      "key": "questions[1][options][1][is_correct]",
+                      "value": "0",
+                      "type": "text",
+                      "id": 20
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/games",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "game",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "مسابقة معلومات عامة",
+                      "type": "text",
+                      "uuid": "dc0fdde1-0f23-4e7d-b833-35f77c354fec",
+                      "id": 0
+                    },
+                    {
+                      "key": "description",
+                      "value": "أجب عن الأسئلة واربح الجائزة",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "starts_at",
+                      "value": "2026-11-01 18:00:00",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "ends_at",
+                      "value": "2026-11-01 19:00:00",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Asia/Damascus",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "answer_time_seconds",
+                      "value": "10",
+                      "type": "text",
+                      "id": 5
+                    },
+                    {
+                      "key": "status",
+                      "value": "scheduled",
+                      "type": "text",
+                      "id": 6
+                    },
+                    {
+                      "key": "prize_type",
+                      "value": "cash",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "prize_value",
+                      "value": "50000",
+                      "type": "text",
+                      "id": 8
+                    },
+                    {
+                      "key": "currency_code",
+                      "value": "SYP",
+                      "type": "text",
+                      "id": 9
+                    },
+                    {
+                      "key": "max_winners",
+                      "value": "3",
+                      "type": "text",
+                      "id": 10
+                    },
+                    {
+                      "key": "questions[0][question]",
+                      "value": "ما هي عاصمة العراق؟",
+                      "type": "text",
+                      "id": 11
+                    },
+                    {
+                      "key": "questions[0][options][0][option]",
+                      "value": "بغداد",
+                      "type": "text",
+                      "id": 12
+                    },
+                    {
+                      "key": "questions[0][options][0][is_correct]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 13
+                    },
+                    {
+                      "key": "questions[0][options][1][option]",
+                      "value": "دمشق",
+                      "type": "text",
+                      "id": 14
+                    },
+                    {
+                      "key": "questions[0][options][1][is_correct]",
+                      "value": "0",
+                      "type": "text",
+                      "id": 15
+                    },
+                    {
+                      "key": "questions[1][question]",
+                      "value": "كم عدد أيام الأسبوع؟",
+                      "type": "text",
+                      "id": 16
+                    },
+                    {
+                      "key": "questions[1][options][0][option]",
+                      "value": "سبعة",
+                      "type": "text",
+                      "id": 17
+                    },
+                    {
+                      "key": "questions[1][options][0][is_correct]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 18
+                    },
+                    {
+                      "key": "questions[1][options][1][option]",
+                      "value": "ثمانية",
+                      "type": "text",
+                      "id": 19
+                    },
+                    {
+                      "key": "questions[1][options][1][is_correct]",
+                      "value": "0",
+                      "type": "text",
+                      "id": 20
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "id": 21
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/999999",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "999999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "games winners",
+          "item": [
+            {
+              "name": "winners",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/winners",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "winners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "export",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/winners/export",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "winners",
+                    "export"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delivery",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "delivery_status",
+                      "value": "delivered",
+                      "type": "text",
+                      "id": 0
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/games/winners/1/delivery",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "games",
+                    "winners",
+                    "1",
+                    "delivery"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "inbox",
+          "item": [
+            {
+              "name": "inbox",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/inbox",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "inbox"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "make as read",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/admin/inbox/1/read",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "inbox",
+                    "1",
+                    "read"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vendor",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "owner@gmail.com",
+                      "type": "text",
+                      "uuid": "5fb9f02c-1efd-40ac-a4b4-5c5596cb4697",
+                      "id": 0
+                    },
+                    {
+                      "key": "password",
+                      "value": "password",
+                      "type": "text",
+                      "uuid": "c172d55c-9500-4f3d-a5a5-9122d0a47995",
+                      "id": 1
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/login",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const body = pm.response.json();",
+                      "if (body.data && body.data.token) {",
+                      "    pm.collectionVariables.set('owner_token', body.data.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "me",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/me",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "forget password",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "owner@gmail.com",
+                      "type": "text",
+                      "id": 0
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/password/forgot",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "password",
+                    "forgot"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "verify code",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "owner@gmail.com",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "otp",
+                      "value": "123456",
+                      "type": "text",
+                      "id": 1
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/password/verify-code",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "password",
+                    "verify-code"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "reset password",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "owner@gmail.com",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "recovery_token",
+                      "value": "123456",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "password",
+                      "value": "password123",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "password_confirmation",
+                      "value": "password123",
+                      "type": "text",
+                      "id": 3
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/password/reset",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "password",
+                    "reset"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "logout",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/auth/logout",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "dashboard",
+          "item": [
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/overview/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "overview",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "performance",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/overview/performance?period=weekly",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "overview",
+                    "performance"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "weekly",
+                      "type": "text",
+                      "id": 0
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "interactions",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/overview/interactions",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "overview",
+                    "interactions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "subscription",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/overview/subscription",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "overview",
+                    "subscription"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "reviews",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/overview/reviews",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "overview",
+                    "reviews"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "store",
+          "item": [
+            {
+              "name": "store",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/store",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "store"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "اسم1",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "name1",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "وصف1",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "description1",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "address[ar]",
+                      "value": "عنوان1",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "address[en]",
+                      "value": "address1",
+                      "type": "text",
+                      "id": 5
+                    },
+                    {
+                      "key": "phone",
+                      "value": "1122334455",
+                      "type": "text",
+                      "id": 6
+                    },
+                    {
+                      "key": "whatsapp",
+                      "value": "9632255889",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "email",
+                      "value": "store@gmail.com",
+                      "type": "text",
+                      "id": 8
+                    },
+                    {
+                      "key": "website",
+                      "value": "https://www.google.com",
+                      "type": "text",
+                      "id": 9
+                    },
+                    {
+                      "key": "governorateId",
+                      "value": "1",
+                      "type": "text",
+                      "id": 10,
+                      "disabled": true
+                    },
+                    {
+                      "key": "areaId",
+                      "value": "1",
+                      "type": "text",
+                      "id": 11,
+                      "disabled": true
+                    },
+                    {
+                      "key": "latitude",
+                      "value": "",
+                      "type": "text",
+                      "id": 12,
+                      "disabled": true
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "",
+                      "type": "text",
+                      "id": 13,
+                      "disabled": true
+                    },
+                    {
+                      "key": "logo",
+                      "value": "",
+                      "type": "text",
+                      "id": 14,
+                      "disabled": true
+                    },
+                    {
+                      "key": "coverImage",
+                      "value": "",
+                      "type": "text",
+                      "id": 15,
+                      "disabled": true
+                    },
+                    {
+                      "key": "isLogoRemoved",
+                      "value": "",
+                      "type": "text",
+                      "id": 16,
+                      "disabled": true
+                    },
+                    {
+                      "key": "isCoverImageRemoved",
+                      "value": "",
+                      "type": "text",
+                      "id": 17,
+                      "disabled": true
+                    },
+                    {
+                      "key": "socialLinks[0][platform]",
+                      "value": "facebook",
+                      "type": "text",
+                      "id": 18
+                    },
+                    {
+                      "key": "socialLinks[0][url]",
+                      "value": "https://www.facebook.com",
+                      "type": "text",
+                      "id": 19
+                    },
+                    {
+                      "key": "workingHours[0][day]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 20,
+                      "disabled": true
+                    },
+                    {
+                      "key": "workingHours[0][isOpen]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 21,
+                      "disabled": true
+                    },
+                    {
+                      "key": "workingHours[0][openTime]",
+                      "value": "8:00",
+                      "type": "text",
+                      "id": 22,
+                      "disabled": true
+                    },
+                    {
+                      "key": "workingHours[0][closeTime]",
+                      "value": "23:00",
+                      "type": "text",
+                      "id": 23,
+                      "disabled": true
+                    },
+                    {
+                      "key": "deliveryLinks[0][platformId]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 24,
+                      "disabled": true
+                    },
+                    {
+                      "key": "deliveryLinks[0][isEnabled]",
+                      "value": "1",
+                      "type": "text",
+                      "id": 25,
+                      "disabled": true
+                    },
+                    {
+                      "key": "deliveryLinks[0][url]",
+                      "value": "https://www.beeorder.com",
+                      "type": "text",
+                      "id": 26,
+                      "disabled": true
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/store",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "store"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "products",
+          "item": [
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/products/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/products",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get by id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store product",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "اسم1",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "name1",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "وصف",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "description",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "price",
+                      "value": "200",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "currencyCode",
+                      "value": "syp",
+                      "type": "text",
+                      "id": 5
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "file",
+                      "id": 6,
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "inactive",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 8
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/products",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name[ar]",
+                      "value": "اسم1",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "name1",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "وصف",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "description",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "price",
+                      "value": "200",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "currencyCode",
+                      "value": "syp",
+                      "type": "text",
+                      "id": 5
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "file",
+                      "id": 6,
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "inactive",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 8
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/products/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "offers",
+          "item": [
+            {
+              "name": "offer",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store offer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "productId",
+                      "value": "1",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "title[ar]",
+                      "value": "عنوان",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "title[en]",
+                      "value": "title",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "وصف",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "description",
+                      "type": "text",
+                      "id": 4
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "file",
+                      "id": 5,
+                      "disabled": true
+                    },
+                    {
+                      "key": "originalPrice",
+                      "value": "100",
+                      "type": "text",
+                      "id": 6
+                    },
+                    {
+                      "key": "discountedPrice",
+                      "value": "50",
+                      "type": "text",
+                      "id": 7
+                    },
+                    {
+                      "key": "discountPercentage",
+                      "value": "50",
+                      "type": "text",
+                      "id": 8
+                    },
+                    {
+                      "key": "currencyCode",
+                      "value": "syp",
+                      "type": "text",
+                      "id": 9
+                    },
+                    {
+                      "key": "startsAt",
+                      "value": "2026-01-01",
+                      "type": "text",
+                      "id": 10
+                    },
+                    {
+                      "key": "endsAt",
+                      "value": "2026-01-15",
+                      "type": "text",
+                      "id": 11
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "type": "text",
+                      "id": 12
+                    },
+                    {
+                      "key": "isFeatured",
+                      "value": "1",
+                      "type": "text",
+                      "id": 13
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_id",
+                      "value": null,
+                      "id": 1,
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": null,
+                      "id": 2,
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_featured",
+                      "value": null,
+                      "id": 3,
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": null,
+                      "id": 4,
+                      "disabled": true
+                    },
+                    {
+                      "key": "starts_from",
+                      "value": null,
+                      "id": 5,
+                      "disabled": true
+                    },
+                    {
+                      "key": "starts_to",
+                      "value": null,
+                      "id": 6,
+                      "disabled": true
+                    },
+                    {
+                      "key": "ends_from",
+                      "value": null,
+                      "id": 7,
+                      "disabled": true
+                    },
+                    {
+                      "key": "ends_to",
+                      "value": null,
+                      "id": 8,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "productId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "title[ar]",
+                      "value": "عنوان",
+                      "type": "text"
+                    },
+                    {
+                      "key": "title[en]",
+                      "value": "title",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "وصف",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "description",
+                      "type": "text"
+                    },
+                    {
+                      "key": "originalPrice",
+                      "value": "100",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discountedPrice",
+                      "value": "50",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discountPercentage",
+                      "value": "50",
+                      "type": "text"
+                    },
+                    {
+                      "key": "currencyCode",
+                      "value": "syp",
+                      "type": "text"
+                    },
+                    {
+                      "key": "startsAt",
+                      "value": "2026-09-21",
+                      "type": "text"
+                    },
+                    {
+                      "key": "endsAt",
+                      "value": "2026-10-21",
+                      "type": "text"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isFeatured",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "offer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "pause",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/1/pause",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "1",
+                    "pause"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "resume",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/1/resume",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "1",
+                    "resume"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/offers/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "offers",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "stories",
+          "item": [
+            {
+              "name": "stories",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "story",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "image",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "id": 1,
+                      "fileUploadError": "",
+                      "src": [
+                        "d:\\Work\\QuickWe\\Images\\store.png"
+                      ]
+                    },
+                    {
+                      "key": "caption",
+                      "value": "caption",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 3
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "image",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "id": 1,
+                      "fileUploadError": "",
+                      "src": [
+                        "d:\\Work\\QuickWe\\Images\\store.png"
+                      ]
+                    },
+                    {
+                      "key": "caption",
+                      "value": "caption",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "id": 4
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/stories/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "stories",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "media",
+          "item": [
+            {
+              "name": "media",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/media",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "media"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/media/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "media",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "store media",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "image",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "id": 1,
+                      "fileUploadError": "",
+                      "src": [
+                        "d:\\Work\\QuickWe\\Images\\store.png"
+                      ]
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 3
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/media",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "media"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "image",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "id": 1,
+                      "fileUploadError": "",
+                      "src": [
+                        "d:\\Work\\QuickWe\\Images\\store.png"
+                      ]
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text",
+                      "id": 3
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "id": 4
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/media/7",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "media",
+                    "7"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/media/7",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "media",
+                    "7"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "reviews",
+          "item": [
+            {
+              "name": "reviews",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/reviews",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "reviews"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/reviews/summary",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "reviews",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "report",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "reason",
+                      "value": "image",
+                      "type": "text",
+                      "id": 0
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/reviews/7/report",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "reviews",
+                    "7",
+                    "report"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "subscription",
+          "item": [
+            {
+              "name": "subscription",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/subscription",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "subscription"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "request",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "requestType",
+                      "value": "upgrade",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "planId",
+                      "value": "1",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "message",
+                      "value": "",
+                      "type": "text",
+                      "id": 2,
+                      "disabled": true
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/subscription/requests",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "subscription",
+                    "requests"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "notifications",
+          "item": [
+            {
+              "name": "notifications",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/notifications",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "read",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/notifications/1/read",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "notifications",
+                    "1",
+                    "read"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "account",
+          "item": [
+            {
+              "name": "account",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/owner/account",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "account"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "name",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "phone",
+                      "value": "859745236",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "id": 2
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/account",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "account"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "change password",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{owner_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "currentPassword",
+                      "value": "password",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "newPassword",
+                      "value": "password1234",
+                      "type": "text",
+                      "id": 1
+                    },
+                    {
+                      "key": "newPassword_confirmation",
+                      "value": "password1234",
+                      "type": "text",
+                      "id": 2
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text",
+                      "id": 3
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/owner/account/password",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "owner",
+                    "account",
+                    "password"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
@@ -10103,6 +13771,11 @@
     },
     {
       "key": "admin_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "owner_token",
       "value": "",
       "type": "default"
     }
