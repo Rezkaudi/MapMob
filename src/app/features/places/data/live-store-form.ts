@@ -1,11 +1,13 @@
+import { PlaceOwner } from '../models/place-owner';
 import { PlaceFormValue } from '../state/place-form-group';
+import { findOwnerLoginChanges } from './owner-login-changes';
 import { PlaceIds } from './live-place-choices';
 import { toLivePlaceStatus } from './live-place-mapping';
 
 export type StoreSaveMode = 'create' | 'update';
 
-// Saving these on an update makes the server fail, so they go out on create only.
-const CREATE_ONLY_FIELDS = ['ownerName', 'ownerPhone', 'ownerExtraPhone'] as const;
+// A new place sends its whole owner; an update sends only the login fields that changed.
+const NEW_OWNER_FIELDS = ['ownerName', 'ownerPhone', 'ownerEmail', 'ownerPassword'] as const;
 const OPTIONAL_TEXT_FIELDS = [
   'extraPhone',
   'website',
@@ -31,6 +33,7 @@ export function toLiveStoreForm(
   value: PlaceFormValue,
   ids: PlaceIds,
   mode: StoreSaveMode,
+  previousOwner: PlaceOwner | null = null,
 ): FormData {
   const form = new FormData();
   if (mode === 'update') {
@@ -54,9 +57,13 @@ export function toLiveStoreForm(
   }
   form.set('status', toLivePlaceStatus(value.status));
   if (mode === 'create') {
-    for (const field of CREATE_ONLY_FIELDS) {
+    for (const field of NEW_OWNER_FIELDS) {
       setIfFilled(form, field, value[field]);
     }
+    return form;
+  }
+  for (const field of findOwnerLoginChanges(value, previousOwner)) {
+    form.set(field, value[field]);
   }
   return form;
 }

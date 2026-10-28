@@ -10,8 +10,9 @@ export const OWNER_DOMAIN: DbDomain = {
   tables: [
     {
       name: 'place_owner_accounts',
-      description: 'One sign-in per place, created by an admin when the place is approved.',
-      servedAs: 'POST /owner/auth/login',
+      description:
+        'One sign-in per place, created with the place by an admin (ownerEmail and ownerPassword on POST /places).',
+      servedAs: 'POST /owner/auth/login, owner.email on /places/{id}',
       columns: [
         ID,
         { ...foreignKey('place_id', 'places.id', 'One account per place.'), key: 'uq' },

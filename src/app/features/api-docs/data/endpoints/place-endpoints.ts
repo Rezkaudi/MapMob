@@ -25,6 +25,7 @@ import {
   PLACE_DETAIL_FIELDS,
   PLACE_ROW_FIELDS,
   PLACE_STATUS,
+  PLACE_UPDATE_FIELDS,
   PLACE_WRITE_FIELDS,
 } from './place-fields';
 
@@ -156,6 +157,7 @@ export const PLACES_FEATURE: ApiFeature = {
       },
       notes: [
         'Save everything in one transaction, so a half-saved place is impossible. Also creates the first subscription on planId.',
+        'Also creates the place owner sign-in in place_owner_accounts from ownerEmail, ownerPassword and ownerName, so the owner can log in at POST /owner/auth/login right away.',
         'Enforce the package limits on images, videos and products on the server and return 422. The form checks them too, but must not be the only guard.',
       ],
     },
@@ -167,7 +169,7 @@ export const PLACES_FEATURE: ApiFeature = {
       body: {
         contentType: 'multipart/form-data',
         fields: [
-          ...PLACE_WRITE_FIELDS,
+          ...PLACE_UPDATE_FIELDS,
           optionalField(
             'keptImageIds[]',
             'string[]',
@@ -194,6 +196,7 @@ export const PLACES_FEATURE: ApiFeature = {
       },
       notes: [
         'PHP does not read multipart bodies on PUT. Parse the body yourself (for example in a middleware).',
+        'A new ownerEmail, ownerPhone or ownerPassword updates the place owner sign-in in place_owner_accounts at once. 422 when the email belongs to another account.',
       ],
     },
     {

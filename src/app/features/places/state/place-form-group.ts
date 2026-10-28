@@ -2,6 +2,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { DeliveryLinkFormGroup } from '../../../shared/forms/delivery-link-form';
 import { PlacePackage } from '../models/place-package';
 import { PlaceStatus } from '../models/place-status';
+import { NEW_OWNER_PASSWORD_RULES } from './owner-password-rules';
 
 /** Tartus, the city the design centres its map on. */
 const DEFAULT_LATITUDE = 34.8959;
@@ -15,7 +16,9 @@ export function createPlaceFormGroup(formBuilder: FormBuilder) {
     name: builder.control('', Validators.required),
     ownerName: builder.control(''),
     ownerPhone: builder.control('', Validators.required),
-    ownerExtraPhone: builder.control(''),
+    ownerEmail: builder.control('', [Validators.required, Validators.email]),
+    /** Required when adding; an edit may leave it empty to keep the saved one. */
+    ownerPassword: builder.control('', NEW_OWNER_PASSWORD_RULES),
     mainCategory: builder.control('', Validators.required),
     subCategory: builder.control(''),
     city: builder.control('', Validators.required),

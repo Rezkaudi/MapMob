@@ -12,7 +12,7 @@ import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
 import { LIVE_PLACE_FORM_OPTIONS } from '../testing/live-place-choices-fixture';
 import { buildPlaceSaveRequest } from '../testing/place-save-request-fixture';
 import { toPlaceFormChoices } from './live-place-choices';
-import { PlaceWriter } from './place-writer';
+import { OWNER_LOGIN_NOT_SAVED_MESSAGE, PlaceWriter } from './place-writer';
 
 const ADMIN_URL = 'https://api.test/admin';
 const STORE_URL = `${ADMIN_URL}/stores/52`;
@@ -165,5 +165,49 @@ describe('PlaceWriter', () => {
     next('DELETE', `${STORE_URL}/delivery-links/7`);
 
     expect(await saved).toBe('52');
+  });
+
+  describe('when the merchant login changes on an edit', () => {
+    const savedOwner = { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' };
+    const request = buildPlaceSaveRequest({
+      value: { ...buildPlaceSaveRequest().value, ownerEmail: 'new@example.com', ownerPassword: '' },
+      previousOwner: savedOwner,
+    });
+
+    it('sends the new email with the store', async () => {
+      const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
+      const store = http.expectOne({ method: 'POST', url: STORE_URL });
+
+      expect((store.request.body as FormData).get('ownerEmail')).toBe('new@example.com');
+      store.flush({}, { status: 500, statusText: 'Server Error' });
+      await expect(saved).rejects.toThrow(OWNER_LOGIN_NOT_SAVED_MESSAGE);
+    });
+
+    it('says which fields to put back when the server refuses the change', () => {
+      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('بيانات دخول التاجر');
+      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('أعد');
+    });
+
+    it('keeps the server words when it rejects the values themselves, such as a used email', async () => {
+      const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
+      http
+        .expectOne({ method: 'POST', url: STORE_URL })
+        .flush({ message: 'taken' }, { status: 422, statusText: 'Unprocessable' });
+
+      await expect(saved).rejects.toMatchObject({ status: 422 });
+    });
+  });
+
+  it('keeps the plain server error on an edit that leaves the login alone', async () => {
+    const request = buildPlaceSaveRequest({
+      value: { ...buildPlaceSaveRequest().value, ownerPassword: '' },
+      previousOwner: { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' },
+    });
+    const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
+    http
+      .expectOne({ method: 'POST', url: STORE_URL })
+      .flush({}, { status: 500, statusText: 'Server Error' });
+
+    await expect(saved).rejects.not.toThrow(OWNER_LOGIN_NOT_SAVED_MESSAGE);
   });
 });

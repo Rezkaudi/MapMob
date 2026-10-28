@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
 
 const SHOW_PASSWORD_LABEL = 'إظهار كلمة المرور';
 const HIDE_PASSWORD_LABEL = 'إخفاء كلمة المرور';
-const ICON_SIZE_PX = 16;
+const DEFAULT_ICON_SIZE_PX = 16;
 
 @Component({
   selector: 'button[appPasswordVisibilityToggle]',
@@ -20,7 +20,8 @@ const ICON_SIZE_PX = 16;
 export class PasswordVisibilityToggle {
   readonly isVisible = model(false);
 
-  protected readonly iconSize = ICON_SIZE_PX;
+  /** The place form's 46px fields draw the eye at 20px. */
+  readonly iconSize = input<number>(DEFAULT_ICON_SIZE_PX);
   protected readonly toggleLabel = computed(() =>
     this.isVisible() ? HIDE_PASSWORD_LABEL : SHOW_PASSWORD_LABEL,
   );

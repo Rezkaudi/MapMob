@@ -70,7 +70,6 @@ export const CATALOG_DOMAIN: DbDomain = {
         { name: 'longitude', type: 'decimal(10,7)' },
         { name: 'owner_name', ...OPTIONAL_TEXT },
         { name: 'owner_phone', type: 'varchar(20)' },
-        { name: 'owner_extra_phone', type: 'varchar(20)', isNullable: true },
         { name: 'phone', type: 'varchar(20)' },
         { name: 'extra_phone', type: 'varchar(20)', isNullable: true },
         { name: 'email', type: 'varchar(191)', isNullable: true, note: 'Public contact address.' },

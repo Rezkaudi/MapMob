@@ -36,6 +36,7 @@ import { fillPlaceForm } from '../../state/place-form-mapping';
 import { toSavedVideoFiles } from '../../state/place-video-files';
 import { PlaceFormStore } from '../../state/place-form.store';
 import { syncSubCategoryControl } from '../../state/sync-sub-category-control';
+import { applyOwnerPasswordRules } from '../../state/owner-password-rules';
 import { withSavedOption } from '../../state/with-saved-option';
 import { toWorkingWeek } from '../../state/working-week-from-rows';
 import { ConfirmDialog } from '../../../../shared/ui/confirm-dialog/confirm-dialog';
@@ -46,6 +47,7 @@ import { PlaceDeliverySection } from './place-delivery-section/place-delivery-se
 import { PlaceDetailsSection } from './place-details-section/place-details-section';
 import { PlaceFormActions } from './place-form-actions/place-form-actions';
 import { PlaceLocationSection } from './place-location-section/place-location-section';
+import { PlaceMerchantAccountSection } from './place-merchant-account-section/place-merchant-account-section';
 import { PlaceMediaSection } from './place-media-section/place-media-section';
 import { PlaceSubscriptionSection } from './place-subscription-section/place-subscription-section';
 import { ProductsEditor } from './products-editor/products-editor';
@@ -74,6 +76,7 @@ const ALL_DAY_CLOSES_AT = '23:59';
     PlaceFormActions,
     PlaceLocationSection,
     PlaceMediaSection,
+    PlaceMerchantAccountSection,
     PlaceSubscriptionSection,
     ProductDialog,
     ProductsEditor,
@@ -98,10 +101,9 @@ export class PlaceForm {
     initialValue: this.form.controls.city.value,
   });
 
-  private readonly selectedMainCategory = toSignal(
-    this.form.controls.mainCategory.valueChanges,
-    { initialValue: this.form.controls.mainCategory.value },
-  );
+  private readonly selectedMainCategory = toSignal(this.form.controls.mainCategory.valueChanges, {
+    initialValue: this.form.controls.mainCategory.value,
+  });
 
   /** The saved value joins the list when the list does not already offer it. */
   protected readonly categories = computed(() =>
@@ -190,6 +192,10 @@ export class PlaceForm {
   constructor() {
     // The add route binds no id, and its empty string means "adding", the same as none.
     this.store.load(computed(() => this.id() || null));
+    effect(() => {
+      const isEditing = this.isEditing();
+      untracked(() => applyOwnerPasswordRules(this.form.controls.ownerPassword, isEditing));
+    });
     effect(() => {
       const section = this.section();
       if (section && this.store.isReady()) {
@@ -300,6 +306,7 @@ export class PlaceForm {
       videos: this.videos(),
       products: this.products(),
       previousPackage: this.store.editedPlace()?.subscription.package ?? null,
+      previousOwner: this.store.editedPlace()?.owner ?? null,
     };
   }
 

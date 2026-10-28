@@ -83,7 +83,7 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
     mainCategory: place.category,
     subCategory: SUB_CATEGORY,
     images: GALLERY,
-    owner: { name: 'أحمد عبدالله', phone: '096077789', extraPhone: '0933111222' },
+    owner: { name: 'أحمد عبدالله', phone: '096077789', email: 'ahmad@example.com' },
     subscription: {
       package: place.package,
       status: place.status,

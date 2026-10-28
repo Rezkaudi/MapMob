@@ -38,7 +38,11 @@ export const PLACE_DETAIL_FIELDS = [
   field('mainCategory', 'object', REF),
   field('subCategory', 'object | null', REF),
   field('isOpenNow', 'boolean', 'From the working hours, in Damascus time.'),
-  field('owner', 'object', '{ name | null, phone, extraPhone | null }'),
+  field(
+    'owner',
+    'object',
+    '{ name | null, phone, email }. email is the sign-in from place_owner_accounts; the password is never sent.',
+  ),
   field(
     'contact',
     'object',
@@ -75,7 +79,12 @@ export const PLACE_WRITE_FIELDS = [
   field('name', 'string', 'Max 150.'),
   optionalField('ownerName', 'string', 'Max 100.'),
   field('ownerPhone', 'string', 'Syrian number, 10 digits starting 09, e.g. 0931234567.'),
-  optionalField('ownerExtraPhone', 'string'),
+  field(
+    'ownerEmail',
+    'string (email)',
+    'The place owner sign-in for the owner dashboard (place_owner_accounts.email). Unique: 422 when taken.',
+  ),
+  field('ownerPassword', 'string', 'Min 8. Store a bcrypt hash only.'),
   field('mainCategoryId', 'string', 'An active main category.'),
   optionalField('subCategoryId', 'string', 'Must be a child of mainCategoryId.'),
   field('governorateId', 'string'),
@@ -123,3 +132,10 @@ export const PLACE_WRITE_FIELDS = [
   optionalField('products[n][orderUrl]', 'string (url)', 'Link to an outside ordering app.'),
   optionalField('products[n][image]', 'file (png, jpg, webp; max 2 MB)'),
 ];
+
+/** An update may leave the password out to keep the saved one. */
+export const PLACE_UPDATE_FIELDS = PLACE_WRITE_FIELDS.map((one) =>
+  one.name === 'ownerPassword'
+    ? optionalField('ownerPassword', 'string', 'Min 8. Leave it out to keep the saved password.')
+    : one,
+);

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, concat, last, map, of, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, concat, last, map, of, switchMap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
@@ -12,9 +12,14 @@ import { PlaceSaveRequest } from '../models/place-save-request';
 import { resolvePlaceIds } from './live-place-choices';
 import { toLivePlanSlug } from './live-place-mapping';
 import { toLiveStoreForm } from './live-store-form';
+import { findOwnerLoginChanges } from './owner-login-changes';
 import { PlacePartsWriter } from './place-parts-writer';
 
 const MISSING_CATEGORY_MESSAGE = 'اختر تصنيفاً من القائمة قبل الحفظ.';
+const UNPROCESSABLE_STATUS = 422;
+
+export const OWNER_LOGIN_NOT_SAVED_MESSAGE =
+  'لم يقبل السيرفر تغيير بيانات دخول التاجر (البريد أو الهاتف أو كلمة المرور)، فلم تُحفظ التعديلات. أعد هذه الحقول كما كانت لحفظ باقي التعديلات.';
 
 /**
  * Sending everything in one store call makes the server fail, so the store is saved with its
@@ -40,8 +45,22 @@ export class PlaceWriter {
     }
     const isNew = id === null;
     const storeUrl = isNew ? `${this.adminUrl}/stores` : `${this.adminUrl}/stores/${id}`;
-    const storeForm = toLiveStoreForm(request.value, ids, isNew ? 'create' : 'update');
+    const storeForm = toLiveStoreForm(
+      request.value,
+      ids,
+      isNew ? 'create' : 'update',
+      request.previousOwner,
+    );
+    const changesLogin =
+      !isNew && findOwnerLoginChanges(request.value, request.previousOwner).length > 0;
     return this.httpClient.post<LiveEnvelope<{ id: string | number }>>(storeUrl, storeForm).pipe(
+      catchError((error: { status?: number }) =>
+        throwError(() =>
+          changesLogin && error.status !== UNPROCESSABLE_STATUS
+            ? new Error(OWNER_LOGIN_NOT_SAVED_MESSAGE)
+            : error,
+        ),
+      ),
       map(({ data }) => String(data.id)),
       switchMap((storeId) =>
         concat(

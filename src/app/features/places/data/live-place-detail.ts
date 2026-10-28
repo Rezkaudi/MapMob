@@ -57,7 +57,7 @@ export interface LivePlaceDetail {
   readonly owner: {
     readonly name: LiveText;
     readonly phone: LiveText;
-    readonly extraPhone: LiveText;
+    readonly email?: LiveText;
   } | null;
   readonly contact: Readonly<
     Record<

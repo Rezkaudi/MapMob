@@ -63,6 +63,8 @@ function typeInto(fixture: ReturnType<typeof render>, testId: string, value: str
 const REQUIRED_VALUES = {
   name: 'صيدلية الحياة',
   ownerPhone: '0955000000',
+  ownerEmail: 'owner@example.com',
+  ownerPassword: 'secret-123',
   mainCategory: 'صيدلية',
   city: 'الرياض',
   region: 'المركز',
@@ -82,13 +84,14 @@ function submit(fixture: ReturnType<typeof render>): void {
 }
 
 describe('PlaceForm', () => {
-  it('renders the eight sections of the design, in its order', () => {
+  it('renders the nine sections of the design, in its order', () => {
     const headings: HTMLElement[] = Array.from(
       render().nativeElement.querySelectorAll('app-form-section h2, app-form-section h3'),
     );
 
     expect(headings.map((heading) => heading.textContent?.trim())).toEqual([
       'المعلومات الأساسية',
+      'معلومات حساب التاجر',
       'موقع المكان',
       'تفاصيل المكان',
       'منصات التوصيل',
@@ -200,6 +203,7 @@ describe('PlaceForm', () => {
     expect(request.value.name).toBe('صيدلية الحياة');
     expect(request.week).toHaveLength(7);
     expect(request.previousPackage).toBeNull();
+    expect(request.previousOwner).toBeNull();
   });
 
   it('offers only the regions of the picked city', () => {
@@ -215,9 +219,8 @@ describe('PlaceForm', () => {
     fixture.componentInstance['form'].controls.mainCategory.setValue('صيدلية');
     fixture.detectChanges();
 
-    const subCategory: HTMLSelectElement = fixture.nativeElement.querySelector(
-      'select#sub-category',
-    );
+    const subCategory: HTMLSelectElement =
+      fixture.nativeElement.querySelector('select#sub-category');
     expect(subCategory.disabled).toBe(false);
     expect(Array.from(subCategory.options).map((option) => option.value)).toEqual([
       '',
@@ -309,7 +312,8 @@ describe('PlaceForm', () => {
     expect(fieldValue(fixture, 'input#place-name')).toBe(detail.name);
     expect(fieldValue(fixture, 'input#owner-name')).toBe(detail.owner.name);
     expect(fieldValue(fixture, 'input#owner-phone')).toBe(detail.owner.phone);
-    expect(fieldValue(fixture, 'input#owner-extra-phone')).toBe(detail.owner.extraPhone);
+    expect(fieldValue(fixture, 'input#owner-email')).toBe(detail.owner.email);
+    expect(fieldValue(fixture, 'input#owner-password')).toBe('');
     expect(fieldValue(fixture, 'select#main-category')).toBe(detail.mainCategory);
     expect(fieldValue(fixture, 'select#sub-category')).toBe(detail.subCategory);
     expect(fieldValue(fixture, 'select#city')).toBe(detail.location.city);
@@ -470,7 +474,8 @@ describe('PlaceForm', () => {
 
     for (const id of [
       'owner-phone',
-      'owner-extra-phone',
+      'owner-email',
+      'owner-password',
       'phone',
       'extra-phone',
       'website',
@@ -482,6 +487,158 @@ describe('PlaceForm', () => {
       expect(element.querySelector(`#${id}`)?.getAttribute('dir'), id).toBe('ltr');
     }
     expect(element.querySelector('#place-name')?.getAttribute('dir')).toBeNull();
+  });
+
+  it('keeps four fields in the basic card, as the frame draws it', () => {
+    const element: HTMLElement = render().nativeElement;
+    const fields = Array.from(element.querySelectorAll('#basic-info input, #basic-info select'));
+
+    expect(fields.map((field) => field.id)).toEqual([
+      'place-name',
+      'owner-name',
+      'main-category',
+      'sub-category',
+    ]);
+    expect(element.querySelector('#owner-extra-phone')).toBeNull();
+  });
+
+  it('asks for the merchant sign-in: email and phone on the first row, password under the email', () => {
+    const section: HTMLElement = render().nativeElement.querySelector('#merchant-account');
+    const fields = Array.from(section.querySelectorAll('input'));
+    const labels = Array.from(section.querySelectorAll('label'));
+
+    expect(fields.map((field) => field.id)).toEqual([
+      'owner-email',
+      'owner-phone',
+      'owner-password',
+    ]);
+    expect(labels.map((label) => label.children[0].textContent?.trim())).toEqual([
+      'البريد الالكتروني',
+      'رقم هاتف المالك /المسؤول',
+      'كلمة المرور',
+    ]);
+    expect(section.querySelector('h2')?.textContent?.trim()).toBe('معلومات حساب التاجر');
+    expect(fields.map((field) => field.type)).toEqual(['email', 'tel', 'password']);
+    expect(section.querySelector('#owner-email')?.getAttribute('placeholder')).toBe(
+      'example@gmail.com',
+    );
+    expect(section.querySelector('#owner-phone')?.getAttribute('placeholder')).toBeNull();
+  });
+
+  it('starts the email and the password at the right edge, as the frame draws the email', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    for (const id of ['owner-email', 'owner-password']) {
+      expect(element.querySelector('#' + id)?.classList, id).toContain('text-right');
+    }
+  });
+
+  it('marks the three merchant fields required when adding a place', () => {
+    const section: HTMLElement = render().nativeElement.querySelector('#merchant-account');
+
+    expect(section.querySelectorAll('label .text-closed')).toHaveLength(3);
+  });
+
+  it('refuses a merchant email that is not an email', () => {
+    const fixture = render();
+    const form = fixture.componentInstance['form'];
+    form.controls.ownerEmail.setValue('not-an-email');
+
+    expect(form.controls.ownerEmail.valid).toBe(false);
+    form.controls.ownerEmail.setValue('owner@example.com');
+    expect(form.controls.ownerEmail.valid).toBe(true);
+  });
+
+  it('needs a password of at least 8 letters to add a place', () => {
+    const form = render().componentInstance['form'];
+
+    form.controls.ownerPassword.setValue('');
+    expect(form.controls.ownerPassword.valid).toBe(false);
+    form.controls.ownerPassword.setValue('short');
+    expect(form.controls.ownerPassword.valid).toBe(false);
+    form.controls.ownerPassword.setValue('long-enough');
+    expect(form.controls.ownerPassword.valid).toBe(true);
+  });
+
+  it('lets an edit keep the saved password: the field may stay empty and has no star', () => {
+    const fixture = render('place-1');
+    const form = fixture.componentInstance['form'];
+    const section: HTMLElement = fixture.nativeElement.querySelector('#merchant-account');
+    const passwordLabel = section.querySelector('label[for="owner-password"]');
+
+    expect(form.controls.ownerPassword.value).toBe('');
+    expect(form.controls.ownerPassword.valid).toBe(true);
+    expect(passwordLabel?.querySelector('.text-closed')).toBeNull();
+    form.controls.ownerPassword.setValue('short');
+    expect(form.controls.ownerPassword.valid).toBe(false);
+  });
+
+  it('hides the password until the eye is clicked, and hides it again on a second click', () => {
+    const fixture = render();
+    const password: HTMLInputElement = fixture.nativeElement.querySelector('#owner-password');
+    const eye: HTMLButtonElement = fixture.nativeElement.querySelector(
+      '#merchant-account button[appPasswordVisibilityToggle]',
+    );
+
+    expect(password.type).toBe('password');
+    expect((eye.querySelector('app-icon span') as HTMLElement).style.width).toBe('20px');
+    eye.click();
+    fixture.detectChanges();
+    expect(password.type).toBe('text');
+    eye.click();
+    fixture.detectChanges();
+    expect(password.type).toBe('password');
+  });
+
+  it('puts a strong random password in the field and shows it, so the admin can pass it on', () => {
+    const fixture = render();
+    const form = fixture.componentInstance['form'];
+    const generate: HTMLButtonElement = fixture.nativeElement.querySelector(
+      '[data-testid="generate-password"]',
+    );
+
+    expect(generate.type).toBe('button');
+    expect(generate.textContent?.trim()).toBe('إنشاء كلمة مرور');
+    generate.click();
+    fixture.detectChanges();
+
+    const first = form.controls.ownerPassword.value;
+    expect(first).toHaveLength(12);
+    expect(form.controls.ownerPassword.valid).toBe(true);
+    expect(form.controls.ownerPassword.dirty).toBe(true);
+    expect(fieldValue(fixture, '#owner-password')).toBe(first);
+    expect((fixture.nativeElement.querySelector('#owner-password') as HTMLInputElement).type).toBe(
+      'text',
+    );
+    generate.click();
+    expect(form.controls.ownerPassword.value).not.toBe(first);
+  });
+
+  it('tells the admin on the edit page that an empty password keeps the saved one', () => {
+    const editPassword = render('place-1').nativeElement.querySelector('#owner-password');
+    const addPassword = render().nativeElement.querySelector('#owner-password');
+
+    expect(editPassword.getAttribute('placeholder')).toBe(
+      'اتركها فارغة للإبقاء على كلمة المرور الحالية',
+    );
+    expect(addPassword.getAttribute('placeholder')).toBeNull();
+  });
+
+  it('lets the admin change the merchant email and phone on the edit page', () => {
+    const element: HTMLElement = render('place-1').nativeElement;
+
+    for (const id of ['owner-email', 'owner-phone', 'owner-password']) {
+      expect((element.querySelector('#' + id) as HTMLInputElement).disabled, id).toBe(false);
+    }
+  });
+
+  it('sends the saved owner with an edit, so only a changed login goes to the server', async () => {
+    savedRequests.length = 0;
+    const fixture = render('place-1');
+    submit(fixture);
+    await fixture.whenStable();
+
+    expect(savedRequests.at(-1)?.request.previousOwner).toEqual(createPlaceDetail().owner);
   });
 
   it('spans the detailed address across both columns', () => {
@@ -559,6 +716,7 @@ describe('PlaceForm sections', () => {
 
     expect(sections.map((section) => section.id)).toEqual([
       'basic-info',
+      'merchant-account',
       'location',
       'details',
       'delivery',

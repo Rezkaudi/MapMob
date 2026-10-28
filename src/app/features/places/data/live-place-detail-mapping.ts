@@ -33,7 +33,7 @@ export function toPlaceDetail(
     owner: {
       name: live.owner?.name ?? '',
       phone: live.owner?.phone ?? '',
-      extraPhone: live.owner?.extraPhone ?? '',
+      email: live.owner?.email ?? '',
     },
     subscription: toSubscription(live, status, plans),
     activity: {

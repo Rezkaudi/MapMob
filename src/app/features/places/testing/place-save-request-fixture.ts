@@ -7,7 +7,8 @@ export function buildPlaceSaveRequest(overrides: Partial<PlaceSaveRequest> = {})
       name: 'صيدلية الأمل',
       ownerName: 'أحمد',
       ownerPhone: '0931111111',
-      ownerExtraPhone: '',
+      ownerEmail: 'owner@example.com',
+      ownerPassword: 'secret-123',
       mainCategory: 'pharmacy',
       subCategory: '',
       city: 'tartous Governorate',
@@ -33,6 +34,7 @@ export function buildPlaceSaveRequest(overrides: Partial<PlaceSaveRequest> = {})
     videos: [],
     products: [],
     previousPackage: null,
+    previousOwner: null,
     ...overrides,
   };
 }

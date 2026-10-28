@@ -11,7 +11,7 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
     mainCategory: 'صيدليات',
     subCategory: 'صيدليات',
     images: ['assets/images/place-cover.jpg', 'assets/images/place-shelf.jpg'],
-    owner: { name: 'أحمد عبدالله', phone: '096077789', extraPhone: '0933111222' },
+    owner: { name: 'أحمد عبدالله', phone: '096077789', email: 'ahmad@example.com' },
     subscription: { package: 'premium', status: 'active', renewsAt: '2024-10-24T00:00:00.000Z' },
     activity: { addedAt: '2024-10-24T00:00:00.000Z', updatedLabel: 'منذ يومين' },
     contact: {

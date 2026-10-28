@@ -7,6 +7,7 @@ import { PlaceFieldControl } from './place-field-control';
   template: `
     <input data-role="name" appPlaceFieldControl fieldTone="strong" />
     <input data-role="phone" appPlaceFieldControl [isLatin]="true" />
+    <input data-role="email" appPlaceFieldControl [isLatin]="true" latinEdge="right" />
     <select data-role="city" appPlaceFieldControl></select>
     <textarea data-role="description" appPlaceFieldControl></textarea>
   `,
@@ -43,6 +44,14 @@ describe('PlaceFieldControl', () => {
     expect(find('name').getAttribute('dir')).toBeNull();
     expect(find('phone').classList).toContain('text-left');
     expect(find('phone').getAttribute('dir')).toBe('ltr');
+  });
+
+  it('starts a Latin field at the right edge when the frame draws it there', () => {
+    const email = render()('email');
+
+    expect(email.getAttribute('dir')).toBe('ltr');
+    expect(email.classList).toContain('text-right');
+    expect(email.classList).not.toContain('text-left');
   });
 
   it('leaves room on the left of a select for its chevron', () => {

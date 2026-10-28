@@ -89,6 +89,29 @@ describe('the API reference data', () => {
     expect(joinCalls?.[0].response.example).toHaveProperty('registrationFormUrl');
   });
 
+  it('makes the merchant sign-in with the place: email and password, the password kept on update when left out', () => {
+    const create = endpoints.find((endpoint) => endpoint.id === 'places-create');
+    const update = endpoints.find((endpoint) => endpoint.id === 'places-update');
+    const createField = (name: string) => create?.body?.fields.find((one) => one.name === name);
+    const updateField = (name: string) => update?.body?.fields.find((one) => one.name === name);
+
+    expect(createField('ownerEmail')?.isRequired).toBe(true);
+    expect(createField('ownerPassword')?.isRequired).toBe(true);
+    expect(updateField('ownerEmail')?.isRequired).toBe(true);
+    expect(updateField('ownerPassword')?.isRequired).toBe(false);
+    expect(createField('ownerExtraPhone')).toBeUndefined();
+    expect(create?.body?.example).toMatchObject({ ownerEmail: expect.any(String) });
+    expect(update?.body?.example).not.toHaveProperty('ownerPassword');
+    expect(create?.response.example).toMatchObject({ owner: { email: expect.any(String) } });
+    expect(update?.notes?.join(' ')).toContain('ownerEmail, ownerPhone or ownerPassword');
+  });
+
+  it('keeps the merchant sign-in in place_owner_accounts, not a second owner phone on the place', () => {
+    const places = tables.find((table) => table.name === 'places');
+
+    expect(places?.columns.map((column) => column.name)).not.toContain('owner_extra_phone');
+  });
+
   it('lists the nine calls of the games screen and its add and edit pages, right after payments', () => {
     const gamesFeature = API_FEATURES.find((feature) => feature.id === 'games');
     const ids = API_FEATURES.map((feature) => feature.id);

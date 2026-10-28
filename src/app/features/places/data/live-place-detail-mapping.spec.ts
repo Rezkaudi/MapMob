@@ -17,7 +17,7 @@ const LIVE_DETAIL: LivePlaceDetail = {
   mainCategory: { id: '1', name: 'مطاعم' },
   subCategory: null,
   isOpenNow: true,
-  owner: { name: 'عبيدة', phone: '0999', extraPhone: null },
+  owner: { name: 'عبيدة', phone: '0999', email: 'obeida@example.com' },
   contact: {
     phone: '0935',
     extraPhone: null,
@@ -90,7 +90,7 @@ describe('toPlaceDetail', () => {
     expect(detail.publicUrl).toBe('');
     expect(detail.mainCategory).toBe('مطاعم');
     expect(detail.subCategory).toBe('');
-    expect(detail.owner).toEqual({ name: 'عبيدة', phone: '0999', extraPhone: '' });
+    expect(detail.owner).toEqual({ name: 'عبيدة', phone: '0999', email: 'obeida@example.com' });
     expect(detail.contact.whatsapp).toBe('');
     expect(detail.location).toEqual({
       city: 'دمشق',
@@ -100,6 +100,13 @@ describe('toPlaceDetail', () => {
       longitude: 35.8836,
     });
     expect(detail.isOpenNow).toBe(true);
+  });
+
+  it('leaves the owner email empty while the server sends none', () => {
+    const owner = { name: 'عبيدة', phone: '0999', extraPhone: null };
+    const withoutEmail = toPlaceDetail({ ...LIVE_DETAIL, owner }, NOW, [LIVE_GOLD_PLAN], []);
+
+    expect(withoutEmail.owner.email).toBe('');
   });
 
   it('lists only the open days, day 0 being Sunday, and marks today', () => {

@@ -6,7 +6,7 @@ function render() {
   fixture.componentRef.setInput('owner', {
     name: 'أحمد عبدالله',
     phone: '096077789',
-    extraPhone: '0933111222',
+    email: 'ahmad@example.com',
   });
   fixture.detectChanges();
   return fixture;

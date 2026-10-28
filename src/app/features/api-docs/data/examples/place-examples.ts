@@ -51,7 +51,7 @@ export const PLACE_DETAIL = {
   rating: 4.6,
   reviewCount: 84,
   isOpenNow: true,
-  owner: { name: 'عبيدة', phone: '0931234567', extraPhone: null },
+  owner: { name: 'عبيدة', phone: '0931234567', email: 'obeida@example.com' },
   contact: {
     phone: '0931234567',
     extraPhone: null,
@@ -132,6 +132,8 @@ export const PLACE_WRITE_FORM = {
   name: 'متجر دمشق المركزي',
   ownerName: 'عبيدة',
   ownerPhone: '0931234567',
+  ownerEmail: 'obeida@example.com',
+  ownerPassword: 'secret-123',
   mainCategoryId: '1',
   subCategoryId: '7',
   governorateId: '1',
@@ -166,8 +168,11 @@ export const PLACE_WRITE_FORM = {
   'products[0][image]': '@product.png',
 };
 
+const { ownerPassword: _keptPassword, ...PLACE_FORM_WITHOUT_PASSWORD } = PLACE_WRITE_FORM;
+
+/** No ownerPassword: the update keeps the saved one. */
 export const PLACE_UPDATE_FORM = {
-  ...PLACE_WRITE_FORM,
+  ...PLACE_FORM_WITHOUT_PASSWORD,
   'keptImageIds[]': ['31'],
   'keptVideoIds[]': [],
   'products[0][id]': '5',
