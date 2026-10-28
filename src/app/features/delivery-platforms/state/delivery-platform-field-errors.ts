@@ -1,3 +1,4 @@
+import { WEB_ADDRESS_MESSAGE } from '../../../shared/forms/contact-validators';
 import { DeliveryPlatformFormGroup } from './delivery-platform-form-group';
 
 export type DeliveryPlatformTextField = 'name' | 'latinName' | 'websiteUrl' | 'sortOrder';
@@ -15,7 +16,7 @@ const MESSAGES: Record<DeliveryPlatformTextField, ErrorMessages> = {
   websiteUrl: {
     required: 'أدخل رابط المنصة الرئيسي',
     maxlength: 'الرابط 255 حرفاً كحد أقصى',
-    pattern: 'أدخل رابطاً كاملاً يبدأ بـ https://',
+    pattern: WEB_ADDRESS_MESSAGE,
   },
   sortOrder: { pattern: 'أدخل رقماً صحيحاً من 1 فأكثر' },
 };

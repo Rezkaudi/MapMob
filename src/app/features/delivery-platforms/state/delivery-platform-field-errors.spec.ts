@@ -34,7 +34,7 @@ describe('findDeliveryPlatformFieldErrors', () => {
     expect(findDeliveryPlatformFieldErrors(form)).toEqual({
       name: null,
       latinName: 'اكتب الاسم بأحرف لاتينية',
-      websiteUrl: 'أدخل رابطاً كاملاً يبدأ بـ https://',
+      websiteUrl: 'أدخل رابطاً كاملاً يبدأ بـ https://\u200E',
       sortOrder: 'أدخل رقماً صحيحاً من 1 فأكثر',
     });
   });

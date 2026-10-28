@@ -15,7 +15,7 @@ describe('ContentMockDatabaseLoader', () => {
       loader.request((database) => database.listQuestions().length),
     );
 
-    expect(pageCount).toBe(5);
+    expect(pageCount).toBe(6);
     expect(questionCount).toBe(3);
   });
 

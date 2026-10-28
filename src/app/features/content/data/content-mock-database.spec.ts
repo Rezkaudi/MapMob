@@ -4,10 +4,16 @@ import {
   buildContentPage,
   buildFaqQuestion,
   buildLegalPage,
+  buildProviderJoinPage,
 } from '../testing/content-fixture';
+import { ContentPageKind } from '../models/content-page-kind';
 import { ContentMockDatabase, ContentMockSeed } from './content-mock-database';
 
 const TODAY = '2026-09-17';
+
+function rowOf(database: ContentMockDatabase, kind: ContentPageKind) {
+  return database.listPages().find((page) => page.kind === kind);
+}
 
 function createDatabase() {
   const seed: ContentMockSeed = {
@@ -15,6 +21,7 @@ function createDatabase() {
       buildContentPage(),
       buildContentPage({ kind: 'terms', title: 'الشروط و الأحكام' }),
       buildContentPage({ kind: 'privacy', title: 'سياسة الخصوصية' }),
+      buildContentPage({ kind: 'provider-join', title: 'انضم إلينا كمقدم خدمة' }),
       buildContentPage({ kind: 'contact', title: 'تواصل معنا' }),
       buildContentPage({ kind: 'faq', title: 'الأسئلة الشائعة' }),
     ],
@@ -24,6 +31,7 @@ function createDatabase() {
       privacy: buildLegalPage({ title: 'سياسة الخصوصية' }),
     },
     contact: buildContactPage(),
+    providerJoin: buildProviderJoinPage(),
     questions: [buildFaqQuestion(), buildFaqQuestion({ id: 'faq-2', question: 'سؤال ثان؟' })],
   };
   return new ContentMockDatabase(seed, () => TODAY);
@@ -35,7 +43,7 @@ describe('ContentMockDatabase', () => {
       createDatabase()
         .listPages()
         .map((page) => page.kind),
-    ).toEqual(['about', 'terms', 'privacy', 'contact', 'faq']);
+    ).toEqual(['about', 'terms', 'privacy', 'provider-join', 'contact', 'faq']);
   });
 
   it('saves the about page, keeps its banner, and stamps the row with the new title and status', () => {
@@ -54,7 +62,7 @@ describe('ContentMockDatabase', () => {
 
     expect(saved.bannerUrl).toBe('assets/images/about-app-banner.png');
     expect(database.aboutPage().summary).toBe('<p>جديد</p>');
-    expect(database.listPages()[0]).toEqual({
+    expect(rowOf(database, 'about')).toEqual({
       kind: 'about',
       title: 'من نحن',
       updatedOn: TODAY,
@@ -75,6 +83,28 @@ describe('ContentMockDatabase', () => {
     expect(saved.bannerUrl).toBeNull();
   });
 
+  it('saves the join page and stamps its row with the new title and status', () => {
+    const database = createDatabase();
+
+    const saved = database.saveProviderJoinPage({
+      title: 'كن شريكاً',
+      registrationFormUrl: 'https://forms.example.com/join',
+      status: 'published',
+    });
+
+    expect(saved).toEqual({
+      title: 'كن شريكاً',
+      registrationFormUrl: 'https://forms.example.com/join',
+    });
+    expect(database.providerJoinPage()).toEqual(saved);
+    expect(rowOf(database, 'provider-join')).toEqual({
+      kind: 'provider-join',
+      title: 'كن شريكاً',
+      updatedOn: TODAY,
+      status: 'published',
+    });
+  });
+
   it('saves a legal page by its kind', () => {
     const database = createDatabase();
 
@@ -86,7 +116,7 @@ describe('ContentMockDatabase', () => {
 
     expect(database.legalPage('privacy').body).toBe('<p>نص</p>');
     expect(database.legalPage('terms').title).toBe('الشروط و الأحكام');
-    expect(database.listPages()[2].title).toBe('الخصوصية');
+    expect(rowOf(database, 'privacy')?.title).toBe('الخصوصية');
   });
 
   it('saves the contact page', () => {
@@ -95,7 +125,7 @@ describe('ContentMockDatabase', () => {
     database.saveContactPage({ ...buildContactPage({ supportPhone: '+2' }), status: 'published' });
 
     expect(database.contactPage().supportPhone).toBe('+2');
-    expect(database.listPages()[3].updatedOn).toBe(TODAY);
+    expect(rowOf(database, 'contact')?.updatedOn).toBe(TODAY);
   });
 
   it('adds, updates and deletes questions, and stamps the FAQ row', () => {
@@ -110,7 +140,7 @@ describe('ContentMockDatabase', () => {
       { id: 'faq-1', question: 'معدل؟', answer: 'تم' },
       { id: 'faq-3', question: 'جديد؟', answer: 'نعم' },
     ]);
-    expect(database.listPages()[4].updatedOn).toBe(TODAY);
+    expect(rowOf(database, 'faq')?.updatedOn).toBe(TODAY);
   });
 
   it('says when a question is missing', () => {

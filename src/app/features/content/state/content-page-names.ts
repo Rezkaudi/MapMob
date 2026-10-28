@@ -7,6 +7,7 @@ export const CONTENT_PAGE_NAMES: Readonly<Record<ContentPageKind, string>> = {
   privacy: 'سياسة الخصوصية',
   contact: 'تواصل معنا',
   faq: 'الأسئلة الشائعة',
+  'provider-join': 'انضم إلينا كمقدم خدمة',
 };
 
 /** The frames spell it "المحتةى"; the typo is fixed here. */

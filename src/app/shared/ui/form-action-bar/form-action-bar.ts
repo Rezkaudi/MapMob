@@ -13,5 +13,7 @@ export class FormActionBar {
   readonly saveLabel = input.required<string>();
   readonly cancelLink = input.required<string>();
   readonly isBusy = input<boolean>(false);
+  /** Pages that only publish, like "انضم إلينا كمقدم خدمة", hide "حفظ كمسودة". */
+  readonly isDraftVisible = input<boolean>(true);
   readonly saveDraft = output<void>();
 }

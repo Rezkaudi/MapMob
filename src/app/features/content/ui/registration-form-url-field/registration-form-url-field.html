@@ -1,0 +1,23 @@
+<!-- Same shape as the title field: label, 8px, the 50px box, then a 24px line for the message. -->
+<app-content-field-label
+  text="رابط نموذج التسجيل الخارجي"
+  forId="registration-form-url"
+  [isRequired]="true"
+/>
+<!-- A link reads left to right; the frame still sets it against the right edge. -->
+<input
+  id="registration-form-url"
+  type="url"
+  dir="ltr"
+  inputmode="url"
+  autocomplete="url"
+  class="mt-2 block h-[50px] w-full rounded border bg-white px-4 py-3 text-right text-[16px]/[24px] font-bold text-text-primary outline-none focus:border-primary"
+  [class]="error ? 'border-closed' : 'border-text-secondary'"
+  [formControl]="control()"
+  [attr.aria-invalid]="error !== null"
+/>
+<div class="flex h-6 items-center">
+  @if (error; as message) {
+    <p role="alert" class="text-start text-[12px]/[16px] text-closed">{{ message }}</p>
+  }
+</div>

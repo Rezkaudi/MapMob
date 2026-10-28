@@ -17,6 +17,7 @@ import {
   CONTENT_SECTION_LABEL,
 } from '../../state/content-page-names';
 import { CONTENT_URL } from '../../state/content-page-route';
+import { HTTPS_SCHEME_IN_ARABIC } from '../../../../shared/forms/contact-validators';
 import { touchedError } from '../../../../shared/forms/touched-error';
 import { ContactChannelField } from '../../ui/contact-channel-field/contact-channel-field';
 import { ContentFieldLabel } from '../../ui/content-field-label/content-field-label';
@@ -29,7 +30,7 @@ const MESSAGES = {
   introduction: 'اكتب النص التعريفي',
   phone: 'اكتب رقم هاتف صحيح',
   email: 'اكتب بريداً إلكترونياً صحيحاً',
-  link: 'اكتب رابطاً يبدأ بـ https://',
+  link: `اكتب رابطاً يبدأ بـ ${HTTPS_SCHEME_IN_ARABIC}`,
 };
 
 @Component({

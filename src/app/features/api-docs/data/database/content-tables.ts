@@ -9,11 +9,15 @@ export const CONTENT_DOMAIN: DbDomain = {
   tables: [
     {
       name: 'content_pages',
-      description: 'One row per fixed page. Seed all four.',
+      description: 'One row per fixed page. Seed all five.',
       servedAs: '/content/pages',
       columns: [
         ID,
-        { name: 'kind', type: "enum('about','terms','privacy','contact')", key: 'uq' },
+        {
+          name: 'kind',
+          type: "enum('about','terms','privacy','contact','provider-join')",
+          key: 'uq',
+        },
         { name: 'title', type: 'varchar(120)' },
         {
           name: 'body_html',
@@ -25,7 +29,7 @@ export const CONTENT_DOMAIN: DbDomain = {
         {
           name: 'fields',
           type: 'json',
-          note: 'Page-only fields: about {phone,email,address}; contact {supportPhone,...,whatsappUrl}.',
+          note: 'Page-only fields: about {phone,email,address}; contact {supportPhone,...,whatsappUrl}; provider-join {registrationFormUrl}.',
         },
         { name: 'status', type: "enum('published','draft')" },
         adminReference('updated_by_admin_id', ''),
@@ -34,7 +38,7 @@ export const CONTENT_DOMAIN: DbDomain = {
     },
     {
       name: 'faq_questions',
-      description: 'The FAQ. The fifth content page row (kind faq) is built from this table.',
+      description: 'The FAQ. The content page row of kind faq is built from this table.',
       servedAs: '/content/faq',
       columns: [
         ID,

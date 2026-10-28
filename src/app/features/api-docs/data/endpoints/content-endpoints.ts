@@ -8,6 +8,8 @@ import {
   FAQ_QUESTION,
   LEGAL_FORM,
   LEGAL_PAGE,
+  PROVIDER_JOIN_FORM,
+  PROVIDER_JOIN_PAGE,
 } from '../examples/content-examples';
 import { NO_CONTENT, field, optionalField } from '../shared-fields';
 
@@ -41,13 +43,23 @@ const CONTACT_FIELDS = [
   ),
 ];
 
+const PROVIDER_JOIN_FIELDS = [
+  field('title', 'string'),
+  field(
+    'registrationFormUrl',
+    'string (url)',
+    'The outside sign-up form (e.g. Google Forms) the app opens. Must start with http:// or https://.',
+  ),
+];
+
 export const CONTENT_FEATURE: ApiFeature = {
   id: 'content',
   name: 'Content pages',
   app: 'admin',
   screen: '/admin/content',
   permissionModule: 'content',
-  intro: 'The fixed pages the mobile app shows: about, terms, privacy, contact and the FAQ.',
+  intro:
+    'The fixed pages the mobile app shows: about, terms, privacy, contact, the FAQ and "join us as a service provider".',
   endpoints: [
     {
       id: 'content-pages',
@@ -56,12 +68,12 @@ export const CONTENT_FEATURE: ApiFeature = {
       summary: 'The content pages table.',
       response: {
         status: 200,
-        description: 'Always all five rows, even for a page never edited.',
+        description: 'Always all six rows, even for a page never edited.',
         example: CONTENT_PAGES,
         fields: [
           field(
             'kind',
-            'enum: about | terms | privacy | contact | faq',
+            'enum: about | terms | privacy | contact | faq | provider-join',
             'The stable key the dashboard routes on.',
           ),
           field('title', 'string'),
@@ -160,6 +172,37 @@ export const CONTENT_FEATURE: ApiFeature = {
         example: CONTACT_FORM,
       },
       response: { status: 200, description: 'The saved page.', example: CONTACT_PAGE },
+    },
+    {
+      id: 'content-provider-join-read',
+      method: 'GET',
+      path: '/content/pages/provider-join',
+      summary: 'The "join us as a service provider" page.',
+      response: {
+        status: 200,
+        description: 'The page.',
+        example: PROVIDER_JOIN_PAGE,
+        fields: [...PAGE_META_FIELDS, ...PROVIDER_JOIN_FIELDS],
+      },
+    },
+    {
+      id: 'content-provider-join-save',
+      method: 'PUT',
+      path: '/content/pages/provider-join',
+      summary: 'Save the "join us as a service provider" page.',
+      body: {
+        contentType: 'application/json',
+        fields: [
+          ...PROVIDER_JOIN_FIELDS,
+          field(
+            'status',
+            'enum: published | draft',
+            'The dashboard has no draft button here and always sends published.',
+          ),
+        ],
+        example: PROVIDER_JOIN_FORM,
+      },
+      response: { status: 200, description: 'The saved page.', example: PROVIDER_JOIN_PAGE },
     },
     {
       id: 'content-faq-list',

@@ -9,6 +9,7 @@ describe('CONTENT_ROUTES', () => {
       'privacy',
       'contact',
       'faq',
+      'provider-join',
     ]);
   });
 

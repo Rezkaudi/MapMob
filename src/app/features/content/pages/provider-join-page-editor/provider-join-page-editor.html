@@ -1,0 +1,37 @@
+<app-form-page-heading
+  [parentLabel]="sectionLabel"
+  [parentLink]="contentUrl"
+  [currentLabel]="stepLabel"
+  [title]="pageName"
+  [description]="description"
+  descriptionSize="small"
+/>
+
+@if (store.error(); as error) {
+  <app-error-state class="mt-6" [message]="error" (retry)="store.retry()" />
+} @else if (!store.page()) {
+  <app-skeleton class="mt-6 block" height="338px" />
+} @else {
+  <!-- The card starts 24px under the heading and keeps the frame's 338px; the bar sits at the bottom. -->
+  <form class="mt-6 flex flex-1 flex-col" novalidate [formGroup]="form" (ngSubmit)="publish()">
+    <app-content-form-card class="mb-10 *:min-h-[338px]">
+      <app-page-title-field [control]="form.controls.title" />
+      <app-registration-form-url-field [control]="form.controls.registrationFormUrl" />
+    </app-content-form-card>
+
+    <app-form-action-bar
+      class="mt-auto"
+      saveLabel="حفظ التغييرات"
+      [cancelLink]="contentUrl"
+      [isBusy]="store.isSaving()"
+      [isDraftVisible]="false"
+    />
+  </form>
+}
+
+<app-content-save-toasts
+  [savedStatus]="store.savedStatus()"
+  [saveError]="store.saveError()"
+  (savedDismissed)="store.dismissSavedMessage()"
+  (errorDismissed)="store.clearSaveError()"
+/>

@@ -25,4 +25,11 @@ export const CONTENT_ROUTES: Routes = [
     path: 'faq',
     loadComponent: () => import('./pages/faq-page/faq-page').then((m) => m.FaqPage),
   },
+  {
+    path: 'provider-join',
+    loadComponent: () =>
+      import('./pages/provider-join-page-editor/provider-join-page-editor').then(
+        (m) => m.ProviderJoinPageEditor,
+      ),
+  },
 ];

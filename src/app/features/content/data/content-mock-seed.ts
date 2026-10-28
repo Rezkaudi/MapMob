@@ -14,6 +14,7 @@ export const CONTENT_MOCK_SEED: ContentMockSeed = {
     publishedPage('about', 'عن التطبيق'),
     publishedPage('terms', 'الشروط و الأحكام'),
     publishedPage('privacy', 'سياسة الخصوصية'),
+    publishedPage('provider-join', 'انضم إلينا كمقدم خدمة'),
     publishedPage('contact', 'تواصل معنا'),
     publishedPage('faq', 'الأسئلة الشائعة'),
   ],
@@ -40,6 +41,12 @@ export const CONTENT_MOCK_SEED: ContentMockSeed = {
     instagramUrl: 'https://instagram.com/mapmobapp',
     telegramUrl: 'https://t.me/mapmobsupport',
     whatsappUrl: 'https://wa.me/966123456789',
+  },
+  // The frame's title box repeats "الشروط و الأحكام" and its link reads "docs.google.com.forms";
+  // both are copy slips, so the seed uses the page's own name and a well-formed address.
+  providerJoin: {
+    title: 'انضم إلينا كمقدم خدمة',
+    registrationFormUrl: 'https://docs.google.com/forms',
   },
   questions: [
     {

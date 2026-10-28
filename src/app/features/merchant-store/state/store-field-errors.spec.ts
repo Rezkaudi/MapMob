@@ -40,9 +40,9 @@ describe('findStoreFieldError', () => {
     expect(findStoreFieldError(form, 'phone')).toBe('أدخل رقم هاتف صحيح');
     expect(findStoreFieldError(form, 'whatsapp')).toBe('أدخل رقم واتساب صحيح');
     expect(findStoreFieldError(form, 'email')).toBe('أدخل بريداً إلكترونياً صحيحاً');
-    expect(findStoreFieldError(form, 'facebook')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://');
-    expect(findStoreFieldError(form, 'instagram')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://');
-    expect(findStoreFieldError(form, 'telegram')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://');
+    expect(findStoreFieldError(form, 'facebook')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://\u200E');
+    expect(findStoreFieldError(form, 'instagram')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://\u200E');
+    expect(findStoreFieldError(form, 'telegram')).toBe('أدخل رابطاً كاملاً يبدأ بـ https://\u200E');
   });
   it('collects the message of every field at once', () => {
     const form = createForm();

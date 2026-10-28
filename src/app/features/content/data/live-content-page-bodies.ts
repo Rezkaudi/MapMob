@@ -3,6 +3,7 @@ import { AboutPageDraft } from '../models/about-page-draft';
 import { ContactPageDraft } from '../models/contact-page-draft';
 import { FaqQuestionDraft } from '../models/faq-question-draft';
 import { LegalPageDraft } from '../models/legal-page-draft';
+import { ProviderJoinPageDraft } from '../models/provider-join-page-draft';
 
 // PHP reads a body only on POST, so a save names its real method inside it.
 const PUT_OVER_POST = 'PUT';
@@ -41,6 +42,15 @@ export function toLiveContactBody({ title, introduction, ...contact }: ContactPa
     title: inBothLanguages(title),
     introduction: inBothLanguages(introduction),
     ...contact,
+  };
+}
+
+export function toLiveProviderJoinBody({ title, ...page }: ProviderJoinPageDraft) {
+  return {
+    _method: PUT_OVER_POST,
+    title: inBothLanguages(title),
+    ...page,
+    body: inBothLanguages(page.registrationFormUrl),
   };
 }
 

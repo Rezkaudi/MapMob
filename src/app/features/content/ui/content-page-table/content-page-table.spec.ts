@@ -45,7 +45,7 @@ describe('ContentPageTable', () => {
     const cells = firstRow.querySelectorAll('td');
 
     expect(cells[1].textContent?.trim()).toBe('عن التطبيق');
-    expect(cells[2].textContent?.trim()).toBe('26 يناير 2024');
+    expect(cells[2].textContent?.trim()).toBe('٢٦ يناير ٢٠٢٤');
     expect(cells[3].querySelector('app-content-status-pill')?.textContent?.trim()).toBe(
       'منشورة ومتاحة',
     );

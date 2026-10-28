@@ -1,11 +1,12 @@
 import { CONTENT_MOCK_SEED } from './content-mock-seed';
 
 describe('CONTENT_MOCK_SEED', () => {
-  it('lists the five pages in the design order, all published on 26 January 2024', () => {
+  it('lists the six pages in the design order, all published on 26 January 2024', () => {
     expect(CONTENT_MOCK_SEED.pages.map((page) => page.title)).toEqual([
       'عن التطبيق',
       'الشروط و الأحكام',
       'سياسة الخصوصية',
+      'انضم إلينا كمقدم خدمة',
       'تواصل معنا',
       'الأسئلة الشائعة',
     ]);
@@ -30,5 +31,6 @@ describe('CONTENT_MOCK_SEED', () => {
     expect(CONTENT_MOCK_SEED.legal.terms.body).toContain('1. التعريف بالخدمة');
     expect(CONTENT_MOCK_SEED.legal.privacy.body).toContain('بيانات الموقع');
     expect(CONTENT_MOCK_SEED.contact.telegramUrl).toBe('https://t.me/mapmobsupport');
+    expect(CONTENT_MOCK_SEED.providerJoin.title).toBe('انضم إلينا كمقدم خدمة');
   });
 });

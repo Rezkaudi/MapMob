@@ -63,7 +63,7 @@ describe('delivery link form', () => {
 
     link.controls.storeUrl.setValue('talabat');
     expect(findDeliveryLinkError(link.controls.storeUrl, 'أدخل الرابط')).toBe(
-      'أدخل رابطاً كاملاً يبدأ بـ https://',
+      'أدخل رابطاً كاملاً يبدأ بـ https://\u200E',
     );
   });
 

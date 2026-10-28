@@ -9,4 +9,7 @@ export const contactEmail = Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 /** A full web address, as the app opens it in the browser. */
 export const webAddress = Validators.pattern(/^https?:\/\/\S+\.\S+$/i);
 
-export const WEB_ADDRESS_MESSAGE = 'أدخل رابطاً كاملاً يبدأ بـ https://';
+/** The left-to-right mark stops an RTL line from drawing the closing "://" as "//:https". */
+export const HTTPS_SCHEME_IN_ARABIC = 'https://\u200E';
+
+export const WEB_ADDRESS_MESSAGE = `أدخل رابطاً كاملاً يبدأ بـ ${HTTPS_SCHEME_IN_ARABIC}`;

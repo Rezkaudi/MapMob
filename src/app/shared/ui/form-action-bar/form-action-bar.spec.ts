@@ -34,6 +34,21 @@ describe('FormActionBar', () => {
     expect(saveDraft).toHaveBeenCalled();
   });
 
+  it('leaves out the draft button on a page that has no drafts, cancel staying leftmost', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(FormActionBar);
+    fixture.componentRef.setInput('saveLabel', 'حفظ التغييرات');
+    fixture.componentRef.setInput('cancelLink', '/admin/content');
+    fixture.componentRef.setInput('isDraftVisible', false);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const labels = Array.from(element.querySelectorAll('button, a'), (item) =>
+      item.textContent?.trim(),
+    );
+    expect(labels).toEqual(['حفظ التغييرات', 'إلغاء']);
+  });
+
   it('holds both saves while one is running', () => {
     const buttons = Array.from(
       render(true).nativeElement.querySelectorAll('button'),

@@ -56,7 +56,7 @@ describe('toDeliveryLinkRows', () => {
 
     const row = toDeliveryLinkRows(profile.deliveryLinks, links)[0];
 
-    expect(row.error).toBe('أدخل رابطاً كاملاً يبدأ بـ https://');
+    expect(row.error).toBe('أدخل رابطاً كاملاً يبدأ بـ https://\u200E');
     expect(row.canOpen).toBe(false);
   });
 });

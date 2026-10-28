@@ -7,6 +7,8 @@ import { ContentPage } from '../models/content-page';
 import { LegalPageKind } from '../models/content-page-kind';
 import { LegalPage } from '../models/legal-page';
 import { LegalPageDraft } from '../models/legal-page-draft';
+import { ProviderJoinPage } from '../models/provider-join-page';
+import { ProviderJoinPageDraft } from '../models/provider-join-page-draft';
 
 export abstract class ContentPageRepository {
   abstract getPages(): Observable<readonly ContentPage[]>;
@@ -16,4 +18,6 @@ export abstract class ContentPageRepository {
   abstract saveLegalPage(kind: LegalPageKind, draft: LegalPageDraft): Observable<LegalPage>;
   abstract getContactPage(): Observable<ContactPage>;
   abstract saveContactPage(draft: ContactPageDraft): Observable<ContactPage>;
+  abstract getProviderJoinPage(): Observable<ProviderJoinPage>;
+  abstract saveProviderJoinPage(draft: ProviderJoinPageDraft): Observable<ProviderJoinPage>;
 }

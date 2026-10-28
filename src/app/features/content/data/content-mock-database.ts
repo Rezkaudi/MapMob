@@ -9,12 +9,15 @@ import { FaqQuestion } from '../models/faq-question';
 import { FaqQuestionDraft } from '../models/faq-question-draft';
 import { LegalPage } from '../models/legal-page';
 import { LegalPageDraft } from '../models/legal-page-draft';
+import { ProviderJoinPage } from '../models/provider-join-page';
+import { ProviderJoinPageDraft } from '../models/provider-join-page-draft';
 
 export interface ContentMockSeed {
   readonly pages: readonly ContentPage[];
   readonly about: AboutPage;
   readonly legal: Readonly<Record<LegalPageKind, LegalPage>>;
   readonly contact: ContactPage;
+  readonly providerJoin: ProviderJoinPage;
   readonly questions: readonly FaqQuestion[];
 }
 
@@ -26,6 +29,7 @@ export class ContentMockDatabase {
   private about: AboutPage;
   private legal: Readonly<Record<LegalPageKind, LegalPage>>;
   private contact: ContactPage;
+  private providerJoin: ProviderJoinPage;
   private questions: readonly FaqQuestion[];
 
   constructor(
@@ -37,6 +41,7 @@ export class ContentMockDatabase {
     this.about = seed.about;
     this.legal = seed.legal;
     this.contact = seed.contact;
+    this.providerJoin = seed.providerJoin;
     this.questions = seed.questions;
   }
 
@@ -73,6 +78,16 @@ export class ContentMockDatabase {
   saveContactPage({ status, ...page }: ContactPageDraft): ContactPage {
     this.contact = page;
     this.stampPage('contact', page.title, status);
+    return page;
+  }
+
+  providerJoinPage(): ProviderJoinPage {
+    return this.providerJoin;
+  }
+
+  saveProviderJoinPage({ status, ...page }: ProviderJoinPageDraft): ProviderJoinPage {
+    this.providerJoin = page;
+    this.stampPage('provider-join', page.title, status);
     return page;
   }
 

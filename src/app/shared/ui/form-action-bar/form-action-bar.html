@@ -14,14 +14,16 @@
   >
     {{ saveLabel() }}
   </button>
-  <button
-    type="button"
-    class="h-[46px] rounded border border-border px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
-    [disabled]="isBusy()"
-    (click)="saveDraft.emit()"
-  >
-    حفظ كمسودة
-  </button>
+  @if (isDraftVisible()) {
+    <button
+      type="button"
+      class="h-[46px] rounded border border-border px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="isBusy()"
+      (click)="saveDraft.emit()"
+    >
+      حفظ كمسودة
+    </button>
+  }
   <a
     class="flex h-[46px] items-center rounded border border-closed px-4 text-[14px]/[20px] font-medium text-closed hover:bg-closed/5"
     [routerLink]="cancelLink()"

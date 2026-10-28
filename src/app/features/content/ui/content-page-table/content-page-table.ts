@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LatinDigitDatePipe } from '../../../../shared/pipes/latin-digit-date.pipe';
+import { ArabicDatePipe } from '../../../../shared/pipes/arabic-date.pipe';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { TableEmpty } from '../../../../shared/ui/table-empty/table-empty';
 import { TableSkeleton } from '../../../../shared/ui/table-skeleton/table-skeleton';
@@ -11,11 +11,11 @@ import { ContentStatusPill } from '../content-status-pill/content-status-pill';
 
 /** Shares of the 1046px design table: 72 / 274 / 242 / 310 / 148px, right to left. */
 const COLUMN_WIDTHS = ['6.88%', '26.2%', '23.14%', '29.63%', '14.15%'];
-const PAGE_KIND_COUNT = 5;
+const PAGE_KIND_COUNT = 6;
 
 @Component({
   selector: 'app-content-page-table',
-  imports: [AppIcon, ContentStatusPill, LatinDigitDatePipe, RouterLink, TableEmpty, TableSkeleton],
+  imports: [AppIcon, ArabicDatePipe, ContentStatusPill, RouterLink, TableEmpty, TableSkeleton],
   templateUrl: './content-page-table.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

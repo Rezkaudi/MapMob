@@ -36,7 +36,7 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(197);
+    expect(countEndpoints(API_FEATURES).total).toBe(199);
   });
 
   it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {
@@ -74,6 +74,19 @@ describe('the API reference data', () => {
       'DELETE /delivery-platforms/{id}',
       'GET /delivery-platforms/{id}/stores',
     ]);
+  });
+
+  it('documents the "join us as a provider" page: read and save, with its sign-up form link', () => {
+    const contentFeature = API_FEATURES.find((feature) => feature.id === 'content');
+    const joinCalls = contentFeature?.endpoints.filter((endpoint) =>
+      endpoint.path.endsWith('/provider-join'),
+    );
+
+    expect(joinCalls?.map((endpoint) => endpoint.method)).toEqual(['GET', 'PUT']);
+    expect(joinCalls?.[1].body?.fields?.map((bodyField) => bodyField.name)).toContain(
+      'registrationFormUrl',
+    );
+    expect(joinCalls?.[0].response.example).toHaveProperty('registrationFormUrl');
   });
 
   it('lists the nine calls of the games screen and its add and edit pages, right after payments', () => {

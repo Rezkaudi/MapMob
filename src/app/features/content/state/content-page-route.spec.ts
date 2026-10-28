@@ -8,5 +8,6 @@ describe('contentPageEditUrl', () => {
     expect(contentPageEditUrl('privacy')).toBe('/admin/content/privacy');
     expect(contentPageEditUrl('contact')).toBe('/admin/content/contact');
     expect(contentPageEditUrl('faq')).toBe('/admin/content/faq');
+    expect(contentPageEditUrl('provider-join')).toBe('/admin/content/provider-join');
   });
 });

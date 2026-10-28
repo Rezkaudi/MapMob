@@ -3,6 +3,7 @@ import { ContactPage } from '../models/contact-page';
 import { ContentPage } from '../models/content-page';
 import { FaqQuestion } from '../models/faq-question';
 import { LegalPage } from '../models/legal-page';
+import { ProviderJoinPage } from '../models/provider-join-page';
 
 export function buildContentPage(overrides: Partial<ContentPage> = {}): ContentPage {
   return {
@@ -53,6 +54,14 @@ export function buildFaqQuestion(overrides: Partial<FaqQuestion> = {}): FaqQuest
     id: 'faq-1',
     question: 'ما هو تطبيق MapMob؟',
     answer: 'MapMob هو دليل جغرافي ذكي وتفاعلي.',
+    ...overrides,
+  };
+}
+
+export function buildProviderJoinPage(overrides: Partial<ProviderJoinPage> = {}): ProviderJoinPage {
+  return {
+    title: 'انضم إلينا كمقدم خدمة',
+    registrationFormUrl: 'https://docs.google.com/forms/d/mapmob-join',
     ...overrides,
   };
 }

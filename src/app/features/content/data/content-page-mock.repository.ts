@@ -8,6 +8,8 @@ import { ContentPage } from '../models/content-page';
 import { LegalPageKind } from '../models/content-page-kind';
 import { LegalPage } from '../models/legal-page';
 import { LegalPageDraft } from '../models/legal-page-draft';
+import { ProviderJoinPage } from '../models/provider-join-page';
+import { ProviderJoinPageDraft } from '../models/provider-join-page-draft';
 import { ContentMockDatabaseLoader } from './content-mock-database-loader';
 import { ContentPageRepository } from './content-page.repository';
 
@@ -41,5 +43,13 @@ export class ContentPageMockRepository implements ContentPageRepository {
 
   saveContactPage(draft: ContactPageDraft): Observable<ContactPage> {
     return this.loader.request((database) => database.saveContactPage(draft));
+  }
+
+  getProviderJoinPage(): Observable<ProviderJoinPage> {
+    return this.loader.request((database) => database.providerJoinPage());
+  }
+
+  saveProviderJoinPage(draft: ProviderJoinPageDraft): Observable<ProviderJoinPage> {
+    return this.loader.request((database) => database.saveProviderJoinPage(draft));
   }
 }

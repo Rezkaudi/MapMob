@@ -9,6 +9,12 @@ export const CONTENT_PAGES = [
     status: 'published',
   },
   { kind: 'privacy', title: 'سياسة الخصوصية', updatedAt: '2026-09-18T10:00:00Z', status: 'draft' },
+  {
+    kind: 'provider-join',
+    title: 'انضم إلينا كمقدم خدمة',
+    updatedAt: '2026-10-28T10:00:00Z',
+    status: 'published',
+  },
   { kind: 'contact', title: 'تواصل معنا', updatedAt: '2026-09-15T10:00:00Z', status: 'published' },
   { kind: 'faq', title: 'الأسئلة الشائعة', updatedAt: '2026-09-22T10:00:00Z', status: 'published' },
 ];
@@ -55,6 +61,13 @@ export const CONTACT_PAGE = {
   whatsappUrl: 'https://wa.me/963931234567',
 };
 
+export const PROVIDER_JOIN_PAGE = {
+  status: 'published',
+  updatedAt: '2026-10-28T10:00:00Z',
+  title: 'انضم إلينا كمقدم خدمة',
+  registrationFormUrl: 'https://docs.google.com/forms/d/e/mapmob-providers/viewform',
+};
+
 export const FAQ_QUESTION = {
   id: 'q1',
   question: 'كيف أضيف متجري؟',
@@ -65,3 +78,7 @@ export const FAQ_QUESTION = {
 export const LEGAL_FORM = { title: LEGAL_PAGE.title, body: LEGAL_PAGE.body, status: 'published' };
 
 export const CONTACT_FORM = (({ updatedAt: _updatedAt, ...form }) => form)(CONTACT_PAGE);
+
+export const PROVIDER_JOIN_FORM = (({ updatedAt: _updatedAt, ...form }) => form)(
+  PROVIDER_JOIN_PAGE,
+);
