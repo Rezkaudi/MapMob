@@ -60,8 +60,17 @@ describe('SubscriptionHttpRepository', () => {
     expect(page.items[0].id).toBe('8');
   });
 
-  it('counts the summary strip from the two lists', async () => {
+  it('reads the active counts from the server summary and the rest from the lists', async () => {
     const response = firstValueFrom(repository.getSummary());
+    http.expectOne(`${SUBSCRIPTIONS_URL}/summary`).flush({
+      data: {
+        total_count: 2,
+        pending_count: 0,
+        active_count: 1,
+        expired_count: 1,
+        cancelled_count: 0,
+      },
+    });
     answerLists();
 
     expect(await response).toEqual({
@@ -154,8 +163,24 @@ describe('SubscriptionHttpRepository', () => {
     expect(await response).toBeUndefined();
   });
 
-  it('builds the export file on this side', async () => {
-    const response = firstValueFrom(repository.exportSubscriptions({ pageIndex: 0, pageSize: 10 }));
+  it('downloads the server file when it can apply the filters itself', async () => {
+    const response = firstValueFrom(
+      repository.exportSubscriptions({ pageIndex: 2, pageSize: 10, status: 'expired' }),
+    );
+
+    const request = http.expectOne((call) => call.url === `${SUBSCRIPTIONS_URL}/export`);
+    expect(request.request.params.get('status')).toBe('expired');
+    expect(request.request.params.has('page')).toBe(false);
+    expect(request.request.responseType).toBe('blob');
+    request.flush(new Blob(['csv'], { type: 'text/csv' }));
+
+    expect((await response).type).toContain('text/csv');
+  });
+
+  it('builds the file on this side when the server cannot apply a filter', async () => {
+    const response = firstValueFrom(
+      repository.exportSubscriptions({ pageIndex: 0, pageSize: 10, search: 'دمشق' }),
+    );
     answerLists();
 
     expect((await response).type).toContain('text/csv');

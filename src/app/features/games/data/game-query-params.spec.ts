@@ -1,44 +1,19 @@
-import { toGameParams, toWinnerParams } from './game-query-params';
+import { toWinnerExportParams } from './game-query-params';
 
-describe('game query params', () => {
-  it('sends the paging and leaves out empty filters', () => {
-    expect(toGameParams({ pageIndex: 1, pageSize: 3, search: '  ' })).toEqual({
-      pageIndex: 1,
-      pageSize: 3,
-    });
-  });
-
-  it('sends the search, status and sort when set', () => {
+describe('toWinnerExportParams', () => {
+  it('sends the search and game in the server names, and no paging', () => {
     expect(
-      toGameParams({
-        pageIndex: 0,
-        pageSize: 3,
-        search: '104',
-        status: 'finished',
-        sort: 'oldest',
+      toWinnerExportParams({
+        pageIndex: 2,
+        pageSize: 4,
+        search: ' سارة ',
+        gameId: '9',
+        sort: 'name',
       }),
-    ).toEqual({ pageIndex: 0, pageSize: 3, search: '104', status: 'finished', sort: 'oldest' });
+    ).toEqual({ search: 'سارة', game_id: '9' });
   });
 
-  it('sends the winner filters, and none of the paging for an export', () => {
-    const query = {
-      pageIndex: 2,
-      pageSize: 4,
-      search: 'سارة',
-      gameId: 'game-9',
-      sort: 'name' as const,
-    };
-    expect(toWinnerParams(query)).toEqual({
-      pageIndex: 2,
-      pageSize: 4,
-      search: 'سارة',
-      gameId: 'game-9',
-      sort: 'name',
-    });
-    expect(toWinnerParams(query, { isExport: true })).toEqual({
-      search: 'سارة',
-      gameId: 'game-9',
-      sort: 'name',
-    });
+  it('leaves out empty filters', () => {
+    expect(toWinnerExportParams({ pageIndex: 0, pageSize: 4, search: '  ' })).toEqual({});
   });
 });

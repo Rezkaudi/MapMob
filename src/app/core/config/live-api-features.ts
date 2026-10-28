@@ -9,6 +9,8 @@ export const LIVE_API_FEATURES: readonly ApiFeatureName[] = [
   'content',
   'dashboard',
   'delivery-platforms',
+  'games',
+  'inbox',
   'notifications',
   'offers',
   'payments',

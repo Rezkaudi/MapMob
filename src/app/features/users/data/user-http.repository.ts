@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
 import { ActivationStatus } from '../../../shared/models/activation-status';
@@ -13,19 +12,14 @@ import { UserSummary } from '../models/user-summary';
 import { LiveUser } from './live-user';
 import { toAppUser, toUserDetail } from './live-user-mapping';
 import { LiveUserPage } from './live-user-page';
-import { toUserSummary } from './live-user-summary';
 import { toUserFilterParams, toUserQueryParams } from './user-query-params';
 import { UserRepository } from './user.repository';
 
 const NO_USERS: PagedResult<AppUser> = { items: [], totalCount: 0 };
-const FIRST_PAGE = { pageIndex: 0 };
-/** How many of the newest users the summary reads to count the new ones. */
-const NEWEST_USERS_PAGE_SIZE = 100;
 
 @Injectable()
 export class UserHttpRepository implements UserRepository {
   private readonly httpClient = inject(HttpClient);
-  private readonly clock = inject(CLOCK);
   private readonly usersUrl = `${inject(API_BASE_URL)}/admin/users`;
 
   getUsers(query: UserQuery): Observable<PagedResult<AppUser>> {
@@ -37,23 +31,10 @@ export class UserHttpRepository implements UserRepository {
     );
   }
 
-  // The server has no summary route yet, so the cards are counted from the list.
   getSummary(): Observable<UserSummary> {
-    return forkJoin({
-      newest: this.getPage({ ...FIRST_PAGE, pageSize: NEWEST_USERS_PAGE_SIZE }),
-      suspended: this.getPage({ ...FIRST_PAGE, pageSize: 1, status: 'suspended' }),
-    }).pipe(
-      map(({ newest, suspended }) =>
-        toUserSummary(
-          {
-            totalCount: newest.meta.totalCount,
-            suspendedCount: suspended.meta.totalCount,
-            newestSignUps: newest.data.map((user) => user.created_at),
-          },
-          this.clock(),
-        ),
-      ),
-    );
+    return this.httpClient
+      .get<LiveEnvelope<UserSummary>>(`${this.usersUrl}/summary`)
+      .pipe(map(({ data }) => data));
   }
 
   getUserDetail(id: string): Observable<UserDetail> {

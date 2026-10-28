@@ -16,6 +16,8 @@ import { toNameSlug } from '../../../shared/data/name-slug';
 import { toLivePlanBody, toPackagePlan } from './live-plan-mapping';
 import { LiveSubscription } from './live-subscription';
 import { toSubscription } from './live-subscription-mapping';
+import { LiveSubscriptionSummary } from './live-subscription-summary';
+import { canServerExport, toServerExportParams } from './subscription-export-filters';
 import { filterSubscriptions, querySubscriptions } from './subscription-list-query';
 import { SubscriptionRepository } from './subscription.repository';
 import { buildSubscriptionsCsvFile } from './subscriptions-csv';
@@ -31,18 +33,26 @@ interface LiveLists {
   readonly subscriptions: readonly Subscription[];
 }
 
-/** The server has no summary, export or filters here, so those run on this side. */
+/** The list ignores filters, so they run here; the export uses the server file when it can. */
 @Injectable()
 export class SubscriptionHttpRepository implements SubscriptionRepository {
   private readonly httpClient = inject(HttpClient);
   private readonly clock = inject(CLOCK);
   private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
   private readonly plansUrl = `${this.adminUrl}/plans`;
+  private readonly subscriptionsUrl = `${this.adminUrl}/subscriptions`;
 
   getSummary(): Observable<SubscriptionSummary> {
     const today = toCalendarDay(this.clock());
-    return this.loadLists().pipe(
-      map(({ plans, subscriptions }) => summarizeLiveSubscriptions(plans, subscriptions, today)),
+    return forkJoin({
+      counts: this.httpClient.get<LiveEnvelope<LiveSubscriptionSummary>>(
+        `${this.subscriptionsUrl}/summary`,
+      ),
+      lists: this.loadLists(),
+    }).pipe(
+      map(({ counts, lists }) =>
+        summarizeLiveSubscriptions(lists.plans, lists.subscriptions, counts.data, today),
+      ),
     );
   }
 
@@ -83,9 +93,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   }
 
   cancelSubscription(id: string): Observable<void> {
-    return this.httpClient
-      .delete(`${this.adminUrl}/subscriptions/${id}`)
-      .pipe(map(() => undefined));
+    return this.httpClient.delete(`${this.subscriptionsUrl}/${id}`).pipe(map(() => undefined));
   }
 
   getSubscriptions(query: SubscriptionQuery): Observable<PagedResult<Subscription>> {
@@ -95,6 +103,12 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   }
 
   exportSubscriptions(query: SubscriptionQuery): Observable<Blob> {
+    if (canServerExport(query)) {
+      return this.httpClient.get(`${this.subscriptionsUrl}/export`, {
+        params: toServerExportParams(query),
+        responseType: 'blob',
+      });
+    }
     return this.loadLists().pipe(
       map(({ subscriptions }) =>
         buildSubscriptionsCsvFile(filterSubscriptions(subscriptions, query)),
@@ -121,9 +135,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   private loadLists(): Observable<LiveLists> {
     return forkJoin({
       plans: this.httpClient.get<LiveEnvelope<readonly LivePlan[]>>(this.plansUrl),
-      subscriptions: this.httpClient.get<PagedResult<LiveSubscription>>(
-        `${this.adminUrl}/subscriptions`,
-      ),
+      subscriptions: this.httpClient.get<PagedResult<LiveSubscription>>(this.subscriptionsUrl),
     }).pipe(map(({ plans, subscriptions }) => toLiveLists(plans.data, subscriptions.items)));
   }
 }

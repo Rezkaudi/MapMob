@@ -3,14 +3,12 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { CLOCK } from '../../../core/config/clock';
 import { LiveUser } from './live-user';
 import { toAppUser, toUserDetail } from './live-user-mapping';
 import { UserHttpRepository } from './user-http.repository';
 
 const BASE_URL = 'https://api.test';
 const USERS_URL = `${BASE_URL}/admin/users`;
-const NOW = new Date('2026-10-13T12:00:00.000Z');
 const LIVE_USER: LiveUser = {
   id: 5,
   name: 'obedah',
@@ -33,7 +31,6 @@ describe('UserHttpRepository', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: API_BASE_URL, useValue: BASE_URL },
-        { provide: CLOCK, useValue: () => NOW },
       ],
     });
     repository = TestBed.inject(UserHttpRepository);
@@ -64,25 +61,18 @@ describe('UserHttpRepository', () => {
     expect(page).toEqual({ items: [], totalCount: 0 });
   });
 
-  it('builds the summary from two list calls, since the server has no summary route', async () => {
+  it('reads the summary from the server summary route', async () => {
     const response = firstValueFrom(repository.getSummary());
-
-    const [newest, suspended] = http.match((candidate) => candidate.url === USERS_URL);
-    expect(newest.request.params.get('per_page')).toBe('100');
-    expect(newest.request.params.has('status')).toBe(false);
-    expect(suspended.request.params.get('status')).toBe('suspended');
-    newest.flush({
-      data: [{ ...LIVE_USER, created_at: '2026-10-10T10:00:00.000000Z' }, LIVE_USER],
-      meta: { totalCount: 12 },
-    });
-    suspended.flush({ data: [LIVE_USER], meta: { totalCount: 1 } });
-
-    expect(await response).toEqual({
-      totalUserCount: 12,
-      activeUserCount: 11,
+    const summary = {
+      totalUserCount: 13,
+      activeUserCount: 12,
       suspendedUserCount: 1,
-      newUserCount: 2,
-    });
+      newUserCount: 4,
+    };
+
+    http.expectOne(`${USERS_URL}/summary`).flush({ data: summary });
+
+    expect(await response).toEqual(summary);
   });
 
   it('reads one user in detail', async () => {

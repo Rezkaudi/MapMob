@@ -73,9 +73,12 @@ describe('CategoryHttpRepository', () => {
     expect(page.kindCounts).toEqual({ all: 2, main: 1, sub: 1 });
   });
 
-  it('offers only main categories as parents', async () => {
+  it('asks the server for the main categories with an empty parent id', async () => {
     const response = firstValueFrom(repository.getMainCategories());
-    answerAll();
+    const request = http.expectOne((call) => call.url === CATEGORIES_URL);
+    expect(request.request.params.get('parent_id')).toBe('');
+    expect(request.request.urlWithParams).toContain('parent_id=&');
+    request.flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 1 } });
 
     expect(await response).toEqual([{ id: '1', name: 'مطاعم' }]);
   });

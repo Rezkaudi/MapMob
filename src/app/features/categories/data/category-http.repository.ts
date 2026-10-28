@@ -17,6 +17,7 @@ import { toCategory, toLiveCategoryForm } from './live-category-mapping';
 
 // There are few categories, so one big page brings them all; the kind counts need them all.
 const ALL_CATEGORIES_PAGE_SIZE = 1000;
+const MAIN_CATEGORY_PARENT_ID = '';
 
 @Injectable()
 export class CategoryHttpRepository implements CategoryRepository {
@@ -28,12 +29,14 @@ export class CategoryHttpRepository implements CategoryRepository {
     return this.loadAll().pipe(map((categories) => queryCategories(categories, query)));
   }
 
+  // The server reads `parent_id=null` as the word "null"; an empty value means "no parent".
   getMainCategories(): Observable<readonly MainCategory[]> {
-    return this.loadAll().pipe(
+    return this.loadLive({ parent_id: MAIN_CATEGORY_PARENT_ID }).pipe(
       map((categories) =>
-        categories
-          .filter((category) => category.kind === 'main')
-          .map(({ id, name }) => ({ id, name })),
+        categories.map((category) => {
+          const { id, name } = toCategory(category, categories);
+          return { id, name };
+        }),
       ),
     );
   }
@@ -84,10 +87,10 @@ export class CategoryHttpRepository implements CategoryRepository {
     return this.loadLive().pipe(map((all) => all.map((category) => toCategory(category, all))));
   }
 
-  private loadLive(): Observable<readonly LiveCategory[]> {
+  private loadLive(filters: Record<string, string> = {}): Observable<readonly LiveCategory[]> {
     return this.httpClient
       .get<LiveEnvelope<readonly LiveCategory[]>>(this.categoriesUrl, {
-        params: { per_page: ALL_CATEGORIES_PAGE_SIZE },
+        params: { ...filters, per_page: ALL_CATEGORIES_PAGE_SIZE },
       })
       .pipe(map(({ data }) => data));
   }

@@ -1,5 +1,5 @@
 import { buildGame, buildWinner } from '../testing/game-fixture';
-import { matchGames, matchWinners } from './game-mock-query';
+import { matchGames, matchWinners } from './game-list-query';
 
 const OLDER = buildGame({
   id: 'old',

@@ -2,6 +2,7 @@ import { addCalendarDays } from '../../../shared/formatting/calendar-day';
 import { PackagePlan } from '../models/package-plan';
 import { Subscription } from '../models/subscription';
 import { SubscriptionSummary } from '../models/subscription-summary';
+import { LiveSubscriptionSummary } from './live-subscription-summary';
 
 const ENDING_SOON_DAY_COUNT = 7;
 
@@ -12,10 +13,11 @@ function findTopPlan(plans: readonly PackagePlan[]): PackagePlan | null {
   );
 }
 
-/** The server has no summary route, so the strip is counted from the plans and the rows. */
+/** The server counts the subscribers; the plan cards and "ending soon" come from the lists. */
 export function summarizeLiveSubscriptions(
   plans: readonly PackagePlan[],
   subscriptions: readonly Subscription[],
+  counts: LiveSubscriptionSummary,
   today: string,
 ): SubscriptionSummary {
   const topPlan = findTopPlan(plans);
@@ -27,7 +29,7 @@ export function summarizeLiveSubscriptions(
     availablePlanCount: plans.filter((plan) => plan.isActive).length,
     endingSoonCount: active.filter((entry) => entry.endsOn >= today && entry.endsOn <= lastSoonDay)
       .length,
-    activeSubscriberCount: active.length,
-    activeSubscriberShare: subscriptions.length === 0 ? 0 : active.length / subscriptions.length,
+    activeSubscriberCount: counts.active_count,
+    activeSubscriberShare: counts.total_count === 0 ? 0 : counts.active_count / counts.total_count,
   };
 }

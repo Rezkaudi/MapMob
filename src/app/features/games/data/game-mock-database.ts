@@ -11,7 +11,7 @@ import { PrizeDeliveryStatus } from '../models/prize-delivery-status';
 import { WinnerPage } from '../models/winner-page';
 import { WinnerQuery } from '../models/winner-query';
 import { canChangeGame } from '../state/game-status-pill';
-import { matchGames, matchWinners } from './game-mock-query';
+import { matchGames, matchWinners } from './game-list-query';
 import { toGameEntry, toGameRecord } from './game-mock-records';
 import { buildWinnersCsvFile } from './winners-csv';
 
