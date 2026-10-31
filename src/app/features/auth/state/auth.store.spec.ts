@@ -123,13 +123,15 @@ describe('AuthStore', () => {
     expect(store.isSignedIn()).toBe(false);
   });
 
-  it('revokeSession leaves the admin server alone for a merchant', () => {
+  it('revokeSession revokes a merchant token on the owner server, not the admin one', () => {
     const signOut = vi.fn(() => of(undefined));
-    const store = createStore({ signOut });
+    const signOutMerchant = vi.fn(() => of(undefined));
+    const store = createStore({ signOut, signOutMerchant });
     store.startSession(MERCHANT);
 
     store.revokeSession();
 
+    expect(signOutMerchant).toHaveBeenCalled();
     expect(signOut).not.toHaveBeenCalled();
     expect(store.isSignedIn()).toBe(false);
   });

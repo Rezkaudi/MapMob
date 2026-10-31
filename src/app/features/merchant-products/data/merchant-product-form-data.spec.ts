@@ -11,13 +11,13 @@ const DRAFT: ProductDraft = {
 };
 
 describe('toNewProductFormData', () => {
-  it('sends the fields as text, leaving out an empty order link and a missing picture', () => {
+  it('sends the fields as the server names them, leaving out an empty order link and a missing picture', () => {
     const data = toNewProductFormData(DRAFT);
 
-    expect(data.get('name')).toBe('سيروم');
+    expect(data.get('name[ar]')).toBe('سيروم');
     expect(data.get('price')).toBe('350');
-    expect(data.get('currency')).toBe('USD');
-    expect(data.get('isAvailable')).toBe('false');
+    expect(data.get('currencyCode')).toBe('USD');
+    expect(data.get('status')).toBe('inactive');
     expect(data.has('orderUrl')).toBe(false);
     expect(data.has('image')).toBe(false);
     expect(data.has('isImageRemoved')).toBe(false);
@@ -38,14 +38,17 @@ describe('toNewProductFormData', () => {
 });
 
 describe('toProductUpdateFormData', () => {
-  it('asks to delete the saved picture when the dialog cleared it', () => {
-    expect(toProductUpdateFormData(DRAFT).get('isImageRemoved')).toBe('true');
+  it('goes as a PUT through POST and asks to delete a picture the dialog cleared', () => {
+    const data = toProductUpdateFormData(DRAFT);
+
+    expect(data.get('_method')).toBe('PUT');
+    expect(data.get('isImageRemoved')).toBe('1');
   });
 
   it('keeps the saved picture when the dialog still shows it', () => {
     const data = toProductUpdateFormData({ ...DRAFT, imageUrl: 'https://cdn.example.com/1.png' });
 
-    expect(data.get('isImageRemoved')).toBe('false');
+    expect(data.get('isImageRemoved')).toBe('0');
     expect(data.has('image')).toBe(false);
   });
 });

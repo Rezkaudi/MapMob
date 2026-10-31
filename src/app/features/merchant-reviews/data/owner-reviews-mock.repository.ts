@@ -7,7 +7,7 @@ import { OwnerReview } from '../models/owner-review';
 import { OwnerReviewQuery } from '../models/owner-review-query';
 import { OwnerReviewSummary } from '../models/owner-review-summary';
 import { ReviewReport } from '../models/review-report';
-import { queryOwnerReviews, summarizeOwnerReviews } from './owner-review-mock-query';
+import { queryOwnerReviews, summarizeOwnerReviews } from './owner-review-list-query';
 import { OwnerReviewsRepository } from './owner-reviews.repository';
 
 const ALREADY_REPORTED_MESSAGE = 'تم الإبلاغ عن هذه المراجعة من قبل.';

@@ -58,7 +58,11 @@ describe('MerchantAuthMockRepository', () => {
     );
 
     await firstValueFrom(
-      repository.resetPassword({ resetToken: grant.resetToken, password: 'new-secret-1' }),
+      repository.resetPassword({
+        email: MERCHANT_EMAIL,
+        resetToken: grant.resetToken,
+        password: 'new-secret-1',
+      }),
     );
     const user = await firstValueFrom(
       repository.signIn({ email: MERCHANT_EMAIL, password: 'new-secret-1' }),

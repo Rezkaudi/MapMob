@@ -3,10 +3,18 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { buildOwnerReview, buildOwnerReviewSummary } from '../testing/owner-review-fixture';
 import { OwnerReviewsHttpRepository } from './owner-reviews-http.repository';
 
 const BASE_URL = 'https://api.test';
+const REVIEWS_URL = `${BASE_URL}/owner/reviews`;
+
+const LIVE_REVIEW = {
+  id: 9,
+  rating: 5,
+  comment: 'ممتاز',
+  user: { id: 3, name: 'سارة' },
+  createdAt: '2026-10-26T10:00:00Z',
+};
 
 describe('OwnerReviewsHttpRepository', () => {
   let repository: OwnerReviewsHttpRepository;
@@ -27,53 +35,93 @@ describe('OwnerReviewsHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for a page of reviews with only the filters that are set', async () => {
-    const page = { items: [buildOwnerReview()], totalCount: 1 };
+  it('reads every review and filters, sorts and pages them here', async () => {
     const response = firstValueFrom(
-      repository.getReviews({
-        pageIndex: 2,
-        pageSize: 4,
-        search: 'أحمد',
-        rating: 5,
-        reportStatus: 'pending',
-        submittedFrom: '2026-09-01',
-      }),
+      repository.getReviews({ pageIndex: 0, pageSize: 1, rating: 5 }),
     );
 
-    const request = http.expectOne((candidate) => candidate.url === `${BASE_URL}/owner/reviews`);
-    const params = request.request.params;
-    expect(params.get('pageIndex')).toBe('2');
-    expect(params.get('pageSize')).toBe('4');
-    expect(params.get('search')).toBe('أحمد');
-    expect(params.get('rating')).toBe('5');
-    expect(params.get('reportStatus')).toBe('pending');
-    expect(params.get('submittedFrom')).toBe('2026-09-01');
-    expect(params.has('submittedTo')).toBe(false);
-    expect(params.has('sort')).toBe(false);
-    request.flush(page);
-    expect(await response).toEqual(page);
+    http
+      .expectOne((one) => one.url === REVIEWS_URL)
+      .flush({
+        data: [
+          LIVE_REVIEW,
+          { ...LIVE_REVIEW, id: 10, rating: 3 },
+          { ...LIVE_REVIEW, id: 11, createdAt: '2026-10-20T10:00:00Z' },
+        ],
+        meta: { current_page: 1, last_page: 1 },
+      });
+
+    const page = await response;
+    expect(page.totalCount).toBe(2);
+    expect(page.items).toEqual([
+      {
+        id: '9',
+        author: { id: '3', name: 'سارة' },
+        rating: 5,
+        comment: 'ممتاز',
+        createdAt: '2026-10-26T10:00:00Z',
+        reportStatus: 'none',
+      },
+    ]);
   });
 
-  it('reads the rating summary', async () => {
-    const summary = buildOwnerReviewSummary();
+  it('reads the report state of a review the owner reported', async () => {
+    const response = firstValueFrom(repository.getReviews({ pageIndex: 0, pageSize: 4 }));
+
+    http
+      .expectOne((one) => one.url === REVIEWS_URL)
+      .flush({
+        data: [{ ...LIVE_REVIEW, reportStatus: 'pending' }],
+        meta: { current_page: 1, last_page: 1 },
+      });
+
+    expect((await response).items[0].reportStatus).toBe('pending');
+  });
+
+  it('reads the rating summary, five stars first', async () => {
     const response = firstValueFrom(repository.getSummary());
 
-    http.expectOne(`${BASE_URL}/owner/reviews/summary`).flush(summary);
+    http.expectOne(`${REVIEWS_URL}/summary`).flush({
+      status_code: 200,
+      data: {
+        trustedReviewCount: 6,
+        averageRating: 4.2,
+        starDistribution: [
+          { count: 3, percentage: 50 },
+          { count: 2, percentage: 33 },
+          { count: 1, percentage: 17 },
+          { count: 0, percentage: 0 },
+          { count: 0, percentage: 0 },
+        ],
+        monthly: { newReviews: 4, previousComparablePeriodReviews: 2 },
+      },
+    });
 
-    expect(await response).toEqual(summary);
+    expect(await response).toEqual({
+      averageRating: 4.2,
+      ratedCount: 6,
+      starCounts: [
+        { stars: 5, count: 3 },
+        { stars: 4, count: 2 },
+        { stars: 3, count: 1 },
+        { stars: 2, count: 0 },
+        { stars: 1, count: 0 },
+      ],
+      thisMonthCount: 4,
+      lastMonthCount: 2,
+    });
   });
 
   it('sends a report on one review', async () => {
-    const reported = buildOwnerReview({ reportStatus: 'pending' });
     const response = firstValueFrom(
-      repository.reportReview('review-1', { reason: 'fake', notes: 'لم يزر المتجر' }),
+      repository.reportReview('9', { reason: 'fake', notes: 'لم يزر المتجر' }),
     );
 
-    const request = http.expectOne(`${BASE_URL}/owner/reviews/review-1/report`);
+    const request = http.expectOne(`${REVIEWS_URL}/9/report`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual({ reason: 'fake', notes: 'لم يزر المتجر' });
-    request.flush(reported);
+    request.flush({ status_code: 201, data: { id: 4, reason: 'fake', status: 'pending' } });
 
-    expect(await response).toEqual(reported);
+    expect((await response).reportStatus).toBe('pending');
   });
 });

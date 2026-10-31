@@ -2561,176 +2561,209 @@
                   "formdata": [
                     {
                       "key": "user_id",
-                      "value": "8",
-                      "type": "text"
+                      "value": "",
+                      "type": "text",
+                      "id": 0,
+                      "disabled": true
                     },
                     {
                       "key": "name[ar]",
                       "value": "متجر طرطوس المركزي",
-                      "type": "text"
+                      "type": "text",
+                      "id": 1
                     },
                     {
                       "key": "name[en]",
                       "value": "tartus central store",
-                      "type": "text"
+                      "type": "text",
+                      "id": 2
                     },
                     {
                       "key": "description[ar]",
                       "value": "المتجر الرئيسي لجميع انواع المنتجات",
-                      "type": "text"
+                      "type": "text",
+                      "id": 3
                     },
                     {
                       "key": "description[en]",
                       "value": "all product type",
-                      "type": "text"
+                      "type": "text",
+                      "id": 4
                     },
                     {
                       "key": "address[ar]",
                       "value": "طرطوس مقابل الكراج",
-                      "type": "text"
+                      "type": "text",
+                      "id": 5
                     },
                     {
                       "key": "address[en]",
                       "value": "tartus center city",
-                      "type": "text"
+                      "type": "text",
+                      "id": 6
                     },
                     {
                       "key": "mainCategoryId",
-                      "value": "9",
-                      "type": "text"
+                      "value": "1",
+                      "type": "text",
+                      "id": 7
                     },
                     {
                       "key": "subCategoryId",
                       "value": "7",
                       "type": "text",
+                      "id": 8,
                       "disabled": true
                     },
                     {
                       "key": "governorateId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 9
                     },
                     {
                       "key": "areaId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 10
                     },
                     {
                       "key": "latitude",
                       "value": "34.5138",
-                      "type": "text"
+                      "type": "text",
+                      "id": 11
                     },
                     {
                       "key": "longitude",
                       "value": "35.2766",
-                      "type": "text"
+                      "type": "text",
+                      "id": 12
                     },
                     {
                       "key": "phone",
                       "value": "0931212356",
-                      "type": "text"
+                      "type": "text",
+                      "id": 13
                     },
                     {
                       "key": "website",
                       "value": "https://store.com",
-                      "type": "text"
+                      "type": "text",
+                      "id": 14
                     },
                     {
                       "key": "whatsapp",
                       "value": "0931238888",
-                      "type": "text"
+                      "type": "text",
+                      "id": 15
                     },
                     {
                       "key": "status",
                       "value": "active",
-                      "type": "text"
+                      "type": "text",
+                      "id": 16
                     },
                     {
                       "key": "workingHours[0][day]",
                       "value": "saturday",
                       "type": "text",
+                      "id": 17,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[0][isOpen]",
                       "value": "false",
                       "type": "text",
+                      "id": 18,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[1][day]",
                       "value": "sunday",
                       "type": "text",
+                      "id": 19,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[1][isOpen]",
                       "value": "true",
                       "type": "text",
+                      "id": 20,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[1][openTime]",
                       "value": "09:00",
                       "type": "text",
+                      "id": 21,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[1][closeTime]",
                       "value": "18:00",
                       "type": "text",
+                      "id": 22,
                       "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][platformId]",
                       "value": "1",
                       "type": "text",
+                      "id": 23,
                       "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][isEnabled]",
                       "value": "true",
                       "type": "text",
+                      "id": 24,
                       "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][storeUrl]",
                       "value": "https://beeorder.sy/store/damascus-central",
                       "type": "text",
+                      "id": 25,
                       "disabled": true
                     },
                     {
                       "key": "products[0][name]",
                       "value": "مرتديلا",
                       "type": "text",
+                      "id": 26,
                       "disabled": true
                     },
                     {
                       "key": "products[0][price]",
                       "value": "12000",
                       "type": "text",
+                      "id": 27,
                       "disabled": true
                     },
                     {
                       "key": "products[0][currency]",
                       "value": "SYP",
                       "type": "text",
+                      "id": 28,
                       "disabled": true
                     },
                     {
                       "key": "products[0][isAvailable]",
                       "value": "true",
                       "type": "text",
+                      "id": 29,
                       "disabled": true
                     },
                     {
                       "key": "logo",
                       "type": "file",
+                      "id": 30,
                       "src": "/C:/Users/obedah/Downloads/صورة متجر 1.jpg"
                     },
                     {
                       "key": "cover_image",
                       "type": "file",
+                      "id": 31,
                       "src": "/C:/Users/obedah/Downloads/متجر3.jpg"
                     },
                     {
@@ -2738,6 +2771,7 @@
                       "value": "",
                       "type": "text",
                       "uuid": "cad71fb5-42ae-406a-95bf-a306fda4d8c3",
+                      "id": 32,
                       "disabled": true
                     },
                     {
@@ -2745,7 +2779,32 @@
                       "value": "",
                       "type": "text",
                       "uuid": "4f638c30-0143-4a25-bf80-5b0b00f79ad5",
+                      "id": 33,
                       "disabled": true
+                    },
+                    {
+                      "key": "ownerName",
+                      "value": "sara",
+                      "type": "text",
+                      "id": 34
+                    },
+                    {
+                      "key": "ownerEmail",
+                      "value": "sara@gmail.com",
+                      "type": "text",
+                      "id": 35
+                    },
+                    {
+                      "key": "ownerPhone",
+                      "value": "0987456321",
+                      "type": "text",
+                      "id": 36
+                    },
+                    {
+                      "key": "ownerPassword",
+                      "value": "password",
+                      "type": "text",
+                      "id": 37
                     }
                   ]
                 },
@@ -11201,8 +11260,7 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
+                    "value": "application/json"
                   }
                 ],
                 "body": {
@@ -11210,10 +11268,11 @@
                   "formdata": [
                     {
                       "key": "email",
-                      "value": "owner@gmail.com",
+                      "value": "sara@gmail.com",
                       "type": "text",
                       "uuid": "5fb9f02c-1efd-40ac-a4b4-5c5596cb4697",
-                      "id": 0
+                      "id": 0,
+                      "disabled": true
                     },
                     {
                       "key": "password",
@@ -11221,6 +11280,12 @@
                       "type": "text",
                       "uuid": "c172d55c-9500-4f3d-a5a5-9122d0a47995",
                       "id": 1
+                    },
+                    {
+                      "key": "phone",
+                      "value": "0987456321",
+                      "type": "text",
+                      "id": 2
                     }
                   ]
                 },
@@ -11309,7 +11374,7 @@
                   "formdata": [
                     {
                       "key": "email",
-                      "value": "owner@gmail.com",
+                      "value": "sara@gmail.com",
                       "type": "text",
                       "id": 0
                     }
@@ -11349,7 +11414,7 @@
                   "formdata": [
                     {
                       "key": "email",
-                      "value": "owner@gmail.com",
+                      "value": "sara@gmail.com",
                       "type": "text",
                       "id": 0
                     },
@@ -11395,7 +11460,7 @@
                   "formdata": [
                     {
                       "key": "email",
-                      "value": "owner@gmail.com",
+                      "value": "sara@gmail.com",
                       "type": "text",
                       "id": 0
                     },

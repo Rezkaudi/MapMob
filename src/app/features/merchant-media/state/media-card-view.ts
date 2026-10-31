@@ -17,9 +17,15 @@ export function toMediaCard(item: MerchantMediaItem): MediaCardView {
     item,
     kindLabel: copy.label,
     isVideo: item.kind === 'video',
-    fileText: `${mediaFormatLabel(item.mimeType)} · ${formatLatinFileSize(item.sizeBytes)}`,
+    fileText: describeFile(item),
     addedText: `أضيف في ${formatLatinDigitDate(item.createdAt)}`,
     replaceLabel: copy.replaceLabel,
     accept: acceptedTypesOf(item.kind),
   };
+}
+
+// The live server sends no file size, so the card shows only the format then.
+function describeFile(item: MerchantMediaItem): string {
+  const format = mediaFormatLabel(item.mimeType);
+  return item.sizeBytes > 0 ? `${format} · ${formatLatinFileSize(item.sizeBytes)}` : format;
 }

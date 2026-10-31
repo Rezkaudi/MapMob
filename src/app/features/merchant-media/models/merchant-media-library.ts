@@ -7,5 +7,7 @@ export interface MerchantMediaLibrary {
   readonly imageLimit: number | null;
   /** null = no cap. */
   readonly videoLimit: number | null;
+  /** One cap on pictures and videos together; null when only the two caps above apply. */
+  readonly totalLimit: number | null;
   readonly items: readonly MerchantMediaItem[];
 }

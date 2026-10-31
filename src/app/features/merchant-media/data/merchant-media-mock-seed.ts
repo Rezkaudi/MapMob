@@ -45,6 +45,7 @@ export function buildMerchantMediaSeed(): MerchantMediaLibrary {
     plan: { id: 'plan-free', name: 'الباقة المجانية' },
     imageLimit: 4,
     videoLimit: 1,
+    totalLimit: null,
     items: SEED_ITEMS,
   };
 }

@@ -1,12 +1,16 @@
+import { liveOwnerStatusOf } from '../../../shared/data/live-owner-status';
 import { ProductDraft } from '../../../shared/models/product-draft';
+
+const YES = '1';
+const NO = '0';
 
 /** Multipart, so a picked picture travels with the fields. */
 export function toNewProductFormData(draft: ProductDraft): FormData {
   const data = new FormData();
-  data.set('name', draft.name);
+  data.set('name[ar]', draft.name);
   data.set('price', String(draft.price));
-  data.set('currency', draft.currency);
-  data.set('isAvailable', String(draft.isAvailable));
+  data.set('currencyCode', draft.currency);
+  data.set('status', liveOwnerStatusOf(draft.isAvailable));
   if (draft.orderUrl) {
     data.set('orderUrl', draft.orderUrl);
   }
@@ -16,9 +20,10 @@ export function toNewProductFormData(draft: ProductDraft): FormData {
   return data;
 }
 
-/** An update also says whether the saved picture was cleared in the dialog. */
+/** POST with `_method=PUT`, as PHP reads no multipart body on a real PUT. */
 export function toProductUpdateFormData(draft: ProductDraft): FormData {
   const data = toNewProductFormData(draft);
-  data.set('isImageRemoved', String(draft.imageUrl === ''));
+  data.set('_method', 'PUT');
+  data.set('isImageRemoved', draft.imageUrl === '' ? YES : NO);
   return data;
 }

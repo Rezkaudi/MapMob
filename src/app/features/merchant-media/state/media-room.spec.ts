@@ -22,6 +22,29 @@ describe('describeMediaRoom', () => {
     });
   });
 
+  it('lets one shared cap hold both kinds, as the live plans count them together', () => {
+    const library = buildMediaLibrary({
+      imageLimit: null,
+      videoLimit: null,
+      totalLimit: 3,
+      items: [buildMediaItem({ id: '1' }), buildMediaVideo()],
+    });
+
+    expect(describeMediaRoom(library)).toEqual({
+      remainingImages: 1,
+      remainingVideos: 1,
+      canAddImage: true,
+      canAddVideo: true,
+      isFull: false,
+    });
+  });
+
+  it('is full once the shared cap is used up', () => {
+    const library = buildMediaLibrary({ imageLimit: null, videoLimit: null, totalLimit: 1 });
+
+    expect(describeMediaRoom(library).isFull).toBe(true);
+  });
+
   it('is full once neither kind has room', () => {
     const library = buildMediaLibrary({ imageLimit: 1, videoLimit: 0, items: [buildMediaItem()] });
 

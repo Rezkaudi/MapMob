@@ -30,17 +30,22 @@ describe('OwnerAccountHttpRepository', () => {
   it('reads the owner account, which carries no role badge', async () => {
     const profile = firstValueFrom(repository.getProfile());
 
-    http.expectOne({ method: 'GET', url: `${BASE_URL}/owner/account` }).flush(OWNER_ACCOUNT);
+    http
+      .expectOne({ method: 'GET', url: `${BASE_URL}/owner/account` })
+      .flush({ data: { id: '35', name: 'محمد احمد', email: 'mmmm.mo@mapmob.com', phone: '0999' } });
 
     expect(await profile).toEqual({ ...OWNER_ACCOUNT, roleName: null });
   });
 
-  it('saves the name and email', async () => {
+  it('saves the name; the server keeps the email as it is', async () => {
     const profile = firstValueFrom(repository.updateProfile(OWNER_ACCOUNT));
 
     const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/owner/account` });
-    expect(request.request.body).toEqual(OWNER_ACCOUNT);
-    request.flush(OWNER_ACCOUNT);
+    expect(request.request.body).toEqual({ name: 'محمد احمد', email: 'mmmm.mo@mapmob.com' });
+    request.flush({
+      status_code: 200,
+      data: { id: '35', name: 'محمد احمد', email: 'mmmm.mo@mapmob.com' },
+    });
 
     expect(await profile).toEqual({ ...OWNER_ACCOUNT, roleName: null });
   });
@@ -50,7 +55,11 @@ describe('OwnerAccountHttpRepository', () => {
     repository.changePassword(change).subscribe();
 
     const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/owner/account/password` });
-    expect(request.request.body).toEqual(change);
+    expect(request.request.body).toEqual({
+      currentPassword: 'old-pass-1',
+      newPassword: 'new-pass-1',
+      newPassword_confirmation: 'new-pass-1',
+    });
     request.flush(null);
   });
 });

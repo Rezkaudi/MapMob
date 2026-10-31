@@ -75,7 +75,11 @@ export const MerchantAuthStore = signalStore(
         pipe(
           switchMap((password) =>
             store.runRequest(
-              repository.resetPassword({ resetToken: store.resetToken() ?? '', password }),
+              repository.resetPassword({
+                email: store.resetEmail() ?? '',
+                resetToken: store.resetToken() ?? '',
+                password,
+              }),
               () => patchState(store, { resetStep: 'done', resetToken: null }),
             ),
           ),

@@ -65,4 +65,10 @@ describe('AuthHttpRepository', () => {
 
     http.expectOne({ method: 'POST', url: `${BASE_URL}/admin/logout` }).flush({});
   });
+
+  it('revokes a merchant token on the owner logout route', () => {
+    repository.signOutMerchant().subscribe();
+
+    http.expectOne({ method: 'POST', url: `${BASE_URL}/owner/auth/logout` }).flush({});
+  });
 });

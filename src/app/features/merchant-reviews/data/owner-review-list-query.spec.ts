@@ -1,5 +1,5 @@
 import { buildOwnerReview } from '../testing/owner-review-fixture';
-import { queryOwnerReviews, summarizeOwnerReviews } from './owner-review-mock-query';
+import { queryOwnerReviews, summarizeOwnerReviews } from './owner-review-list-query';
 
 const NOW = new Date('2026-09-20T12:00:00.000Z');
 

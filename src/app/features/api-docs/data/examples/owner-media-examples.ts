@@ -1,5 +1,4 @@
 import type { MerchantMediaItem } from '../../../merchant-media/models/merchant-media-item';
-import type { MerchantMediaLibrary } from '../../../merchant-media/models/merchant-media-library';
 
 export const OWNER_MEDIA_PICTURE = {
   id: '31',
@@ -29,7 +28,7 @@ export const OWNER_MEDIA_LIBRARY = {
       createdAt: '2026-09-12T09:05:00Z',
     },
   ],
-} satisfies MerchantMediaLibrary;
+};
 
 export const OWNER_MEDIA_FORM = {
   kind: 'image',

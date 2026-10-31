@@ -111,6 +111,25 @@ describe('MerchantAuthStore', () => {
     expect(store.resetToken()).toBeNull();
   });
 
+  it('sends the email with the new password, as the server needs it', () => {
+    const resetPassword = vi.fn(() => of(undefined));
+    const store = createStore({
+      sendResetCode: () => of(undefined),
+      verifyResetCode: () => of({ resetToken: 'reset-1' }),
+      resetPassword,
+    });
+    store.sendResetCode(EMAIL);
+    store.verifyResetCode('123456');
+
+    store.resetPassword('new-secret-1');
+
+    expect(resetPassword).toHaveBeenCalledWith({
+      email: EMAIL,
+      resetToken: 'reset-1',
+      password: 'new-secret-1',
+    });
+  });
+
   it('starts a fresh reset from the email step', () => {
     const store = createStore({ sendResetCode: () => of(undefined) });
     store.sendResetCode(EMAIL);

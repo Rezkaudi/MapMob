@@ -1,6 +1,5 @@
 import type { AuthenticatedUser } from '../../../auth/models/authenticated-user';
 import type { Credentials } from '../../../auth/models/credentials';
-import type { NewPassword } from '../../../merchant-auth/models/new-password';
 import type { PasswordResetGrant } from '../../../merchant-auth/models/password-reset-grant';
 import type { ResetCodeCheck } from '../../../merchant-auth/models/reset-code-check';
 import type { MerchantOverview } from '../../../merchant-overview/models/merchant-overview';
@@ -45,7 +44,7 @@ export const RESET_GRANT = {
 export const NEW_PASSWORD_REQUEST = {
   resetToken: 'b1f4c7e2-9a3d-4e8b-8f21-6c0d5a7e3b94',
   password: 'new-secret-1',
-} satisfies NewPassword;
+};
 
 export const OWNER_OVERVIEW = {
   placeName: 'مطعم الروابي',

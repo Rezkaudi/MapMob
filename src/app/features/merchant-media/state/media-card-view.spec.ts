@@ -25,4 +25,8 @@ describe('toMediaCard', () => {
     expect(card.replaceLabel).toBe('استبدال الفيديو');
     expect(card.accept).toBe('video/*');
   });
+
+  it('shows only the format when the size is not known', () => {
+    expect(toMediaCard(buildMediaItem({ sizeBytes: 0 })).fileText).toBe('JPG');
+  });
 });

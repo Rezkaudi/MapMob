@@ -15,14 +15,28 @@ function remainingOf(
   return Math.max(0, limit - used);
 }
 
+function withinTotal(remaining: number | null, library: MerchantMediaLibrary): number | null {
+  if (library.totalLimit === null) {
+    return remaining;
+  }
+  const totalLeft = Math.max(0, library.totalLimit - library.items.length);
+  return remaining === null ? totalLeft : Math.min(remaining, totalLeft);
+}
+
 function hasRoom(remaining: number | null): boolean {
   return remaining === null || remaining > 0;
 }
 
 /** The plan caps pictures and videos apart (plans.limit_gallery_images, plans.limit_videos). */
 export function describeMediaRoom(library: MerchantMediaLibrary): MediaRoom {
-  const remainingImages = remainingOf(library.items, 'image', library.imageLimit);
-  const remainingVideos = remainingOf(library.items, 'video', library.videoLimit);
+  const remainingImages = withinTotal(
+    remainingOf(library.items, 'image', library.imageLimit),
+    library,
+  );
+  const remainingVideos = withinTotal(
+    remainingOf(library.items, 'video', library.videoLimit),
+    library,
+  );
   const canAddImage = hasRoom(remainingImages);
   const canAddVideo = hasRoom(remainingVideos);
   return {

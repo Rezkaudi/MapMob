@@ -65,12 +65,8 @@ export const AuthStore = signalStore(
     ),
     revokeSession(): void {
       // The request reads the token on subscribe, so signing out right after is safe.
-      if (!store.isMerchant()) {
-        repository
-          .signOut()
-          .pipe(catchError(() => of(null)))
-          .subscribe();
-      }
+      const revoke = store.isMerchant() ? repository.signOutMerchant() : repository.signOut();
+      revoke.pipe(catchError(() => of(null))).subscribe();
       store.signOut();
     },
   })),

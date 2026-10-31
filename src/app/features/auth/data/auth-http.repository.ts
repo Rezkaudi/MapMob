@@ -13,7 +13,8 @@ import { LiveLoginResponse } from './live-login-response';
 @Injectable()
 export class AuthHttpRepository implements AuthRepository {
   private readonly httpClient = inject(HttpClient);
-  private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
+  private readonly apiBaseUrl = inject(API_BASE_URL);
+  private readonly adminUrl = `${this.apiBaseUrl}/admin`;
 
   signIn(credentials: Credentials): Observable<AuthenticatedUser> {
     return this.httpClient
@@ -32,6 +33,10 @@ export class AuthHttpRepository implements AuthRepository {
 
   signOut(): Observable<void> {
     return this.httpClient.post<void>(`${this.adminUrl}/logout`, {});
+  }
+
+  signOutMerchant(): Observable<void> {
+    return this.httpClient.post<void>(`${this.apiBaseUrl}/owner/auth/logout`, {});
   }
 }
 

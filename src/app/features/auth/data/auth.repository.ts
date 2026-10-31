@@ -5,4 +5,6 @@ import { Credentials } from '../models/credentials';
 export abstract class AuthRepository {
   abstract signIn(credentials: Credentials): Observable<AuthenticatedUser>;
   abstract signOut(): Observable<void>;
+  /** Revokes a place owner's token, which the admin logout route refuses. */
+  abstract signOutMerchant(): Observable<void>;
 }

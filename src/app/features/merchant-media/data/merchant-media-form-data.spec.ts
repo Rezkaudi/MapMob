@@ -3,20 +3,20 @@ import { toMediaReplaceFormData, toNewMediaFormData } from './merchant-media-for
 const PICTURE = new File(['x'], 'front.jpg', { type: 'image/jpeg' });
 
 describe('toNewMediaFormData', () => {
-  it('sends the kind, the file and the main flag', () => {
+  it('sends the kind as type, and the file', () => {
     const data = toNewMediaFormData({ kind: 'image', file: PICTURE, isMain: true });
 
-    expect(data.get('kind')).toBe('image');
+    expect(data.get('type')).toBe('image');
     expect(data.get('file')).toBe(PICTURE);
-    expect(data.get('isMain')).toBe('true');
   });
 });
 
 describe('toMediaReplaceFormData', () => {
-  it('sends only the new file', () => {
+  it('goes as a PUT through POST with the new file and its kind', () => {
     const data = toMediaReplaceFormData(PICTURE);
 
+    expect(data.get('_method')).toBe('PUT');
+    expect(data.get('type')).toBe('image');
     expect(data.get('file')).toBe(PICTURE);
-    expect([...data.keys()]).toEqual(['file']);
   });
 });

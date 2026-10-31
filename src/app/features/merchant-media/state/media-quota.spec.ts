@@ -21,6 +21,12 @@ describe('totalMediaLimit', () => {
     expect(totalMediaLimit(LIBRARY)).toBe(5);
   });
 
+  it('uses the shared cap when the plan has one', () => {
+    expect(
+      totalMediaLimit({ ...LIBRARY, imageLimit: null, videoLimit: null, totalLimit: 20 }),
+    ).toBe(20);
+  });
+
   it('is null when either kind has no cap', () => {
     expect(totalMediaLimit({ ...LIBRARY, videoLimit: null })).toBeNull();
   });

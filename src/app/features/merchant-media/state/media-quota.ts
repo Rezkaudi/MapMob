@@ -20,8 +20,11 @@ const MEDIA_QUOTA_NOUNS: QuotaNouns = {
   uncappedNotice: UNCAPPED_NOTICE,
 };
 
-/** The page shows one limit: pictures and videos added up. null when either has no cap. */
+/** The page shows one limit: the shared cap, else pictures and videos added up. null = no cap. */
 export function totalMediaLimit(library: MerchantMediaLibrary): number | null {
+  if (library.totalLimit !== null) {
+    return library.totalLimit;
+  }
   if (library.imageLimit === null || library.videoLimit === null) {
     return null;
   }

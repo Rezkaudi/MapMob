@@ -35,4 +35,7 @@ export class AuthMockRepository implements AuthRepository {
   signOut(): Observable<void> {
     return mockResponse(undefined);
   }
+  signOutMerchant(): Observable<void> {
+    return mockResponse(undefined);
+  }
 }
