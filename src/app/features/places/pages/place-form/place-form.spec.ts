@@ -624,12 +624,26 @@ describe('PlaceForm', () => {
     expect(addPassword.getAttribute('placeholder')).toBeNull();
   });
 
-  it('lets the admin change the merchant email and phone on the edit page', () => {
+  it('lets the admin change the merchant phone and password on the edit page', () => {
     const element: HTMLElement = render('place-1').nativeElement;
 
-    for (const id of ['owner-email', 'owner-phone', 'owner-password']) {
+    for (const id of ['owner-phone', 'owner-password']) {
       expect((element.querySelector('#' + id) as HTMLInputElement).disabled, id).toBe(false);
     }
+  });
+
+  it('locks the merchant email on the edit page', () => {
+    const fixture = render('place-1');
+    const email: HTMLInputElement = fixture.nativeElement.querySelector('#owner-email');
+
+    expect(email.disabled).toBe(true);
+    expect(fixture.componentInstance['form'].controls.ownerEmail.disabled).toBe(true);
+  });
+
+  it('keeps the merchant email open when adding a place', () => {
+    const email: HTMLInputElement = render().nativeElement.querySelector('#owner-email');
+
+    expect(email.disabled).toBe(false);
   });
 
   it('sends the saved owner with an edit, so only a changed login goes to the server', async () => {

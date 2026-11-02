@@ -196,7 +196,7 @@ export const PLACES_FEATURE: ApiFeature = {
       },
       notes: [
         'PHP does not read multipart bodies on PUT. Parse the body yourself (for example in a middleware).',
-        'A new ownerEmail, ownerPhone or ownerPassword updates the place owner sign-in in place_owner_accounts at once. 422 when the email belongs to another account.',
+        'A new ownerPhone or ownerPassword updates the place owner sign-in in place_owner_accounts at once. ownerEmail is set when the place is added and never changes: ignore it on update.',
       ],
     },
     {

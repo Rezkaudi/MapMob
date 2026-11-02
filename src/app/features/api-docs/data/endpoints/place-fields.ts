@@ -134,7 +134,10 @@ export const PLACE_WRITE_FIELDS = [
 ];
 
 /** An update may leave the password out to keep the saved one. */
-export const PLACE_UPDATE_FIELDS = PLACE_WRITE_FIELDS.map((one) =>
+/** The owner email is the sign-in, set once on create, so an update has no ownerEmail. */
+export const PLACE_UPDATE_FIELDS = PLACE_WRITE_FIELDS.filter(
+  (one) => one.name !== 'ownerEmail',
+).map((one) =>
   one.name === 'ownerPassword'
     ? optionalField('ownerPassword', 'string', 'Min 8. Leave it out to keep the saved password.')
     : one,

@@ -170,15 +170,15 @@ describe('PlaceWriter', () => {
   describe('when the merchant login changes on an edit', () => {
     const savedOwner = { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' };
     const request = buildPlaceSaveRequest({
-      value: { ...buildPlaceSaveRequest().value, ownerEmail: 'new@example.com', ownerPassword: '' },
+      value: { ...buildPlaceSaveRequest().value, ownerPhone: '0939999999', ownerPassword: '' },
       previousOwner: savedOwner,
     });
 
-    it('sends the new email with the store', async () => {
+    it('sends the new phone with the store', async () => {
       const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
       const store = http.expectOne({ method: 'POST', url: STORE_URL });
 
-      expect((store.request.body as FormData).get('ownerEmail')).toBe('new@example.com');
+      expect((store.request.body as FormData).get('ownerPhone')).toBe('0939999999');
       store.flush({}, { status: 500, statusText: 'Server Error' });
       await expect(saved).rejects.toThrow(OWNER_LOGIN_NOT_SAVED_MESSAGE);
     });
@@ -188,7 +188,7 @@ describe('PlaceWriter', () => {
       expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('أعد');
     });
 
-    it('keeps the server words when it rejects the values themselves, such as a used email', async () => {
+    it('keeps the server words when it rejects the values themselves, such as a used phone', async () => {
       const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
       http
         .expectOne({ method: 'POST', url: STORE_URL })

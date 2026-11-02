@@ -168,11 +168,15 @@ export const PLACE_WRITE_FORM = {
   'products[0][image]': '@product.png',
 };
 
-const { ownerPassword: _keptPassword, ...PLACE_FORM_WITHOUT_PASSWORD } = PLACE_WRITE_FORM;
+const {
+  ownerPassword: _keptPassword,
+  ownerEmail: _fixedEmail,
+  ...PLACE_FORM_WITHOUT_LOGIN
+} = PLACE_WRITE_FORM;
 
-/** No ownerPassword: the update keeps the saved one. */
+/** No ownerPassword: the update keeps the saved one. No ownerEmail: it never changes. */
 export const PLACE_UPDATE_FORM = {
-  ...PLACE_FORM_WITHOUT_PASSWORD,
+  ...PLACE_FORM_WITHOUT_LOGIN,
   'keptImageIds[]': ['31'],
   'keptVideoIds[]': [],
   'products[0][id]': '5',

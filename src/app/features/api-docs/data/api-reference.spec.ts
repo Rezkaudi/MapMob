@@ -89,7 +89,7 @@ describe('the API reference data', () => {
     expect(joinCalls?.[0].response.example).toHaveProperty('registrationFormUrl');
   });
 
-  it('makes the merchant sign-in with the place: email and password, the password kept on update when left out', () => {
+  it('makes the merchant sign-in with the place: email and password, the email fixed and the password kept on update', () => {
     const create = endpoints.find((endpoint) => endpoint.id === 'places-create');
     const update = endpoints.find((endpoint) => endpoint.id === 'places-update');
     const createField = (name: string) => create?.body?.fields.find((one) => one.name === name);
@@ -97,13 +97,14 @@ describe('the API reference data', () => {
 
     expect(createField('ownerEmail')?.isRequired).toBe(true);
     expect(createField('ownerPassword')?.isRequired).toBe(true);
-    expect(updateField('ownerEmail')?.isRequired).toBe(true);
+    expect(updateField('ownerEmail')).toBeUndefined();
     expect(updateField('ownerPassword')?.isRequired).toBe(false);
     expect(createField('ownerExtraPhone')).toBeUndefined();
     expect(create?.body?.example).toMatchObject({ ownerEmail: expect.any(String) });
     expect(update?.body?.example).not.toHaveProperty('ownerPassword');
+    expect(update?.body?.example).not.toHaveProperty('ownerEmail');
     expect(create?.response.example).toMatchObject({ owner: { email: expect.any(String) } });
-    expect(update?.notes?.join(' ')).toContain('ownerEmail, ownerPhone or ownerPassword');
+    expect(update?.notes?.join(' ')).toContain('ownerEmail is set when the place is added and never changes');
   });
 
   it('keeps the merchant sign-in in place_owner_accounts, not a second owner phone on the place', () => {

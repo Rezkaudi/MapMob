@@ -39,7 +39,7 @@ describe('toLiveStoreForm', () => {
     expect(form.has('ownerPassword')).toBe(false);
   });
 
-  it('sends the merchant email and phone on an update only when they changed', () => {
+  it('sends the merchant phone on an update only when it changed, and never the email', () => {
     const value = {
       ...buildPlaceSaveRequest().value,
       ownerEmail: 'new@example.com',
@@ -49,7 +49,7 @@ describe('toLiveStoreForm', () => {
 
     const form = toLiveStoreForm(value, IDS, 'update', SAVED_OWNER);
 
-    expect(form.get('ownerEmail')).toBe('new@example.com');
+    expect(form.has('ownerEmail')).toBe(false);
     expect(form.get('ownerPhone')).toBe('0939999999');
     expect(form.has('ownerPassword')).toBe(false);
     expect(form.has('ownerName')).toBe(false);
