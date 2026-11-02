@@ -333,7 +333,7 @@ export class PlaceForm {
 
   private fillFrom(place: PlaceDetail): void {
     fillPlaceForm(this.form, place);
-    this.week.set(toWorkingWeek(place.workingHours));
+    this.week.set(toWorkingWeek(place.workingHours, place.hasSavedHours));
     this.images.set(toSavedMediaFiles(place.images));
     this.videos.set(toSavedVideoFiles(place.videos));
     this.products.set(place.products.map((product) => ({ ...product, imageFile: null })));

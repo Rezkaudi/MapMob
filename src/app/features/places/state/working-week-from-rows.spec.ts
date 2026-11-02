@@ -3,17 +3,24 @@ import { toWorkingWeek } from './working-week-from-rows';
 
 describe('toWorkingWeek', () => {
   it('keeps the week in the order the editor draws it', () => {
-    expect(toWorkingWeek([]).map((day) => day.day)).toEqual([...WEEK_DAYS]);
+    expect(toWorkingWeek([], false).map((day) => day.day)).toEqual([...WEEK_DAYS]);
   });
 
   it('falls back to the default week when the place has no saved hours', () => {
-    expect(toWorkingWeek([])).toEqual(createDefaultWeek());
+    expect(toWorkingWeek([], false)).toEqual(createDefaultWeek());
+  });
+
+  it('closes every day when the saved week has no open day', () => {
+    const week = toWorkingWeek([], true);
+
+    expect(week.map((day) => day.isOpen)).toEqual(WEEK_DAYS.map(() => false));
+    expect(week.map((day) => day.opensAt)).toEqual(createDefaultWeek().map((day) => day.opensAt));
   });
 
   it('spreads a day range over every day it covers', () => {
     const week = toWorkingWeek([
       { days: 'الأحد - الخميس', hours: '09:00 AM - 11:00 PM', isToday: false },
-    ]);
+    ], true);
 
     const sunday = week.find((day) => day.day === 'الأحد');
     const thursday = week.find((day) => day.day === 'الخميس');
@@ -24,7 +31,7 @@ describe('toWorkingWeek', () => {
   it('closes a day no row mentions', () => {
     const week = toWorkingWeek([
       { days: 'الأحد - الخميس', hours: '09:00 AM - 11:00 PM', isToday: false },
-    ]);
+    ], true);
 
     expect(week.find((day) => day.day === 'الجمعة')?.isOpen).toBe(false);
   });
@@ -32,7 +39,7 @@ describe('toWorkingWeek', () => {
   it('reads a single day written with the "today" note', () => {
     const week = toWorkingWeek([
       { days: 'السبت (اليوم)', hours: '10:00 AM - 10:00 PM', isToday: true },
-    ]);
+    ], true);
 
     expect(week.find((day) => day.day === 'السبت')).toEqual({
       day: 'السبت',
@@ -43,7 +50,7 @@ describe('toWorkingWeek', () => {
   });
 
   it('reads hours already written on the 24 hour clock', () => {
-    const week = toWorkingWeek([{ days: 'الجمعة', hours: '16:00 - 23:59', isToday: false }]);
+    const week = toWorkingWeek([{ days: 'الجمعة', hours: '16:00 - 23:59', isToday: false }], true);
 
     expect(week.find((day) => day.day === 'الجمعة')).toEqual({
       day: 'الجمعة',
@@ -54,7 +61,7 @@ describe('toWorkingWeek', () => {
   });
 
   it('keeps a day marked "مغلق" closed', () => {
-    const week = toWorkingWeek([{ days: 'الجمعة', hours: 'مغلق', isToday: false }]);
+    const week = toWorkingWeek([{ days: 'الجمعة', hours: 'مغلق', isToday: false }], true);
 
     expect(week.find((day) => day.day === 'الجمعة')?.isOpen).toBe(false);
   });
@@ -62,14 +69,14 @@ describe('toWorkingWeek', () => {
   it('wraps a range that runs past the end of the week', () => {
     const week = toWorkingWeek([
       { days: 'الخميس - السبت', hours: '08:00 AM - 02:00 PM', isToday: false },
-    ]);
+    ], true);
 
     const open = week.filter((day) => day.isOpen).map((day) => day.day);
     expect(open).toEqual(['السبت', 'الخميس', 'الجمعة']);
   });
 
   it('reads midnight and noon on the 12 hour clock', () => {
-    const week = toWorkingWeek([{ days: 'السبت', hours: '12:00 AM - 12:00 PM', isToday: false }]);
+    const week = toWorkingWeek([{ days: 'السبت', hours: '12:00 AM - 12:00 PM', isToday: false }], true);
 
     expect(week[0].opensAt).toBe('00:00');
     expect(week[0].closesAt).toBe('12:00');

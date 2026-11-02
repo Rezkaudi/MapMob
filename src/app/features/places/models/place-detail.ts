@@ -26,7 +26,10 @@ export interface PlaceDetail {
   readonly activity: PlaceActivity;
   readonly contact: PlaceContact;
   readonly location: PlaceLocation;
+  /** Only the open days. */
   readonly workingHours: readonly WorkingHoursRow[];
+  /** The server holds a week for this place, even if every day in it is closed. */
+  readonly hasSavedHours: boolean;
   readonly products: readonly PlaceProduct[];
   readonly offers: readonly PlaceOffer[];
   readonly videos: readonly PlaceVideo[];

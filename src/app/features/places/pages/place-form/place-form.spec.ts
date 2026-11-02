@@ -406,6 +406,19 @@ describe('PlaceForm', () => {
     );
   });
 
+  it('shows every day closed when the saved place is closed all week', () => {
+    const fixture = render('place-1', (placeId) =>
+      of(createPlaceDetail({ id: placeId, workingHours: [], hasSavedHours: true })),
+    );
+
+    const switches: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('app-working-hours-editor button[role="switch"]'),
+    );
+    expect(switches.map((toggle) => toggle.getAttribute('aria-checked'))).toEqual(
+      switches.map(() => 'false'),
+    );
+  });
+
   it('opens the days the saved place works on', () => {
     const fixture = render('place-1');
 

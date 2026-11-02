@@ -107,6 +107,7 @@ export function buildMockPlaceDetail(place: Place): PlaceDetail {
       longitude: 35.886,
     },
     workingHours: WORKING_HOURS,
+    hasSavedHours: true,
     products: PRODUCTS,
     offers: OFFERS,
     videos: VIDEOS,

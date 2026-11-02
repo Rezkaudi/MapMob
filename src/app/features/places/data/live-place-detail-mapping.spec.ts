@@ -115,6 +115,23 @@ describe('toPlaceDetail', () => {
     ]);
   });
 
+  it('says the place has saved hours when the server sends its days, even all closed', () => {
+    const allClosed = toPlaceDetail(
+      {
+        ...LIVE_DETAIL,
+        workingHours: [{ day: 0, isOpen: false, openTime: '09:00', closeTime: '18:00' }],
+      },
+      NOW,
+      [LIVE_GOLD_PLAN],
+      [],
+    );
+    const noDays = toPlaceDetail({ ...LIVE_DETAIL, workingHours: [] }, NOW, [LIVE_GOLD_PLAN], []);
+
+    expect(allClosed.workingHours).toEqual([]);
+    expect(allClosed.hasSavedHours).toBe(true);
+    expect(noDays.hasSavedHours).toBe(false);
+  });
+
   it('reads the subscription plan and when it ends', () => {
     expect(detail.subscription).toEqual({
       package: 'premium',

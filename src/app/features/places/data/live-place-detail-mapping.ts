@@ -57,6 +57,7 @@ export function toPlaceDetail(
       longitude: live.location?.longitude ?? 0,
     },
     workingHours: toWorkingHoursRows(live.workingHours, now),
+    hasSavedHours: live.workingHours.length > 0,
     products: live.products.map(toProduct),
     offers: live.offers.map(toOffer),
     videos: live.videos.map((video) => ({

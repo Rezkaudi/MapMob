@@ -34,6 +34,7 @@ export function createPlaceDetail(overrides: Partial<PlaceDetail> = {}): PlaceDe
       { days: 'الأحد - الخميس', hours: '09:00 AM - 11:00 PM', isToday: false },
       { days: 'السبت (اليوم)', hours: '10:00 AM - 10:00 PM', isToday: true },
     ],
+    hasSavedHours: true,
     products: Array.from({ length: 2 }, (_, index) => ({
       id: `product-${index + 1}`,
       name: 'سيروم تحت العين',

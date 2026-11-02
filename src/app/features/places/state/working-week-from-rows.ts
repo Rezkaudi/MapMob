@@ -8,8 +8,11 @@ const TWENTY_FOUR_HOUR = /^(\d{1,2}):(\d{2})$/;
 const NOON = 12;
 
 /** The saved week as the editor needs it: one entry per day, in the editor's order. */
-export function toWorkingWeek(rows: readonly WorkingHoursRow[]): WorkingDay[] {
-  if (rows.length === 0) {
+export function toWorkingWeek(
+  rows: readonly WorkingHoursRow[],
+  hasSavedHours: boolean,
+): WorkingDay[] {
+  if (!hasSavedHours) {
     return createDefaultWeek();
   }
   const opened = new Map<string, { opensAt: string; closesAt: string }>();
