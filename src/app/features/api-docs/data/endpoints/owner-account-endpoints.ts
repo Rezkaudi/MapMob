@@ -1,5 +1,5 @@
 import { ApiFeature } from '../../models/api-feature';
-import { OWNER_ACCOUNT } from '../examples/owner-examples';
+import { OWNER_ACCOUNT, OWNER_ACCOUNT_SAVE } from '../examples/owner-examples';
 import { PASSWORD_CHANGE } from '../examples/settings-examples';
 import { NO_CONTENT, field } from '../shared-fields';
 
@@ -10,7 +10,7 @@ export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
   screen: '/merchant/settings',
   permissionModule: null,
   intro:
-    "The owner changes the name and email of their own sign-in (place_owner_accounts) and its password. Signing out needs no call here; it uses the owner's token only.",
+    "The owner changes the name of their own sign-in (place_owner_accounts) and its password. The email is shown but not editable here; only the admin sets it. Signing out needs no call here; it uses the owner's token only.",
   endpoints: [
     {
       id: 'owner-account-read',
@@ -31,23 +31,14 @@ export const OWNER_ACCOUNT_FEATURE: ApiFeature = {
       id: 'owner-account-save',
       method: 'PUT',
       path: '/owner/account',
-      summary: "Change the signed-in owner's name and email.",
+      summary: "Change the signed-in owner's name.",
       body: {
         contentType: 'application/json',
-        fields: [
-          field('fullName', 'string', 'Max 100.'),
-          field('email', 'string (email)', 'Unique among owner accounts.'),
-        ],
-        example: OWNER_ACCOUNT,
+        fields: [field('fullName', 'string', 'Max 100.')],
+        example: OWNER_ACCOUNT_SAVE,
       },
       response: { status: 200, description: 'The updated account.', example: OWNER_ACCOUNT },
-      errors: [
-        {
-          status: 422,
-          when: 'The email is taken by another owner account.',
-          example: { message: 'The email has already been taken.', errors: { email: ['taken'] } },
-        },
-      ],
+      notes: ['The owner cannot change the email. The admin sets it on the place form.'],
     },
     {
       id: 'owner-account-password',

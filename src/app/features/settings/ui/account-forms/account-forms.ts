@@ -49,6 +49,7 @@ import {
 export class AccountForms {
   readonly signOutUrl = input.required<string>();
   readonly signOutDescription = input<string | null>(null);
+  readonly isEmailEditable = input(true);
 
   protected readonly store = inject(AccountSettingsStore);
   private readonly authStore = inject(AuthStore);

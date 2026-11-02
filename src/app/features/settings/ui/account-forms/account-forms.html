@@ -41,7 +41,8 @@
             type="email"
             autocomplete="email"
             formControlName="email"
-            class="font-inter"
+            [readOnly]="!isEmailEditable()"
+            class="font-inter read-only:cursor-not-allowed read-only:opacity-60 read-only:focus:ring-0"
             [class]="inputWithIconClasses"
             [attr.aria-invalid]="fieldError('email') !== null"
           />

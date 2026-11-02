@@ -9,7 +9,11 @@ import { AccountForms } from './account-forms';
 
 const MERCHANT_LOGIN_URL = '/login?role=merchant';
 
-function render(profile: AccountProfile, signOutDescription: string | null = null) {
+function render(
+  profile: AccountProfile,
+  signOutDescription: string | null = null,
+  isEmailEditable = true,
+) {
   const revokeSession = vi.fn();
   const repository: Partial<AccountRepository> = { getProfile: () => of(profile) };
   TestBed.configureTestingModule({
@@ -23,6 +27,7 @@ function render(profile: AccountProfile, signOutDescription: string | null = nul
   const fixture = TestBed.createComponent(AccountForms);
   fixture.componentRef.setInput('signOutUrl', MERCHANT_LOGIN_URL);
   fixture.componentRef.setInput('signOutDescription', signOutDescription);
+  fixture.componentRef.setInput('isEmailEditable', isEmailEditable);
   fixture.detectChanges();
   return { element: fixture.nativeElement as HTMLElement, revokeSession, navigate };
 }
@@ -50,6 +55,23 @@ describe('AccountForms', () => {
     expect((element.querySelector('#account-full-name') as HTMLInputElement).value).toBe(
       'خولة محمد',
     );
+  });
+
+  it('lets the email be edited by default', () => {
+    const { element } = render(buildAccountProfile());
+
+    expect((element.querySelector('#account-email') as HTMLInputElement).readOnly).toBe(false);
+  });
+
+  it('shows the email as read-only when it may not be edited', () => {
+    const profile = buildAccountProfile();
+    const { element } = render(profile, null, false);
+
+    const email = element.querySelector('#account-email') as HTMLInputElement;
+    expect(email.value).toBe(profile.email);
+    expect(email.readOnly).toBe(true);
+    expect(email.className).toContain('read-only:opacity-60');
+    expect(email.className).toContain('read-only:cursor-not-allowed');
   });
 
   it('gives every password input an eye button that shows and hides it', () => {

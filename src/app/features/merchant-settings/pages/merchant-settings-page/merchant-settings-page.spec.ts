@@ -57,6 +57,14 @@ describe('MerchantSettingsPage', () => {
     expect(element.querySelectorAll('app-sign-out-panel p')).toHaveLength(1);
   });
 
+  it('shows the owner email but does not let the owner change it', () => {
+    const { element } = render();
+
+    const email = element.querySelector('#account-email') as HTMLInputElement;
+    expect(email.value).toBe('mmmm.mo@mapmob.com');
+    expect(email.readOnly).toBe(true);
+  });
+
   it('signs out to the merchant tab of the login page', () => {
     const { element, revokeSession, navigate } = render();
 

@@ -29,10 +29,7 @@ export class OwnerAccountHttpRepository implements OwnerAccountRepository {
 
   updateProfile(draft: AccountProfileDraft): Observable<AccountProfile> {
     return this.httpClient
-      .put<LiveEnvelope<LiveOwnerAccount>>(this.accountUrl, {
-        name: draft.fullName,
-        email: draft.email,
-      })
+      .put<LiveEnvelope<LiveOwnerAccount>>(this.accountUrl, { name: draft.fullName })
       .pipe(map(({ data }) => toProfile(data)));
   }
 

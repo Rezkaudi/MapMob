@@ -37,11 +37,11 @@ describe('OwnerAccountHttpRepository', () => {
     expect(await profile).toEqual({ ...OWNER_ACCOUNT, roleName: null });
   });
 
-  it('saves the name; the server keeps the email as it is', async () => {
+  it('saves only the name, because the owner may not change the email', async () => {
     const profile = firstValueFrom(repository.updateProfile(OWNER_ACCOUNT));
 
     const request = http.expectOne({ method: 'PUT', url: `${BASE_URL}/owner/account` });
-    expect(request.request.body).toEqual({ name: 'محمد احمد', email: 'mmmm.mo@mapmob.com' });
+    expect(request.request.body).toEqual({ name: 'محمد احمد' });
     request.flush({
       status_code: 200,
       data: { id: '35', name: 'محمد احمد', email: 'mmmm.mo@mapmob.com' },

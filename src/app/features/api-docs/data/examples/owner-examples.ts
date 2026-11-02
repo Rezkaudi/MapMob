@@ -235,3 +235,7 @@ export const OWNER_ACCOUNT = {
   fullName: 'محمد احمد',
   email: 'rawabi@gmail.com',
 } satisfies AccountProfileDraft;
+
+export const OWNER_ACCOUNT_SAVE = {
+  fullName: 'محمد احمد',
+} satisfies Pick<AccountProfileDraft, 'fullName'>;
