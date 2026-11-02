@@ -203,7 +203,6 @@ describe('PlaceForm', () => {
     expect(request.value.name).toBe('صيدلية الحياة');
     expect(request.week).toHaveLength(7);
     expect(request.previousPackage).toBeNull();
-    expect(request.previousOwner).toBeNull();
   });
 
   it('offers only the regions of the picked city', () => {
@@ -624,35 +623,31 @@ describe('PlaceForm', () => {
     expect(addPassword.getAttribute('placeholder')).toBeNull();
   });
 
-  it('lets the admin change the merchant phone and password on the edit page', () => {
+  it('lets the admin change the merchant password on the edit page', () => {
     const element: HTMLElement = render('place-1').nativeElement;
 
-    for (const id of ['owner-phone', 'owner-password']) {
+    expect((element.querySelector('#owner-password') as HTMLInputElement).disabled).toBe(false);
+  });
+
+  it('locks the merchant email and phone on the edit page', () => {
+    const fixture = render('place-1');
+    const controls = fixture.componentInstance['form'].controls;
+
+    for (const id of ['owner-email', 'owner-phone']) {
+      expect((fixture.nativeElement.querySelector('#' + id) as HTMLInputElement).disabled, id).toBe(
+        true,
+      );
+    }
+    expect(controls.ownerEmail.disabled).toBe(true);
+    expect(controls.ownerPhone.disabled).toBe(true);
+  });
+
+  it('keeps the merchant email and phone open when adding a place', () => {
+    const element: HTMLElement = render().nativeElement;
+
+    for (const id of ['owner-email', 'owner-phone']) {
       expect((element.querySelector('#' + id) as HTMLInputElement).disabled, id).toBe(false);
     }
-  });
-
-  it('locks the merchant email on the edit page', () => {
-    const fixture = render('place-1');
-    const email: HTMLInputElement = fixture.nativeElement.querySelector('#owner-email');
-
-    expect(email.disabled).toBe(true);
-    expect(fixture.componentInstance['form'].controls.ownerEmail.disabled).toBe(true);
-  });
-
-  it('keeps the merchant email open when adding a place', () => {
-    const email: HTMLInputElement = render().nativeElement.querySelector('#owner-email');
-
-    expect(email.disabled).toBe(false);
-  });
-
-  it('sends the saved owner with an edit, so only a changed login goes to the server', async () => {
-    savedRequests.length = 0;
-    const fixture = render('place-1');
-    submit(fixture);
-    await fixture.whenStable();
-
-    expect(savedRequests.at(-1)?.request.previousOwner).toEqual(createPlaceDetail().owner);
   });
 
   it('spans the detailed address across both columns', () => {

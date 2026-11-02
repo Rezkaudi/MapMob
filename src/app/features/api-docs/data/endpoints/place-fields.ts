@@ -133,10 +133,11 @@ export const PLACE_WRITE_FIELDS = [
   optionalField('products[n][image]', 'file (png, jpg, webp; max 2 MB)'),
 ];
 
-/** An update may leave the password out to keep the saved one. */
-/** The owner email is the sign-in, set once on create, so an update has no ownerEmail. */
+const SIGN_IN_FIELDS_SET_ON_CREATE = ['ownerEmail', 'ownerPhone'];
+
+/** The owner signs in with the email or phone, set once on create; an update may leave the password out. */
 export const PLACE_UPDATE_FIELDS = PLACE_WRITE_FIELDS.filter(
-  (one) => one.name !== 'ownerEmail',
+  (one) => !SIGN_IN_FIELDS_SET_ON_CREATE.includes(one.name),
 ).map((one) =>
   one.name === 'ownerPassword'
     ? optionalField('ownerPassword', 'string', 'Min 8. Leave it out to keep the saved password.')

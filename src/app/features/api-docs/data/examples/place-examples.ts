@@ -171,10 +171,11 @@ export const PLACE_WRITE_FORM = {
 const {
   ownerPassword: _keptPassword,
   ownerEmail: _fixedEmail,
+  ownerPhone: _fixedPhone,
   ...PLACE_FORM_WITHOUT_LOGIN
 } = PLACE_WRITE_FORM;
 
-/** No ownerPassword: the update keeps the saved one. No ownerEmail: it never changes. */
+/** No ownerPassword: the update keeps the saved one. No ownerEmail or ownerPhone: they never change. */
 export const PLACE_UPDATE_FORM = {
   ...PLACE_FORM_WITHOUT_LOGIN,
   'keptImageIds[]': ['31'],

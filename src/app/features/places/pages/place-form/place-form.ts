@@ -33,7 +33,7 @@ import { ProductDraft } from '../../../../shared/models/product-draft';
 import { WorkingDay, createDefaultWeek } from '../../models/working-day';
 import { createPlaceFormGroup } from '../../state/place-form-group';
 import { fillPlaceForm } from '../../state/place-form-mapping';
-import { lockOwnerEmailWhenEditing } from '../../state/owner-email-lock';
+import { lockOwnerSignInWhenEditing } from '../../state/owner-sign-in-lock';
 import { toSavedVideoFiles } from '../../state/place-video-files';
 import { PlaceFormStore } from '../../state/place-form.store';
 import { syncSubCategoryControl } from '../../state/sync-sub-category-control';
@@ -197,7 +197,8 @@ export class PlaceForm {
       const isEditing = this.isEditing();
       untracked(() => {
         applyOwnerPasswordRules(this.form.controls.ownerPassword, isEditing);
-        lockOwnerEmailWhenEditing(this.form.controls.ownerEmail, isEditing);
+        lockOwnerSignInWhenEditing(this.form.controls.ownerEmail, isEditing);
+        lockOwnerSignInWhenEditing(this.form.controls.ownerPhone, isEditing);
       });
     });
     effect(() => {
@@ -310,7 +311,6 @@ export class PlaceForm {
       videos: this.videos(),
       products: this.products(),
       previousPackage: this.store.editedPlace()?.subscription.package ?? null,
-      previousOwner: this.store.editedPlace()?.owner ?? null,
     };
   }
 

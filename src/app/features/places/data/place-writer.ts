@@ -19,7 +19,7 @@ const MISSING_CATEGORY_MESSAGE = 'اختر تصنيفاً من القائمة ق
 const UNPROCESSABLE_STATUS = 422;
 
 export const OWNER_LOGIN_NOT_SAVED_MESSAGE =
-  'لم يقبل السيرفر تغيير بيانات دخول التاجر (البريد أو الهاتف أو كلمة المرور)، فلم تُحفظ التعديلات. أعد هذه الحقول كما كانت لحفظ باقي التعديلات.';
+  'لم يقبل السيرفر تغيير كلمة مرور التاجر، فلم تُحفظ التعديلات. امسح حقل كلمة المرور لحفظ باقي التعديلات.';
 
 /**
  * Sending everything in one store call makes the server fail, so the store is saved with its
@@ -45,14 +45,8 @@ export class PlaceWriter {
     }
     const isNew = id === null;
     const storeUrl = isNew ? `${this.adminUrl}/stores` : `${this.adminUrl}/stores/${id}`;
-    const storeForm = toLiveStoreForm(
-      request.value,
-      ids,
-      isNew ? 'create' : 'update',
-      request.previousOwner,
-    );
-    const changesLogin =
-      !isNew && findOwnerLoginChanges(request.value, request.previousOwner).length > 0;
+    const storeForm = toLiveStoreForm(request.value, ids, isNew ? 'create' : 'update');
+    const changesLogin = !isNew && findOwnerLoginChanges(request.value).length > 0;
     return this.httpClient.post<LiveEnvelope<{ id: string | number }>>(storeUrl, storeForm).pipe(
       catchError((error: { status?: number }) =>
         throwError(() =>

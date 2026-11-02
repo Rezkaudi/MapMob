@@ -1,7 +1,6 @@
 import { buildPlaceSaveRequest } from '../testing/place-save-request-fixture';
 import { toLiveStoreForm } from './live-store-form';
 
-const SAVED_OWNER = { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' };
 const IDS = { mainCategoryId: '8', subCategoryId: null, governorateId: '6', areaId: '7' };
 
 describe('toLiveStoreForm', () => {
@@ -27,10 +26,10 @@ describe('toLiveStoreForm', () => {
     expect(form.has('_method')).toBe(false);
   });
 
-  it('sends no owner fields on an update that leaves the merchant login as it was', () => {
+  it('sends no owner fields on an update without a new password', () => {
     const value = { ...buildPlaceSaveRequest().value, ownerPassword: '' };
 
-    const form = toLiveStoreForm(value, IDS, 'update', SAVED_OWNER);
+    const form = toLiveStoreForm(value, IDS, 'update');
 
     expect(form.get('_method')).toBe('PUT');
     expect(form.has('ownerName')).toBe(false);
@@ -39,7 +38,7 @@ describe('toLiveStoreForm', () => {
     expect(form.has('ownerPassword')).toBe(false);
   });
 
-  it('sends the merchant phone on an update only when it changed, and never the email', () => {
+  it('never sends the merchant email or phone on an update, even when they changed', () => {
     const value = {
       ...buildPlaceSaveRequest().value,
       ownerEmail: 'new@example.com',
@@ -47,10 +46,10 @@ describe('toLiveStoreForm', () => {
       ownerPassword: '',
     };
 
-    const form = toLiveStoreForm(value, IDS, 'update', SAVED_OWNER);
+    const form = toLiveStoreForm(value, IDS, 'update');
 
     expect(form.has('ownerEmail')).toBe(false);
-    expect(form.get('ownerPhone')).toBe('0939999999');
+    expect(form.has('ownerPhone')).toBe(false);
     expect(form.has('ownerPassword')).toBe(false);
     expect(form.has('ownerName')).toBe(false);
   });
@@ -58,7 +57,7 @@ describe('toLiveStoreForm', () => {
   it('sends a new merchant password on an update when one is typed', () => {
     const value = { ...buildPlaceSaveRequest().value, ownerPassword: 'Fresh-Pass9' };
 
-    const form = toLiveStoreForm(value, IDS, 'update', SAVED_OWNER);
+    const form = toLiveStoreForm(value, IDS, 'update');
 
     expect(form.get('ownerPassword')).toBe('Fresh-Pass9');
     expect(form.has('ownerEmail')).toBe(false);

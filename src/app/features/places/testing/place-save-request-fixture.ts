@@ -34,7 +34,6 @@ export function buildPlaceSaveRequest(overrides: Partial<PlaceSaveRequest> = {})
     videos: [],
     products: [],
     previousPackage: null,
-    previousOwner: null,
     ...overrides,
   };
 }

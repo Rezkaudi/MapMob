@@ -167,28 +167,26 @@ describe('PlaceWriter', () => {
     expect(await saved).toBe('52');
   });
 
-  describe('when the merchant login changes on an edit', () => {
-    const savedOwner = { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' };
+  describe('when the merchant password changes on an edit', () => {
     const request = buildPlaceSaveRequest({
-      value: { ...buildPlaceSaveRequest().value, ownerPhone: '0939999999', ownerPassword: '' },
-      previousOwner: savedOwner,
+      value: { ...buildPlaceSaveRequest().value, ownerPassword: 'Fresh-Pass9' },
     });
 
-    it('sends the new phone with the store', async () => {
+    it('sends the new password with the store', async () => {
       const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
       const store = http.expectOne({ method: 'POST', url: STORE_URL });
 
-      expect((store.request.body as FormData).get('ownerPhone')).toBe('0939999999');
+      expect((store.request.body as FormData).get('ownerPassword')).toBe('Fresh-Pass9');
       store.flush({}, { status: 500, statusText: 'Server Error' });
       await expect(saved).rejects.toThrow(OWNER_LOGIN_NOT_SAVED_MESSAGE);
     });
 
-    it('says which fields to put back when the server refuses the change', () => {
-      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('بيانات دخول التاجر');
-      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('أعد');
+    it('says to clear the password when the server refuses the change', () => {
+      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('كلمة مرور التاجر');
+      expect(OWNER_LOGIN_NOT_SAVED_MESSAGE).toContain('امسح');
     });
 
-    it('keeps the server words when it rejects the values themselves, such as a used phone', async () => {
+    it('keeps the server words when it rejects the value itself, such as a short password', async () => {
       const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
       http
         .expectOne({ method: 'POST', url: STORE_URL })
@@ -201,7 +199,6 @@ describe('PlaceWriter', () => {
   it('keeps the plain server error on an edit that leaves the login alone', async () => {
     const request = buildPlaceSaveRequest({
       value: { ...buildPlaceSaveRequest().value, ownerPassword: '' },
-      previousOwner: { name: 'أحمد', phone: '0931111111', email: 'owner@example.com' },
     });
     const saved = firstValueFrom(writer.save('52', request, CHOICES, []));
     http

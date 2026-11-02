@@ -1,4 +1,3 @@
-import { PlaceOwner } from '../models/place-owner';
 import { PlaceFormValue } from '../state/place-form-group';
 import { findOwnerLoginChanges } from './owner-login-changes';
 import { PlaceIds } from './live-place-choices';
@@ -33,7 +32,6 @@ export function toLiveStoreForm(
   value: PlaceFormValue,
   ids: PlaceIds,
   mode: StoreSaveMode,
-  previousOwner: PlaceOwner | null = null,
 ): FormData {
   const form = new FormData();
   if (mode === 'update') {
@@ -62,7 +60,7 @@ export function toLiveStoreForm(
     }
     return form;
   }
-  for (const field of findOwnerLoginChanges(value, previousOwner)) {
+  for (const field of findOwnerLoginChanges(value)) {
     form.set(field, value[field]);
   }
   return form;
