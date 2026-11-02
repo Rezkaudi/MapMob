@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, from, map, of, switchMap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { httpStatusOf } from '../../../core/http/http-status-of';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { Category } from '../models/category';
 import { CategoryDraft } from '../models/category-draft';
@@ -18,6 +19,11 @@ import { toCategory, toLiveCategoryForm } from './live-category-mapping';
 // There are few categories, so one big page brings them all; the kind counts need them all.
 const ALL_CATEGORIES_PAGE_SIZE = 1000;
 const MAIN_CATEGORY_PARENT_ID = '';
+const UNPROCESSABLE_STATUS = 422;
+
+// The server refuses this delete with an English message, so the panel says it in Arabic.
+export const CATEGORY_HAS_CHILDREN_MESSAGE =
+  'لا يمكن حذف هذا التصنيف لأن له تصنيفات فرعية. احذفها أو انقلها إلى تصنيف آخر أولاً.';
 
 @Injectable()
 export class CategoryHttpRepository implements CategoryRepository {
@@ -59,7 +65,16 @@ export class CategoryHttpRepository implements CategoryRepository {
   }
 
   deleteCategory(id: string): Observable<void> {
-    return this.httpClient.delete(`${this.categoriesUrl}/${id}`).pipe(map(() => undefined));
+    return this.httpClient.delete(`${this.categoriesUrl}/${id}`).pipe(
+      map(() => undefined),
+      catchError((error: unknown) =>
+        throwError(() =>
+          httpStatusOf(error) === UNPROCESSABLE_STATUS
+            ? new Error(CATEGORY_HAS_CHILDREN_MESSAGE)
+            : error,
+        ),
+      ),
+    );
   }
 
   private sendForm(url: string, draft: CategoryDraft, method: 'PUT' | null): Observable<Category> {

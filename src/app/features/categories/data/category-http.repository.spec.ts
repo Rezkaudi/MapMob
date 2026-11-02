@@ -5,7 +5,10 @@ import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CategoryDraft } from '../models/category-draft';
 import { LIVE_MAIN_CATEGORY, LIVE_SUB_CATEGORY } from '../testing/live-category-fixture';
-import { CategoryHttpRepository } from './category-http.repository';
+import {
+  CATEGORY_HAS_CHILDREN_MESSAGE,
+  CategoryHttpRepository,
+} from './category-http.repository';
 import { CategoryIconFileMaker } from './category-icon-file-maker';
 
 const BASE_URL = 'https://api.test';
@@ -130,5 +133,29 @@ describe('CategoryHttpRepository', () => {
     http.expectOne({ method: 'DELETE', url: `${CATEGORIES_URL}/17` }).flush({});
 
     expect(await response).toBeUndefined();
+  });
+
+  it('says in Arabic why the server refuses to delete a category with sub categories', async () => {
+    const response = firstValueFrom(repository.deleteCategory('4'));
+
+    http
+      .expectOne({ method: 'DELETE', url: `${CATEGORIES_URL}/4` })
+      .flush(
+        { message: 'Cannot delete this category because it has child categories.' },
+        { status: 422, statusText: 'Unprocessable Content' },
+      );
+
+    await expect(response).rejects.toThrow(CATEGORY_HAS_CHILDREN_MESSAGE);
+    expect(CATEGORY_HAS_CHILDREN_MESSAGE).toContain('تصنيفات فرعية');
+  });
+
+  it('keeps any other delete error as it is', async () => {
+    const response = firstValueFrom(repository.deleteCategory('4'));
+
+    http
+      .expectOne({ method: 'DELETE', url: `${CATEGORIES_URL}/4` })
+      .flush({}, { status: 500, statusText: 'Server Error' });
+
+    await expect(response).rejects.toMatchObject({ status: 500 });
   });
 });
