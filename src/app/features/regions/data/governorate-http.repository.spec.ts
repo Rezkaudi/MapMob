@@ -3,7 +3,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { GovernorateHttpRepository } from './governorate-http.repository';
+import {
+  GOVERNORATE_IN_USE_MESSAGE,
+  GovernorateHttpRepository,
+} from './governorate-http.repository';
 
 const BASE_URL = 'https://api.test';
 const REGIONS_URL = `${BASE_URL}/admin/regions`;
@@ -101,5 +104,29 @@ describe('GovernorateHttpRepository', () => {
     repository.deleteGovernorate('6').subscribe();
 
     http.expectOne({ method: 'DELETE', url: `${REGIONS_URL}/6` }).flush({});
+  });
+
+  it('says in Arabic why the server refuses to delete a governorate that is in use', async () => {
+    const response = firstValueFrom(repository.deleteGovernorate('17'));
+
+    http
+      .expectOne({ method: 'DELETE', url: `${REGIONS_URL}/17` })
+      .flush(
+        { message: 'Cannot delete this region because it has associated cities or stores.' },
+        { status: 422, statusText: 'Unprocessable Content' },
+      );
+
+    await expect(response).rejects.toThrow(GOVERNORATE_IN_USE_MESSAGE);
+    expect(GOVERNORATE_IN_USE_MESSAGE).toContain('مناطق أو أماكن');
+  });
+
+  it('keeps any other governorate delete error as it is', async () => {
+    const response = firstValueFrom(repository.deleteGovernorate('17'));
+
+    http
+      .expectOne({ method: 'DELETE', url: `${REGIONS_URL}/17` })
+      .flush({}, { status: 500, statusText: 'Server Error' });
+
+    await expect(response).rejects.toMatchObject({ status: 500 });
   });
 });

@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { replaceRefusalMessage } from '../../../core/http/replace-refusal-message';
 import { LivePage, toPagedResult } from '../../../core/http/live-page';
 import { toLivePageParams } from '../../../core/http/live-page-params';
 import { PagedResult } from '../../../core/models/paged-result';
@@ -18,6 +19,9 @@ import {
   toLiveRegionBody,
   toLiveStatusBody,
 } from './live-region-mapping';
+
+export const GOVERNORATE_IN_USE_MESSAGE =
+  'لا يمكن حذف هذه المحافظة لأن فيها مناطق أو أماكن. احذفها أو انقلها إلى محافظة أخرى أولاً.';
 
 @Injectable()
 export class GovernorateHttpRepository implements GovernorateRepository {
@@ -51,7 +55,9 @@ export class GovernorateHttpRepository implements GovernorateRepository {
   }
 
   deleteGovernorate(id: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.regionsUrl}/${id}`);
+    return this.httpClient
+      .delete<void>(`${this.regionsUrl}/${id}`)
+      .pipe(replaceRefusalMessage(GOVERNORATE_IN_USE_MESSAGE));
   }
 
   private save(id: string, body: object): Observable<Governorate> {
