@@ -27,6 +27,8 @@ import { LiveOfferSummary } from './live-offer-summary';
 import { toOfferFormData } from './offer-form-data';
 import { toOfferFilterParams, toOfferQueryParams } from './offer-query-params';
 import { OfferRepository } from './offer.repository';
+import { toCurrencyCode } from '../../../shared/money/to-currency-code';
+import { LiveOfferItem } from './live-offer-item';
 
 type LiveStoreCategories = LiveEnvelope<{ readonly mainCategories: readonly LiveReference[] }>;
 
@@ -81,8 +83,12 @@ export class OfferHttpRepository implements OfferRepository {
 
   getPlaceItems(placeId: string): Observable<readonly OfferItem[]> {
     return this.httpClient
-      .get<LiveEnvelope<readonly OfferItem[]>>(`${this.storesUrl}/${placeId}/offer-items`)
-      .pipe(map(({ data }) => data));
+      .get<LiveEnvelope<readonly LiveOfferItem[]>>(`${this.storesUrl}/${placeId}/offer-items`)
+      .pipe(
+        map(({ data }) =>
+          data.map((item) => ({ ...item, currency: toCurrencyCode(item.currency) })),
+        ),
+      );
   }
 
   createOffer(draft: OfferDraft): Observable<Offer> {

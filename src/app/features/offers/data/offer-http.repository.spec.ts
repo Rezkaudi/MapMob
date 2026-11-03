@@ -140,6 +140,20 @@ describe('OfferHttpRepository', () => {
     expect(await response).toEqual(items);
   });
 
+  it('reads an item currency the server wrote in its own way', async () => {
+    const response = firstValueFrom(repository.getPlaceItems('119'));
+
+    http.expectOne(`${STORES_URL}/119/offer-items`).flush({
+      data: [
+        { id: '48', name: 'قميص', price: 100, currency: 'ل.س' },
+        { id: '49', name: 'بنطال', price: 200, currency: 'syp' },
+        { id: '50', name: 'حذاء', price: 10, currency: 'usd' },
+      ],
+    });
+
+    expect((await response).map((item) => item.currency)).toEqual(['SYP', 'SYP', 'USD']);
+  });
+
   it('creates with a POST, and updates with a POST that names PUT, since PHP reads no form data on PUT', async () => {
     const created = firstValueFrom(repository.createOffer(buildOfferDraft({ placeId: '4' })));
     const updated = firstValueFrom(repository.updateOffer('2', buildOfferDraft({ placeId: '4' })));

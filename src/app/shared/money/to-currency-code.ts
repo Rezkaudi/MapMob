@@ -1,9 +1,18 @@
 import { CurrencyCode } from './currency-code';
 import { CURRENCY_CODES } from './currency-codes';
+import { CURRENCY_SYMBOLS } from './currency-symbols';
 
 const DEFAULT_CURRENCY: CurrencyCode = 'SYP';
 
-/** The server stores free text here, so anything unknown reads as the local currency. */
+function isSymbolOf(code: CurrencyCode, value: string): boolean {
+  return CURRENCY_SYMBOLS[code] === value;
+}
+
+/** The server stores free text here (usd, $, ل.س), so anything unknown reads as the local currency. */
 export function toCurrencyCode(value: string | null): CurrencyCode {
-  return CURRENCY_CODES.find((code) => code === value) ?? DEFAULT_CURRENCY;
+  const written = value?.trim() ?? '';
+  return (
+    CURRENCY_CODES.find((code) => code === written.toUpperCase() || isSymbolOf(code, written)) ??
+    DEFAULT_CURRENCY
+  );
 }
