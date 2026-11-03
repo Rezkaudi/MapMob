@@ -34,6 +34,14 @@ describe('FormActionBar', () => {
     expect(saveDraft).toHaveBeenCalled();
   });
 
+  it('marks the draft button so empty required fields are pointed out', () => {
+    const element = render().nativeElement as HTMLElement;
+
+    expect(element.querySelector('button[type="button"]')?.hasAttribute('data-checks-form')).toBe(
+      true,
+    );
+  });
+
   it('leaves out the draft button on a page that has no drafts, cancel staying leftmost', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(FormActionBar);

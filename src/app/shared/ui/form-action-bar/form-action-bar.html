@@ -18,6 +18,7 @@
   @if (isDraftVisible()) {
     <button
       type="button"
+      data-checks-form
       class="h-[46px] rounded border border-border px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
       [disabled]="isBusy()"
       [attr.aria-busy]="isDraftSpinning()"

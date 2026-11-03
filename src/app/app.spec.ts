@@ -28,4 +28,11 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-page-lock-overlay')).toBeTruthy();
   });
+
+  it('renders the alert that points to empty required fields', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('app-invalid-form-alert')).toBeTruthy();
+  });
 });
