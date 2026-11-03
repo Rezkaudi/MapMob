@@ -7,6 +7,10 @@ const REPORTED = {
 };
 
 describe('live review mapping', () => {
+  it('reads an approved review as published', () => {
+    expect(toReview({ ...LIVE_REVIEW, status: 'approved', reports: [] }).status).toBe('published');
+  });
+
   it('reads a pending review as published, with the Arabic place name', () => {
     expect(toReview(LIVE_REVIEW)).toEqual({
       id: '7',
@@ -59,8 +63,8 @@ describe('live review mapping', () => {
     expect(detail.report).toBeNull();
   });
 
-  it('shows a review again with the status the server gives new reviews', () => {
-    expect(toLiveReviewStatus('published')).toBe('pending');
+  it('shows a review again as approved, since the server refuses "published"', () => {
+    expect(toLiveReviewStatus('published')).toBe('approved');
     expect(toLiveReviewStatus('hidden')).toBe('hidden');
   });
 });

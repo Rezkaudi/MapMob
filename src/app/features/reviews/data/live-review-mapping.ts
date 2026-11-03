@@ -7,9 +7,9 @@ import { LiveReviewedStore, LiveReviewer } from './live-review-people';
 
 const HIDDEN_STATUS = 'hidden';
 const OPEN_REPORT_STATUS = 'pending';
-// The server refuses "published"; a new, visible review is "pending" there.
+// The server refuses "published"; "approved" is its word for a review shown after moderation.
 const LIVE_STATUS: Record<ModeratedReviewStatus, string> = {
-  published: 'pending',
+  published: 'approved',
   hidden: HIDDEN_STATUS,
 };
 
