@@ -22,3 +22,14 @@ describe('WinnerToolbar', () => {
     expect(exported).toHaveBeenCalled();
   });
 });
+
+describe('WinnerToolbar while exporting', () => {
+  it('spins on the export button', () => {
+    const fixture = TestBed.createComponent(WinnerToolbar);
+    fixture.componentRef.setInput('isExporting', true);
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('[data-role="export"]') as HTMLElement;
+    expect(button.querySelector('app-spinner')).not.toBeNull();
+  });
+});

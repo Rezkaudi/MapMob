@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable, of } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
 import { PaymentRepository } from '../../data/payment.repository';
 import { PaymentFormOptions } from '../../models/payment-form-options';
 import { NewPaymentStore } from '../../state/new-payment.store';
 import { NewPaymentDialog } from './new-payment-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const OPTIONS: PaymentFormOptions = {
   merchants: [
@@ -23,7 +24,7 @@ const OPTIONS: PaymentFormOptions = {
   ],
 };
 
-async function render() {
+async function render(createPayment: () => Observable<unknown> = () => of({})) {
   TestBed.configureTestingModule({
     providers: [
       NewPaymentStore,
@@ -31,7 +32,7 @@ async function render() {
         provide: PaymentRepository,
         useValue: {
           getPaymentFormOptions: (): Observable<PaymentFormOptions> => of(OPTIONS),
-          createPayment: () => of({} as never),
+          createPayment,
         } as unknown as PaymentRepository,
       },
       { provide: CLOCK, useValue: () => new Date('2026-09-17T10:00:00Z') },
@@ -172,5 +173,18 @@ describe('NewPaymentDialog', () => {
     (element.querySelector('[data-testid="payment-cancel"]') as HTMLButtonElement).click();
 
     expect(store.isOpen()).toBe(false);
+  });
+});
+
+describe('NewPaymentDialog while saving', () => {
+  it('spins on the submit button and stays open until the server answers', async () => {
+    const { fixture, store, element } = await render(() => NEVER);
+
+    (element.querySelector('[data-testid="payment-submit"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(element.querySelector('[data-testid="payment-submit"] app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+    expect(store.isOpen()).toBe(true);
   });
 });

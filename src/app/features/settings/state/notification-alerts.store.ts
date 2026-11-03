@@ -10,9 +10,10 @@ import { NotificationAlertKind } from '../models/notification-alert-kind';
 
 interface NotificationAlertsState {
   readonly alerts: readonly NotificationAlert[];
+  readonly savingKind: NotificationAlertKind | null;
 }
 
-const initialState: NotificationAlertsState = { alerts: [] };
+const initialState: NotificationAlertsState = { alerts: [], savingKind: null };
 
 export const NotificationAlertsStore = signalStore(
   withState(initialState),
@@ -44,8 +45,13 @@ export const NotificationAlertsStore = signalStore(
       ),
       /** Flips the switch at once; puts it back if the server refuses. */
       async setAlertEnabled(kind: NotificationAlertKind, isEnabled: boolean): Promise<boolean> {
+        if (store.isSaving()) {
+          return false;
+        }
         setEnabled(kind, isEnabled);
+        patchState(store, { savingKind: kind });
         const isSaved = await store.runSave(repository.setAlertEnabled(kind, isEnabled));
+        patchState(store, { savingKind: null });
         if (!isSaved) {
           setEnabled(kind, !isEnabled);
         }

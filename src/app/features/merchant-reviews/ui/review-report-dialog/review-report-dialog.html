@@ -1,4 +1,5 @@
 <app-form-dialog-frame
+  [isBusy]="isBusy()"
   heading="الإبلاغ عن مراجعة"
   appearance="notice"
   [subheading]="subheading"
@@ -113,6 +114,6 @@
     [attr.aria-busy]="isBusy()"
     (click)="send()"
   >
-    إرسال البلاغ
+    <app-busy-label [isBusy]="isBusy()">إرسال البلاغ</app-busy-label>
   </button>
 </app-form-dialog-frame>

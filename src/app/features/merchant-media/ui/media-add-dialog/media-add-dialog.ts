@@ -19,6 +19,7 @@ import { MEDIA_UPLOAD_COPY } from '../../state/media-upload-copy';
 import { MEDIA_UPLOAD_RULES, acceptedTypesOf } from '../../state/media-upload-rules';
 import { MediaKindChoice } from '../media-kind-choice/media-kind-choice';
 import { MediaDraft } from '../../models/media-draft';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 interface PickedMedia {
   readonly file: File;
@@ -29,7 +30,7 @@ interface PickedMedia {
 /** The "إضافة وسائط" dialog: pick a kind, drop one file, and maybe make it the main picture. */
 @Component({
   selector: 'app-media-add-dialog',
-  imports: [AppIcon, FieldLabel, FileDropzone, FormDialogFrame, MediaKindChoice],
+  imports: [AppIcon, FieldLabel, FileDropzone, FormDialogFrame, MediaKindChoice, Spinner],
   templateUrl: './media-add-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

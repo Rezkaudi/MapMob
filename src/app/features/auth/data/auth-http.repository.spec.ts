@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { AuthHttpRepository } from './auth-http.repository';
+import { SKIPS_WRITE_LOCK } from '../../../core/http/skips-write-lock';
 
 const BASE_URL = 'https://api.test';
 const CREDENTIALS = { email: 'admin@mapmob.com', password: 'secret' };
@@ -63,12 +64,16 @@ describe('AuthHttpRepository', () => {
   it('revokes the token on sign-out', () => {
     repository.signOut().subscribe();
 
-    http.expectOne({ method: 'POST', url: `${BASE_URL}/admin/logout` }).flush({});
+    const logout = http.expectOne({ method: 'POST', url: `${BASE_URL}/admin/logout` });
+    expect(logout.request.context.get(SKIPS_WRITE_LOCK)).toBe(true);
+    logout.flush({});
   });
 
   it('revokes a merchant token on the owner logout route', () => {
     repository.signOutMerchant().subscribe();
 
-    http.expectOne({ method: 'POST', url: `${BASE_URL}/owner/auth/logout` }).flush({});
+    const logout = http.expectOne({ method: 'POST', url: `${BASE_URL}/owner/auth/logout` });
+    expect(logout.request.context.get(SKIPS_WRITE_LOCK)).toBe(true);
+    logout.flush({});
   });
 });

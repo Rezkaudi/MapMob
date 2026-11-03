@@ -3,6 +3,7 @@ import { CLOCK } from '../../../../core/config/clock';
 import { buildNotificationDetailView } from '../../state/notification-detail-view';
 import { buildNotification } from '../../testing/notification-fixture';
 import { NotificationResendDialog } from './notification-resend-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const NOW = new Date(2026, 8, 8, 10, 25);
 const SENT = buildNotification({ status: 'sent', sendAt: '2026-09-01T10:00' });
@@ -77,5 +78,30 @@ describe('NotificationResendDialog', () => {
 
     expect(remove).toHaveBeenCalledOnce();
     expect(closed).toHaveBeenCalledOnce();
+  });
+});
+
+describe('NotificationResendDialog while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const { fixture } = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
+  });
+});
+
+describe('NotificationResendDialog confirm while saving', () => {
+  it('spins on the confirm button', () => {
+    const { fixture, element } = render();
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('[dialogFooter] app-spinner')).not.toBeNull();
   });
 });

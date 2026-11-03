@@ -1,4 +1,5 @@
 <app-dialog-frame
+  [isBusy]="store.isSaving()"
   appearance="roomy"
   heading="إضافة دفعة جديدة"
   subheading="سجّل دفعة نقدية تم استلامها من أحد التجار وتفعيل الخدمة فورياً."
@@ -218,8 +219,9 @@
     dialogFooter
     type="button"
     data-testid="payment-cancel"
-    class="h-[42px] rounded-[4px] border border-border bg-white px-5 text-[14px]/[20px] font-medium text-text-primary hover:bg-surface-muted"
+    class="h-[42px] rounded-[4px] border border-border bg-white px-5 text-[14px]/[20px] font-medium text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
     (click)="store.close()"
+    [disabled]="store.isSaving()"
   >
     إلغاء
   </button>
@@ -229,8 +231,9 @@
     data-testid="payment-submit"
     class="h-[46px] rounded-[4px] bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
     [disabled]="!store.canSubmit()"
+    [attr.aria-busy]="store.isSaving()"
     (click)="store.submit()"
   >
-    تسجيل الدفعة و تفعيل الاشتراك
+    <app-busy-label [isBusy]="store.isSaving()">تسجيل الدفعة و تفعيل الاشتراك</app-busy-label>
   </button>
 </app-dialog-frame>

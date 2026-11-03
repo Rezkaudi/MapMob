@@ -7,6 +7,7 @@ import {
   output,
 } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
+import { BusyLabel } from '../busy-label/busy-label';
 import {
   ConfirmActionCopy,
   ConfirmActionTone,
@@ -109,7 +110,7 @@ const DETAIL_SKINS: Record<ConfirmDetailAppearance, DetailSkin> = {
 
 @Component({
   selector: 'app-confirm-action-dialog',
-  imports: [AppIcon],
+  imports: [AppIcon, BusyLabel],
   templateUrl: './confirm-action-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -147,7 +148,10 @@ export class ConfirmActionDialog {
   });
 
   @HostListener('document:keydown.escape')
-  protected cancelOnEscape(): void {
+  protected cancelUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.cancelled.emit();
   }
 }

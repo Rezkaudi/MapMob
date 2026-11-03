@@ -17,13 +17,14 @@ import { LimitStepper } from '../limit-stepper/limit-stepper';
 import { PlanFeatureRows } from '../plan-feature-rows/plan-feature-rows';
 import { PriceCycleCard } from '../price-cycle-card/price-cycle-card';
 import { PLAN_LIMIT_FIELDS, PlanLimitField } from './plan-limit-fields';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const YEARLY_MONTHS = 12;
 const PERCENT = 100;
 
 @Component({
   selector: 'app-plan-form-dialog',
-  imports: [AppIcon, LimitStepper, PlanFeatureRows, PriceCycleCard, ReactiveFormsModule],
+  imports: [AppIcon, LimitStepper, PlanFeatureRows, PriceCycleCard, ReactiveFormsModule, BusyLabel],
   templateUrl: './plan-form-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -73,7 +74,10 @@ export class PlanFormDialog {
   }
 
   @HostListener('document:keydown.escape')
-  protected cancelOnEscape(): void {
+  protected cancelUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.cancelled.emit();
   }
 }

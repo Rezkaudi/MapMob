@@ -4,6 +4,7 @@ import { RoleDraft } from '../../models/role-draft';
 import { NEW_ROLE_GRANTS } from '../../state/role-grants';
 import { buildAdminRole } from '../../testing/settings-fixture';
 import { RoleDialog } from './role-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render(dialog: RoleDialogState) {
   const fixture = TestBed.createComponent(RoleDialog);
@@ -128,5 +129,19 @@ describe('RoleDialog', () => {
     buttonNamed(element, 'إضافة الدور').click();
 
     expect(saved.map((draft) => draft.name)).toEqual(['مشرف']);
+  });
+});
+
+describe('RoleDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const { fixture, element, closes: closeCount } = render({ mode: 'add' });
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(closeCount()).toBe(0);
   });
 });

@@ -58,6 +58,7 @@
     [mode]="form.mode"
     [initialDraft]="form.draft"
     [isOrderUrlHintVisible]="false"
+    [isBusy]="store.isSaving()"
     (submitted)="store.submitDraft($event)"
     (cancelled)="store.closeDialog()"
   />

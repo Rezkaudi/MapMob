@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { buildFormCopy } from '../region-dialog-copy';
 import { RegionFormDialog } from './region-form-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render(inputs: Record<string, unknown> = {}) {
   const fixture = TestBed.createComponent(RegionFormDialog);
@@ -109,5 +110,20 @@ describe('RegionFormDialog', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
     expect(cancelled).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe('RegionFormDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const fixture = render({ initialName: 'طرطوس', isBusy: true });
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

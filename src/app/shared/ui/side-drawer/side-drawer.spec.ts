@@ -109,3 +109,23 @@ describe('SideDrawer', () => {
     expect(element.querySelector('footer')?.className).toContain('mx-5');
   });
 });
+
+describe('SideDrawer while saving', () => {
+  it('cannot be closed by the cross, the backdrop or Escape', () => {
+    const fixture = TestBed.createComponent(SideDrawer);
+    fixture.componentRef.setInput('title', 'حفظ');
+    fixture.componentRef.setInput('isBusy', true);
+    const closed = vi.fn();
+    fixture.componentInstance.closed.subscribe(closed);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const cross = element.querySelector('button[aria-label="إغلاق"]') as HTMLButtonElement;
+    expect(cross.disabled).toBe(true);
+    cross.click();
+    (element.querySelector('[data-role="backdrop"]') as HTMLElement).click();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(closed).not.toHaveBeenCalled();
+  });
+});

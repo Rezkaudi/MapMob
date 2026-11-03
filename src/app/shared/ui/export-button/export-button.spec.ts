@@ -26,3 +26,15 @@ describe('ExportButton', () => {
     expect(button.getAttribute('aria-busy')).toBe('true');
   });
 });
+
+describe('ExportButton while exporting', () => {
+  it('spins in place of the download glyph', () => {
+    const fixture = TestBed.createComponent(ExportButton);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+
+    expect(button.querySelector('app-spinner')).not.toBeNull();
+    expect(button.querySelector('app-icon')).toBeNull();
+  });
+});

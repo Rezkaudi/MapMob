@@ -28,8 +28,9 @@
         #closeButton
         type="button"
         aria-label="إغلاق"
-        class="flex justify-center"
+        class="flex justify-center disabled:cursor-not-allowed disabled:opacity-50"
         [class]="skin().closeButton"
+        [disabled]="isBusy()"
         (click)="close()"
       >
         @if (skin().hasCloseIcon) {

@@ -1,13 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { SKIPS_WRITE_LOCK } from '../../../core/http/skips-write-lock';
 import { readAllOwnerPages } from '../../../shared/data/read-all-owner-pages';
 import { OwnerNotification } from '../models/owner-notification';
 import { LiveOwnerNotification } from './live-owner-notification';
 import { OwnerNotificationsRepository } from './owner-notifications.repository';
 import { toOwnerNotification } from './to-owner-notification';
+
+const READ_IN_BACKGROUND = new HttpContext().set(SKIPS_WRITE_LOCK, true);
 
 @Injectable()
 export class OwnerNotificationsHttpRepository implements OwnerNotificationsRepository {
@@ -22,7 +25,11 @@ export class OwnerNotificationsHttpRepository implements OwnerNotificationsRepos
 
   markAsRead(id: string): Observable<OwnerNotification> {
     return this.httpClient
-      .patch<LiveEnvelope<LiveOwnerNotification>>(`${this.notificationsUrl}/${id}/read`, {})
+      .patch<LiveEnvelope<LiveOwnerNotification>>(
+        `${this.notificationsUrl}/${id}/read`,
+        {},
+        { context: READ_IN_BACKGROUND },
+      )
       .pipe(map(({ data }) => toOwnerNotification(data)));
   }
 }

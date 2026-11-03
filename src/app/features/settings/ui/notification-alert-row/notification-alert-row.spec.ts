@@ -37,3 +37,27 @@ describe('NotificationAlertRow', () => {
     expect(toggles).toEqual([true]);
   });
 });
+
+describe('NotificationAlertRow while saving', () => {
+  it('spins beside the switch of the alert being saved', () => {
+    const fixture = TestBed.createComponent(NotificationAlertRow);
+    fixture.componentRef.setInput('alert', { kind: 'subscription-expiring', isEnabled: true });
+    fixture.componentRef.setInput('isSaving', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-spinner')).not.toBeNull();
+  });
+
+  it('holds the switch while any alert is saving', () => {
+    const fixture = TestBed.createComponent(NotificationAlertRow);
+    fixture.componentRef.setInput('alert', { kind: 'subscription-expiring', isEnabled: true });
+    fixture.componentRef.setInput('isDisabled', true);
+    fixture.detectChanges();
+
+    const toggle = fixture.nativeElement.querySelector(
+      'button[role="switch"], button',
+    ) as HTMLButtonElement;
+    expect(toggle.disabled).toBe(true);
+    expect(fixture.nativeElement.querySelector('app-spinner')).toBeNull();
+  });
+});

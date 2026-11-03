@@ -4,7 +4,7 @@
   role="dialog"
   aria-modal="true"
   aria-labelledby="category-form-title"
-  (click)="cancelled.emit()"
+  (click)="cancelUnlessBusy()"
 >
   <form
     class="flex max-h-full w-[580px] max-w-full flex-col overflow-hidden rounded-3xl border border-[#f1f5f9] bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
@@ -37,9 +37,10 @@
       <button
         type="button"
         data-testid="category-close"
-        class="flex size-8 shrink-0 items-center justify-center text-[#94a3b8] hover:text-text-primary"
+        class="flex size-8 shrink-0 items-center justify-center text-[#94a3b8] hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
         aria-label="إغلاق النافذة"
-        (click)="cancelled.emit()"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         <app-icon name="dialog-close" [size]="32" aria-hidden="true" />
       </button>
@@ -135,13 +136,14 @@
         [disabled]="!canSubmit()"
         [attr.aria-busy]="isBusy()"
       >
-        {{ copy().submitLabel }}
+        <app-busy-label [isBusy]="isBusy()">{{ copy().submitLabel }}</app-busy-label>
       </button>
       <button
         type="button"
         data-testid="category-cancel"
-        class="h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted"
-        (click)="cancelled.emit()"
+        class="h-10 rounded-lg border border-border bg-white px-5 text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         إلغاء
       </button>

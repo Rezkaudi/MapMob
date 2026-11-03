@@ -1,4 +1,5 @@
 <app-side-drawer
+  [isBusy]="isBusy()"
   [title]="view()?.title ?? loadingTitle"
   [hasAlertDot]="view()?.hasReport ?? false"
   (closed)="closed.emit()"

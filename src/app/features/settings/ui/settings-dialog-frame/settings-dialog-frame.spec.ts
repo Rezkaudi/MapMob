@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SettingsDialogFrame } from './settings-dialog-frame';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 @Component({
   imports: [SettingsDialogFrame],
@@ -86,5 +87,19 @@ describe('SettingsDialogFrame', () => {
     expect(element.querySelector('[role="alert"]')?.textContent?.trim()).toBe(
       'البريد مستخدم من قبل',
     );
+  });
+});
+
+describe('SettingsDialogFrame while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const { fixture, element, host } = render();
+    host.isBusy.set(true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(host.closes).toBe(0);
   });
 });

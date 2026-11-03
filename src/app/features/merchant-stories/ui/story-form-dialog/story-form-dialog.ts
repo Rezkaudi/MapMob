@@ -20,6 +20,7 @@ import {
   findStoryFileError,
   storyKindOf,
 } from '../../state/story-upload-rules';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const CAPTION_MAX_LENGTH = 120;
 const CAPTION_FIELD_ID = 'story-caption';
@@ -49,7 +50,7 @@ interface FileRow {
 /** The "إضافة قصة جديدة" dialog, also opened on a story to edit it. */
 @Component({
   selector: 'app-story-form-dialog',
-  imports: [AppIcon, FieldLabel, FileDropzone, FormDialogFrame],
+  imports: [AppIcon, FieldLabel, FileDropzone, FormDialogFrame, BusyLabel],
   templateUrl: './story-form-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

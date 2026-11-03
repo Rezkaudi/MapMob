@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ReviewReport } from '../../models/review-report';
 import { buildOwnerReview } from '../../testing/owner-review-fixture';
 import { ReviewReportDialog } from './review-report-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const TAREQ = buildOwnerReview({ author: { id: 'user-5', name: 'طارق السعيد' }, rating: 1 });
 
@@ -93,5 +94,21 @@ describe('ReviewReportDialog', () => {
     fixture.detectChanges();
 
     expect(sendButton(element).disabled).toBe(true);
+  });
+});
+
+describe('ReviewReportDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const { fixture } = build();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

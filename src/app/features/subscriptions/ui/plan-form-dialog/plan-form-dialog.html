@@ -3,7 +3,7 @@
   role="dialog"
   aria-modal="true"
   aria-labelledby="plan-form-title"
-  (click)="cancelled.emit()"
+  (click)="cancelUnlessBusy()"
 >
   <form
     [formGroup]="form()"
@@ -30,8 +30,9 @@
       <button
         type="button"
         aria-label="إغلاق النافذة"
-        class="flex size-9 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-muted"
-        (click)="cancelled.emit()"
+        class="flex size-9 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         <app-icon name="close-thin" [size]="24" aria-hidden="true" />
       </button>
@@ -158,8 +159,9 @@
     <footer class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
       <button
         type="button"
-        class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-surface-muted"
-        (click)="cancelled.emit()"
+        class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         إلغاء
       </button>
@@ -167,8 +169,9 @@
         type="submit"
         class="h-[42px] rounded bg-primary px-6 text-[14px]/[20px] font-extrabold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         [disabled]="isBusy()"
+        [attr.aria-busy]="isBusy()"
       >
-        حفظ التعديلات
+        <app-busy-label [isBusy]="isBusy()">حفظ التعديلات</app-busy-label>
       </button>
     </footer>
   </form>

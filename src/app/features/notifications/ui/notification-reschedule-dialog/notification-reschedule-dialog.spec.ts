@@ -3,6 +3,7 @@ import { CLOCK } from '../../../../core/config/clock';
 import { buildNotificationDetailView } from '../../state/notification-detail-view';
 import { buildNotification } from '../../testing/notification-fixture';
 import { NotificationRescheduleDialog } from './notification-reschedule-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const NOW = new Date(2026, 8, 8, 10, 0);
 const SCHEDULED = buildNotification();
@@ -76,5 +77,31 @@ describe('NotificationRescheduleDialog', () => {
     buttonNamed(element, 'إلغاء').click();
 
     expect(back).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('NotificationRescheduleDialog while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const { fixture } = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentInstance.back.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
+  });
+});
+
+describe('NotificationRescheduleDialog confirm while saving', () => {
+  it('spins on the confirm button', () => {
+    const { fixture, element } = render();
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('[dialogFooter] app-spinner')).not.toBeNull();
   });
 });

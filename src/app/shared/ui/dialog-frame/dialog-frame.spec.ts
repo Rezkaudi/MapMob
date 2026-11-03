@@ -138,3 +138,43 @@ describe('DialogFrame', () => {
     expect(element.querySelector('footer')).toBeNull();
   });
 });
+
+describe('DialogFrame while saving', () => {
+  it('cannot be closed by the cross, the backdrop or Escape', () => {
+    const fixture = TestBed.createComponent(DialogFrame);
+    fixture.componentRef.setInput('heading', 'حفظ');
+    fixture.componentRef.setInput('isBusy', true);
+    const closed = vi.fn();
+    fixture.componentInstance.closed.subscribe(closed);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const cross = element.querySelector('button[aria-label="إغلاق النافذة"]') as HTMLButtonElement;
+    expect(cross.disabled).toBe(true);
+    cross.click();
+    (element.querySelector('[role="dialog"]') as HTMLElement).click();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(closed).not.toHaveBeenCalled();
+  });
+});
+
+describe('DialogFrame back arrow while saving', () => {
+  it('does not go back until the save ends', () => {
+    const fixture = TestBed.createComponent(DialogFrame);
+    fixture.componentRef.setInput('heading', 'إعادة الجدولة');
+    fixture.componentRef.setInput('isBackVisible', true);
+    fixture.componentRef.setInput('isBusy', true);
+    const back = vi.fn();
+    fixture.componentInstance.back.subscribe(back);
+    fixture.detectChanges();
+
+    const arrow = fixture.nativeElement.querySelector(
+      'button[aria-label="رجوع"]',
+    ) as HTMLButtonElement;
+    arrow.click();
+
+    expect(arrow.disabled).toBe(true);
+    expect(back).not.toHaveBeenCalled();
+  });
+});

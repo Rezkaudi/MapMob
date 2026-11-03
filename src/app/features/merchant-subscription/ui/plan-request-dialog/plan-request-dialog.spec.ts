@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { buildUpgradeRequest } from '../../state/plan-request-view';
 import { FEATURED_PLAN, buildOverview } from '../../testing/merchant-subscription-fixture';
 import { PlanRequestDialog } from './plan-request-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render(isBusy = false) {
   const fixture = TestBed.createComponent(PlanRequestDialog);
@@ -51,5 +52,21 @@ describe('PlanRequestDialog', () => {
     const [, send] = render(true).nativeElement.querySelectorAll('footer button');
 
     expect(send.disabled).toBe(true);
+  });
+});
+
+describe('PlanRequestDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const fixture = render(true);
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

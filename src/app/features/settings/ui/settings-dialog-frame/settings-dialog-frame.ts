@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, input, output } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 let nextFrameNumber = 0;
 
@@ -10,7 +11,7 @@ let nextFrameNumber = 0;
  */
 @Component({
   selector: 'app-settings-dialog-frame',
-  imports: [AppIcon],
+  imports: [AppIcon, BusyLabel],
   templateUrl: './settings-dialog-frame.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,7 +27,10 @@ export class SettingsDialogFrame {
   protected readonly titleId = `settings-dialog-title-${nextFrameNumber++}`;
 
   @HostListener('document:keydown.escape')
-  protected closeOnEscape(): void {
+  protected closeUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 }

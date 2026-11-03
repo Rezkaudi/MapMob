@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { MerchantAuthStore } from '../../state/merchant-auth.store';
 import { renderMerchantAuthPage } from '../merchant-auth-page-testing';
 import { ResetCode } from './reset-code';
@@ -93,5 +93,30 @@ describe('ResetCode', () => {
     expect(page.element.querySelector('[role="alert"]')!.textContent!.trim()).toBe(
       'رمز التحقق غير صحيح',
     );
+  });
+});
+
+describe('ResetCode while a code is resent', () => {
+  it('spins on the resend button, not on the confirm button', () => {
+    let isFirstSend = true;
+    const page = renderMerchantAuthPage(ResetCode, {
+      sendResetCode: () => {
+        const answer = isFirstSend ? of(undefined) : NEVER;
+        isFirstSend = false;
+        return answer;
+      },
+    });
+    TestBed.inject(MerchantAuthStore).sendResetCode('merchant@mapmob.com');
+    const resend = [...page.element.querySelectorAll('button')].find(
+      (button) => button.textContent!.trim() === 'إعادة إرسال',
+    )!;
+
+    resend.click();
+    page.fixture.detectChanges();
+
+    expect(resend.querySelector('app-spinner')).not.toBeNull();
+    const confirm = page.element.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(confirm.disabled).toBe(true);
+    expect(confirm.querySelector('app-spinner')).toBeNull();
   });
 });

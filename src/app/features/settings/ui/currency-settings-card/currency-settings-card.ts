@@ -11,10 +11,11 @@ import {
   SETTINGS_SUBMIT_BUTTON_CLASSES,
 } from '../settings-control-classes';
 import { SettingsField } from '../settings-field/settings-field';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 @Component({
   selector: 'app-currency-settings-card',
-  imports: [ReactiveFormsModule, SettingsCard, SettingsField],
+  imports: [ReactiveFormsModule, SettingsCard, SettingsField, BusyLabel],
   templateUrl: './currency-settings-card.html',
   host: { class: 'block' },
   // The symbol error reads the form's touched state, which signals do not track.

@@ -1,7 +1,8 @@
 <!-- The footer packs its buttons left; the first one lands on the right. -->
 <button
   type="button"
-  class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary hover:bg-surface-muted"
+  class="h-11 rounded-lg border border-border bg-surface px-5 text-[12px]/[16px] text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+  [disabled]="isBusy()"
   (click)="cancelled.emit()"
 >
   إلغاء
@@ -13,5 +14,5 @@
   [attr.aria-busy]="isBusy()"
   (click)="confirmed.emit()"
 >
-  {{ confirmLabel() }}
+  <app-busy-label [isBusy]="isBusy()">{{ confirmLabel() }}</app-busy-label>
 </button>

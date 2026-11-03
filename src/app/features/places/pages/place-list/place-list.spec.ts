@@ -383,3 +383,22 @@ describe('PlaceList export', () => {
     expect(saved).toEqual(['places-2026-09-20.csv']);
   });
 });
+
+describe('PlaceList export while the file is built', () => {
+  it('spins on the export button', () => {
+    configure({
+      getPlaces: () => of({ items: [createPlace()], totalCount: 1 }),
+      exportPlaces: () => NEVER,
+    });
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+    const exportButton = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('button'),
+    ).find((button) => button.textContent?.trim() === 'تصدير') as HTMLButtonElement;
+
+    exportButton.click();
+    fixture.detectChanges();
+
+    expect(exportButton.querySelector('app-spinner')).not.toBeNull();
+  });
+});

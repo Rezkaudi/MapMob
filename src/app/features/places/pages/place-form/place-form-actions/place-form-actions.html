@@ -11,18 +11,25 @@
 >
   <button
     type="submit"
-    class="h-[46px] rounded bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    class="h-[46px] rounded bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+    [disabled]="isBusy()"
+    [attr.aria-busy]="isBusy()"
   >
-    حفظ المكان
+    <app-busy-label [isBusy]="isBusy()">حفظ المكان</app-busy-label>
   </button>
   <button
     type="button"
-    class="h-[46px] rounded border border-border bg-surface px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    class="h-[46px] rounded border border-border bg-surface px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+    [disabled]="isBusy()"
   >
     حفظ كمسودة
   </button>
   <a
     routerLink="/admin/places"
+    [class.pointer-events-none]="isBusy()"
+    [class.opacity-60]="isBusy()"
+    [attr.aria-disabled]="isBusy() || null"
+    [attr.tabindex]="isBusy() ? -1 : null"
     class="flex h-[46px] items-center rounded border border-closed px-4 text-[14px]/[20px] font-medium text-closed transition-colors hover:bg-error-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-closed"
   >
     إلغاء

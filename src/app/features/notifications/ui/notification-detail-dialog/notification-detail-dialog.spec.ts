@@ -3,6 +3,7 @@ import { AppNotification } from '../../models/notification';
 import { buildNotificationDetailView } from '../../state/notification-detail-view';
 import { buildNotification } from '../../testing/notification-fixture';
 import { NotificationDetailDialog } from './notification-detail-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const NOW = new Date(2026, 8, 8, 10, 0);
 const SCHEDULED = buildNotification();
@@ -82,5 +83,20 @@ describe('NotificationDetailDialog', () => {
     const loading = render({ notification: null, isLoading: true });
     expect(loading.element.querySelector('app-skeleton')).toBeTruthy();
     expect(loading.element.querySelector('footer button')).toBeNull();
+  });
+});
+
+describe('NotificationDetailDialog while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const { fixture } = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

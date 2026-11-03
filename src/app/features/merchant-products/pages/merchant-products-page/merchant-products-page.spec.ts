@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
 import { ProductDraft } from '../../../../shared/models/product-draft';
 import { RowActionsMenu } from '../../../../shared/ui/row-actions-menu/row-actions-menu';
@@ -21,11 +21,15 @@ class FakeRepository extends MerchantProductRepository {
     items: [buildMerchantProduct({ id: '1' }), buildMerchantProduct({ id: '2', name: 'سيروم' })],
   });
   isFailing = false;
+  isCreatePending = false;
 
   getCatalog(): Observable<MerchantProductCatalog> {
     return this.isFailing ? throwError(() => new Error('انقطع الاتصال')) : of(this.catalog);
   }
   createProduct(draft: ProductDraft): Observable<MerchantProduct> {
+    if (this.isCreatePending) {
+      return NEVER;
+    }
     return of(buildMerchantProduct({ id: '3', name: draft.name }));
   }
   updateProduct(id: string, draft: ProductDraft): Observable<MerchantProduct> {
@@ -150,5 +154,26 @@ describe('MerchantProductsPage', () => {
 
     expect(host.querySelector('app-error-state')?.textContent).toContain('انقطع الاتصال');
     expect(host.querySelector('app-product-table')).toBeNull();
+  });
+});
+
+describe('MerchantProductsPage while a product saves', () => {
+  it('spins on the dialog save button until the server answers', () => {
+    const fixture = build((repository) => (repository.isCreatePending = true));
+    const host: HTMLElement = fixture.nativeElement;
+    host.querySelector<HTMLButtonElement>('app-add-button button')!.click();
+    fixture.detectChanges();
+    const name = host.querySelector('[data-testid="product-name"]') as HTMLInputElement;
+    name.value = 'جل';
+    name.dispatchEvent(new Event('input'));
+    const price = host.querySelector('[data-testid="product-price"]') as HTMLInputElement;
+    price.value = '90';
+    price.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    host.querySelector<HTMLButtonElement>('[data-testid="submit-product"]')!.click();
+    fixture.detectChanges();
+
+    expect(host.querySelector('[data-testid="submit-product"] app-spinner')).not.toBeNull();
   });
 });

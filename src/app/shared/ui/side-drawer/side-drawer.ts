@@ -64,6 +64,8 @@ export class SideDrawer {
   readonly hasAlertDot = input<boolean>(false);
   readonly footerTone = input<DrawerFooterTone>('plain');
   readonly appearance = input<DrawerAppearance>('panel');
+  /** True while the drawer's save runs; the drawer then stays open. */
+  readonly isBusy = input<boolean>(false);
   readonly closed = output<void>();
 
   protected readonly skin = computed(() => SKINS[this.appearance()]);
@@ -77,6 +79,9 @@ export class SideDrawer {
 
   @HostListener('document:keydown.escape')
   protected close(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 }

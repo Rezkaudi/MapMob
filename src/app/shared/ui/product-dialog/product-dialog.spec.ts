@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ProductDialog } from './product-dialog';
 import { ProductDraft } from '../../models/product-draft';
+import { tryEveryWayOut } from '../../testing/try-every-way-out';
 
 function build() {
   const fixture = TestBed.createComponent(ProductDialog);
@@ -224,5 +225,22 @@ describe('ProductDialog', () => {
       'app-icon',
       'span',
     ]);
+  });
+});
+
+describe('ProductDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const fixture = build();
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const submit = element.querySelector('[data-testid="submit-product"]') as HTMLButtonElement;
+    expect(submit.disabled).toBe(true);
+    expect(submit.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+    expect(closes).not.toHaveBeenCalled();
   });
 });

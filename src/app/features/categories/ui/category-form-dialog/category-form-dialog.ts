@@ -17,10 +17,11 @@ import { CategoryFormCopy } from '../category-form-copy';
 import { CategoryColorPicker } from '../category-color-picker/category-color-picker';
 import { CategoryIconPicker } from '../category-icon-picker/category-icon-picker';
 import { CategoryKindPicker } from '../category-kind-picker/category-kind-picker';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 @Component({
   selector: 'app-category-form-dialog',
-  imports: [AppIcon, CategoryColorPicker, CategoryIconPicker, CategoryKindPicker],
+  imports: [AppIcon, CategoryColorPicker, CategoryIconPicker, CategoryKindPicker, BusyLabel],
   templateUrl: './category-form-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -75,7 +76,10 @@ export class CategoryFormDialog {
   }
 
   @HostListener('document:keydown.escape')
-  protected cancelOnEscape(): void {
+  protected cancelUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.cancelled.emit();
   }
 }

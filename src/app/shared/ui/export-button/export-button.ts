@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
+import { Spinner } from '../spinner/spinner';
 
 /** The 93×45 outlined "تصدير" button the list headers carry. */
 @Component({
   selector: 'app-export-button',
-  imports: [AppIcon],
+  imports: [AppIcon, Spinner],
   templateUrl: './export-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

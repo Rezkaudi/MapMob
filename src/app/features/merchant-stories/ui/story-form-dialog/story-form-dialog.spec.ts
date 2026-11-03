@@ -3,6 +3,7 @@ import { StoryDraft } from '../../models/story-draft';
 import { StoryFormOptions } from '../../models/story-form-options';
 import { buildStory } from '../../testing/merchant-story-fixture';
 import { StoryFormDialog } from './story-form-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const ADD: StoryFormOptions = {
   story: null,
@@ -219,5 +220,21 @@ describe('StoryFormDialog', () => {
 
       expect(drafts).toEqual([{ file: VIDEO, caption: 'النص القديم' }]);
     });
+  });
+});
+
+describe('StoryFormDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const { fixture } = build();
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

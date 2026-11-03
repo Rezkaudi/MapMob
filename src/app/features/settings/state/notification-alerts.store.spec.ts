@@ -56,3 +56,44 @@ describe('NotificationAlertsStore', () => {
     expect(store.saveError()).toBe('تعذر حفظ التنبيه');
   });
 });
+
+describe('NotificationAlertsStore while a switch saves', () => {
+  it('names the alert being saved until the server answers', () => {
+    const answer = new Subject<NotificationAlert>();
+    const store = createStore({ setAlertEnabled: () => answer });
+    const [first] = store.alerts();
+
+    void store.setAlertEnabled(first.kind, !first.isEnabled);
+
+    expect(store.savingKind()).toBe(first.kind);
+    answer.next({ kind: first.kind, isEnabled: !first.isEnabled });
+    answer.complete();
+  });
+
+  it('names no alert once the save ends', async () => {
+    const store = createStore();
+    const [first] = store.alerts();
+
+    await store.setAlertEnabled(first.kind, !first.isEnabled);
+
+    expect(store.savingKind()).toBeNull();
+  });
+
+  it('ignores another switch while one is saving', async () => {
+    const calls: string[] = [];
+    const store = createStore({
+      setAlertEnabled: (kind) => {
+        calls.push(kind);
+        return new Subject<NotificationAlert>();
+      },
+    });
+    const [first, second] = store.alerts();
+    void store.setAlertEnabled(first.kind, !first.isEnabled);
+
+    const isSaved = await store.setAlertEnabled(second.kind, !second.isEnabled);
+
+    expect(isSaved).toBe(false);
+    expect(calls).toEqual([first.kind]);
+    expect(store.alerts()[1].isEnabled).toBe(second.isEnabled);
+  });
+});

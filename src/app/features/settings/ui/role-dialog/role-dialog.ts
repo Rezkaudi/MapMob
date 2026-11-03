@@ -20,11 +20,12 @@ import { NEW_ROLE_GRANTS, toggleGrant } from '../../state/role-grants';
 import { PermissionMatrix } from '../permission-matrix/permission-matrix';
 import { SETTINGS_DIALOG_INPUT_CLASSES } from '../settings-control-classes';
 import { roleDialogCopy } from './role-dialog-copy';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 /** The 896px role card with the name, status, description and the permission matrix. */
 @Component({
   selector: 'app-role-dialog',
-  imports: [AppIcon, PermissionMatrix, ReactiveFormsModule, ToggleSwitch],
+  imports: [AppIcon, PermissionMatrix, ReactiveFormsModule, ToggleSwitch, BusyLabel],
   templateUrl: './role-dialog.html',
   // Field errors read the form's touched state, which signals do not track.
   changeDetection: ChangeDetectionStrategy.Default,
@@ -108,7 +109,10 @@ export class RoleDialog implements OnInit {
   }
 
   @HostListener('document:keydown.escape')
-  protected closeOnEscape(): void {
+  protected closeUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 

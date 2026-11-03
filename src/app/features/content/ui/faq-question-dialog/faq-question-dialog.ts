@@ -19,6 +19,7 @@ import {
 } from '../../state/faq-question-form-group';
 import { touchedError } from '../../../../shared/forms/touched-error';
 import { FAQ_QUESTION_DIALOG_COPY } from './faq-question-dialog-copy';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const MESSAGES = {
   question: 'اكتب نص السؤال',
@@ -28,7 +29,7 @@ const MESSAGES = {
 /** The 580px card that adds a question or edits one. */
 @Component({
   selector: 'app-faq-question-dialog',
-  imports: [AppIcon, ReactiveFormsModule],
+  imports: [AppIcon, ReactiveFormsModule, BusyLabel],
   templateUrl: './faq-question-dialog.html',
   changeDetection: ChangeDetectionStrategy.Default,
 })
@@ -73,7 +74,10 @@ export class FaqQuestionDialog implements OnInit {
   }
 
   @HostListener('document:keydown.escape')
-  protected closeOnEscape(): void {
+  protected closeUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 }

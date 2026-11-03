@@ -56,7 +56,7 @@
           [disabled]="store.isLoading() || store.isSavingProfile()"
           [attr.aria-busy]="store.isSavingProfile()"
         >
-          حفظ التغييرات
+          <app-busy-label [isBusy]="store.isSavingProfile()">حفظ التغييرات</app-busy-label>
         </button>
       </div>
     </app-settings-card>
@@ -96,7 +96,7 @@
         [disabled]="store.isChangingPassword()"
         [attr.aria-busy]="store.isChangingPassword()"
       >
-        تحديث كلمة المرور
+        <app-busy-label [isBusy]="store.isChangingPassword()">تحديث كلمة المرور</app-busy-label>
       </button>
     </div>
   </app-settings-card>

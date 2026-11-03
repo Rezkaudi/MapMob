@@ -27,3 +27,18 @@ describe('AuthSubmitButton', () => {
     expect(button.querySelector('app-spinner')).toBeTruthy();
   });
 });
+
+describe('AuthSubmitButton while another button on the form waits', () => {
+  it('stays disabled without a spinner of its own', () => {
+    const fixture = TestBed.createComponent(AuthSubmitButton);
+    fixture.componentRef.setInput('label', 'تأكيد الرمز');
+    fixture.componentRef.setInput('busyLabel', 'جاري التحقق من الرمز');
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.componentRef.setInput('isSpinning', false);
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    expect(button.querySelector('app-spinner')).toBeNull();
+  });
+});

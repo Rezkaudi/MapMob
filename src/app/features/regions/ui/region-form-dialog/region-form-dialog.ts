@@ -12,6 +12,7 @@ import { SelectOption } from '../../../../shared/ui/select-field/select-option';
 import { RegionDraft } from '../../models/region-draft';
 import { REGION_STATUS_OPTION_LABEL, RegionStatus } from '../../models/region-status';
 import { RegionFormCopy } from '../region-form-copy';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const STATUS_OPTIONS: readonly SelectOption[] = (
   Object.keys(REGION_STATUS_OPTION_LABEL) as RegionStatus[]
@@ -19,7 +20,7 @@ const STATUS_OPTIONS: readonly SelectOption[] = (
 
 @Component({
   selector: 'app-region-form-dialog',
-  imports: [AppIcon],
+  imports: [AppIcon, BusyLabel],
   templateUrl: './region-form-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -56,7 +57,10 @@ export class RegionFormDialog {
   }
 
   @HostListener('document:keydown.escape')
-  protected cancelOnEscape(): void {
+  protected cancelUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.cancelled.emit();
   }
 }

@@ -1,4 +1,5 @@
 <app-dialog-frame
+  [isBusy]="isBusy()"
   heading="إعادة جدولة الإشعار"
   subheading="قم بتحديد الموعد الجديد لإرسال الإشعار المجدول"
   [isBackVisible]="true"
@@ -54,8 +55,9 @@
   <div dialogFooter class="flex items-center gap-4">
     <button
       type="button"
-      class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-border/40"
+      class="h-[42px] rounded border border-border px-5 text-[14px]/[20px] font-bold text-text-primary hover:bg-border/40 disabled:cursor-not-allowed disabled:opacity-60"
       (click)="back.emit()"
+      [disabled]="isBusy()"
     >
       إلغاء
     </button>
@@ -66,7 +68,7 @@
       [attr.aria-busy]="isBusy()"
       (click)="confirm()"
     >
-      تأكيد إعادة جدولة
+      <app-busy-label [isBusy]="isBusy()">تأكيد إعادة جدولة</app-busy-label>
     </button>
   </div>
 </app-dialog-frame>

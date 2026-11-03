@@ -9,10 +9,11 @@ import {
   SETTINGS_SUBMIT_BUTTON_CLASSES,
 } from '../settings-control-classes';
 import { SettingsField } from '../settings-field/settings-field';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 @Component({
   selector: 'app-language-settings-card',
-  imports: [ReactiveFormsModule, SettingsCard, SettingsField],
+  imports: [ReactiveFormsModule, SettingsCard, SettingsField, BusyLabel],
   templateUrl: './language-settings-card.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

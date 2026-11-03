@@ -17,9 +17,13 @@
         class="h-[42px] border-border bg-white text-text-primary hover:bg-surface-muted"
         [class]="outlinedButton"
         [disabled]="isBusy()"
-        (click)="pause.emit()"
+        (click)="pressedAction.press('pause'); pause.emit()"
       >
-        <app-icon name="pause-outline" [size]="14" aria-hidden="true" />
+        @if (pressedAction.spinning() === 'pause') {
+          <app-spinner [size]="14" label="جاري التنفيذ" />
+        } @else {
+          <app-icon name="pause-outline" [size]="14" aria-hidden="true" />
+        }
         <span>إيقاف العرض</span>
       </button>
     }
@@ -29,9 +33,13 @@
         class="h-[42px] border-border bg-white text-text-primary hover:bg-surface-muted"
         [class]="outlinedButton"
         [disabled]="isBusy()"
-        (click)="resume.emit()"
+        (click)="pressedAction.press('resume'); resume.emit()"
       >
-        <app-icon name="play" [size]="14" aria-hidden="true" />
+        @if (pressedAction.spinning() === 'resume') {
+          <app-spinner [size]="14" label="جاري التنفيذ" />
+        } @else {
+          <app-icon name="play" [size]="14" aria-hidden="true" />
+        }
         <span>تفعيل العرض</span>
       </button>
     }
@@ -42,9 +50,13 @@
     class="h-10 border-closed text-closed hover:bg-closed/5"
     [class]="outlinedButton"
     [disabled]="isBusy()"
-    (click)="remove.emit()"
+    (click)="pressedAction.press('remove'); remove.emit()"
   >
-    <app-icon name="trash-filled" [size]="12" aria-hidden="true" />
+    @if (pressedAction.spinning() === 'remove') {
+      <app-spinner [size]="14" label="جاري التنفيذ" />
+    } @else {
+      <app-icon name="trash-filled" [size]="12" aria-hidden="true" />
+    }
     <span>حذف</span>
   </button>
 </div>

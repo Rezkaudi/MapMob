@@ -56,4 +56,30 @@ describe('FormActionBar', () => {
 
     expect(buttons.every((button) => button.disabled)).toBe(true);
   });
+
+  it('spins on the save button and takes cancel out of reach while saving', () => {
+    const element = render(true).nativeElement as HTMLElement;
+
+    const save = element.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(save.disabled).toBe(true);
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+    const cancel = element.querySelector('a') as HTMLAnchorElement;
+    expect(cancel.getAttribute('aria-disabled')).toBe('true');
+    expect(cancel.getAttribute('tabindex')).toBe('-1');
+    expect(cancel.className).toContain('pointer-events-none');
+  });
+});
+
+describe('FormActionBar saving a draft', () => {
+  it('spins on the draft button, not on save, when the draft was asked for', () => {
+    const fixture = render();
+    const element = fixture.nativeElement as HTMLElement;
+    (element.querySelector('button[type="button"]') as HTMLButtonElement).click();
+
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('button[type="button"] app-spinner')).not.toBeNull();
+    expect(element.querySelector('button[type="submit"] app-spinner')).toBeNull();
+  });
 });

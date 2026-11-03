@@ -18,6 +18,7 @@ import { EMPTY_PRODUCT_DRAFT } from '../../models/empty-product-draft';
 import { PRODUCT_AVAILABILITY_CHOICES, availabilityValue } from '../../models/product-availability';
 import { ProductDraft } from '../../models/product-draft';
 import { PRODUCT_FORM_COPY } from './product-form-copy';
+import { Spinner } from '../spinner/spinner';
 
 const AVAILABLE = 'available';
 /** Stands in for a file name when the picture came back from the server. */
@@ -25,7 +26,7 @@ const SAVED_IMAGE_LABEL = 'الصورة الحالية';
 
 @Component({
   selector: 'app-product-dialog',
-  imports: [AppIcon, CurrencySelect, FieldLabel, FileDropzone, FormDialogFrame],
+  imports: [AppIcon, CurrencySelect, FieldLabel, FileDropzone, FormDialogFrame, Spinner],
   templateUrl: './product-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,6 +36,7 @@ export class ProductDialog {
   readonly initialDraft = input<ProductDraft>(EMPTY_PRODUCT_DRAFT);
   /** The merchant frame drops the line under the order link. */
   readonly isOrderUrlHintVisible = input<boolean>(true);
+  readonly isBusy = input<boolean>(false);
   readonly submitted = output<ProductDraft>();
   readonly cancelled = output<void>();
 

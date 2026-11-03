@@ -40,3 +40,15 @@ describe('MapSettingsCard', () => {
     expect(saved).toEqual([{ distanceUnit: 'kilometer', searchRadiusKm: 25 }]);
   });
 });
+
+describe('MapSettingsCard while saving', () => {
+  it('spins on the save button', () => {
+    const fixture = TestBed.createComponent(MapSettingsCard);
+    fixture.componentRef.setInput('map', { distanceUnit: 'kilometer', searchRadiusKm: 15 });
+    fixture.componentRef.setInput('isSaving', true);
+    fixture.detectChanges();
+
+    const save = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLElement;
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+  });
+});

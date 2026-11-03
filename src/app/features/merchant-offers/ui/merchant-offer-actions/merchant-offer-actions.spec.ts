@@ -50,3 +50,20 @@ describe('MerchantOfferActions', () => {
     expect(build('pause', true).buttons.every((button) => button.disabled)).toBe(true);
   });
 });
+
+describe('MerchantOfferActions while saving', () => {
+  it('spins only on the pressed button', () => {
+    const fixture = TestBed.createComponent(MerchantOfferActions);
+    fixture.componentRef.setInput('pauseAction', 'resume');
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const buttons = Array.from(element.querySelectorAll('button'));
+
+    buttons.find((button) => button.textContent?.trim() === 'تفعيل العرض')?.click();
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    const spinning = buttons.filter((button) => button.querySelector('app-spinner'));
+    expect(spinning.map((button) => button.textContent?.trim())).toEqual(['تفعيل العرض']);
+  });
+});

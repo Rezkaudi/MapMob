@@ -1,7 +1,7 @@
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { MediaPicker } from '../../../../shared/ui/media-picker/media-picker';
 import { PlaceRepository } from '../../data/place.repository';
 import { PLACE_MOCK_FORM_CHOICES } from '../../data/place-mock-form-choices';
@@ -25,15 +25,18 @@ function render(
   id: string | undefined = '',
   getPlace?: (id: string) => Observable<PlaceDetail>,
   choices: PlaceFormChoices = PLACE_MOCK_FORM_CHOICES,
+  savePlace?: PlaceRepository['savePlace'],
 ) {
   TestBed.resetTestingModule();
   const repository: Partial<PlaceRepository> = {
     getPlace: getPlace ?? ((placeId) => of(createPlaceDetail({ id: placeId }))),
     getPlaceFormChoices: () => of(choices),
-    savePlace: (placeId, request) => {
-      savedRequests.push({ id: placeId, request });
-      return of(placeId ?? 'place-new');
-    },
+    savePlace:
+      savePlace ??
+      ((placeId, request) => {
+        savedRequests.push({ id: placeId, request });
+        return of(placeId ?? 'place-new');
+      }),
   };
   TestBed.configureTestingModule({
     providers: [provideRouter([]), { provide: PlaceRepository, useValue: repository }],
@@ -758,5 +761,18 @@ describe('PlaceForm sections', () => {
     renderWithFragment('working-hours');
 
     expect(scrolled).toEqual(['working-hours']);
+  });
+});
+
+describe('PlaceForm while saving', () => {
+  it('spins on the save button until every part of the place is saved', () => {
+    const fixture = render('', undefined, PLACE_MOCK_FORM_CHOICES, () => NEVER);
+    fillRequiredFields(fixture);
+
+    submit(fixture);
+
+    const save = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(save.disabled).toBe(true);
+    expect(save.querySelector('app-spinner')).not.toBeNull();
   });
 });

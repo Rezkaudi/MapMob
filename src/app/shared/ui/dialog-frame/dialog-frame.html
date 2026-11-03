@@ -4,7 +4,7 @@
     role="dialog"
     aria-modal="true"
     aria-labelledby="dialog-frame-title"
-    (click)="closed.emit()"
+    (click)="closeUnlessBusy()"
   >
     <div
       class="w-full overflow-hidden border bg-white"
@@ -22,7 +22,8 @@
             <button
               type="button"
               aria-label="رجوع"
-              class="flex size-5 items-center justify-center text-[#130f26] hover:text-primary"
+              class="flex size-5 items-center justify-center text-[#130f26] hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="isBusy()"
               (click)="back.emit()"
             >
               <app-icon name="arrow-right-curved" [size]="20" aria-hidden="true" />
@@ -55,8 +56,9 @@
           <button
             type="button"
             aria-label="إغلاق النافذة"
-            class="flex size-8 shrink-0 items-center justify-center rounded text-text-secondary hover:bg-border"
-            (click)="closed.emit()"
+            class="flex size-8 shrink-0 items-center justify-center rounded text-text-secondary hover:bg-border disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="isBusy()"
+            (click)="closeUnlessBusy()"
           >
             <app-icon name="close-sharp" [size]="12" aria-hidden="true" />
           </button>

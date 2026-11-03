@@ -100,7 +100,11 @@
                 [attr.aria-busy]="store.isExporting()"
                 (click)="exportRequested.emit()"
               >
-                <app-icon name="download-tray" [size]="16" aria-hidden="true" />
+                @if (store.isExporting()) {
+                  <app-spinner [size]="16" label="جاري التنفيذ" />
+                } @else {
+                  <app-icon name="download-tray" [size]="16" aria-hidden="true" />
+                }
                 تصدير قائمة الفائزين
               </button>
             }

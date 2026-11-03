@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 @Component({
@@ -13,4 +13,8 @@ export class AuthSubmitButton {
   /** Read by screen readers while the request runs. */
   readonly busyLabel = input.required<string>();
   readonly isBusy = input<boolean>(false);
+  /** `false` when another button on the form started the wait; it spins there instead. */
+  readonly isSpinning = input<boolean | null>(null);
+
+  protected readonly showsSpinner = computed(() => this.isSpinning() ?? this.isBusy());
 }

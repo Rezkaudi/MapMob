@@ -9,6 +9,7 @@ import { provideApiBaseUrl } from './core/config/api-base-url';
 import { provideMerchantSupportUrl } from './core/config/merchant-support-url';
 import { provideUseMockApi } from './core/config/use-mock-api';
 import { apiErrorInterceptor } from './core/http/api-error.interceptor';
+import { writeLockInterceptor } from './core/http/write-lock.interceptor';
 import { authTokenInterceptor } from './features/auth/data/auth-token.interceptor';
 import { sessionExpiryInterceptor } from './features/auth/data/session-expiry.interceptor';
 import { provideAdsFeature } from './features/ads/ads.providers';
@@ -49,10 +50,15 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    // The error interceptor comes first so it sees the 401 only after the session check.
+    // The error interceptor sees the 401 only after the session check.
     provideHttpClient(
       withFetch(),
-      withInterceptors([apiErrorInterceptor, authTokenInterceptor, sessionExpiryInterceptor]),
+      withInterceptors([
+        writeLockInterceptor,
+        apiErrorInterceptor,
+        authTokenInterceptor,
+        sessionExpiryInterceptor,
+      ]),
     ),
     { provide: LOCALE_ID, useValue: 'ar' },
     provideApiBaseUrl(),

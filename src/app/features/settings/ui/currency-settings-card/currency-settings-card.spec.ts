@@ -47,3 +47,19 @@ describe('CurrencySettingsCard', () => {
     expect(saved).toEqual([{ currency: 'SYP', currencySymbol: 'ل.س', decimalPlaces: 2 }]);
   });
 });
+
+describe('CurrencySettingsCard while saving', () => {
+  it('spins on the save button', () => {
+    const fixture = TestBed.createComponent(CurrencySettingsCard);
+    fixture.componentRef.setInput('currency', {
+      currency: 'SYP',
+      currencySymbol: 'ل.س',
+      decimalPlaces: 0,
+    });
+    fixture.componentRef.setInput('isSaving', true);
+    fixture.detectChanges();
+
+    const save = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLElement;
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+  });
+});

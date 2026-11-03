@@ -8,6 +8,7 @@ import { StarRating } from '../../../../shared/ui/star-rating/star-rating';
 import { OwnerReview } from '../../models/owner-review';
 import { ReviewReport } from '../../models/review-report';
 import { REVIEW_REPORT_REASON_LABEL, ReviewReportReason } from '../../models/review-report-reason';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const NOTES_MAX_LENGTH = 500;
 const SUBHEADING =
@@ -19,7 +20,7 @@ const REASON_CHOICES = (Object.keys(REVIEW_REPORT_REASON_LABEL) as ReviewReportR
 /** "الإبلاغ عن مراجعة": a reason, optional details, then the report goes to the admins. */
 @Component({
   selector: 'app-review-report-dialog',
-  imports: [AppIcon, ArabicDatePipe, FormDialogFrame, RadioDot, StarRating],
+  imports: [AppIcon, ArabicDatePipe, FormDialogFrame, RadioDot, StarRating, BusyLabel],
   templateUrl: './review-report-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

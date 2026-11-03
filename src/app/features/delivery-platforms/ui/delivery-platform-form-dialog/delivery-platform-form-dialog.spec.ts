@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { DeliveryPlatformDraft } from '../../models/delivery-platform-draft';
 import { buildDeliveryPlatformDraft } from '../../testing/delivery-platform-fixture';
 import { DeliveryPlatformFormDialog } from './delivery-platform-form-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render(inputs: Record<string, unknown> = {}) {
   const fixture = TestBed.createComponent(DeliveryPlatformFormDialog);
@@ -172,5 +173,21 @@ describe('DeliveryPlatformFormDialog', () => {
 
     expect(field(fixture, 'platform-website')).toBeNull();
     expect(sent[0].websiteUrl).toBe('');
+  });
+});
+
+describe('DeliveryPlatformFormDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const fixture = render();
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

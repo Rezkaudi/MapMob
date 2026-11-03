@@ -3,6 +3,7 @@ import { MOCK_PLANS } from '../../data/plan-mock-samples';
 import { PackagePlan } from '../../models/package-plan';
 import { PlanDraft } from '../../models/plan-draft';
 import { PlanFormDialog } from './plan-form-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const basic = MOCK_PLANS.find((plan) => plan.id === 'basic') as PackagePlan;
 const featured = MOCK_PLANS.find((plan) => plan.id === 'featured') as PackagePlan;
@@ -131,5 +132,22 @@ describe('PlanFormDialog', () => {
     expect(pickers[0].value).toBe('SYP');
     element(fixture).querySelector('form')?.dispatchEvent(new Event('submit'));
     expect(saved!.currency).toBe('SYP');
+  });
+});
+
+describe('PlanFormDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const fixture = render();
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

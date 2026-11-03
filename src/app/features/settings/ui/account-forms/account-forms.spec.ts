@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { AuthStore } from '../../../auth/state/auth.store';
 import { AccountRepository } from '../../data/account.repository';
 import { AccountProfile } from '../../models/account-profile';
@@ -103,5 +103,55 @@ describe('AccountForms', () => {
 
     expect(revokeSession).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith(MERCHANT_LOGIN_URL);
+  });
+});
+
+describe('AccountForms while saving', () => {
+  function renderPending() {
+    const repository: Partial<AccountRepository> = {
+      getProfile: () => of(buildAccountProfile()),
+      updateProfile: () => NEVER,
+      changePassword: () => NEVER,
+    };
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: AccountRepository, useValue: repository },
+        { provide: AuthStore, useValue: { revokeSession: vi.fn() } },
+      ],
+    });
+    const fixture = TestBed.createComponent(AccountForms);
+    fixture.componentRef.setInput('signOutUrl', MERCHANT_LOGIN_URL);
+    fixture.detectChanges();
+    return { fixture, element: fixture.nativeElement as HTMLElement };
+  }
+
+  function typeInto(element: HTMLElement, id: string, value: string): void {
+    const input = element.querySelector(`#${id}`) as HTMLInputElement;
+    input.value = value;
+    input.dispatchEvent(new Event('input'));
+  }
+
+  it('spins on the profile save button until the server answers', () => {
+    const { fixture, element } = renderPending();
+    const [profileForm] = Array.from(element.querySelectorAll('form'));
+
+    profileForm.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(profileForm.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+  });
+
+  it('spins on the password button until the server answers', () => {
+    const { fixture, element } = renderPending();
+    typeInto(element, 'current-password', 'Old-pass-123');
+    typeInto(element, 'new-password', 'New-pass-456');
+    typeInto(element, 'confirm-password', 'New-pass-456');
+    const passwordForm = Array.from(element.querySelectorAll('form')).at(-1) as HTMLFormElement;
+
+    passwordForm.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(passwordForm.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
   });
 });

@@ -22,6 +22,7 @@ import {
 } from '../../state/delivery-platform-form-group';
 import { DELIVERY_PLATFORM_FORM_COPY } from '../delivery-platform-dialog-copy';
 import { PlatformLogoField } from '../platform-logo-field/platform-logo-field';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 const STATUS_CHOICES = (
   Object.keys(DELIVERY_PLATFORM_STATUS_LABEL) as (keyof typeof DELIVERY_PLATFORM_STATUS_LABEL)[]
@@ -29,7 +30,7 @@ const STATUS_CHOICES = (
 
 @Component({
   selector: 'app-delivery-platform-form-dialog',
-  imports: [AppIcon, FieldLabel, FormDialogFrame, PlatformLogoField, ReactiveFormsModule],
+  imports: [AppIcon, FieldLabel, FormDialogFrame, PlatformLogoField, ReactiveFormsModule, Spinner],
   templateUrl: './delivery-platform-form-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,7 +48,9 @@ export class DeliveryPlatformFormDialog {
 
   protected readonly statusChoices = STATUS_CHOICES;
   protected readonly copy = computed(() => DELIVERY_PLATFORM_FORM_COPY[this.mode()]);
-  protected readonly form = computed(() => createDeliveryPlatformFormGroup(this.initialDraft(), this.isWebsiteShown()));
+  protected readonly form = computed(() =>
+    createDeliveryPlatformFormGroup(this.initialDraft(), this.isWebsiteShown()),
+  );
   protected readonly logoUrl = linkedSignal(() => this.initialDraft()?.logoUrl ?? null);
   private readonly logoFile = signal<File | null>(null);
   /** Goes up on every change of the form, so the OnPush messages follow it. */

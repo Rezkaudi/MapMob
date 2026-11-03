@@ -112,3 +112,16 @@ describe('ComplaintDetail page', () => {
     expect(loads).toBe(2);
   });
 });
+
+describe('ComplaintDetailPage while saving', () => {
+  it('spins on the save button until the server answers', () => {
+    const { fixture, element } = render({ saveReview: () => NEVER });
+
+    buttonNamed(element, 'حفظ التغييرات').click();
+    fixture.detectChanges();
+
+    const save = element.querySelector('footer button') as HTMLButtonElement;
+    expect(save.disabled).toBe(true);
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+  });
+});

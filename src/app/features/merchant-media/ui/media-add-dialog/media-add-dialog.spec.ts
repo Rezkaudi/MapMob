@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MediaAddOptions } from '../../models/media-add-options';
 import { MediaDraft } from '../../models/media-draft';
 import { MediaAddDialog } from './media-add-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const DIALOG: MediaAddOptions = {
   startKind: 'image',
@@ -115,5 +116,21 @@ describe('MediaAddDialog', () => {
     query(fixture, '[data-testid="cancel-media"]')!.click();
 
     expect(cancelCount).toBe(1);
+  });
+});
+
+describe('MediaAddDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const fixture = build();
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

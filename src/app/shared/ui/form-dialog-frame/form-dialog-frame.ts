@@ -65,6 +65,8 @@ export class FormDialogFrame {
   readonly size = input<FormDialogSize>('regular');
   /** A read-only table has nothing to confirm, so it drops the footer. */
   readonly hasFooter = input<boolean>(true);
+  /** True while the dialog's save runs; the dialog then stays open. */
+  readonly isBusy = input<boolean>(false);
   readonly closed = output<void>();
 
   protected readonly titleId = `form-dialog-title-${nextTitleNumber++}`;
@@ -72,7 +74,10 @@ export class FormDialogFrame {
   protected readonly sizeSkin = computed(() => SIZE_SKINS[this.size()]);
 
   @HostListener('document:keydown.escape')
-  protected closeOnEscape(): void {
+  protected closeUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 }

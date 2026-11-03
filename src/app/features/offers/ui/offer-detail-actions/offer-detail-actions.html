@@ -16,9 +16,13 @@
         type="button"
         class="flex h-[42px] w-[101px] items-center justify-center gap-1 rounded-lg border border-border bg-white text-[12px]/[16px] font-semibold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
         [disabled]="isBusy()"
-        (click)="pause.emit()"
+        (click)="pressedAction.press('pause'); pause.emit()"
       >
-        <app-icon name="pause-bars" [size]="11" aria-hidden="true" />
+        @if (pressedAction.spinning() === 'pause') {
+          <app-spinner [size]="14" label="جاري التنفيذ" />
+        } @else {
+          <app-icon name="pause-bars" [size]="11" aria-hidden="true" />
+        }
         <span>إيقاف العرض</span>
       </button>
     }
@@ -27,9 +31,13 @@
         type="button"
         class="flex h-[42px] w-[101px] items-center justify-center gap-1 rounded-lg border border-border bg-white text-[12px]/[16px] font-semibold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
         [disabled]="isBusy()"
-        (click)="resume.emit()"
+        (click)="pressedAction.press('resume'); resume.emit()"
       >
-        <app-icon name="play" [size]="11" aria-hidden="true" />
+        @if (pressedAction.spinning() === 'resume') {
+          <app-spinner [size]="14" label="جاري التنفيذ" />
+        } @else {
+          <app-icon name="play" [size]="11" aria-hidden="true" />
+        }
         <span>تفعيل العرض</span>
       </button>
     }
@@ -39,9 +47,13 @@
     type="button"
     class="flex h-10 w-[69px] items-center justify-center gap-1 rounded-lg border border-closed text-[12px]/[16px] font-semibold text-closed hover:bg-closed/5 disabled:cursor-not-allowed disabled:opacity-60"
     [disabled]="isBusy()"
-    (click)="remove.emit()"
+    (click)="pressedAction.press('remove'); remove.emit()"
   >
-    <app-icon name="trash-filled" [size]="12" aria-hidden="true" />
+    @if (pressedAction.spinning() === 'remove') {
+      <app-spinner [size]="14" label="جاري التنفيذ" />
+    } @else {
+      <app-icon name="trash-filled" [size]="12" aria-hidden="true" />
+    }
     <span>حذف</span>
   </button>
 </div>

@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { CampaignPauseAction } from '../../../../shared/models/campaign-pause-action';
+import { PressedAction } from '../../../../shared/state/pressed-action';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
+
+type OfferAction = 'pause' | 'resume' | 'remove';
 
 @Component({
   selector: 'app-offer-detail-actions',
-  imports: [AppIcon],
+  imports: [AppIcon, Spinner],
   templateUrl: './offer-detail-actions.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,4 +20,6 @@ export class OfferDetailActions {
   readonly pause = output<void>();
   readonly resume = output<void>();
   readonly remove = output<void>();
+
+  protected readonly pressedAction = new PressedAction<OfferAction>(this.isBusy);
 }

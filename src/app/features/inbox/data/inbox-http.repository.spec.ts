@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { InboxHttpRepository } from './inbox-http.repository';
 import { LiveInboxNotification } from './live-inbox-notification';
+import { SKIPS_WRITE_LOCK } from '../../../core/http/skips-write-lock';
 
 const BASE = 'https://api.test';
 const INBOX_URL = `${BASE}/admin/inbox`;
@@ -63,5 +64,13 @@ describe('InboxHttpRepository', () => {
       .expectOne((call) => call.url === INBOX_URL)
       .flush(onePage([{ ...ROW, read_at: '2026-10-28T09:00:00Z' }]));
     expect((await read).isRead).toBe(true);
+  });
+
+  it('marks a notification as read in the background, without locking the page', () => {
+    repository.markAsRead('3').subscribe();
+
+    const patch = http.expectOne(`${INBOX_URL}/3/read`);
+    expect(patch.request.context.get(SKIPS_WRITE_LOCK)).toBe(true);
+    patch.flush({ data: { ...ROW, read_at: '2026-10-28T09:00:00Z' } });
   });
 });

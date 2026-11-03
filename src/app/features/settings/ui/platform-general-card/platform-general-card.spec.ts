@@ -65,3 +65,15 @@ describe('PlatformGeneralCard', () => {
     expect(element.textContent).toContain('اكتب بريداً إلكترونياً صحيحاً');
   });
 });
+
+describe('PlatformGeneralCard while saving', () => {
+  it('spins on the save button', () => {
+    const fixture = TestBed.createComponent(PlatformGeneralCard);
+    fixture.componentRef.setInput('general', buildPlatformSettings().general);
+    fixture.componentRef.setInput('isSaving', true);
+    fixture.detectChanges();
+
+    const save = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLElement;
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+  });
+});

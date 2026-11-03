@@ -17,9 +17,16 @@
       </p>
     </div>
   </div>
-  <app-toggle-switch
-    [isOn]="alert().isEnabled"
-    [label]="copy().title"
-    (toggled)="toggled.emit($event)"
-  />
+  <!-- RTL: the spinner sits between the text and the switch. -->
+  <div class="flex items-center gap-2">
+    @if (isSaving()) {
+      <app-spinner [size]="16" class="text-primary" label="جاري الحفظ" />
+    }
+    <app-toggle-switch
+      [isOn]="alert().isEnabled"
+      [label]="copy().title"
+      [isDisabled]="isDisabled()"
+      (toggled)="toggled.emit($event)"
+    />
+  </div>
 </div>

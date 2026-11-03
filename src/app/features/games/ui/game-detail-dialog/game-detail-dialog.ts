@@ -9,6 +9,7 @@ import { GameDetailSummary } from '../game-detail-summary/game-detail-summary';
 import { GameQuestionList } from '../game-question-list/game-question-list';
 import { GameStatTiles } from '../game-stat-tiles/game-stat-tiles';
 import { GameWinnerList } from '../game-winner-list/game-winner-list';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 /** The centred "تفاصيل اللعبة" modal. Reads the page's detail store; the page acts on its buttons. */
 @Component({
@@ -22,6 +23,7 @@ import { GameWinnerList } from '../game-winner-list/game-winner-list';
     GameWinnerList,
     IconTabs,
     Skeleton,
+    Spinner,
   ],
   templateUrl: './game-detail-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

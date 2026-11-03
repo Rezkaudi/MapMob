@@ -18,6 +18,7 @@ import {
   SETTINGS_SUBMIT_BUTTON_CLASSES,
 } from '../settings-control-classes';
 import { SettingsField } from '../settings-field/settings-field';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 const MESSAGES = {
   appName: 'اكتب اسم التطبيق',
@@ -29,7 +30,7 @@ type GeneralField = keyof typeof MESSAGES;
 
 @Component({
   selector: 'app-platform-general-card',
-  imports: [ReactiveFormsModule, SettingsCard, SettingsField],
+  imports: [ReactiveFormsModule, SettingsCard, SettingsField, BusyLabel],
   templateUrl: './platform-general-card.html',
   host: { class: 'block' },
   // Field errors read the form's touched state, which signals do not track.

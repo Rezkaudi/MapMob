@@ -97,13 +97,18 @@ export class DialogFrame {
   readonly appearance = input<DialogFrameAppearance>('compact');
   /** A read-only dialog, such as the subscription details, has no footer bar. */
   readonly hasFooter = input<boolean>(true);
+  /** True while the dialog's save runs; the dialog then stays open. */
+  readonly isBusy = input<boolean>(false);
   readonly closed = output<void>();
   readonly back = output<void>();
 
   protected readonly skin = computed(() => SKINS[this.appearance()]);
 
   @HostListener('document:keydown.escape')
-  protected closeOnEscape(): void {
+  protected closeUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
     this.closed.emit();
   }
 }

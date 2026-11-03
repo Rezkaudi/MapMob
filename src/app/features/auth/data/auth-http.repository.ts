@@ -1,14 +1,18 @@
-import { HttpClient, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpStatusCode } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { httpStatusOf } from '../../../core/http/http-status-of';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { SKIPS_WRITE_LOCK } from '../../../core/http/skips-write-lock';
 import { AuthenticatedUser } from '../models/authenticated-user';
 import { Credentials } from '../models/credentials';
 import { WRONG_CREDENTIALS_MESSAGE } from './auth-messages';
 import { AuthRepository } from './auth.repository';
 import { LiveLoginResponse } from './live-login-response';
+
+// The session ends on this side at once, so the login page need not wait for the server.
+const LOGOUT_IN_BACKGROUND = new HttpContext().set(SKIPS_WRITE_LOCK, true);
 
 @Injectable()
 export class AuthHttpRepository implements AuthRepository {
@@ -32,11 +36,19 @@ export class AuthHttpRepository implements AuthRepository {
   }
 
   signOut(): Observable<void> {
-    return this.httpClient.post<void>(`${this.adminUrl}/logout`, {});
+    return this.httpClient.post<void>(
+      `${this.adminUrl}/logout`,
+      {},
+      { context: LOGOUT_IN_BACKGROUND },
+    );
   }
 
   signOutMerchant(): Observable<void> {
-    return this.httpClient.post<void>(`${this.apiBaseUrl}/owner/auth/logout`, {});
+    return this.httpClient.post<void>(
+      `${this.apiBaseUrl}/owner/auth/logout`,
+      {},
+      { context: LOGOUT_IN_BACKGROUND },
+    );
   }
 }
 

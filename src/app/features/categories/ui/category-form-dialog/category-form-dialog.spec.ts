@@ -2,12 +2,19 @@ import { TestBed } from '@angular/core/testing';
 import { CategoryDraft } from '../../models/category-draft';
 import { buildCategoryFormCopy } from '../category-dialog-copy';
 import { CategoryFormDialog } from './category-form-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const PARENTS = [
   { value: 'm1', label: 'مطاعم' },
   { value: 'm2', label: 'مقاهي' },
 ];
-const NEW_DRAFT: CategoryDraft = { name: '', kind: 'main', parentId: null, icon: 'utensils-crossed', color: '#0583EC' };
+const NEW_DRAFT: CategoryDraft = {
+  name: '',
+  kind: 'main',
+  parentId: null,
+  icon: 'utensils-crossed',
+  color: '#0583EC',
+};
 
 function render(mode: 'create' | 'edit', draft: CategoryDraft = NEW_DRAFT) {
   const fixture = TestBed.createComponent(CategoryFormDialog);
@@ -86,7 +93,9 @@ describe('CategoryFormDialog', () => {
     fixture.detectChanges();
     query<HTMLButtonElement>(fixture, 'category-submit')!.click();
 
-    expect(submitted).toEqual([{ name: 'فنادق', kind: 'main', parentId: null, icon: 'store', color: '#0583EC' }]);
+    expect(submitted).toEqual([
+      { name: 'فنادق', kind: 'main', parentId: null, icon: 'store', color: '#0583EC' },
+    ]);
   });
 
   it('opens the edit dialog of a sub category without the kind picker', () => {
@@ -158,5 +167,22 @@ describe('CategoryFormDialog', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
     expect(cancelled).toHaveBeenCalledTimes(4);
+  });
+});
+
+describe('CategoryFormDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const fixture = render('create');
+    const closes = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

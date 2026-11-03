@@ -10,6 +10,7 @@ import { PAYMENT_KIND_CHOICES, PaymentKind } from '../../models/payment-kind';
 import { PAYMENT_TERM_CHOICES, PaymentTerm } from '../../models/payment-term';
 import { NewPaymentStore } from '../../state/new-payment.store';
 import { CurrentSubscriptionCard } from '../current-subscription-card/current-subscription-card';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 /** The design records cash only, so the method row is a fixed note rather than a choice. */
 const CASH_LABEL = 'نقدي';
@@ -23,6 +24,7 @@ const CASH_LABEL = 'نقدي';
     DialogFrame,
     SegmentedChoice,
     SlashDatePipe,
+    BusyLabel,
   ],
   templateUrl: './new-payment-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

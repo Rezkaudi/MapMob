@@ -3,11 +3,12 @@ import { ListSort } from '../../../../shared/models/list-sort';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ListSearchField } from '../../../../shared/ui/list-search-field/list-search-field';
 import { SortSelect } from '../../../../shared/ui/sort-select/sort-select';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 /** The top of the winners card: its title, the file export, then search and sort. */
 @Component({
   selector: 'app-winner-toolbar',
-  imports: [AppIcon, ListSearchField, SortSelect],
+  imports: [AppIcon, ListSearchField, SortSelect, Spinner],
   templateUrl: './winner-toolbar.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

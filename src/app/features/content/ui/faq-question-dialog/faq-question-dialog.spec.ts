@@ -3,6 +3,7 @@ import { FaqDialog } from '../../models/faq-dialog';
 import { FaqQuestionDraft } from '../../models/faq-question-draft';
 import { buildFaqQuestion } from '../../testing/content-fixture';
 import { FaqQuestionDialog } from './faq-question-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render(dialog: FaqDialog, saveError: string | null = null) {
   const fixture = TestBed.createComponent(FaqQuestionDialog);
@@ -107,5 +108,19 @@ describe('FaqQuestionDialog', () => {
     const { element } = render({ mode: 'add' }, 'تعذر حفظ السؤال');
 
     expect(element.querySelector('[role="alert"]')?.textContent?.trim()).toBe('تعذر حفظ السؤال');
+  });
+});
+
+describe('FaqQuestionDialog while saving', () => {
+  it('spins on the save button and cannot be closed until the save ends', () => {
+    const { fixture, element, closeCount } = render({ mode: 'add' });
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(element.querySelector('button[type="submit"] app-spinner')).not.toBeNull();
+
+    tryEveryWayOut(element);
+
+    expect(closeCount()).toBe(0);
   });
 });

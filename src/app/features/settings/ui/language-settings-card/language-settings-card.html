@@ -45,7 +45,7 @@
         [disabled]="isSaving()"
         [attr.aria-busy]="isSaving()"
       >
-        حفظ التغييرات
+        <app-busy-label [isBusy]="isSaving()">حفظ التغييرات</app-busy-label>
       </button>
     </div>
   </app-settings-card>

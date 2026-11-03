@@ -3,6 +3,7 @@ import { ReviewDetail } from '../../models/review-detail';
 import { buildReviewDetailView } from '../../state/review-detail-view';
 import { buildReview, buildReviewDetail } from '../../testing/review-fixture';
 import { ReviewDetailDrawer } from './review-detail-drawer';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 interface RenderOptions {
   readonly detail?: ReviewDetail | null;
@@ -117,5 +118,20 @@ describe('ReviewDetailDrawer', () => {
     ).click();
 
     expect(closed).toHaveBeenCalledOnce();
+  });
+});
+
+describe('ReviewDetailDrawer while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const fixture = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

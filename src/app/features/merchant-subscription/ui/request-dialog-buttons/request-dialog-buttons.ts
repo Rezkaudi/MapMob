@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 /** "إلغاء" and the send button, as the plan-change frames draw their footer. */
 @Component({
   selector: 'app-request-dialog-buttons',
+  imports: [BusyLabel],
   templateUrl: './request-dialog-buttons.html',
   // `contents` lets the two buttons sit straight in the dialog footer's flex row.
   host: { class: 'contents' },

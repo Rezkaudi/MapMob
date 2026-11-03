@@ -72,3 +72,33 @@ describe('ReviewModerationActions', () => {
     expect(buttons.every((button) => button.disabled)).toBe(true);
   });
 });
+
+describe('ReviewModerationActions while saving', () => {
+  function spinningLabels(element: HTMLElement): string[] {
+    return Array.from(element.querySelectorAll('button'))
+      .filter((button) => button.querySelector('app-spinner'))
+      .map((button) => button.textContent?.trim() ?? '');
+  }
+
+  it('spins only on the decision that was pressed', () => {
+    const fixture = render('settleReport');
+    const element = fixture.nativeElement as HTMLElement;
+
+    buttonNamed(element, 'قبول وإخفاء التقييم').click();
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(spinningLabels(element)).toEqual(['قبول وإخفاء التقييم']);
+  });
+
+  it('spins on the hide button once pressed', () => {
+    const fixture = render('hide');
+    const element = fixture.nativeElement as HTMLElement;
+
+    buttonNamed(element, 'إخفاء التقييم').click();
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+
+    expect(spinningLabels(element)).toEqual(['إخفاء التقييم']);
+  });
+});

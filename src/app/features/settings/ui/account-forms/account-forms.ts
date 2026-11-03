@@ -27,6 +27,7 @@ import {
   ACCOUNT_FIELD_MESSAGES,
   ACCOUNT_SAVED_COPY,
 } from './account-forms-copy';
+import { BusyLabel } from '../../../../shared/ui/busy-label/busy-label';
 
 /** The personal card, the password card and the sign-out strip that the admin and merchant share. */
 @Component({
@@ -39,6 +40,7 @@ import {
     SettingsPasswordField,
     SignOutPanel,
     Toast,
+    BusyLabel,
   ],
   templateUrl: './account-forms.html',
   providers: [AccountSettingsStore],

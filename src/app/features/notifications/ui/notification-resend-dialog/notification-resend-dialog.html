@@ -1,4 +1,5 @@
 <app-dialog-frame
+  [isBusy]="isBusy()"
   heading="إعادة إرسال الإشعار"
   subheading="تحديد موعد إعادة إرسال الإشعار للمستخدمين"
   headingIcon="refresh-ccw"
@@ -85,7 +86,7 @@
       [attr.aria-busy]="isBusy()"
       (click)="confirm()"
     >
-      إعادة إرسال الإشعار
+      <app-busy-label [isBusy]="isBusy()">إعادة إرسال الإشعار</app-busy-label>
     </button>
   </div>
 </app-dialog-frame>

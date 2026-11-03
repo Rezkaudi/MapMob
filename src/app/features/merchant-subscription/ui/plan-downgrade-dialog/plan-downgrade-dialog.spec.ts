@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { buildDowngradeView } from '../../state/plan-downgrade-view';
 import { FREE_PLAN, buildOverview } from '../../testing/merchant-subscription-fixture';
 import { PlanDowngradeDialog } from './plan-downgrade-dialog';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 function render() {
   const fixture = TestBed.createComponent(PlanDowngradeDialog);
@@ -43,5 +44,21 @@ describe('PlanDowngradeDialog', () => {
     confirm.click();
 
     expect(submitted).toHaveBeenCalledOnce();
+  });
+});
+
+describe('PlanDowngradeDialog while saving', () => {
+  it('spins and cannot be closed until the save ends', () => {
+    const fixture = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-spinner')).not.toBeNull();
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

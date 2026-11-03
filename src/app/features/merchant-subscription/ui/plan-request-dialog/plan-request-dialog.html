@@ -1,4 +1,9 @@
-<app-dialog-frame [heading]="request().title" appearance="slim" (closed)="closed.emit()">
+<app-dialog-frame
+  [isBusy]="isBusy()"
+  [heading]="request().title"
+  appearance="slim"
+  (closed)="closed.emit()"
+>
   <dl class="flex flex-col rounded-lg bg-[#F2F4F6] px-4 py-4">
     @for (row of request().rows; track row.label) {
       <!-- RTL: the label comes first, so it sits on the right. -->

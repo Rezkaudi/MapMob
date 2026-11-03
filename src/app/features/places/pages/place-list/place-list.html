@@ -22,7 +22,11 @@
           (click)="exportAll()"
         >
           <span>تصدير</span>
-          <app-icon name="export" [size]="16" />
+          @if (store.isExporting()) {
+            <app-spinner [size]="16" label="جاري التنفيذ" />
+          } @else {
+            <app-icon name="export" [size]="16" />
+          }
         </button>
       </div>
     }

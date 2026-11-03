@@ -16,7 +16,11 @@
     [attr.aria-busy]="isExporting()"
     (click)="exportRequested.emit()"
   >
-    <app-icon name="download-small" [size]="11" aria-hidden="true" />
+    @if (isExporting()) {
+      <app-spinner [size]="14" label="جاري التنفيذ" />
+    } @else {
+      <app-icon name="download-small" [size]="11" aria-hidden="true" />
+    }
     <span>تصدير الكشف</span>
   </button>
 </header>

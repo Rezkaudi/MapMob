@@ -82,4 +82,24 @@ describe('ConfirmDialog while saving', () => {
     const confirm: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     expect(confirm.disabled).toBe(true);
   });
+
+  it('spins on the confirm button and blocks cancel and the backdrop', () => {
+    const fixture = TestBed.createComponent(ConfirmDialog);
+    fixture.componentRef.setInput('title', 'حذف الشركات');
+    fixture.componentRef.setInput('message', 'متأكد؟');
+    fixture.componentRef.setInput('confirmLabel', 'حذف الشركات');
+    fixture.componentRef.setInput('isBusy', true);
+    const cancelled = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(cancelled);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('[data-testid="confirm-action"] app-spinner')).not.toBeNull();
+    const cancel = element.querySelector('[data-testid="cancel-confirm"]') as HTMLButtonElement;
+    expect(cancel.disabled).toBe(true);
+
+    (element.querySelector('[role="dialog"]') as HTMLElement).click();
+
+    expect(cancelled).not.toHaveBeenCalled();
+  });
 });

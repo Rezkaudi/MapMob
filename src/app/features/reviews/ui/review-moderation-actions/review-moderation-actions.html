@@ -9,17 +9,21 @@
           type="button"
           class="h-9 flex-1 rounded border border-border text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="isBusy()"
-          (click)="rejectReport.emit()"
+          (click)="pressedAction.press('rejectReport'); rejectReport.emit()"
         >
-          رفض البلاغ (إبقاء التقييم)
+          <app-busy-label [isBusy]="pressedAction.spinning() === 'rejectReport'"
+            >رفض البلاغ (إبقاء التقييم)</app-busy-label
+          >
         </button>
         <button
           type="button"
           class="h-9 flex-1 rounded bg-accent text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="isBusy()"
-          (click)="acceptReport.emit()"
+          (click)="pressedAction.press('acceptReport'); acceptReport.emit()"
         >
-          قبول وإخفاء التقييم
+          <app-busy-label [isBusy]="pressedAction.spinning() === 'acceptReport'"
+            >قبول وإخفاء التقييم</app-busy-label
+          >
         </button>
       }
       @case ('hide') {
@@ -27,9 +31,11 @@
           type="button"
           class="h-9 flex-1 rounded bg-accent text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="isBusy()"
-          (click)="statusChange.emit('hidden')"
+          (click)="pressedAction.press('hide'); statusChange.emit('hidden')"
         >
-          إخفاء التقييم
+          <app-busy-label [isBusy]="pressedAction.spinning() === 'hide'"
+            >إخفاء التقييم</app-busy-label
+          >
         </button>
       }
       @case ('show') {
@@ -37,9 +43,11 @@
           type="button"
           class="h-9 flex-1 rounded border border-border text-[12px]/[16px] font-bold text-text-primary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="isBusy()"
-          (click)="statusChange.emit('published')"
+          (click)="pressedAction.press('show'); statusChange.emit('published')"
         >
-          إظهار التقييم
+          <app-busy-label [isBusy]="pressedAction.spinning() === 'show'"
+            >إظهار التقييم</app-busy-label
+          >
         </button>
       }
     }
@@ -49,9 +57,13 @@
     type="button"
     class="flex h-9 w-full items-center justify-center gap-1 rounded bg-closed text-[12px]/[16px] font-bold text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
     [disabled]="isBusy()"
-    (click)="remove.emit()"
+    (click)="pressedAction.press('remove'); remove.emit()"
   >
-    <app-icon name="trash-outline" [size]="16" aria-hidden="true" />
+    @if (pressedAction.spinning() === 'remove') {
+      <app-spinner [size]="16" label="جاري التنفيذ" />
+    } @else {
+      <app-icon name="trash-outline" [size]="16" aria-hidden="true" />
+    }
     <span>حذف التقييم نهائياً من المنصة</span>
   </button>
 </div>

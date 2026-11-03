@@ -4,6 +4,7 @@ import { OfferDetail } from '../../models/offer-detail';
 import { buildOfferDetailView } from '../../state/offer-detail-view';
 import { buildOffer, buildOfferDetail } from '../../testing/offer-fixture';
 import { OfferDetailDrawer } from './offer-detail-drawer';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const DETAIL = buildOfferDetail();
 
@@ -111,5 +112,20 @@ describe('OfferDetailDrawer', () => {
     expect(failed.nativeElement.textContent).toContain('تعذر تحميل العرض');
     (failed.nativeElement.querySelector('[role="alert"] button') as HTMLButtonElement).click();
     expect(retry).toHaveBeenCalled();
+  });
+});
+
+describe('OfferDetailDrawer while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const fixture = render();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

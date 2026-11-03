@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PageLock } from '../../../core/page-lock/page-lock';
 import { TestBed } from '@angular/core/testing';
 import { Spinner } from './spinner';
 
@@ -48,5 +49,19 @@ describe('Spinner', () => {
 
     const status: HTMLElement = fixture.nativeElement.querySelector('[role="status"]');
     expect(status.getAttribute('aria-label')).toBe('جاري الحفظ');
+  });
+});
+
+describe('Spinner and the page lock', () => {
+  it('locks the page while it is on screen and frees it once gone', () => {
+    const pageLock = TestBed.inject(PageLock);
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    expect(pageLock.isBusy()).toBe(true);
+
+    fixture.destroy();
+
+    expect(pageLock.isBusy()).toBe(false);
   });
 });

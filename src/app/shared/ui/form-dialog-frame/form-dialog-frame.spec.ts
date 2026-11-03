@@ -100,3 +100,23 @@ describe('FormDialogFrame', () => {
     expect(element.querySelector('footer')).toBeNull();
   });
 });
+
+describe('FormDialogFrame while saving', () => {
+  it('cannot be closed by the cross, the backdrop or Escape', () => {
+    const fixture = TestBed.createComponent(FormDialogFrame);
+    fixture.componentRef.setInput('heading', 'حفظ');
+    fixture.componentRef.setInput('isBusy', true);
+    const closed = vi.fn();
+    fixture.componentInstance.closed.subscribe(closed);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    const cross = element.querySelector('[data-role="close-dialog"]') as HTMLButtonElement;
+    expect(cross.disabled).toBe(true);
+    cross.click();
+    (element.querySelector('[role="dialog"]') as HTMLElement).click();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(closed).not.toHaveBeenCalled();
+  });
+});

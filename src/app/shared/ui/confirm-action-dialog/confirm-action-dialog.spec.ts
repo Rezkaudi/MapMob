@@ -258,3 +258,22 @@ describe('ConfirmActionDialog hide and show dialogs from the admin story design'
     expect(question.classList).toContain('max-w-[360px]');
   });
 });
+
+describe('ConfirmActionDialog while saving', () => {
+  it('spins on the confirm button and blocks every way out until the save is done', () => {
+    const fixture = render('activate', true);
+    const cancelled = vi.fn();
+    fixture.componentInstance.cancelled.subscribe(cancelled);
+    const element = fixture.nativeElement as HTMLElement;
+
+    const confirm = element.querySelector('button') as HTMLButtonElement;
+    expect(confirm.disabled).toBe(true);
+    expect(confirm.querySelector('app-spinner')).not.toBeNull();
+    expect(buttonNamed(element, 'إلغاء').disabled).toBe(true);
+
+    (element.querySelector('[role="dialog"]') as HTMLElement).click();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(cancelled).not.toHaveBeenCalled();
+  });
+});

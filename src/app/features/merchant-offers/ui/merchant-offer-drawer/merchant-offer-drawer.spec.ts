@@ -6,6 +6,7 @@ import { MerchantOfferDetail } from '../../models/merchant-offer-detail';
 import { buildMerchantOffer } from '../../testing/merchant-offer-fixture';
 import { MerchantOfferActions } from '../merchant-offer-actions/merchant-offer-actions';
 import { MerchantOfferDrawer } from './merchant-offer-drawer';
+import { tryEveryWayOut } from '../../../../shared/testing/try-every-way-out';
 
 const DETAIL: MerchantOfferDetail = {
   offer: buildMerchantOffer({
@@ -71,5 +72,20 @@ describe('MerchantOfferDrawer', () => {
     ).click();
 
     expect(log).toEqual(['edit', 'pause', 'remove', 'close']);
+  });
+});
+
+describe('MerchantOfferDrawer while saving', () => {
+  it('cannot be closed until the save ends', () => {
+    const fixture = build();
+    const closes = vi.fn();
+    fixture.componentInstance.closed.subscribe(closes);
+    fixture.componentRef.setInput('isBusy', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    tryEveryWayOut(element);
+
+    expect(closes).not.toHaveBeenCalled();
   });
 });

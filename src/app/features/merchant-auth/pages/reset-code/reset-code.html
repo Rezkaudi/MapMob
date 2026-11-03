@@ -26,9 +26,12 @@
             type="button"
             class="rounded font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-60"
             [disabled]="store.isLoading()"
-            (click)="resend()"
+            [attr.aria-busy]="pressedAction.spinning() === 'resend'"
+            (click)="pressedAction.press('resend'); resend()"
           >
-            إعادة إرسال
+            <app-busy-label [isBusy]="pressedAction.spinning() === 'resend'"
+              >إعادة إرسال</app-busy-label
+            >
           </button>
         </p>
       </div>
@@ -39,6 +42,7 @@
         label="تأكيد الرمز"
         busyLabel="جاري التحقق من الرمز"
         [isBusy]="store.isLoading()"
+        [isSpinning]="pressedAction.spinning() !== 'resend'"
       />
     </form>
   </div>

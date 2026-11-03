@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { GameRepository } from '../../data/game.repository';
 import { GameDetail } from '../../models/game-detail';
 import { GameDetailStore } from '../../state/game-detail.store';
 import { buildGameDetail, buildWinner } from '../../testing/game-fixture';
 import { GameDetailDialog } from './game-detail-dialog';
 
-function render(detail: GameDetail) {
+function render(
+  detail: GameDetail,
+  exportWinners: () => Observable<Blob> = () => of(new Blob(['csv'])),
+) {
   TestBed.configureTestingModule({
     providers: [
       GameDetailStore,
@@ -15,7 +18,7 @@ function render(detail: GameDetail) {
         useValue: {
           getGameDetail: () => of(detail),
           getWinners: () => of({ items: [buildWinner()], totalCount: 1 }),
-          exportWinners: () => of(new Blob(['csv'])),
+          exportWinners,
         },
       },
     ],
@@ -71,5 +74,22 @@ describe('GameDetailDialog', () => {
       .forEach((button) => button.click());
     element.querySelector<HTMLButtonElement>('[aria-label="إغلاق النافذة"]')?.click();
     expect(events).toEqual(['remove', 'edit', 'closed']);
+  });
+});
+
+describe('GameDetailDialog while exporting', () => {
+  it('spins on the export button until the file is ready', () => {
+    const { fixture, element, store } = render(
+      buildGameDetail({ status: 'finished', winnerCount: 1 }),
+      () => NEVER,
+    );
+
+    void store.exportWinners();
+    fixture.detectChanges();
+
+    const exportButton = Array.from(element.querySelectorAll('footer button')).find(
+      (button) => button.textContent?.trim() === 'تصدير قائمة الفائزين',
+    ) as HTMLButtonElement;
+    expect(exportButton.querySelector('app-spinner')).not.toBeNull();
   });
 });

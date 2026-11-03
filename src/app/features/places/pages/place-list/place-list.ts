@@ -30,6 +30,7 @@ import { NotifyDialog } from './notify-dialog/notify-dialog';
 import { PlaceLogo } from './place-logo/place-logo';
 import { PlaceAction } from './place-action';
 import { PlaceActionFlow } from './place-action-flow';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 const STATUS_TONE: Record<PlaceStatus, BadgeTone> = {
   active: 'success',
@@ -74,6 +75,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
     ArabicDatePipe,
     DecimalPipe,
     RouterLink,
+    Spinner,
   ],
   templateUrl: './place-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

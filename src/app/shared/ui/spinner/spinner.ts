@@ -1,11 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
+import { PageLock } from '../../../core/page-lock/page-lock';
 
 const DEFAULT_SIZE_PX = 20;
 const BORDER_RATIO = 0.1;
 const MIN_BORDER_PX = 2;
 const DEFAULT_LABEL = 'جاري التحميل';
 
-/** A spinning ring in the current text colour, for waits too short to draw a skeleton for. */
+/** A spinning ring in the current text colour. While one is on screen the page is locked. */
 @Component({
   selector: 'app-spinner',
   templateUrl: './spinner.html',
@@ -24,4 +32,10 @@ export class Spinner {
   protected readonly borderWidthInPixels = computed(
     () => `${Math.max(MIN_BORDER_PX, Math.round(this.size() * BORDER_RATIO))}px`,
   );
+
+  constructor() {
+    const pageLock = inject(PageLock);
+    pageLock.start();
+    inject(DestroyRef).onDestroy(() => pageLock.finish());
+  }
 }

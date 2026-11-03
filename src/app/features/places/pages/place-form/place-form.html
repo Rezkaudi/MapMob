@@ -74,7 +74,7 @@
       (removeProduct)="askToRemoveProduct($event)"
     />
 
-    <app-place-form-actions />
+    <app-place-form-actions [isBusy]="store.isSaving()" />
   </form>
 }
 

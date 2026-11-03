@@ -9,6 +9,7 @@ import { ComplaintDetailSkeleton } from '../../ui/complaint-detail-skeleton/comp
 import { ComplaintReporterCard } from '../../ui/complaint-reporter-card/complaint-reporter-card';
 import { ComplaintReviewCard } from '../../ui/complaint-review-card/complaint-review-card';
 import { ReportedPlaceCard } from '../../ui/reported-place-card/reported-place-card';
+import { Spinner } from '../../../../shared/ui/spinner/spinner';
 
 @Component({
   selector: 'app-complaint-detail',
@@ -22,6 +23,7 @@ import { ReportedPlaceCard } from '../../ui/reported-place-card/reported-place-c
     FormPageHeading,
     ReportedPlaceCard,
     Toast,
+    Spinner,
   ],
   templateUrl: './complaint-detail.html',
   providers: [ComplaintDetailStore],

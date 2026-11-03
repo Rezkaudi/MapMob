@@ -6,6 +6,10 @@
   [attr.aria-busy]="isBusy()"
   (click)="pressed.emit()"
 >
-  <app-icon name="export" [size]="16" aria-hidden="true" />
+  @if (isBusy()) {
+    <app-spinner [size]="16" label="جاري التنفيذ" />
+  } @else {
+    <app-icon name="export" [size]="16" aria-hidden="true" />
+  }
   <span>تصدير</span>
 </button>

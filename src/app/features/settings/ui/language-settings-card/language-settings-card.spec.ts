@@ -35,3 +35,18 @@ describe('LanguageSettingsCard', () => {
     expect(saved).toEqual([{ defaultLanguage: 'ar', detectsDeviceLanguage: false }]);
   });
 });
+
+describe('LanguageSettingsCard while saving', () => {
+  it('spins on the save button', () => {
+    const fixture = TestBed.createComponent(LanguageSettingsCard);
+    fixture.componentRef.setInput('language', {
+      defaultLanguage: 'ar',
+      detectsDeviceLanguage: true,
+    });
+    fixture.componentRef.setInput('isSaving', true);
+    fixture.detectChanges();
+
+    const save = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLElement;
+    expect(save.querySelector('app-spinner')).not.toBeNull();
+  });
+});

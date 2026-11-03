@@ -47,7 +47,11 @@
       (click)="store.saveReview()"
     >
       <span>حفظ التغييرات</span>
-      <app-icon name="check-rounded" [size]="24" aria-hidden="true" />
+      @if (store.isSaving()) {
+        <app-spinner [size]="24" label="جاري التنفيذ" />
+      } @else {
+        <app-icon name="check-rounded" [size]="24" aria-hidden="true" />
+      }
     </button>
   </footer>
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AppIcon } from '../app-icon/app-icon';
+import { BusyLabel } from '../busy-label/busy-label';
 
 export type ConfirmTone = 'success' | 'warning' | 'danger';
 
@@ -34,7 +35,7 @@ const TONE_SKIN: Record<ConfirmTone, ToneSkin> = {
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [AppIcon],
+  imports: [AppIcon, BusyLabel],
   templateUrl: './confirm-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -51,4 +52,11 @@ export class ConfirmDialog {
   readonly cancelled = output<void>();
 
   protected readonly skin = computed(() => TONE_SKIN[this.tone()]);
+
+  protected cancelUnlessBusy(): void {
+    if (this.isBusy()) {
+      return;
+    }
+    this.cancelled.emit();
+  }
 }

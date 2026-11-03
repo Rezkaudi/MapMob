@@ -17,6 +17,8 @@
           <li>
             <app-notification-alert-row
               [alert]="alert"
+              [isSaving]="store.savingKind() === alert.kind"
+              [isDisabled]="store.isSaving()"
               (toggled)="store.setAlertEnabled(alert.kind, $event)"
             />
           </li>

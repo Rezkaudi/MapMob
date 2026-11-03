@@ -4,7 +4,7 @@
   role="dialog"
   aria-modal="true"
   aria-labelledby="region-form-title"
-  (click)="cancelled.emit()"
+  (click)="cancelUnlessBusy()"
 >
   <form
     class="flex max-h-full w-[450px] max-w-full flex-col overflow-hidden rounded-lg bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]"
@@ -23,9 +23,10 @@
       <button
         type="button"
         data-testid="region-close"
-        class="flex h-7 w-[22px] shrink-0 items-center justify-center text-[#404753] hover:text-text-primary"
+        class="flex h-7 w-[22px] shrink-0 items-center justify-center text-[#404753] hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
         aria-label="إغلاق النافذة"
-        (click)="cancelled.emit()"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         <app-icon name="close-bold" [size]="22" aria-hidden="true" />
       </button>
@@ -109,8 +110,9 @@
       <button
         type="button"
         data-testid="region-cancel"
-        class="h-[34px] rounded border border-text-secondary bg-white px-4 text-[12px]/[16px] text-text-secondary hover:bg-surface-muted"
-        (click)="cancelled.emit()"
+        class="h-[34px] rounded border border-text-secondary bg-white px-4 text-[12px]/[16px] text-text-secondary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="cancelUnlessBusy()"
+        [disabled]="isBusy()"
       >
         إلغاء
       </button>
@@ -121,7 +123,7 @@
         [disabled]="!canSubmit()"
         [attr.aria-busy]="isBusy()"
       >
-        {{ copy().submitLabel }}
+        <app-busy-label [isBusy]="isBusy()">{{ copy().submitLabel }}</app-busy-label>
       </button>
     </footer>
   </form>

@@ -2,7 +2,7 @@
   class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(25,28,29,0.3)] backdrop-blur-[2px]"
   role="dialog"
   aria-modal="true"
-  (click)="cancelled.emit()"
+  (click)="cancelUnlessBusy()"
 >
   <div
     class="w-[448px] rounded-2xl bg-surface px-8 py-6 text-center shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
@@ -35,15 +35,17 @@
         class="h-10 flex-1 rounded-lg text-[14px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
         [class]="skin().confirm"
         [disabled]="isBusy()"
+        [attr.aria-busy]="isBusy()"
         (click)="confirmed.emit()"
       >
-        {{ confirmLabel() }}
+        <app-busy-label [isBusy]="isBusy()">{{ confirmLabel() }}</app-busy-label>
       </button>
       <button
         type="button"
         data-testid="cancel-confirm"
-        class="h-10 flex-1 rounded-lg border border-border bg-[#f8f9fa] text-[14px] font-medium text-text-primary"
-        (click)="cancelled.emit()"
+        class="h-10 flex-1 rounded-lg border border-border bg-[#f8f9fa] text-[14px] font-medium text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="isBusy()"
+        (click)="cancelUnlessBusy()"
       >
         إلغاء
       </button>

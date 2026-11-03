@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { OwnerNotificationsHttpRepository } from './owner-notifications-http.repository';
+import { SKIPS_WRITE_LOCK } from '../../../core/http/skips-write-lock';
 
 const BASE_URL = 'https://api.test';
 const NOTIFICATIONS_URL = `${BASE_URL}/owner/notifications`;
@@ -94,5 +95,15 @@ describe('OwnerNotificationsHttpRepository', () => {
     });
 
     expect((await response).isRead).toBe(true);
+  });
+
+  it('marks a notification as read in the background, without locking the page', () => {
+    repository.markAsRead('3').subscribe();
+
+    const patch = http.expectOne(`${NOTIFICATIONS_URL}/3/read`);
+    expect(patch.request.context.get(SKIPS_WRITE_LOCK)).toBe(true);
+    patch.flush({
+      data: { id: '3', data: { title: 'x', body: 'y' }, read_at: null, created_at: null },
+    });
   });
 });
