@@ -10,6 +10,7 @@ const LIVE_SETTINGS = {
     logoUrl: 'https://api.test/storage/platform/logo.png',
     supportEmail: 'support@mapmob.com',
     supportPhone: '0931234567',
+    ownerApplicationUrl: 'https://merchant.mapmob.com',
   },
   map: { distanceUnit: 'kilometer', searchRadiusKm: 10 },
   language: { defaultLanguage: 'ar', detectsDeviceLanguage: true },
@@ -38,6 +39,7 @@ describe('PlatformSettingsHttpRepository', () => {
       logoFileName: 'logo.png',
       supportEmail: 'support@mapmob.com',
       supportPhone: '0931234567',
+      ownerApplicationUrl: 'https://merchant.mapmob.com',
     });
     expect(settings.currency.currency).toBe('SYP');
   });
@@ -49,6 +51,7 @@ describe('PlatformSettingsHttpRepository', () => {
         appName: 'MapMob',
         supportEmail: 'support@mapmob.com',
         supportPhone: '0931234567',
+        ownerApplicationUrl: 'https://merchant.mapmob.com',
         logo,
       }),
     );
@@ -58,10 +61,30 @@ describe('PlatformSettingsHttpRepository', () => {
     const form = request.request.body as FormData;
     expect([form.get('_method'), form.get('appName')]).toEqual(['PUT', 'MapMob']);
     expect(form.get('logo')).toBeInstanceOf(File);
+    expect(form.get('ownerApplicationUrl')).toBe('https://merchant.mapmob.com');
     request.flush(SAVED);
     http.expectOne(PLATFORM_URL).flush(LIVE_SETTINGS);
 
     expect((await response).logoFileName).toBe('logo.png');
+  });
+
+  it('reads a missing merchant app link as none, and leaves an empty one out of the save', async () => {
+    const { ownerApplicationUrl: _link, ...olderGeneral } = LIVE_SETTINGS.general;
+    const settings = firstValueFrom(repository.getSettings());
+    http.expectOne(PLATFORM_URL).flush({ ...LIVE_SETTINGS, general: olderGeneral });
+    expect((await settings).general.ownerApplicationUrl).toBeNull();
+
+    const response = firstValueFrom(
+      repository.updateGeneral({
+        appName: 'MapMob',
+        supportEmail: 'support@mapmob.com',
+        supportPhone: '0931234567',
+        ownerApplicationUrl: null,
+        logo: null,
+      }),
+    );
+    const form = http.expectOne(`${PLATFORM_URL}/general`).request.body as FormData;
+    expect(form.has('ownerApplicationUrl')).toBe(false);
   });
 
   it('saves the map, language and currency groups and answers with what was saved', async () => {

@@ -58,6 +58,7 @@ export const GAME_DETAIL = {
   questionCount: 1,
   description: 'صوّت مع الأغلبية واربح جوائز',
   voteSeconds: 10,
+  maxPlayerCount: 500,
   questions: [
     {
       id: '880',
@@ -78,6 +79,7 @@ export const GAME_DRAFT = {
   startsAt: '2026-10-15T18:00:00+03:00',
   timeZone: 'Asia/Damascus',
   voteSeconds: 10,
+  maxPlayerCount: 500,
   questions: [
     { text: 'ما المشروب الذي يفضله معظم الأشخاص في الصباح؟', options: ['القهوة', 'الشاي'] },
   ],

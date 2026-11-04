@@ -463,6 +463,175 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "most visited stores",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/most-visited",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "most-visited"
+                  ],
+                  "query": [
+                    {
+                      "key": "category_id",
+                      "value": null,
+                      "id": 0,
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": null,
+                      "id": 1,
+                      "disabled": true
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "id": 2,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "nearby stores",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stores/nearby",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stores",
+                    "nearby"
+                  ],
+                  "query": [
+                    {
+                      "key": "latitude",
+                      "value": null,
+                      "id": 0,
+                      "disabled": true
+                    },
+                    {
+                      "key": "longitude",
+                      "value": null,
+                      "id": 1,
+                      "disabled": true
+                    },
+                    {
+                      "key": "radius",
+                      "value": "",
+                      "type": "text",
+                      "id": 2,
+                      "disabled": true
+                    },
+                    {
+                      "key": "category_id",
+                      "value": "",
+                      "type": "text",
+                      "id": 3,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view story",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stories/28/views",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stories",
+                    "28",
+                    "views"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get stories",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/stories",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stories"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -1656,6 +1825,240 @@
           ]
         },
         {
+          "name": "games",
+          "item": [
+            {
+              "name": "rooms",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "join room",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms/1/join",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms",
+                    "1",
+                    "join"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "leave room",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms/1/leave",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms",
+                    "1",
+                    "leave"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "current status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms/1/current",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms",
+                    "1",
+                    "current"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "answer",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "option_id",
+                      "value": "5",
+                      "type": "text",
+                      "id": 0
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms/1/rounds/1/answer",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms",
+                    "1",
+                    "rounds",
+                    "1",
+                    "answer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "game",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mapurl}}/api/game-rooms/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "game-rooms",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "search",
           "request": {
             "method": "GET",
@@ -1792,6 +2195,40 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "get owner link",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mapurl}}/api/owner-link",
+              "host": [
+                "{{mapurl}}"
+              ],
+              "path": [
+                "api",
+                "owner-link"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1871,13 +2308,42 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/regions",
+                  "raw": "{{mapurl}}/admin/regions?sort_by=oldest,latest,name_asc,name_desc",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "regions"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort_by",
+                      "value": "oldest,latest,name_asc,name_desc",
+                      "type": "text",
+                      "id": 0
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "",
+                      "type": "text",
+                      "id": 1,
+                      "disabled": true
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "id": 2,
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "type": "text",
+                      "id": 3,
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -2072,13 +2538,42 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/cities",
+                  "raw": "{{mapurl}}/admin/cities?sort_by=latest,oldest,name_asc,name_desc",
                   "host": [
                     "{{mapurl}}"
                   ],
                   "path": [
                     "admin",
                     "cities"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "",
+                      "type": "text",
+                      "id": 0,
+                      "disabled": true
+                    },
+                    {
+                      "key": "region_id",
+                      "value": "",
+                      "type": "text",
+                      "id": 1,
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "",
+                      "type": "text",
+                      "id": 2,
+                      "disabled": true
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "latest,oldest,name_asc,name_desc",
+                      "type": "text",
+                      "id": 3
+                    }
                   ]
                 }
               },
@@ -2849,290 +3344,373 @@
                       "key": "_method",
                       "value": "PUT",
                       "type": "text",
-                      "uuid": "0a347397-cee1-49c6-9273-d68559e552b9"
+                      "uuid": "0a347397-cee1-49c6-9273-d68559e552b9",
+                      "id": 0
                     },
                     {
                       "key": "name[ar]",
                       "value": "متجر دمشق المركزي - الفرع الرئيسي",
-                      "type": "text"
+                      "type": "text",
+                      "id": 1
                     },
                     {
                       "key": "name[en]",
                       "value": "Damascus Central Store - Main Branch",
-                      "type": "text"
+                      "type": "text",
+                      "id": 2
                     },
                     {
                       "key": "ownerName",
                       "value": "عبيدة شعبان",
-                      "type": "text"
+                      "type": "text",
+                      "id": 3
                     },
                     {
                       "key": "ownerPhone",
                       "value": "0931234567",
-                      "type": "text"
+                      "type": "text",
+                      "id": 4
                     },
                     {
                       "key": "mainCategoryId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 5
                     },
                     {
                       "key": "subCategoryId",
                       "value": "7",
                       "type": "text",
+                      "id": 6,
                       "disabled": true
                     },
                     {
                       "key": "governorateId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 7
                     },
                     {
                       "key": "areaId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 8
                     },
                     {
                       "key": "address[ar]",
                       "value": "شارع الجلاء، بناء 4، المزة",
-                      "type": "text"
+                      "type": "text",
+                      "id": 9
                     },
                     {
                       "key": "address[en]",
                       "value": "Al-Jalaa Street, Building 4, Mazzeh",
-                      "type": "text"
+                      "type": "text",
+                      "id": 10
                     },
                     {
                       "key": "latitude",
                       "value": "33.5138",
-                      "type": "text"
+                      "type": "text",
+                      "id": 11
                     },
                     {
                       "key": "longitude",
                       "value": "36.2765",
-                      "type": "text"
+                      "type": "text",
+                      "id": 12
                     },
                     {
                       "key": "phone",
                       "value": "0931234567",
-                      "type": "text"
+                      "type": "text",
+                      "id": 13
                     },
                     {
                       "key": "website",
                       "value": "https://example.com",
-                      "type": "text"
+                      "type": "text",
+                      "id": 14
                     },
                     {
                       "key": "whatsapp",
                       "value": "0931234567",
-                      "type": "text"
+                      "type": "text",
+                      "id": 15
                     },
                     {
                       "key": "description[ar]",
                       "value": "تعديل وصف المتجر - أحدث المواد الغذائية",
-                      "type": "text"
+                      "type": "text",
+                      "id": 16
                     },
                     {
                       "key": "description[en]",
                       "value": "Updated store description - Latest food items",
-                      "type": "text"
+                      "type": "text",
+                      "id": 17
                     },
                     {
                       "key": "planId",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 18
                     },
                     {
                       "key": "status",
                       "value": "active",
-                      "type": "text"
+                      "type": "text",
+                      "id": 19
                     },
                     {
                       "key": "isLogoRemoved",
                       "value": "false",
-                      "type": "text"
+                      "type": "text",
+                      "id": 20
                     },
                     {
                       "key": "keptImageIds[0]",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 21,
+                      "disabled": true
                     },
                     {
                       "key": "keptImageIds[1]",
                       "value": "2",
-                      "type": "text"
+                      "type": "text",
+                      "id": 22,
+                      "disabled": true
                     },
                     {
                       "key": "keptVideoIds[0]",
                       "value": "12",
                       "type": "text",
+                      "id": 23,
                       "disabled": true
                     },
                     {
                       "key": "workingHours[0][day]",
                       "value": "saturday",
-                      "type": "text"
+                      "type": "text",
+                      "id": 24
                     },
                     {
                       "key": "workingHours[0][isOpen]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 25
                     },
                     {
                       "key": "workingHours[0][openTime]",
                       "value": "10:00",
-                      "type": "text"
+                      "type": "text",
+                      "id": 26
                     },
                     {
                       "key": "workingHours[0][closeTime]",
                       "value": "16:00",
-                      "type": "text"
+                      "type": "text",
+                      "id": 27
                     },
                     {
                       "key": "workingHours[1][day]",
                       "value": "sunday",
-                      "type": "text"
+                      "type": "text",
+                      "id": 28
                     },
                     {
                       "key": "workingHours[1][isOpen]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 29
                     },
                     {
                       "key": "workingHours[1][openTime]",
                       "value": "09:00",
-                      "type": "text"
+                      "type": "text",
+                      "id": 30
                     },
                     {
                       "key": "workingHours[1][closeTime]",
                       "value": "20:00",
-                      "type": "text"
+                      "type": "text",
+                      "id": 31
                     },
                     {
                       "key": "deliveryLinks[0][platformId]",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 32,
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][isEnabled]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 33,
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[0][storeUrl]",
                       "value": "https://beeorder.sy/store/damascus-central",
-                      "type": "text"
+                      "type": "text",
+                      "id": 34,
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[1][platformId]",
                       "value": "3",
-                      "type": "text"
+                      "type": "text",
+                      "id": 35,
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[1][isEnabled]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 36,
+                      "disabled": true
                     },
                     {
                       "key": "deliveryLinks[1][storeUrl]",
                       "value": "https://toters.app/store/damascus-central",
-                      "type": "text"
+                      "type": "text",
+                      "id": 37,
+                      "disabled": true
                     },
                     {
                       "key": "logo",
                       "value": "",
                       "type": "text",
+                      "id": 38,
                       "disabled": true
                     },
                     {
                       "key": "images[0]",
                       "value": "",
                       "type": "text",
+                      "id": 39,
                       "disabled": true
                     },
                     {
                       "key": "videos[0]",
                       "value": "",
                       "type": "text",
+                      "id": 40,
                       "disabled": true
                     },
                     {
                       "key": "products[0][id]",
                       "value": "1",
-                      "type": "text"
+                      "type": "text",
+                      "id": 41
                     },
                     {
                       "key": "products[0][name][ar]",
                       "value": "مرتديلا ممتاز",
-                      "type": "text"
+                      "type": "text",
+                      "id": 42
                     },
                     {
                       "key": "products[0][name][en]",
                       "value": "Premium Mortadella",
-                      "type": "text"
+                      "type": "text",
+                      "id": 43
                     },
                     {
                       "key": "products[0][price]",
                       "value": "13500",
-                      "type": "text"
+                      "type": "text",
+                      "id": 44
                     },
                     {
                       "key": "products[0][currency]",
                       "value": "SYP",
-                      "type": "text"
+                      "type": "text",
+                      "id": 45
                     },
                     {
                       "key": "products[0][isAvailable]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 46
                     },
                     {
                       "key": "products[0][image]",
                       "value": "",
                       "type": "text",
+                      "id": 47,
                       "disabled": true
                     },
                     {
                       "key": "products[1][name][ar]",
                       "value": "جبنة قشقوان",
-                      "type": "text"
+                      "type": "text",
+                      "id": 48
                     },
                     {
                       "key": "products[1][name][en]",
                       "value": "Kashkaval Cheese",
-                      "type": "text"
+                      "type": "text",
+                      "id": 49
                     },
                     {
                       "key": "products[1][price]",
                       "value": "25000",
-                      "type": "text"
+                      "type": "text",
+                      "id": 50
                     },
                     {
                       "key": "products[1][currency]",
                       "value": "SYP",
-                      "type": "text"
+                      "type": "text",
+                      "id": 51
                     },
                     {
                       "key": "products[1][isAvailable]",
                       "value": "true",
-                      "type": "text"
+                      "type": "text",
+                      "id": 52
                     },
                     {
                       "key": "products[1][image]",
                       "value": "",
                       "type": "text",
+                      "id": 53,
                       "disabled": true
                     },
                     {
                       "key": "logo",
                       "type": "file",
+                      "id": 54,
                       "src": "/C:/Users/obedah/Downloads/مطعم.jpg",
                       "disabled": true
                     },
                     {
                       "key": "cover_image",
                       "type": "file",
-                      "src": "/C:/Users/obedah/Downloads/ألعاب الفيديو.jpg"
+                      "id": 55,
+                      "src": "/C:/Users/obedah/Downloads/ألعاب الفيديو.jpg",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ownerEmail",
+                      "value": "owner1@gmail.com",
+                      "type": "text",
+                      "id": 56
+                    },
+                    {
+                      "key": "ownerPassword",
+                      "value": "password123",
+                      "type": "text",
+                      "id": 57
+                    },
+                    {
+                      "key": "ownerPassword_confirmation",
+                      "value": "password123",
+                      "type": "text",
+                      "id": 58
                     }
                   ]
                 },
@@ -3815,7 +4393,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{mapurl}}/admin/offers",
+                  "raw": "{{mapurl}}/admin/offers?sort_by=latest,oldest,name_asc,name_desc",
                   "host": [
                     "{{mapurl}}"
                   ],
@@ -3827,47 +4405,62 @@
                     {
                       "key": "store_id",
                       "value": null,
+                      "id": 0,
                       "disabled": true
                     },
                     {
                       "key": "product_id",
                       "value": null,
+                      "id": 1,
                       "disabled": true
                     },
                     {
                       "key": "status",
                       "value": null,
+                      "id": 2,
                       "disabled": true
                     },
                     {
                       "key": "is_featured",
                       "value": null,
+                      "id": 3,
                       "disabled": true
                     },
                     {
                       "key": "search",
                       "value": null,
+                      "id": 4,
                       "disabled": true
                     },
                     {
                       "key": "starts_from",
                       "value": null,
+                      "id": 5,
                       "disabled": true
                     },
                     {
                       "key": "starts_to",
                       "value": null,
+                      "id": 6,
                       "disabled": true
                     },
                     {
                       "key": "ends_from",
                       "value": null,
+                      "id": 7,
                       "disabled": true
                     },
                     {
                       "key": "ends_to",
                       "value": null,
+                      "id": 8,
                       "disabled": true
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "latest,oldest,name_asc,name_desc",
+                      "type": "text",
+                      "id": 9
                     }
                   ]
                 }
@@ -5796,7 +6389,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"الباقة الذهبية\",\r\n  \"slug\": \"golden-plan\",\r\n  \"price\": 150000.00,\r\n  \"currency_code\": \"SYP\",\r\n  \"duration_days\": 30,\r\n  \"max_ads\": 10,\r\n  \"max_offers\": 5,\r\n  \"max_products\": 100,\r\n  \"max_images\": 20,\r\n  \"features\": [\r\n    \"دعم فني على مدار الساعة\",\r\n    \"إحصائيات متقدمة للمتجر\",\r\n    \"أولوية الظهور في نتائج البحث\"\r\n  ],\r\n  \"is_active\": true,\r\n  \"sort_order\": 1\r\n}",
+                  "raw": "{\r\n  \"name\": \"الباقة الذهبية\",\r\n  \"slug\": \"golden-plan\",\r\n  \"price\": 150000.00,\r\n  \"currency_code\": \"SYP\",\r\n  \"duration_days\": 30,\r\n  \"max_ads\": 10,\r\n  \"max_offers\": 5,\r\n  \"max_products\": 100,\r\n  \"max_images\": 20,\r\n  \"limit_active_stories\": 20,\r\n  \"features\": [\r\n    \"دعم فني على مدار الساعة\",\r\n    \"إحصائيات متقدمة للمتجر\",\r\n    \"أولوية الظهور في نتائج البحث\"\r\n  ],\r\n  \"is_active\": true,\r\n  \"sort_order\": 1\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -5811,6 +6404,55 @@
                   "path": [
                     "admin",
                     "plans"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"الباقة الذهبية\",\r\n  \"slug\": \"golden-plan\",\r\n  \"price\": 150000.00,\r\n  \"currency_code\": \"SYP\",\r\n  \"duration_days\": 30,\r\n  \"max_ads\": 10,\r\n  \"max_offers\": 5,\r\n  \"max_products\": 100,\r\n  \"max_images\": 20,\r\n  \"limit_active_stories\": 20,\r\n  \"features\": [\r\n    \"دعم فني على مدار الساعة\",\r\n    \"إحصائيات متقدمة للمتجر\",\r\n    \"أولوية الظهور في نتائج البحث\"\r\n  ],\r\n  \"is_active\": true,\r\n  \"sort_order\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{mapurl}}/admin/plans/1",
+                  "host": [
+                    "{{mapurl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "plans",
+                    "1"
                   ]
                 }
               },
@@ -10128,32 +10770,42 @@
                       "key": "appName",
                       "value": "MapMob",
                       "type": "text",
-                      "uuid": "918da412-285b-49f2-beea-916bfa4d6c26"
+                      "uuid": "918da412-285b-49f2-beea-916bfa4d6c26",
+                      "id": 0
                     },
                     {
                       "key": "supportEmail",
                       "value": "support@mapmob.com",
                       "type": "text",
-                      "uuid": "1c7fc9e2-0c35-407c-bfb0-05ca1d0c9be4"
+                      "uuid": "1c7fc9e2-0c35-407c-bfb0-05ca1d0c9be4",
+                      "id": 1
                     },
                     {
                       "key": "supportPhone",
                       "value": "0931234567",
                       "type": "text",
-                      "uuid": "7ec0d1bc-c7a8-4e45-b4a2-cff87fa58c72"
+                      "uuid": "7ec0d1bc-c7a8-4e45-b4a2-cff87fa58c72",
+                      "id": 2
                     },
                     {
                       "key": "logo",
                       "value": "",
                       "type": "text",
                       "uuid": "a16a71f2-40c9-488c-badf-9ec8857fed2d",
+                      "id": 3,
                       "disabled": true
+                    },
+                    {
+                      "key": "ownerApplicationUrl",
+                      "value": "https://www.google.com",
+                      "type": "text",
+                      "id": 4
                     },
                     {
                       "key": "_method",
                       "value": "PUT",
                       "type": "text",
-                      "uuid": "3efbad4d-31f2-4275-8044-708dced93c90"
+                      "id": 5
                     }
                   ]
                 },
@@ -10785,6 +11437,12 @@
                       "value": "0",
                       "type": "text",
                       "id": 20
+                    },
+                    {
+                      "key": "max_players",
+                      "value": "50",
+                      "type": "text",
+                      "id": 21
                     }
                   ]
                 },
@@ -10992,6 +11650,13 @@
                       "value": "PUT",
                       "type": "text",
                       "id": 21
+                    },
+                    {
+                      "key": "max_players",
+                      "value": "",
+                      "type": "text",
+                      "id": 22,
+                      "disabled": true
                     }
                   ]
                 },
@@ -11793,61 +12458,71 @@
                       "key": "name[ar]",
                       "value": "اسم1",
                       "type": "text",
-                      "id": 0
+                      "id": 0,
+                      "disabled": true
                     },
                     {
                       "key": "name[en]",
                       "value": "name1",
                       "type": "text",
-                      "id": 1
+                      "id": 1,
+                      "disabled": true
                     },
                     {
                       "key": "description[ar]",
                       "value": "وصف1",
                       "type": "text",
-                      "id": 2
+                      "id": 2,
+                      "disabled": true
                     },
                     {
                       "key": "description[en]",
                       "value": "description1",
                       "type": "text",
-                      "id": 3
+                      "id": 3,
+                      "disabled": true
                     },
                     {
                       "key": "address[ar]",
                       "value": "عنوان1",
                       "type": "text",
-                      "id": 4
+                      "id": 4,
+                      "disabled": true
                     },
                     {
                       "key": "address[en]",
                       "value": "address1",
                       "type": "text",
-                      "id": 5
+                      "id": 5,
+                      "disabled": true
                     },
                     {
                       "key": "phone",
                       "value": "1122334455",
                       "type": "text",
-                      "id": 6
+                      "id": 6,
+                      "disabled": true
                     },
                     {
                       "key": "whatsapp",
                       "value": "9632255889",
                       "type": "text",
-                      "id": 7
+                      "id": 7,
+                      "disabled": true
                     },
                     {
                       "key": "email",
                       "value": "store@gmail.com",
                       "type": "text",
-                      "id": 8
+                      "id": 8,
+                      "disabled": true
                     },
                     {
                       "key": "website",
                       "value": "https://www.google.com",
                       "type": "text",
-                      "id": 9
+                      "id": 9,
+                      "disabled": true
                     },
                     {
                       "key": "governorateId",
@@ -11907,13 +12582,13 @@
                     },
                     {
                       "key": "socialLinks[0][platform]",
-                      "value": "facebook",
+                      "value": "telegram",
                       "type": "text",
                       "id": 18
                     },
                     {
                       "key": "socialLinks[0][url]",
-                      "value": "https://www.facebook.com",
+                      "value": "https://www.telegram.com",
                       "type": "text",
                       "id": 19
                     },
@@ -11965,6 +12640,48 @@
                       "type": "text",
                       "id": 26,
                       "disabled": true
+                    },
+                    {
+                      "key": "socialLinks[1][platform]",
+                      "value": "facebook",
+                      "type": "text",
+                      "id": 27
+                    },
+                    {
+                      "key": "socialLinks[1][url]",
+                      "value": "https://www.facebook.com",
+                      "type": "text",
+                      "id": 28
+                    },
+                    {
+                      "key": "socialLinks[2][platform]",
+                      "value": "instagram",
+                      "type": "text",
+                      "id": 29
+                    },
+                    {
+                      "key": "socialLinks[2][url]",
+                      "value": "https://www.instagram.com",
+                      "type": "text",
+                      "id": 30
+                    },
+                    {
+                      "key": "socialLinks[0][type]",
+                      "value": "post",
+                      "type": "text",
+                      "id": 31
+                    },
+                    {
+                      "key": "socialLinks[1][type]",
+                      "value": "story",
+                      "type": "text",
+                      "id": 32
+                    },
+                    {
+                      "key": "socialLinks[2][type]",
+                      "value": "page",
+                      "type": "text",
+                      "id": 33
                     },
                     {
                       "key": "_method",
@@ -12383,8 +13100,7 @@
                 "header": [
                   {
                     "key": "Accept",
-                    "value": "application/json",
-                    "type": "text"
+                    "value": "application/json"
                   }
                 ],
                 "body": {
@@ -12392,88 +13108,75 @@
                   "formdata": [
                     {
                       "key": "productId",
-                      "value": "1",
-                      "type": "text",
-                      "id": 0
+                      "value": "29",
+                      "type": "text"
                     },
                     {
                       "key": "title[ar]",
                       "value": "عنوان",
-                      "type": "text",
-                      "id": 1
+                      "type": "text"
                     },
                     {
                       "key": "title[en]",
                       "value": "title",
-                      "type": "text",
-                      "id": 2
+                      "type": "text"
                     },
                     {
                       "key": "description[ar]",
                       "value": "وصف",
-                      "type": "text",
-                      "id": 3
+                      "type": "text"
                     },
                     {
                       "key": "description[en]",
                       "value": "description",
-                      "type": "text",
-                      "id": 4
+                      "type": "text"
                     },
                     {
                       "key": "image",
-                      "value": "",
                       "type": "file",
-                      "id": 5,
-                      "disabled": true
+                      "src": [
+                        ""
+                      ]
                     },
                     {
                       "key": "originalPrice",
                       "value": "100",
-                      "type": "text",
-                      "id": 6
+                      "type": "text"
                     },
                     {
                       "key": "discountedPrice",
                       "value": "50",
-                      "type": "text",
-                      "id": 7
+                      "type": "text"
                     },
                     {
                       "key": "discountPercentage",
                       "value": "50",
-                      "type": "text",
-                      "id": 8
+                      "type": "text"
                     },
                     {
                       "key": "currencyCode",
                       "value": "syp",
-                      "type": "text",
-                      "id": 9
+                      "type": "text"
                     },
                     {
                       "key": "startsAt",
                       "value": "2026-01-01",
-                      "type": "text",
-                      "id": 10
+                      "type": "text"
                     },
                     {
                       "key": "endsAt",
-                      "value": "2026-01-15",
-                      "type": "text",
-                      "id": 11
+                      "value": "2026-12-15",
+                      "type": "text"
                     },
                     {
                       "key": "status",
                       "value": "active",
-                      "type": "text",
-                      "id": 12
+                      "type": "text"
                     },
                     {
                       "key": "isFeatured",
                       "value": "1",
-                      "type": "text",
-                      "id": 13
+                      "type": "text"
                     }
                   ]
                 },
@@ -12485,56 +13188,6 @@
                   "path": [
                     "owner",
                     "offers"
-                  ],
-                  "query": [
-                    {
-                      "key": "product_id",
-                      "value": null,
-                      "id": 1,
-                      "disabled": true
-                    },
-                    {
-                      "key": "status",
-                      "value": null,
-                      "id": 2,
-                      "disabled": true
-                    },
-                    {
-                      "key": "is_featured",
-                      "value": null,
-                      "id": 3,
-                      "disabled": true
-                    },
-                    {
-                      "key": "search",
-                      "value": null,
-                      "id": 4,
-                      "disabled": true
-                    },
-                    {
-                      "key": "starts_from",
-                      "value": null,
-                      "id": 5,
-                      "disabled": true
-                    },
-                    {
-                      "key": "starts_to",
-                      "value": null,
-                      "id": 6,
-                      "disabled": true
-                    },
-                    {
-                      "key": "ends_from",
-                      "value": null,
-                      "id": 7,
-                      "disabled": true
-                    },
-                    {
-                      "key": "ends_to",
-                      "value": null,
-                      "id": 8,
-                      "disabled": true
-                    }
                   ]
                 }
               },

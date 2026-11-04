@@ -14,6 +14,7 @@ const OPTIONAL_TEXT_FIELDS = [
   'instagram',
   'telegram',
 ] as const;
+const PASSWORD_CONFIRMATION_FIELD = 'ownerPassword_confirmation';
 
 function setIfFilled(form: FormData, name: string, value: string | null): void {
   if (value) {
@@ -62,6 +63,9 @@ export function toLiveStoreForm(
   }
   for (const field of findOwnerLoginChanges(value)) {
     form.set(field, value[field]);
+  }
+  if (form.has('ownerPassword')) {
+    form.set(PASSWORD_CONFIRMATION_FIELD, value.ownerPassword);
   }
   return form;
 }

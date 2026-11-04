@@ -105,7 +105,11 @@ export const SETTINGS_PLATFORM_ENDPOINTS: readonly ApiEndpoint[] = [
       description: 'One read; each group saves on its own below.',
       example: PLATFORM_SETTINGS,
       fields: [
-        field('general', 'object', '{ appName, logoUrl | null, supportEmail, supportPhone }'),
+        field(
+          'general',
+          'object',
+          '{ appName, logoUrl | null, supportEmail, supportPhone, ownerApplicationUrl | null }. ownerApplicationUrl: the link the mobile app gives place owners.',
+        ),
         field('map', 'object', '{ distanceUnit: kilometer | mile, searchRadiusKm }'),
         field('language', 'object', '{ defaultLanguage: ar | en, detectsDeviceLanguage }'),
         field(
@@ -128,6 +132,11 @@ export const SETTINGS_PLATFORM_ENDPOINTS: readonly ApiEndpoint[] = [
         field('appName', 'string'),
         field('supportEmail', 'string (email)'),
         field('supportPhone', 'string'),
+        optionalField(
+          'ownerApplicationUrl',
+          'string (url) | null',
+          '"رابط تطبيق التاجر". Full https URL. Left out = keep the saved link.',
+        ),
         optionalField('logo', 'file (png, svg; max 1 MB)', 'Left out = keep the current logo.'),
       ],
       example: PLATFORM_GENERAL_FORM,

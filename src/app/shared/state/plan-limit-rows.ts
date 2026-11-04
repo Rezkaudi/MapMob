@@ -1,8 +1,8 @@
 import { PlanLimits } from '../models/plan-limits';
 
 /** Arabic switches the counted noun again above ten. */
-const LAST_PLURAL_COUNT = 10;
-const UNLIMITED_LABEL = 'غير محدود ⚡';
+export const LAST_PLURAL_COUNT = 10;
+export const UNLIMITED_LABEL = 'غير محدود ⚡';
 
 /** One "label: value" line inside the card's grey limits box. */
 export interface PlanLimitRow {

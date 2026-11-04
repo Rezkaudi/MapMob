@@ -51,6 +51,7 @@ export function toPlatformGeneral(live: LivePlatformSettings['general']): Platfo
     logoFileName: toLogoFileName(live.logoUrl),
     supportEmail: live.supportEmail,
     supportPhone: live.supportPhone,
+    ownerApplicationUrl: live.ownerApplicationUrl ?? null,
   };
 }
 

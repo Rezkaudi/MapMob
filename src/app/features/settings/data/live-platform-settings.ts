@@ -7,5 +7,6 @@ export interface LivePlatformSettings extends Omit<PlatformSettings, 'general'> 
     readonly logoUrl: string | null;
     readonly supportEmail: string;
     readonly supportPhone: string;
+    readonly ownerApplicationUrl?: string | null;
   };
 }

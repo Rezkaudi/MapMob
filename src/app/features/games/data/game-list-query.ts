@@ -13,7 +13,7 @@ function compareGames(left: GameEntry, right: GameEntry, sort: ListSort): number
   if (sort === 'name') {
     return left.name.localeCompare(right.name, 'ar') || left.roundNumber - right.roundNumber;
   }
-  const byStart = left.startsAt.localeCompare(right.startsAt);
+  const byStart = Date.parse(left.startsAt) - Date.parse(right.startsAt);
   return sort === 'oldest' ? byStart : -byStart;
 }
 

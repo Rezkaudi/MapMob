@@ -23,6 +23,12 @@ export const GAME_DOMAIN: DbDomain = {
         { name: 'starts_at', type: 'timestamp' },
         { name: 'time_zone', type: 'varchar(64)', note: "Default 'Asia/Damascus'." },
         { name: 'vote_seconds', type: 'smallint unsigned' },
+        {
+          name: 'max_player_count',
+          type: 'int unsigned',
+          isNullable: true,
+          note: 'null = no cap. 2 or more.',
+        },
         { name: 'prize_kind', type: "enum('cash','voucher')" },
         { name: 'prize_amount', type: 'decimal(12,2)' },
         { name: 'prize_currency', type: 'char(3)', note: 'SYP or USD.' },

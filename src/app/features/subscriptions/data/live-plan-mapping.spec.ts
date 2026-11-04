@@ -18,7 +18,13 @@ describe('live plan mapping', () => {
       yearlyPrice: null,
       currency: 'SYP',
       subscriberCount: 4,
-      limits: { adsPerMonth: 10, activeOffers: 5, galleryImages: 20, videos: null },
+      limits: {
+        adsPerMonth: 10,
+        activeOffers: 5,
+        galleryImages: 20,
+        videos: null,
+        activeStories: 20,
+      },
       features: ['دعم فني'],
       isActive: true,
     });
@@ -41,6 +47,12 @@ describe('live plan mapping', () => {
     expect(plan.limits.adsPerMonth).toBeNull();
   });
 
+  it('reads a plan with no stories cap as no limit', () => {
+    const plan = toPackagePlan({ ...LIVE_GOLD_PLAN, limit_active_stories: null }, ALL_PLANS, 0);
+
+    expect(plan.limits.activeStories).toBeNull();
+  });
+
   it('writes a draft in the server field names', () => {
     expect(
       toLivePlanBody({
@@ -49,7 +61,13 @@ describe('live plan mapping', () => {
         monthlyPrice: 900,
         yearlyPrice: 9000,
         currency: 'USD',
-        limits: { adsPerMonth: 1, activeOffers: null, galleryImages: 3, videos: 2 },
+        limits: {
+          adsPerMonth: 1,
+          activeOffers: null,
+          galleryImages: 3,
+          videos: 2,
+          activeStories: 4,
+        },
         features: ['أ'],
       }),
     ).toEqual({
@@ -60,7 +78,22 @@ describe('live plan mapping', () => {
       max_ads: 1,
       max_offers: 9999,
       max_images: 3,
+      limit_active_stories: 4,
       features: ['أ'],
     });
+  });
+
+  it('sends an unlimited stories cap as the unlimited number, since the server refuses null', () => {
+    const body = toLivePlanBody({
+      name: 'فضية',
+      isActive: true,
+      monthlyPrice: 900,
+      yearlyPrice: null,
+      currency: 'SYP',
+      limits: { adsPerMonth: 1, activeOffers: 1, galleryImages: 1, videos: 1, activeStories: null },
+      features: [],
+    });
+
+    expect(body['limit_active_stories']).toBe(9999);
   });
 });

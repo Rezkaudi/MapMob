@@ -11,6 +11,7 @@ export const LIVE_GOLD_PLAN: LivePlan = {
   max_offers: 5,
   max_products: 100,
   max_images: 20,
+  limit_active_stories: 20,
   features: ['دعم فني'],
   is_active: true,
   sort_order: 1,

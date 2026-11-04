@@ -149,6 +149,23 @@
             >
           </div>
         </app-form-field>
+
+        <app-form-field
+          label="العدد الأقصى للاعبين"
+          forId="game-max-players"
+          [error]="errors.maxPlayerCount"
+        >
+          <input
+            id="game-max-players"
+            type="number"
+            min="2"
+            inputmode="numeric"
+            formControlName="maxPlayerCount"
+            placeholder="بلا حد"
+            [class]="controlClasses.text"
+            [attr.aria-invalid]="errors.maxPlayerCount !== null"
+          />
+        </app-form-field>
       </div>
     </app-form-section>
 

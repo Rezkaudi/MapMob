@@ -63,4 +63,16 @@ describe('game form group', () => {
       { text: 'ب؟', firstOption: '3', secondOption: '4' },
     ]);
   });
+
+  it('leaves the player cap empty and optional, but wants at least two players when set', () => {
+    const form = createGameFormGroup();
+    expect(form.controls.maxPlayerCount.value).toBeNull();
+    expect(form.controls.maxPlayerCount.valid).toBe(true);
+
+    form.controls.maxPlayerCount.setValue(1);
+    expect(form.controls.maxPlayerCount.valid).toBe(false);
+
+    form.controls.maxPlayerCount.setValue(2);
+    expect(form.controls.maxPlayerCount.valid).toBe(true);
+  });
 });

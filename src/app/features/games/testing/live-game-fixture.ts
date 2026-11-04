@@ -13,6 +13,7 @@ export function buildLiveGame(overrides: Partial<LiveGame> = {}): LiveGame {
     status: 'scheduled',
     prize: { type: 'cash', value: '50000.00', currency_code: 'SYP' },
     max_winners: '3',
+    max_players: null,
     questions_count: 2,
     winners_count: 0,
     ...overrides,

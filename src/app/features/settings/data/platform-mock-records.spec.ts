@@ -19,6 +19,7 @@ describe('PlatformMockRecords', () => {
       appName: 'MapMob Pro',
       supportEmail: 'help@mapmob.com',
       supportPhone: '+963 933 000 111',
+      ownerApplicationUrl: null,
       logo: null,
     });
 
@@ -27,6 +28,7 @@ describe('PlatformMockRecords', () => {
       logoFileName: 'MapMob_logo.svg',
       supportEmail: 'help@mapmob.com',
       supportPhone: '+963 933 000 111',
+      ownerApplicationUrl: null,
     });
     expect(records.settings().general).toEqual(general);
   });

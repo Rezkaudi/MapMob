@@ -10,6 +10,7 @@ const DRAFT: GameDraft = {
   startsAt: '2026-11-01T18:00:00+03:00',
   timeZone: 'Asia/Damascus',
   voteSeconds: 15,
+  maxPlayerCount: null,
   questions: [{ text: 'سؤال؟', options: ['نعم', 'لا'] }],
   prize: {
     kind: 'cash',

@@ -50,6 +50,7 @@ function seedGame(round: number, startsAt: string, status: GameStatus): GameDeta
     timeZone: TIME_ZONE,
     description: 'صوّت مع الأغلبية واربح جوائز',
     voteSeconds: VOTE_SECONDS,
+    maxPlayerCount: null,
     questionCount: SAMPLE_QUESTIONS.length,
     participantCount: isFinished || status === 'active' ? 150 + ((round * 37) % 170) : 0,
     prize: prizeOf(round),

@@ -41,8 +41,11 @@ describe('PlanFormDialog', () => {
     expect(input?.value).toBe('أساسية');
   });
 
-  it('draws a stepper for each of the four allowances', () => {
-    expect(element(render()).querySelectorAll('app-limit-stepper')).toHaveLength(4);
+  it('draws a stepper for each of the five allowances, the last one for stories', () => {
+    const steppers = element(render()).querySelectorAll('app-limit-stepper');
+
+    expect(steppers).toHaveLength(5);
+    expect(steppers[4].textContent).toContain('القصص النشطة');
   });
 
   it('writes an unlimited allowance as words, not as a number', () => {

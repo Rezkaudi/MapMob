@@ -30,6 +30,14 @@ describe('toStoreProfileFormData', () => {
     expect(data.get('socialLinks[2][url]')).toBe('https://t.me/alhayatpharmacy');
   });
 
+  it('marks every social link as a page, since the server refuses a link with no type', () => {
+    const data = toStoreProfileFormData(buildUpdate());
+
+    expect(data.get('socialLinks[0][type]')).toBe('page');
+    expect(data.get('socialLinks[1][type]')).toBe('page');
+    expect(data.get('socialLinks[2][type]')).toBe('page');
+  });
+
   it('sends the seven days numbered from Sunday, as 1 and 0', () => {
     const data = toStoreProfileFormData(buildUpdate());
 

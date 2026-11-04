@@ -15,7 +15,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     yearlyPrice: null,
     currency: 'USD',
     subscriberCount: 450,
-    limits: { adsPerMonth: 1, activeOffers: 2, galleryImages: 5, videos: 0 },
+    limits: { adsPerMonth: 1, activeOffers: 2, galleryImages: 5, videos: 0, activeStories: 1 },
     features: ['التواجد في محرك البحث الجغرافي', 'صفحة متجر كاملة بالبيانات وموقع GPS'],
     isActive: true,
   },
@@ -29,7 +29,7 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     yearlyPrice: 192,
     currency: 'USD',
     subscriberCount: 620,
-    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30 },
+    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30, activeStories: 10 },
     features: [
       'كل مزايا الباقة المجانية',
       'أولوية متقدمة في نتائج البحث والتصفية',
@@ -48,7 +48,13 @@ export const MOCK_PLANS: readonly PackagePlan[] = [
     yearlyPrice: 2390,
     currency: 'SYP',
     subscriberCount: 210,
-    limits: { adsPerMonth: null, activeOffers: null, galleryImages: 100, videos: 30 },
+    limits: {
+      adsPerMonth: null,
+      activeOffers: null,
+      galleryImages: 100,
+      videos: 30,
+      activeStories: null,
+    },
     features: [
       'كافة مزايا الباقة الأساسية بالكامل',
       'ظهور دائم بالبنر المميز في الصفحة الرئيسية',

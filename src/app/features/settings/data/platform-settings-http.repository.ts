@@ -28,7 +28,9 @@ export class PlatformSettingsHttpRepository implements PlatformSettingsRepositor
   updateGeneral({ logo, ...fields }: PlatformGeneralDraft): Observable<PlatformGeneralSettings> {
     const body = new FormData();
     body.set('_method', 'PUT');
-    Object.entries(fields).forEach(([name, value]) => body.set(name, value));
+    Object.entries(fields)
+      .filter(([, value]) => value !== null)
+      .forEach(([name, value]) => body.set(name, value as string));
     if (logo) {
       body.set('logo', logo);
     }

@@ -9,6 +9,8 @@ export interface LivePlan {
   readonly max_offers: number | null;
   readonly max_products: number | null;
   readonly max_images: number | null;
+  /** Missing on older plans. */
+  readonly limit_active_stories?: number | null;
   readonly features: readonly string[] | null;
   readonly is_active: boolean;
   readonly sort_order: number;

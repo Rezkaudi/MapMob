@@ -116,7 +116,13 @@ describe('SubscriptionHttpRepository', () => {
         monthlyPrice: 5000,
         yearlyPrice: null,
         currency: 'SYP',
-        limits: { adsPerMonth: 1, activeOffers: 2, galleryImages: 3, videos: null },
+        limits: {
+          adsPerMonth: 1,
+          activeOffers: 2,
+          galleryImages: 3,
+          videos: null,
+          activeStories: 2,
+        },
         features: [],
       }),
     );

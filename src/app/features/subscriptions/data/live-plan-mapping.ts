@@ -7,8 +7,10 @@ import { toPlanTier } from '../../../shared/data/live-plan-tier';
 // The server refuses an empty limit, so "unlimited" travels as this number.
 const UNLIMITED_LIMIT = 9999;
 
-function toLimit(liveLimit: number | null): number | null {
-  return liveLimit === null || liveLimit >= UNLIMITED_LIMIT ? null : liveLimit;
+function toLimit(liveLimit: number | null | undefined): number | null {
+  return liveLimit === null || liveLimit === undefined || liveLimit >= UNLIMITED_LIMIT
+    ? null
+    : liveLimit;
 }
 
 function toLiveLimit(limit: number | null): number {
@@ -35,6 +37,7 @@ export function toPackagePlan(
       activeOffers: toLimit(plan.max_offers),
       galleryImages: toLimit(plan.max_images),
       videos: null,
+      activeStories: toLimit(plan.limit_active_stories),
     },
     features: plan.features ?? [],
     isActive: plan.is_active,
@@ -51,6 +54,7 @@ export function toLivePlanBody(draft: PlanDraft): Record<string, unknown> {
     max_ads: toLiveLimit(draft.limits.adsPerMonth),
     max_offers: toLiveLimit(draft.limits.activeOffers),
     max_images: toLiveLimit(draft.limits.galleryImages),
+    limit_active_stories: toLiveLimit(draft.limits.activeStories),
     features: draft.features,
   };
 }

@@ -16,6 +16,7 @@ export interface GameFormErrors {
   readonly startsOn: string | null;
   readonly startTime: string | null;
   readonly voteSeconds: string | null;
+  readonly maxPlayerCount: string | null;
   readonly prizeAmount: string | null;
   readonly sponsorName: string | null;
   readonly maxWinnerCount: string | null;
@@ -57,6 +58,10 @@ export function buildGameFormErrors(form: GameFormGroup, now: Date): GameFormErr
     startsOn: startsOnError(form, now),
     startTime: touchedError(controls.startTime, 'اختر وقت انطلاق الجلسة'),
     voteSeconds: touchedError(controls.voteSeconds, 'أدخل عدد ثوانٍ أكبر من صفر'),
+    maxPlayerCount: touchedError(
+      controls.maxPlayerCount,
+      'أدخل لاعبَين على الأقل، أو اترك الحقل فارغاً',
+    ),
     prizeAmount: touchedError(controls.prizeAmount, 'أدخل قيمة أكبر من صفر'),
     sponsorName: touchedError(controls.sponsorName, 'أدخل الجهة المقدمة للقسيمة'),
     maxWinnerCount: touchedError(controls.maxWinnerCount, 'أدخل عدداً أكبر من صفر'),

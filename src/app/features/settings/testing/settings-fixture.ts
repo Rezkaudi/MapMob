@@ -21,6 +21,7 @@ export function buildPlatformSettings(overrides: Partial<PlatformSettings> = {})
       logoFileName: 'MapMob_logo.svg',
       supportEmail: 'supportmapmob@gmail.com',
       supportPhone: '+9639456788',
+      ownerApplicationUrl: 'https://merchant.mapmob.com',
     },
     map: { distanceUnit: 'kilometer', searchRadiusKm: 15 },
     language: { defaultLanguage: 'ar', detectsDeviceLanguage: true },

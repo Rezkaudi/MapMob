@@ -63,6 +63,22 @@ describe('toLiveStoreForm', () => {
     expect(form.has('ownerEmail')).toBe(false);
   });
 
+  it('repeats the new password as its confirmation, which the server asks for on an update', () => {
+    const value = { ...buildPlaceSaveRequest().value, ownerPassword: 'Fresh-Pass9' };
+
+    const form = toLiveStoreForm(value, IDS, 'update');
+
+    expect(form.get('ownerPassword_confirmation')).toBe('Fresh-Pass9');
+  });
+
+  it('sends no password confirmation when no new password is typed', () => {
+    const value = { ...buildPlaceSaveRequest().value, ownerPassword: '' };
+
+    const form = toLiveStoreForm(value, IDS, 'update');
+
+    expect(form.has('ownerPassword_confirmation')).toBe(false);
+  });
+
   it('sends a suspended place in the server word', () => {
     const value = { ...buildPlaceSaveRequest().value, status: 'suspended' as const };
 

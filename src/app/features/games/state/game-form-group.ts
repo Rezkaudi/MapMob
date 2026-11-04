@@ -18,6 +18,8 @@ const DEFAULT_MAX_WINNERS = 10;
 const NAME_MAX_LENGTH = 100;
 const LOWEST_COUNT = 1;
 const MIN_QUESTION_COUNT = 1;
+/** The server refuses a game capped below two players. */
+export const MIN_PLAYER_COUNT = 2;
 
 function requiredText(value = ''): FormControl<string> {
   return new FormControl(value, { nonNullable: true, validators: Validators.required });
@@ -52,6 +54,7 @@ export function createGameFormGroup() {
     startTime: requiredText(),
     timeZone: requiredText(DEFAULT_GAME_TIME_ZONE.id),
     voteSeconds: positiveNumber(DEFAULT_VOTE_SECONDS),
+    maxPlayerCount: new FormControl<number | null>(null, Validators.min(MIN_PLAYER_COUNT)),
     questions: new FormArray([createQuestionGroup()]),
     prizeKind: new FormControl<PrizeKind>('cash', { nonNullable: true }),
     currency: new FormControl<CurrencyCode>('SYP', { nonNullable: true }),

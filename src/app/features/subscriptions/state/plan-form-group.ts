@@ -2,7 +2,7 @@ import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@ang
 import { CurrencyCode } from '../../../shared/money/currency-code';
 import { PackagePlan } from '../models/package-plan';
 import { PlanDraft } from '../models/plan-draft';
-import { PlanLimits } from '../../../shared/models/plan-limits';
+import { PackagePlanLimits } from '../models/package-plan-limits';
 
 const HAS_TEXT = /\S/;
 /** The steppers write an unlimited allowance as this, since a number input cannot hold `null`. */
@@ -19,12 +19,13 @@ function limitControl(limit: number | null) {
   });
 }
 
-function buildLimitsGroup(limits: PlanLimits) {
+function buildLimitsGroup(limits: PackagePlanLimits) {
   return new FormGroup({
     adsPerMonth: limitControl(limits.adsPerMonth),
     activeOffers: limitControl(limits.activeOffers),
     galleryImages: limitControl(limits.galleryImages),
     videos: limitControl(limits.videos),
+    activeStories: limitControl(limits.activeStories),
   });
 }
 
@@ -62,6 +63,7 @@ export function toPlanDraft(form: PlanFormGroup): PlanDraft {
       activeOffers: readLimit(value.limits.activeOffers),
       galleryImages: readLimit(value.limits.galleryImages),
       videos: readLimit(value.limits.videos),
+      activeStories: readLimit(value.limits.activeStories),
     },
     features: value.features.map((feature) => feature.trim()).filter(Boolean),
   };

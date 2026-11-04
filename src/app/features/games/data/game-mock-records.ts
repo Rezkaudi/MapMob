@@ -13,6 +13,7 @@ export function toGameEntry(detail: GameDetail): GameEntry {
   const {
     description: _description,
     voteSeconds: _voteSeconds,
+    maxPlayerCount: _maxPlayerCount,
     questions: _questions,
     winnerCount: _winnerCount,
     deliveredPrizeCount: _deliveredPrizeCount,
@@ -29,6 +30,7 @@ export function toGameRecord(draft: GameDraft, keys: GameRecordKeys): GameDetail
     startsAt: new Date(draft.startsAt).toISOString(),
     timeZone: draft.timeZone,
     voteSeconds: draft.voteSeconds,
+    maxPlayerCount: draft.maxPlayerCount,
     questionCount: draft.questions.length,
     prize: draft.prize,
     status: draft.status,

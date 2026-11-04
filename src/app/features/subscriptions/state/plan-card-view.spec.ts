@@ -13,7 +13,7 @@ function plan(patch: Partial<PackagePlan> = {}): PackagePlan {
     yearlyPrice: 192,
     currency: 'USD',
     subscriberCount: 620,
-    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5 },
+    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5, activeStories: 3 },
     features: ['كل مزايا الباقة المجانية'],
     isActive: true,
     ...patch,
@@ -61,7 +61,16 @@ describe('buildPlanCardView', () => {
     expect(view.subscriberLine).toBe('210 شركات مميزة مشتركة');
   });
 
-  it('carries the three limit rows the card lists', () => {
-    expect(buildPlanCardView(plan()).limitRows).toHaveLength(3);
+  it('lists the three shared limit rows, then the stories cap', () => {
+    const rows = buildPlanCardView(plan()).limitRows;
+
+    expect(rows).toHaveLength(4);
+    expect(rows[3]).toEqual({ label: 'القصص النشطة:', value: '3 قصص' });
+  });
+
+  it('shows an unlimited stories cap as unlimited', () => {
+    const limits = { ...plan().limits, activeStories: null };
+
+    expect(buildPlanCardView(plan({ limits })).limitRows[3].value).toBe('غير محدود ⚡');
   });
 });

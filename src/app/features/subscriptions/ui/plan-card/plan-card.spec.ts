@@ -13,7 +13,7 @@ function plan(patch: Partial<PackagePlan> = {}): PackagePlan {
     yearlyPrice: 192,
     currency: 'USD',
     subscriberCount: 620,
-    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5 },
+    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 5, activeStories: 2 },
     features: ['كل مزايا الباقة المجانية', 'أولوية متقدمة في نتائج البحث والتصفية'],
     isActive: true,
     ...patch,
@@ -73,10 +73,11 @@ describe('PlanCard', () => {
     expect(fixture.nativeElement.querySelector('[data-role="currency"]')).toBeFalsy();
   });
 
-  it('lists the three usage limits', () => {
+  it('lists the usage limits, ending with the stories cap', () => {
     const rows = render().nativeElement.querySelectorAll('[data-role="limit-row"]');
 
-    expect(rows).toHaveLength(3);
+    expect(rows).toHaveLength(4);
+    expect(rows[3].textContent).toContain('القصص النشطة:');
     expect(rows[0].textContent).toContain('عدد الإعلانات:');
     expect(rows[0].textContent).toContain('10 إعلانات شهرياً');
   });

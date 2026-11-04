@@ -1,5 +1,5 @@
 import { CurrencyCode } from '../../../shared/money/currency-code';
-import { PlanLimits } from '../../../shared/models/plan-limits';
+import { PackagePlanLimits } from './package-plan-limits';
 import { PlanTier } from '../../../shared/models/plan-tier';
 
 /** One subscription package, as the cards on the "باقات الاشتراك" tab show it. */
@@ -15,7 +15,7 @@ export interface PackagePlan {
   readonly yearlyPrice: number | null;
   readonly currency: CurrencyCode;
   readonly subscriberCount: number;
-  readonly limits: PlanLimits;
+  readonly limits: PackagePlanLimits;
   readonly features: readonly string[];
   readonly isActive: boolean;
 }

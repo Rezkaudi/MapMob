@@ -22,6 +22,15 @@ describe('matchGames', () => {
     expect(matchGames(games, {}).map((game) => game.id)).toEqual(['new', 'other', 'old']);
   });
 
+  it('orders by the real moment, even when the starts carry different offsets', () => {
+    const utcEvening = buildGame({ id: 'utc', startsAt: '2026-12-01T16:00:00+00:00' });
+    const damascusNight = buildGame({ id: 'damascus', startsAt: '2026-12-01T18:00:00+03:00' });
+
+    const ids = matchGames([utcEvening, damascusNight], { sort: 'oldest' }).map((game) => game.id);
+
+    expect(ids).toEqual(['damascus', 'utc']);
+  });
+
   it('can list the earliest first, or by name', () => {
     expect(matchGames(games, { sort: 'oldest' }).map((game) => game.id)).toEqual([
       'old',

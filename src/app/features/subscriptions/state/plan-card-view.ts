@@ -2,6 +2,7 @@ import { CURRENCY_SYMBOLS } from '../../../shared/money/currency-symbols';
 import { BillingCycle } from '../../../shared/models/billing-cycle';
 import { PackagePlan } from '../models/package-plan';
 import { PlanLimitRow, buildPlanLimitRows } from '../../../shared/state/plan-limit-rows';
+import { buildStoriesLimitRow } from './stories-limit-row';
 
 /** The price line: a big amount, the currency sign beside it, then the billing period. */
 export interface PlanPriceDisplay {
@@ -46,6 +47,9 @@ export function buildPlanCardView(
   return {
     price: buildPrice(plan, cycle),
     subscriberLine: buildSubscriberLine(plan),
-    limitRows: buildPlanLimitRows(plan.limits),
+    limitRows: [
+      ...buildPlanLimitRows(plan.limits),
+      buildStoriesLimitRow(plan.limits.activeStories),
+    ],
   };
 }

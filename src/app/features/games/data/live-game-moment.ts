@@ -1,6 +1,6 @@
 const SERVER_MOMENT_LENGTH = 'yyyy-mm-dd hh:mm:ss'.length;
 
-/** The server keeps the wall time it is sent and calls it UTC, so the moment travels in UTC. */
-export function toServerMoment(isoMoment: string): string {
-  return new Date(isoMoment).toISOString().replace('T', ' ').slice(0, SERVER_MOMENT_LENGTH);
+/** The server reads the time in the game's own zone, so the moment travels as that zone's wall time. */
+export function toServerMoment(zonedIsoMoment: string): string {
+  return zonedIsoMoment.replace('T', ' ').slice(0, SERVER_MOMENT_LENGTH);
 }

@@ -31,6 +31,7 @@ export function buildGameDetail(overrides: Partial<GameDetail> = {}): GameDetail
     ...buildGame(),
     description: 'صوت مع الأغلبية واربح جوائز',
     voteSeconds: 10,
+    maxPlayerCount: null,
     questions: [
       {
         id: 'question-1',

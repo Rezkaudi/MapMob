@@ -28,7 +28,7 @@ const SUBSCRIPTION_FILTER_FIELDS = [
   ...dayRangeFields('startedFrom', 'startedTo', 'of the start date'),
 ];
 
-const LIMIT_KEYS = 'adsPerMonth, activeOffers, galleryImages, videos, products';
+const LIMIT_KEYS = 'adsPerMonth, activeOffers, galleryImages, videos, products, activeStories';
 
 const PLAN_FIELDS = [
   field('id / name / tagline', 'string'),

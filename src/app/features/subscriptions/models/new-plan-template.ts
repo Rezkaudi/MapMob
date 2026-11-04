@@ -11,7 +11,13 @@ export const NEW_PLAN_TEMPLATE: PackagePlan = {
   yearlyPrice: null,
   currency: 'SYP',
   subscriberCount: 0,
-  limits: { adsPerMonth: null, activeOffers: null, galleryImages: null, videos: null },
+  limits: {
+    adsPerMonth: null,
+    activeOffers: null,
+    galleryImages: null,
+    videos: null,
+    activeStories: null,
+  },
   features: [],
   isActive: true,
 };

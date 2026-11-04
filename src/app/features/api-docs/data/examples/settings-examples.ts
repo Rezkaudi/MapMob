@@ -71,6 +71,7 @@ export const PLATFORM_SETTINGS = {
     logoUrl: 'https://api.mapmob.com.co/storage/platform/logo.png',
     supportEmail: 'support@mapmob.com',
     supportPhone: '0931234567',
+    ownerApplicationUrl: 'https://owner.mapmob.com.co',
   },
   map: { distanceUnit: 'kilometer', searchRadiusKm: 10 },
   language: { defaultLanguage: 'ar', detectsDeviceLanguage: true },
@@ -81,5 +82,6 @@ export const PLATFORM_GENERAL_FORM = {
   appName: 'MapMob',
   supportEmail: 'support@mapmob.com',
   supportPhone: '0931234567',
+  ownerApplicationUrl: 'https://owner.mapmob.com.co',
   logo: '@mapmob-logo.png',
 };

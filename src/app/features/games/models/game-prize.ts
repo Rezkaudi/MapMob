@@ -7,5 +7,6 @@ export interface GamePrize {
   readonly value: Money;
   /** The place that gives a voucher; `null` for a cash prize. */
   readonly sponsorName: string | null;
-  readonly maxWinnerCount: number;
+  /** null when the server does not say. */
+  readonly maxWinnerCount: number | null;
 }

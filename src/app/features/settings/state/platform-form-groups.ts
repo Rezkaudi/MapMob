@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { contactEmail, phoneNumber } from '../../../shared/forms/contact-validators';
+import { contactEmail, phoneNumber, webAddress } from '../../../shared/forms/contact-validators';
 import { hasText } from '../../../shared/forms/has-text';
 import { AppLanguage } from '../models/app-language';
 import { CurrencyCode } from '../models/currency-code';
@@ -22,6 +22,7 @@ export function createPlatformGeneralFormGroup() {
       nonNullable: true,
       validators: [Validators.required, phoneNumber],
     }),
+    ownerApplicationUrl: new FormControl('', { nonNullable: true, validators: webAddress }),
   });
 }
 

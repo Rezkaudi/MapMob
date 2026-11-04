@@ -1,6 +1,8 @@
-/** The four allowances the dialog edits, with the tag colour the design gives each kind. */
+import { PackagePlanLimits } from '../../models/package-plan-limits';
+
+/** The allowances the dialog edits, with the tag colour the design gives each kind. */
 export interface PlanLimitField {
-  readonly key: 'adsPerMonth' | 'activeOffers' | 'galleryImages' | 'videos';
+  readonly key: keyof PackagePlanLimits;
   readonly label: string;
   readonly tag: string;
   readonly tagClasses: string;
@@ -30,5 +32,11 @@ export const PLAN_LIMIT_FIELDS: readonly PlanLimitField[] = [
     label: 'الفيديوهات',
     tag: 'فيديو',
     tagClasses: 'bg-[#ce2253]/16 text-[#ce2253]',
+  },
+  {
+    key: 'activeStories',
+    label: 'القصص النشطة',
+    tag: 'قصة',
+    tagClasses: 'bg-[#0e7490]/16 text-[#0e7490]',
   },
 ];

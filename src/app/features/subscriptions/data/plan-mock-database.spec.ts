@@ -10,7 +10,7 @@ function draft(patch: Partial<PlanDraft> = {}): PlanDraft {
     monthlyPrice: 15,
     yearlyPrice: 950,
     currency: 'USD',
-    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30 },
+    limits: { adsPerMonth: 10, activeOffers: 20, galleryImages: 30, videos: 30, activeStories: 2 },
     features: ['كل مزايا الباقة المجانية الأساسية'],
     ...patch,
   };

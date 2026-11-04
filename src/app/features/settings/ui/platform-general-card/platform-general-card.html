@@ -77,6 +77,25 @@
       </app-settings-field>
     </div>
 
+    <div class="grid grid-cols-2 gap-4 pt-1">
+      <app-settings-field
+        label="رابط تطبيق التاجر"
+        fieldId="platform-owner-app-url"
+        [error]="fieldError('ownerApplicationUrl')"
+      >
+        <input
+          id="platform-owner-app-url"
+          type="url"
+          dir="ltr"
+          formControlName="ownerApplicationUrl"
+          placeholder="https://"
+          class="text-right font-inter"
+          [class]="inputClasses"
+          [attr.aria-invalid]="fieldError('ownerApplicationUrl') !== null"
+        />
+      </app-settings-field>
+    </div>
+
     <div class="flex justify-end pt-1">
       <button
         type="submit"

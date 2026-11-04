@@ -50,6 +50,7 @@ describe('toPlanDraft', () => {
 
     expect(draft.name).toBe('الباقة الأساسية');
     expect(draft.limits.adsPerMonth).toBe(10);
+    expect(draft.limits.activeStories).toBe(10);
     expect(draft.features).toHaveLength(4);
   });
 
@@ -66,5 +67,6 @@ describe('toPlanDraft', () => {
     const draft = toPlanDraft(buildPlanFormGroup(featured));
 
     expect(draft.limits.adsPerMonth).toBeNull();
+    expect(draft.limits.activeStories).toBeNull();
   });
 });

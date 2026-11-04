@@ -12,7 +12,7 @@ const PLAN: PackagePlan = {
   yearlyPrice: null,
   currency: 'SYP',
   subscriberCount: 2,
-  limits: { adsPerMonth: 1, activeOffers: 1, galleryImages: 1, videos: null },
+  limits: { adsPerMonth: 1, activeOffers: 1, galleryImages: 1, videos: null, activeStories: 2 },
   features: [],
   isActive: true,
 };

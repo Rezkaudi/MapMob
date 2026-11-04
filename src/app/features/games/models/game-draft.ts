@@ -15,6 +15,8 @@ export interface GameDraft {
   readonly startsAt: string;
   readonly timeZone: string;
   readonly voteSeconds: number;
+  /** null = no cap. */
+  readonly maxPlayerCount: number | null;
   readonly questions: readonly GameQuestionDraft[];
   readonly prize: GamePrize;
   readonly status: GameSavedStatus;

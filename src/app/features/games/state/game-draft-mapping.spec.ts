@@ -9,6 +9,7 @@ const VALUE: GameFormValue = {
   startTime: '18:00',
   timeZone: 'Asia/Damascus',
   voteSeconds: 10,
+  maxPlayerCount: 50,
   questions: [{ text: ' ما المشروب؟ ', firstOption: 'القهوة', secondOption: 'الشاي' }],
   prizeKind: 'cash',
   currency: 'SYP',
@@ -25,6 +26,7 @@ describe('game draft mapping', () => {
       startsAt: '2026-10-15T18:00:00+03:00',
       timeZone: 'Asia/Damascus',
       voteSeconds: 10,
+      maxPlayerCount: 50,
       questions: [{ text: 'ما المشروب؟', options: ['القهوة', 'الشاي'] }],
       prize: {
         kind: 'cash',
@@ -40,6 +42,14 @@ describe('game draft mapping', () => {
     const draft = toGameDraft({ ...VALUE, prizeKind: 'voucher' }, 'draft');
     expect(draft.prize.sponsorName).toBe('كافية النور');
     expect(draft.status).toBe('draft');
+  });
+
+  it('sends an empty player cap as no cap', () => {
+    expect(toGameDraft({ ...VALUE, maxPlayerCount: null }, 'scheduled').maxPlayerCount).toBeNull();
+  });
+
+  it('fills the player cap from a saved game', () => {
+    expect(toGameFormValue(buildGameDetail({ maxPlayerCount: 40 })).maxPlayerCount).toBe(40);
   });
 
   it('fills the form from a saved game, in its own time zone', () => {

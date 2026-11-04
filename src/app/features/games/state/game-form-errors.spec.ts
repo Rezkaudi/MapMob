@@ -12,7 +12,7 @@ describe('buildGameFormErrors', () => {
 
   it('explains each touched field that is wrong', () => {
     const form = createGameFormGroup();
-    form.patchValue({ voteSeconds: 0 });
+    form.patchValue({ voteSeconds: 0, maxPlayerCount: 1 });
     form.markAllAsTouched();
 
     const errors = buildGameFormErrors(form, NOW);
@@ -21,6 +21,7 @@ describe('buildGameFormErrors', () => {
     expect(errors.startsOn).toBe('اختر تاريخ الجلسة');
     expect(errors.startTime).toBe('اختر وقت انطلاق الجلسة');
     expect(errors.voteSeconds).toBe('أدخل عدد ثوانٍ أكبر من صفر');
+    expect(errors.maxPlayerCount).toBe('أدخل لاعبَين على الأقل، أو اترك الحقل فارغاً');
     expect(errors.questions[0].text).toBe('اكتب نص السؤال');
   });
 

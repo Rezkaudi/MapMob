@@ -24,6 +24,7 @@ describe('PlatformGeneralCard', () => {
     expect(input(element, 'platform-app-name').value).toBe('MapMob');
     expect(input(element, 'platform-support-email').value).toBe('supportmapmob@gmail.com');
     expect(input(element, 'platform-support-phone').value).toBe('+9639456788');
+    expect(input(element, 'platform-owner-app-url').value).toBe('https://merchant.mapmob.com');
     expect(element.querySelector('[data-role="logo-file-name"]')?.textContent?.trim()).toBe(
       'MapMob_logo.svg',
     );
@@ -47,6 +48,7 @@ describe('PlatformGeneralCard', () => {
         appName: 'MapMob',
         supportEmail: 'supportmapmob@gmail.com',
         supportPhone: '+9639456788',
+        ownerApplicationUrl: 'https://merchant.mapmob.com',
         logo,
       },
     ]);
@@ -63,6 +65,30 @@ describe('PlatformGeneralCard', () => {
 
     expect(saved).toEqual([]);
     expect(element.textContent).toContain('اكتب بريداً إلكترونياً صحيحاً');
+  });
+
+  it('does not save a merchant app link that is not a full web address', () => {
+    const { fixture, element, saved } = render();
+    const link = input(element, 'platform-owner-app-url');
+
+    link.value = 'merchant.mapmob';
+    link.dispatchEvent(new Event('input'));
+    (element.querySelector('button[type="submit"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(saved).toEqual([]);
+    expect(element.textContent).toContain('أدخل رابطاً كاملاً يبدأ بـ');
+  });
+
+  it('sends an empty merchant app link as none', () => {
+    const { element, saved } = render();
+    const link = input(element, 'platform-owner-app-url');
+
+    link.value = '  ';
+    link.dispatchEvent(new Event('input'));
+    (element.querySelector('button[type="submit"]') as HTMLButtonElement).click();
+
+    expect(saved[0].ownerApplicationUrl).toBeNull();
   });
 });
 

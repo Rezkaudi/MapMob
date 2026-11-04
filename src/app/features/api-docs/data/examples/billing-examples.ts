@@ -6,7 +6,14 @@ export const SUBSCRIPTION_SUMMARY = {
   activeSubscriberPercent: 64,
 };
 
-const LIMITS = { adsPerMonth: 10, activeOffers: 20, galleryImages: 100, videos: 20, products: 50 };
+const LIMITS = {
+  adsPerMonth: 10,
+  activeOffers: 20,
+  galleryImages: 100,
+  videos: 20,
+  products: 50,
+  activeStories: 5,
+};
 
 export const PACKAGE_PLAN = {
   id: '3',

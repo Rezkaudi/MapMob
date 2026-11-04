@@ -27,7 +27,10 @@ export function toGameEntry(game: LiveGame): GameEntry {
     timeZone: game.timezone,
     questionCount: game.questions_count ?? game.questions?.length ?? 0,
     participantCount: UNKNOWN_PARTICIPANT_COUNT,
-    prize: { ...toWonPrize(game.prize), maxWinnerCount: Number(game.max_winners) },
+    prize: {
+      ...toWonPrize(game.prize),
+      maxWinnerCount: game.max_winners === undefined ? null : Number(game.max_winners),
+    },
     status: GAME_STATUS_OF[game.status],
   };
 }
@@ -49,6 +52,7 @@ export function toGameDetail(game: LiveGame, deliveredPrizeCount: number): GameD
     ...toGameEntry(game),
     description: game.description,
     voteSeconds: Number(game.answer_time_seconds),
+    maxPlayerCount: game.max_players === null ? null : Number(game.max_players),
     questions: (game.questions ?? []).map(toGameQuestion),
     winnerCount: game.winners_count ?? 0,
     deliveredPrizeCount,
@@ -68,6 +72,7 @@ export function toLiveGameBody(draft: GameDraft) {
     prize_value: draft.prize.value.amount,
     currency_code: draft.prize.value.currency,
     max_winners: draft.prize.maxWinnerCount,
+    max_players: draft.maxPlayerCount,
     questions: draft.questions.map((question) => ({
       question: question.text,
       options: question.options.map((option, index) => ({ option, is_correct: index === 0 })),

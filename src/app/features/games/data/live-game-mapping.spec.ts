@@ -8,6 +8,7 @@ const DRAFT: GameDraft = {
   startsAt: '2026-11-01T18:00:00+03:00',
   timeZone: 'Asia/Damascus',
   voteSeconds: 10,
+  maxPlayerCount: 20,
   questions: [{ text: 'سؤال؟', options: ['نعم', 'لا'] }],
   prize: {
     kind: 'voucher',
@@ -72,6 +73,7 @@ describe('live game mapping', () => {
       1,
     );
     expect(detail.voteSeconds).toBe(10);
+    expect(detail.maxPlayerCount).toBeNull();
     expect(detail.winnerCount).toBe(2);
     expect(detail.deliveredPrizeCount).toBe(1);
     expect(detail.description).toBe('صوت مع الأغلبية');
@@ -87,11 +89,25 @@ describe('live game mapping', () => {
     ]);
   });
 
-  it('builds the body the server saves, with the start in UTC', () => {
+  it('reads a missing winner cap as unknown, since the server has stopped sending it', () => {
+    const { max_winners: _cap, ...withoutCap } = buildLiveGame();
+
+    expect(toGameEntry(withoutCap).prize.maxWinnerCount).toBeNull();
+  });
+
+  it('reads the player cap, which comes back as a string right after a save', () => {
+    expect(toGameDetail(buildLiveGame({ max_players: '50' }), 0).maxPlayerCount).toBe(50);
+  });
+
+  it('sends no cap as null, so a cleared field clears the saved cap', () => {
+    expect(toLiveGameBody({ ...DRAFT, maxPlayerCount: null }).max_players).toBeNull();
+  });
+
+  it('builds the body the server saves, with the start as the wall time of its own zone', () => {
     expect(toLiveGameBody(DRAFT)).toEqual({
       name: 'لعبة',
       description: null,
-      starts_at: '2026-11-01 15:00:00',
+      starts_at: '2026-11-01 18:00:00',
       timezone: 'Asia/Damascus',
       answer_time_seconds: 10,
       status: 'scheduled',
@@ -99,6 +115,7 @@ describe('live game mapping', () => {
       prize_value: 1000,
       currency_code: 'SYP',
       max_winners: 3,
+      max_players: 20,
       questions: [
         {
           question: 'سؤال؟',

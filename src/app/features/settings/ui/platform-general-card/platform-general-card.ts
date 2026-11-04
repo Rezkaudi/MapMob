@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { WEB_ADDRESS_MESSAGE } from '../../../../shared/forms/contact-validators';
 import { touchedError } from '../../../../shared/forms/touched-error';
 import { PlatformGeneralDraft } from '../../models/platform-general-draft';
 import { PlatformGeneralSettings } from '../../models/platform-general-settings';
@@ -24,6 +25,7 @@ const MESSAGES = {
   appName: 'اكتب اسم التطبيق',
   supportEmail: 'اكتب بريداً إلكترونياً صحيحاً',
   supportPhone: 'اكتب رقم هاتف صحيحاً',
+  ownerApplicationUrl: WEB_ADDRESS_MESSAGE,
 };
 
 type GeneralField = keyof typeof MESSAGES;
@@ -51,8 +53,13 @@ export class PlatformGeneralCard {
 
   constructor() {
     effect(() => {
-      const { appName, supportEmail, supportPhone } = this.general();
-      this.form.reset({ appName, supportEmail, supportPhone });
+      const { appName, supportEmail, supportPhone, ownerApplicationUrl } = this.general();
+      this.form.reset({
+        appName,
+        supportEmail,
+        supportPhone,
+        ownerApplicationUrl: ownerApplicationUrl ?? '',
+      });
       this.pickedLogo.set(null);
     });
   }
@@ -73,11 +80,12 @@ export class PlatformGeneralCard {
     if (this.form.invalid) {
       return;
     }
-    const { appName, supportEmail, supportPhone } = this.form.getRawValue();
+    const { appName, supportEmail, supportPhone, ownerApplicationUrl } = this.form.getRawValue();
     this.saved.emit({
       appName: appName.trim(),
       supportEmail: supportEmail.trim(),
       supportPhone: supportPhone.trim(),
+      ownerApplicationUrl: ownerApplicationUrl.trim() || null,
       logo: this.pickedLogo(),
     });
   }

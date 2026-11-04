@@ -1,5 +1,5 @@
 import { CurrencyCode } from '../../../shared/money/currency-code';
-import { PlanLimits } from '../../../shared/models/plan-limits';
+import { PackagePlanLimits } from './package-plan-limits';
 
 /** What the edit dialog can change about a package. */
 export interface PlanDraft {
@@ -8,6 +8,6 @@ export interface PlanDraft {
   readonly monthlyPrice: number;
   readonly yearlyPrice: number | null;
   readonly currency: CurrencyCode;
-  readonly limits: PlanLimits;
+  readonly limits: PackagePlanLimits;
   readonly features: readonly string[];
 }

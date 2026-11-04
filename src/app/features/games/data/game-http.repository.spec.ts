@@ -21,6 +21,7 @@ const DRAFT: GameDraft = {
   startsAt: '2026-11-01T18:00:00+03:00',
   timeZone: 'Asia/Damascus',
   voteSeconds: 10,
+  maxPlayerCount: null,
   questions: [{ text: 'سؤال؟', options: ['نعم', 'لا'] }],
   prize: {
     kind: 'cash',
@@ -109,7 +110,7 @@ describe('GameHttpRepository', () => {
     const created = firstValueFrom(repository.createGame(DRAFT));
     const post = http.expectOne(GAMES_URL);
     expect(post.request.method).toBe('POST');
-    expect(post.request.body.starts_at).toBe('2026-11-01 15:00:00');
+    expect(post.request.body.starts_at).toBe('2026-11-01 18:00:00');
     expect(post.request.body.questions[0].options[0].is_correct).toBe(true);
     post.flush({ data: buildLiveGame() });
     expect((await created).id).toBe('9');

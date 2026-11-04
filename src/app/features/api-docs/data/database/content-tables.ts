@@ -57,7 +57,7 @@ export const CONTENT_DOMAIN: DbDomain = {
           name: 'key',
           type: 'varchar(60)',
           key: 'pk',
-          note: 'app_name, logo_path, support_email, support_phone, distance_unit, ...',
+          note: 'app_name, logo_path, support_email, support_phone, owner_application_url, distance_unit, ...',
         },
         { name: 'value', type: 'json' },
         { name: 'updated_at', type: 'timestamp', isNullable: true },

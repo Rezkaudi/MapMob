@@ -10,14 +10,29 @@ describe('platform settings forms', () => {
   it('needs an app name, a valid support email and a phone number', () => {
     const form = createPlatformGeneralFormGroup();
 
-    form.setValue({ appName: ' ', supportEmail: 'support@mapmob', supportPhone: 'abc' });
+    form.setValue({
+      appName: ' ',
+      supportEmail: 'support@mapmob',
+      supportPhone: 'abc',
+      ownerApplicationUrl: '',
+    });
     expect(form.controls.appName.valid).toBe(false);
     expect(form.controls.supportEmail.valid).toBe(false);
     expect(form.controls.supportPhone.valid).toBe(false);
 
     const { appName, supportEmail, supportPhone } = buildPlatformSettings().general;
-    form.setValue({ appName, supportEmail, supportPhone });
+    form.setValue({ appName, supportEmail, supportPhone, ownerApplicationUrl: '' });
     expect(form.valid).toBe(true);
+  });
+
+  it('takes an empty merchant app link or a full web address, nothing else', () => {
+    const link = createPlatformGeneralFormGroup().controls.ownerApplicationUrl;
+
+    link.setValue('merchant.mapmob');
+    expect(link.valid).toBe(false);
+
+    link.setValue('https://merchant.mapmob.com');
+    expect(link.valid).toBe(true);
   });
 
   it('keeps the search radius a whole number of kilometres between 1 and the maximum', () => {

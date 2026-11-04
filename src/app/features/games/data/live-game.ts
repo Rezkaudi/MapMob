@@ -21,14 +21,16 @@ export interface LiveGame {
   readonly id: number;
   readonly name: string;
   readonly description: string | null;
-  /** ISO moment in UTC. */
+  /** ISO moment with the offset of `timezone`. */
   readonly starts_at: string;
   readonly ends_at: string | null;
   readonly timezone: string;
   readonly answer_time_seconds: number | string;
   readonly status: LiveGameStatus;
   readonly prize: LivePrize;
-  readonly max_winners: number | string;
+  /** Left out by the server since 2026-11-04. */
+  readonly max_winners?: number | string;
+  readonly max_players: number | string | null;
   /** The list sends a count; the detail sends the questions. */
   readonly questions_count?: number;
   readonly questions?: readonly LiveGameQuestion[];

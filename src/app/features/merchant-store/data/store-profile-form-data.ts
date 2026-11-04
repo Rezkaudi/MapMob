@@ -6,6 +6,8 @@ import { SOCIAL_PLATFORMS } from './social-platforms';
 
 const OPTIONAL_CONTACT_FIELDS = ['email', 'whatsapp'] as const;
 const YES = '1';
+// The store page edits one link per platform: the store's own page there.
+const SOCIAL_LINK_TYPE = 'page';
 const NO = '0';
 
 /** POST with `_method=PUT`, as PHP reads no multipart body on a real PUT. Empty fields are left out. */
@@ -39,6 +41,7 @@ function appendSocialLinks(data: FormData, update: StoreProfileUpdate): void {
   SOCIAL_PLATFORMS.filter((platform) => update[platform] !== null).forEach((platform, index) => {
     data.set(`socialLinks[${index}][platform]`, platform);
     data.set(`socialLinks[${index}][url]`, update[platform] ?? '');
+    data.set(`socialLinks[${index}][type]`, SOCIAL_LINK_TYPE);
   });
 }
 

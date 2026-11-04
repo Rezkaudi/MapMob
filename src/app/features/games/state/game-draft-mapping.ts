@@ -16,6 +16,7 @@ export function toGameDraft(value: GameFormValue, status: GameSavedStatus): Game
     startsAt: toGameStartsAt(value.startsOn, value.startTime, offsetOf(value.timeZone)),
     timeZone: value.timeZone,
     voteSeconds: Number(value.voteSeconds),
+    maxPlayerCount: value.maxPlayerCount === null ? null : Number(value.maxPlayerCount),
     questions: value.questions.map((question) => ({
       text: question.text.trim(),
       options: [question.firstOption.trim(), question.secondOption.trim()],
@@ -39,6 +40,7 @@ export function toGameFormValue(detail: GameDetail): GameFormValue {
     startTime: time,
     timeZone: detail.timeZone,
     voteSeconds: detail.voteSeconds,
+    maxPlayerCount: detail.maxPlayerCount,
     questions: detail.questions.map((question) => ({
       text: question.text,
       firstOption: question.options[0]?.text ?? '',
