@@ -162,7 +162,7 @@ describe('MerchantOfferHttpRepository', () => {
   it('saves a draft or a paused offer as inactive, and an offer on everything with no product', async () => {
     const response = firstValueFrom(
       repository.createOffer(
-        buildOfferDraftFields({ status: 'draft', scope: 'allItems', description: '' }),
+        buildOfferDraftFields({ status: 'paused', scope: 'allItems', description: '' }),
       ),
     );
 

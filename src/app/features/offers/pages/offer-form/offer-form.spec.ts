@@ -182,15 +182,11 @@ describe('OfferForm', () => {
     expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/offers');
   });
 
-  it('saves a draft from "حفظ كمسودة"', async () => {
+  it('has no "حفظ كمسودة" button, because the server has no draft offers', () => {
     const page = createPage();
-    fillRequiredFields(page);
-    choose(page, '#offer-status', 'paused');
 
-    buttonNamed(page.element, 'حفظ كمسودة').click();
-    await settle(page);
-
-    expect(page.created[0].status).toBe('draft');
+    const labels = [...page.element.querySelectorAll('button')].map((button) => button.textContent?.trim());
+    expect(labels).not.toContain('حفظ كمسودة');
   });
 
   it('opens an offer for editing with its saved values, and updates it', async () => {

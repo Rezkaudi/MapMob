@@ -119,16 +119,12 @@ export class MerchantOfferMockDatabase {
       startsOn: draft.startsOn,
       endsOn: draft.endsOn,
       isPaused: draft.status === 'paused',
-      isDraft: draft.status === 'draft',
       imageUrl: draft.image ? URL.createObjectURL(draft.image) : keptImageUrl,
       createdAt: saved?.createdAt ?? this.now().toISOString(),
     };
   }
 
   private statusOf(record: MerchantOfferRecord): CampaignStatus {
-    if (record.isDraft) {
-      return 'draft';
-    }
     if (record.isPaused) {
       return 'paused';
     }
@@ -136,7 +132,7 @@ export class MerchantOfferMockDatabase {
   }
 
   private toOffer(record: MerchantOfferRecord): MerchantOffer {
-    const { isPaused, isDraft, ...offer } = record;
+    const { isPaused, ...offer } = record;
     return { ...offer, status: this.statusOf(record) };
   }
 }

@@ -28,7 +28,7 @@ describe('MerchantOfferMockRepository', () => {
     expect(items[0]).toEqual({ id: 'product-1', name: 'مرطب dove', price: 200, currency: 'SYP' });
   });
 
-  it('works the status out from the days, the pause and the draft flag', async () => {
+  it('works the status out from the days and the pause', async () => {
     const repository = createRepository();
     const status = async (overrides: Parameters<typeof buildOfferDraftFields>[0]) =>
       (await firstValueFrom(repository.createOffer(buildOfferDraftFields(overrides)))).status;
@@ -36,10 +36,9 @@ describe('MerchantOfferMockRepository', () => {
     expect(await status({ startsOn: '2026-10-01', endsOn: '2026-10-10' })).toBe('scheduled');
     expect(await status({ startsOn: '2026-09-01', endsOn: '2026-09-10' })).toBe('expired');
     expect(await status({ status: 'paused' })).toBe('paused');
-    expect(await status({ status: 'draft' })).toBe('draft');
   });
 
-  it('refuses a new live offer once the plan is full, but still takes a draft', async () => {
+  it('refuses a new live offer once the plan is full, but still takes a paused one', async () => {
     const repository = createRepository();
     const running = buildOfferDraftFields({ startsOn: '2026-09-20', endsOn: '2026-10-20' });
     await firstValueFrom(repository.createOffer(running));
@@ -49,8 +48,8 @@ describe('MerchantOfferMockRepository', () => {
       'وصلت للحد المتاح من العروض النشطة في باقتك الحالية.',
     );
     expect(
-      (await firstValueFrom(repository.createOffer({ ...running, status: 'draft' }))).status,
-    ).toBe('draft');
+      (await firstValueFrom(repository.createOffer({ ...running, status: 'paused' }))).status,
+    ).toBe('paused');
   });
 
   it('pauses, resumes, changes and deletes an offer for the next read', async () => {

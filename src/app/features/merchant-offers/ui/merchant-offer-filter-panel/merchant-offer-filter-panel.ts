@@ -21,7 +21,7 @@ import {
   NO_MERCHANT_OFFER_FILTERS,
 } from '../../models/merchant-offer-filters';
 
-/** Right to left, as the frame draws them; a draft is not a status the owner filters by. */
+/** Right to left, as the frame draws them. */
 const STATUS_ORDER: readonly CampaignStatus[] = ['active', 'scheduled', 'paused', 'expired'];
 const STATUS_CHOICES: readonly ChoiceOption[] = STATUS_ORDER.map((status) => ({
   value: status,

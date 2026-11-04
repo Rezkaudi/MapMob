@@ -37,14 +37,14 @@ describe('toAdDraft', () => {
   it('drops the last day of an ongoing ad and the store of an app ad', () => {
     const draft = toAdDraft(
       { ...value, title: '  حملة ', isOngoing: true, advertiserType: 'admin' },
-      { media: null, hadSavedMedia: false, status: 'draft' },
+      { media: null, hadSavedMedia: false, status: 'paused' },
     );
 
     expect(draft).toMatchObject({
       title: 'حملة',
       endsOn: null,
       placeId: null,
-      status: 'draft',
+      status: 'paused',
       isMediaRemoved: false,
     });
   });

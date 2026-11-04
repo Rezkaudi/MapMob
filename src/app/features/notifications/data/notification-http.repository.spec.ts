@@ -18,7 +18,7 @@ function live(overrides: Partial<LiveNotification> = {}): LiveNotification {
     audience: 'users',
     recipientMode: 'all',
     kind: 'general',
-    status: 'draft',
+    status: 'sent',
     sendAt: null,
     sentAt: null,
     recipientCount: 0,
@@ -39,7 +39,6 @@ const DRAFT: NotificationDraft = {
   areaId: null,
   recipientIds: [],
   sendAt: null,
-  intent: 'draft',
   image: null,
   isImageRemoved: false,
 };
@@ -101,7 +100,7 @@ describe('NotificationHttpRepository', () => {
 
     const request = http.expectOne(NOTIFICATIONS_URL);
     expect(request.request.method).toBe('POST');
-    expect((request.request.body as FormData).get('intent')).toBe('draft');
+    expect((request.request.body as FormData).get('intent')).toBe('publish');
     request.flush({ data: live() });
 
     expect((await response).id).toBe('n5');
@@ -118,7 +117,7 @@ describe('NotificationHttpRepository', () => {
     expect((await response).title).toBe('تحديث جديد');
   });
 
-  it('deletes, copies and moves a notification by its number', async () => {
+  it('deletes and moves a notification by its number', async () => {
     const deleted = firstValueFrom(repository.deleteNotification('n5'), {
       defaultValue: undefined,
     });
@@ -126,10 +125,6 @@ describe('NotificationHttpRepository', () => {
     expect(removal.request.method).toBe('DELETE');
     removal.flush({ status: true });
     await deleted;
-
-    const copied = firstValueFrom(repository.duplicateNotification('n5'));
-    http.expectOne(`${NOTIFICATIONS_URL}/5/duplicate`).flush({ data: live({ id: 'n6' }) });
-    expect((await copied).id).toBe('n6');
 
     const moved = firstValueFrom(repository.rescheduleNotification('n5', '2030-01-01T10:00'));
     const move = http.expectOne(`${NOTIFICATIONS_URL}/5/reschedule`);

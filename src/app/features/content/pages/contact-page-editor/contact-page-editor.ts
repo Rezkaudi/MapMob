@@ -4,7 +4,6 @@ import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { FormActionBar } from '../../../../shared/ui/form-action-bar/form-action-bar';
 import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
-import { ContentPageStatus } from '../../models/content-page-status';
 import { ContactPageEditorStore } from '../../state/contact-page-editor.store';
 import {
   createContactPageFormGroup,
@@ -78,18 +77,10 @@ export class ContactPageEditor {
   }
 
   protected publish(): void {
-    this.save('published');
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private save(status: ContentPageStatus): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
     }
-    this.store.save(toContactPageDraft(this.form.getRawValue(), status));
+    this.store.save(toContactPageDraft(this.form.getRawValue()));
   }
 }

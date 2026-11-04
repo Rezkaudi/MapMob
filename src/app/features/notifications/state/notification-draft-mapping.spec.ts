@@ -16,7 +16,7 @@ const BASE_VALUE = {
 describe('toNotificationDraft', () => {
   it('trims the text, joins the send time and keeps only what the recipient mode reads', () => {
     expect(
-      toNotificationDraft(BASE_VALUE, { image: null, hadSavedImage: false, intent: 'publish' }),
+      toNotificationDraft(BASE_VALUE, { image: null, hadSavedImage: false }),
     ).toEqual({
       title: 'عروض جديدة',
       body: 'اكتشف العروض',
@@ -26,7 +26,6 @@ describe('toNotificationDraft', () => {
       areaId: null,
       recipientIds: [],
       sendAt: '2026-09-20T08:00',
-      intent: 'publish',
       image: null,
       isImageRemoved: false,
     });
@@ -35,14 +34,13 @@ describe('toNotificationDraft', () => {
   it('sends straight away, drops the place for picked recipients and notes a removed picture', () => {
     const draft = toNotificationDraft(
       { ...BASE_VALUE, recipientMode: 'selected', timing: 'now' },
-      { image: null, hadSavedImage: true, intent: 'draft' },
+      { image: null, hadSavedImage: true },
     );
 
     expect(draft).toMatchObject({
       governorateId: null,
       recipientIds: ['recipient-1'],
       sendAt: null,
-      intent: 'draft',
       isImageRemoved: true,
     });
   });

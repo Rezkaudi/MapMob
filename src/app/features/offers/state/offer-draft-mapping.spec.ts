@@ -40,9 +40,9 @@ describe('toOfferDraft', () => {
     expect(
       toOfferDraft(
         { ...value, title: '  خصم  ' },
-        { image, hadSavedImage: false, status: 'draft' },
+        { image, hadSavedImage: false, status: 'paused' },
       ),
-    ).toMatchObject({ title: 'خصم', status: 'draft', image: file, isImageRemoved: false });
+    ).toMatchObject({ title: 'خصم', status: 'paused', image: file, isImageRemoved: false });
   });
 
   it('marks a saved picture as removed only when it was there and is gone now', () => {

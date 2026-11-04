@@ -1,6 +1,3 @@
-import { ContentPageStatus } from './content-page-status';
 import { LegalPage } from './legal-page';
 
-export interface LegalPageDraft extends LegalPage {
-  readonly status: ContentPageStatus;
-}
+export type LegalPageDraft = LegalPage;

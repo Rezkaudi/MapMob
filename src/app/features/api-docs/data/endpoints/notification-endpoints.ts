@@ -38,8 +38,8 @@ const NOTIFICATION_FORM_FIELDS = [
   optionalField('sendAt', SEND_TIME, `Left out = send now. ${SEND_TIME_NOTE}`),
   field(
     'intent',
-    'enum: publish | draft',
-    'draft saves only. publish sends now, or schedules when sendAt is set.',
+    'enum: publish',
+    'The dashboard has no drafts. publish sends now, or schedules when sendAt is set.',
   ),
   optionalField('image', 'file (png, jpg; max 2 MB)'),
   field('isImageRemoved', 'boolean'),
@@ -58,7 +58,7 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
   screen: '/admin/notifications',
   permissionModule: 'notifications',
   intro:
-    'Push notifications for app users or places: target everyone, a location or picked recipients; send now or schedule; duplicate, reschedule and resend.',
+    'Push notifications for app users or places: target everyone, a location or picked recipients; send now or schedule; reschedule and resend.',
   endpoints: [
     {
       id: 'notifications-list',
@@ -69,7 +69,7 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
         ...PAGED_QUERY_FIELDS,
         optionalField('audience', AUDIENCE),
         optionalField('kind', 'enum: general | private'),
-        optionalField('status', 'enum: sent | scheduled | draft'),
+        optionalField('status', 'enum: sent | scheduled'),
         ...dayRangeFields('sentFrom', 'sentTo', 'of sendAt'),
       ],
       response: {
@@ -84,11 +84,11 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
             'enum: general | private',
             'Worked out: general when recipientMode is all, else private.',
           ),
-          field('status', 'enum: sent | scheduled | draft'),
+          field('status', 'enum: sent | scheduled'),
           field(
             'sendAt',
             `${SEND_TIME} | null`,
-            `${SEND_TIME_NOTE} null for a draft with no time.`,
+            `${SEND_TIME_NOTE} null when it was sent at once.`,
           ),
           field('recipientCount', 'integer', 'Devices reached (sent) or expected (scheduled).'),
         ],
@@ -125,7 +125,7 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
       id: 'notifications-create',
       method: 'POST',
       path: '/notifications',
-      summary: 'Create a notification: send now, schedule, or save a draft.',
+      summary: 'Create a notification: send now or schedule.',
       body: {
         contentType: 'multipart/form-data',
         fields: NOTIFICATION_FORM_FIELDS,
@@ -133,7 +133,7 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
       },
       response: {
         status: 201,
-        description: 'The new row with status draft, scheduled or sent.',
+        description: 'The new row with status scheduled or sent.',
         example: NOTIFICATION_ROW,
       },
       notes: ['Send through a queue (for example FCM) so the request returns at once.'],
@@ -157,18 +157,6 @@ export const NOTIFICATIONS_FEATURE: ApiFeature = {
       path: '/notifications/{id}',
       summary: 'Delete a notification. A scheduled one is cancelled.',
       response: NO_CONTENT,
-    },
-    {
-      id: 'notifications-duplicate',
-      method: 'POST',
-      path: '/notifications/{id}/duplicate',
-      summary: 'Copy a notification into a new draft.',
-      response: {
-        status: 201,
-        description: 'The copy: same content and targeting, status draft, sendAt null.',
-        example: { ...NOTIFICATION_ROW, id: 'n75', status: 'draft', sendAt: null },
-      },
-      notes: [EMPTY_BODY_NOTE],
     },
     {
       id: 'notifications-reschedule',

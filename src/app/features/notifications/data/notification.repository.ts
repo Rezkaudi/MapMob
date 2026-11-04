@@ -16,7 +16,6 @@ export abstract class NotificationRepository {
   abstract getNotification(id: string): Observable<NotificationDetail>;
   abstract deleteNotification(id: string): Observable<void>;
   /** Saves a copy as a new draft. */
-  abstract duplicateNotification(id: string): Observable<AppNotification>;
   /** `sendAt` is Damascus wall-clock time, `yyyy-mm-ddThh:mm`. */
   abstract rescheduleNotification(id: string, sendAt: string): Observable<AppNotification>;
   /** `null` sends again straight away; a time schedules the resend. */

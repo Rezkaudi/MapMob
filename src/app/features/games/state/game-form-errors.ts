@@ -33,7 +33,7 @@ function questionErrors({ controls }: QuestionGroup): GameQuestionErrors {
   };
 }
 
-/** A published game must start later than now; a draft may keep any day. */
+/** A saved game must start later than now. */
 export function isStartInPast(form: GameFormGroup, now: Date): boolean {
   const { startsOn, startTime, timeZone } = form.getRawValue();
   if (!startsOn || !startTime) {

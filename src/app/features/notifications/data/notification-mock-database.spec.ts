@@ -3,24 +3,23 @@ import { NotificationMockDatabase } from './notification-mock-database';
 
 const SENT = buildNotificationDetail({ id: 'n1', status: 'sent', sendAt: '2026-09-01T10:00' });
 const SCHEDULED = buildNotificationDetail({ id: 'n2', status: 'scheduled' });
-const DRAFT = buildNotificationDetail({ id: 'n3', status: 'draft', sendAt: null });
+const SENT_AT_ONCE = buildNotificationDetail({ id: 'n3', status: 'sent', sendAt: null });
 const NOW = '2026-09-08T09:15';
 
 function createDatabase(): NotificationMockDatabase {
-  return new NotificationMockDatabase([SENT, SCHEDULED, DRAFT]);
+  return new NotificationMockDatabase([SENT, SCHEDULED, SENT_AT_ONCE]);
 }
 
 describe('NotificationMockDatabase', () => {
   it('lists, finds and summarizes the notifications', () => {
     const database = createDatabase();
 
-    expect(database.list()).toEqual([SENT, SCHEDULED, DRAFT]);
+    expect(database.list()).toEqual([SENT, SCHEDULED, SENT_AT_ONCE]);
     expect(database.find('n2')).toEqual(SCHEDULED);
     expect(database.summarize()).toEqual({
       totalCount: 3,
-      sentCount: 1,
+      sentCount: 2,
       scheduledCount: 1,
-      draftCount: 1,
     });
   });
 
@@ -34,16 +33,6 @@ describe('NotificationMockDatabase', () => {
     database.remove('n1');
 
     expect(database.list().map((notification) => notification.id)).toEqual(['n2', 'n3']);
-  });
-
-  it('copies a notification into a new draft at the top of the list', () => {
-    const database = createDatabase();
-
-    const copy = database.duplicate('n1');
-
-    expect(copy.id).not.toBe('n1');
-    expect(copy).toEqual({ ...SENT, id: copy.id, status: 'draft', sendAt: null });
-    expect(database.list()[0]).toEqual(copy);
   });
 
   it('moves a scheduled notification to a new time', () => {
@@ -65,7 +54,7 @@ describe('NotificationMockDatabase', () => {
     });
   });
 
-  it('creates a notification at the top: sent now, scheduled for later, or a draft', () => {
+  it('creates a notification at the top: sent now or scheduled for later', () => {
     const database = createDatabase();
 
     const sent = database.create(buildNotificationDraft(), 1250, NOW);
@@ -78,11 +67,6 @@ describe('NotificationMockDatabase', () => {
       300,
       NOW,
     );
-    const draft = database.create(
-      buildNotificationDraft({ intent: 'draft', sendAt: '2026-09-20T08:00' }),
-      1250,
-      NOW,
-    );
 
     expect(sent).toMatchObject({
       status: 'sent',
@@ -91,8 +75,7 @@ describe('NotificationMockDatabase', () => {
       recipientCount: 1250,
     });
     expect(scheduled).toMatchObject({ status: 'scheduled', kind: 'private', governorateId: 'g1' });
-    expect(draft).toMatchObject({ status: 'draft', sendAt: '2026-09-20T08:00' });
-    expect(database.list()[0]).toEqual(draft);
+    expect(database.list()[0]).toEqual(scheduled);
   });
 
   it('keeps only the recipients the mode reads, and keeps or drops the saved picture', () => {

@@ -2,7 +2,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UploadedImage } from '../../../shared/ui/image-upload-field/uploaded-image';
 import { AboutPage } from '../models/about-page';
 import { AboutPageDraft } from '../models/about-page-draft';
-import { ContentPageStatus } from '../models/content-page-status';
 import { contactEmail, phoneNumber } from '../../../shared/forms/contact-validators';
 import { hasText } from '../../../shared/forms/has-text';
 
@@ -30,7 +29,6 @@ export interface AboutPageDraftExtras {
   /** The banner picked or kept in the form. */
   readonly banner: UploadedImage | null;
   readonly hadSavedBanner: boolean;
-  readonly status: ContentPageStatus;
 }
 
 export function toAboutPageFormValue({ bannerUrl, ...fields }: AboutPage): AboutPageFormValue {
@@ -49,6 +47,5 @@ export function toAboutPageDraft(
     address: value.address.trim(),
     banner: extras.banner?.file ?? null,
     isBannerRemoved: extras.hadSavedBanner && extras.banner === null,
-    status: extras.status,
   };
 }

@@ -97,7 +97,6 @@ describe('GameForm', () => {
     await fixture.whenStable();
 
     const draft = vi.mocked(repository.createGame!).mock.calls[0][0] as GameDraft;
-    expect(draft.status).toBe('scheduled');
     expect(draft.startsAt).toBe('2026-10-15T18:00:00+03:00');
     expect(draft.questions).toEqual([{ text: 'ما المشروب؟', options: ['القهوة', 'الشاي'] }]);
     expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/games');
@@ -113,17 +112,6 @@ describe('GameForm', () => {
     expect(element.textContent).toContain('اختر موعداً لم يمضِ بعد');
   });
 
-  it('saves a draft', async () => {
-    const { fixture, element, repository, fillRequired } = render();
-    fillRequired();
-    const draftButton = Array.from(element.querySelectorAll('button')).find((button) =>
-      button.textContent?.includes('حفظ كمسودة'),
-    );
-    draftButton?.click();
-    await fixture.whenStable();
-    expect(vi.mocked(repository.createGame!).mock.calls[0][0].status).toBe('draft');
-  });
-
   it('fills the edit page from the saved game and updates it', async () => {
     const { fixture, element, repository } = render('game-104');
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('تعديل اللعبة');
@@ -137,7 +125,7 @@ describe('GameForm', () => {
 
     expect(repository.updateGame).toHaveBeenCalledWith(
       'game-104',
-      expect.objectContaining({ status: 'scheduled' }),
+      expect.objectContaining({ name: 'الأكثرية والأقلية' }),
     );
   });
 });

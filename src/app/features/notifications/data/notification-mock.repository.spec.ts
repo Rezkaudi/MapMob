@@ -42,13 +42,11 @@ describe('NotificationMockRepository', () => {
   it('writes through to the database, resending now at the clock time', async () => {
     await firstValueFrom(repository.rescheduleNotification('n2', '2026-09-18T16:30'));
     const resent = await firstValueFrom(repository.resendNotification('n1', null));
-    await firstValueFrom(repository.duplicateNotification('n2'));
     await firstValueFrom(repository.deleteNotification('n1'));
     const page = await firstValueFrom(repository.getNotifications({ pageIndex: 0, pageSize: 4 }));
 
     expect(resent.sendAt).toBe('2026-09-08T09:15');
     expect(page.items.map((item) => [item.status, item.sendAt])).toEqual([
-      ['draft', null],
       ['scheduled', '2026-09-18T16:30'],
     ]);
   });

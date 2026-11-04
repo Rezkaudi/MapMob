@@ -4,13 +4,12 @@ import { CAMPAIGN_STATUS_LABEL, CampaignStatus } from '../../models/campaign-sta
 /** Solid in the tables, outlined with a dot on the ad detail page. */
 export type CampaignStatusAppearance = 'solid' | 'outlined';
 
-/** Active, scheduled and paused come from the design; expired and draft take quieter shades. */
+/** Active, scheduled and paused come from the design; expired takes a quieter shade. */
 const SOLID_SKIN: Record<CampaignStatus, string> = {
   active: 'bg-status-success',
   scheduled: 'bg-[#94a3b8]',
   paused: 'bg-status-error',
   expired: 'bg-text-secondary',
-  draft: 'bg-status-warning',
 };
 
 /** The ad design draws the active pill; the rest take the same tint of their own colour. */
@@ -19,7 +18,6 @@ const OUTLINED_SKIN: Record<CampaignStatus, string> = {
   scheduled: 'bg-[#f1f5f9] border-[#94a3b8] text-[#94a3b8]',
   paused: 'bg-[#fef2f2] border-status-error text-status-error',
   expired: 'bg-surface-muted border-text-secondary text-text-secondary',
-  draft: 'bg-[#fffbeb] border-status-warning text-status-warning',
 };
 
 const SOLID_CLASSES = 'px-3 py-1 text-[12px]/[18px] text-white';

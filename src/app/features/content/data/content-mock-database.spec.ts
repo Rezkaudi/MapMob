@@ -57,7 +57,6 @@ describe('ContentMockDatabase', () => {
       address: 'دمشق',
       banner: null,
       isBannerRemoved: false,
-      status: 'draft',
     });
 
     expect(saved.bannerUrl).toBe('assets/images/about-app-banner.png');
@@ -66,7 +65,7 @@ describe('ContentMockDatabase', () => {
       kind: 'about',
       title: 'من نحن',
       updatedOn: TODAY,
-      status: 'draft',
+      status: 'published',
     });
   });
 
@@ -77,7 +76,6 @@ describe('ContentMockDatabase', () => {
       ...buildAboutPage(),
       banner: null,
       isBannerRemoved: true,
-      status: 'published',
     });
 
     expect(saved.bannerUrl).toBeNull();
@@ -89,7 +87,6 @@ describe('ContentMockDatabase', () => {
     const saved = database.saveProviderJoinPage({
       title: 'كن شريكاً',
       registrationFormUrl: 'https://forms.example.com/join',
-      status: 'published',
     });
 
     expect(saved).toEqual({
@@ -111,7 +108,6 @@ describe('ContentMockDatabase', () => {
     database.saveLegalPage('privacy', {
       title: 'الخصوصية',
       body: '<p>نص</p>',
-      status: 'published',
     });
 
     expect(database.legalPage('privacy').body).toBe('<p>نص</p>');
@@ -122,7 +118,7 @@ describe('ContentMockDatabase', () => {
   it('saves the contact page', () => {
     const database = createDatabase();
 
-    database.saveContactPage({ ...buildContactPage({ supportPhone: '+2' }), status: 'published' });
+    database.saveContactPage(buildContactPage({ supportPhone: '+2' }));
 
     expect(database.contactPage().supportPhone).toBe('+2');
     expect(rowOf(database, 'contact')?.updatedOn).toBe(TODAY);

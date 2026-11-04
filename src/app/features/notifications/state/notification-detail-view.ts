@@ -6,7 +6,7 @@ import { RECIPIENT_MODE_LABELS, RECIPIENT_NOUNS } from '../models/recipient-mode
 import { formatSendDistance } from './format-send-distance';
 import { formatSendTime } from './format-send-time';
 
-export type NotificationPrimaryActionKind = 'reschedule' | 'resend' | 'edit';
+export type NotificationPrimaryActionKind = 'reschedule' | 'resend';
 
 export interface NotificationPrimaryAction {
   readonly kind: NotificationPrimaryActionKind;
@@ -25,11 +25,10 @@ export interface NotificationDetailView {
 
 const NO_SEND_TIME_LABEL = 'لم يحدد بعد';
 
-/** A scheduled one can move, a sent one can go again, and a draft still needs its form. */
+/** A scheduled one can move, and a sent one can go again. */
 const PRIMARY_ACTIONS: Record<NotificationStatus, NotificationPrimaryAction> = {
   scheduled: { kind: 'reschedule', label: 'إعادة جدولة' },
   sent: { kind: 'resend', label: 'إعادة إرسال الإشعار' },
-  draft: { kind: 'edit', label: 'تعديل الإشعار' },
 };
 
 export function buildNotificationDetailView(

@@ -34,7 +34,7 @@ describe('NotificationFilterPanel', () => {
       'الشركات و المتاجر',
     ]);
     expect(groupLabels(element, 'نوع الإشعار')).toEqual(['الكل', 'عام', 'خاص']);
-    expect(groupLabels(element, 'الحالة')).toEqual(['الكل', 'مرسل', 'مجدول', 'مسودة']);
+    expect(groupLabels(element, 'الحالة')).toEqual(['الكل', 'مرسل', 'مجدول']);
     expect(element.textContent).toContain('تاريخ الإرسال');
     expect(element.textContent).toContain('نطاق مخصص');
   });

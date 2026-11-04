@@ -20,11 +20,9 @@ export function createProviderJoinPageFormGroup() {
 export type ProviderJoinPageFormGroup = ReturnType<typeof createProviderJoinPageFormGroup>;
 export type ProviderJoinPageFormValue = ReturnType<ProviderJoinPageFormGroup['getRawValue']>;
 
-/** The design gives this page no "حفظ كمسودة", so every save publishes it. */
 export function toProviderJoinPageDraft(value: ProviderJoinPageFormValue): ProviderJoinPageDraft {
   return {
     title: value.title.trim(),
     registrationFormUrl: value.registrationFormUrl.trim(),
-    status: 'published',
   };
 }

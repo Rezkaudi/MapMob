@@ -65,19 +65,18 @@ describe('OfferMockDatabase', () => {
     expect(database.create(buildOfferDraft(), RUNNING.place, TODAY).id).not.toBe(offer.id);
   });
 
-  it('keeps a paused offer or a draft as saved, and drops the items of an offer on everything', () => {
+  it('keeps a paused offer as saved, and drops the items of an offer on everything', () => {
     const database = createDatabase();
 
     expect(
       database.create(buildOfferDraft({ status: 'paused' }), RUNNING.place, TODAY).status,
     ).toBe('paused');
-    const draft = database.create(
-      buildOfferDraft({ status: 'draft', scope: 'allItems' }),
+    const everything = database.create(
+      buildOfferDraft({ scope: 'allItems' }),
       RUNNING.place,
       TODAY,
     );
-    expect(draft.status).toBe('draft');
-    expect(database.find(draft.id).itemIds).toEqual([]);
+    expect(database.find(everything.id).itemIds).toEqual([]);
   });
 
   it('updates an offer in place, keeping its picture unless it was removed', () => {

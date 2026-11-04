@@ -20,7 +20,6 @@ export const NOTIFICATION_SUMMARY = {
   totalCount: 74,
   sentCount: 58,
   scheduledCount: 6,
-  draftCount: 10,
 } satisfies NotificationSummary;
 
 export const NOTIFICATION_DETAIL = {

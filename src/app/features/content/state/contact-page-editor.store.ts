@@ -18,7 +18,7 @@ export const ContactPageEditorStore = signalStore(
       if (!store.page()) {
         return false;
       }
-      return store.savePageWith(repository.saveContactPage(draft), draft.status);
+      return store.savePageWith(repository.saveContactPage(draft));
     },
   })),
 );

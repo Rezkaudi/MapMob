@@ -15,22 +15,21 @@ describe('buildNotificationDetailView', () => {
     });
   });
 
-  it('offers to resend a sent notification and to edit a draft', () => {
+  it('offers to resend a sent notification', () => {
     const sent = buildNotificationDetailView(
       buildNotification({ status: 'sent', sendAt: '2026-09-01T10:00' }),
       NOW,
     );
-    const draft = buildNotificationDetailView(
-      buildNotification({ status: 'draft', sendAt: null, audience: 'companies', kind: 'private' }),
+    const sentAtOnce = buildNotificationDetailView(
+      buildNotification({ status: 'sent', sendAt: null, audience: 'companies', kind: 'private' }),
       NOW,
     );
 
     expect(sent.primaryAction).toEqual({ kind: 'resend', label: 'إعادة إرسال الإشعار' });
     expect(sent.sendDistanceLabel).toBe('منذ أسبوع');
-    expect(draft.primaryAction).toEqual({ kind: 'edit', label: 'تعديل الإشعار' });
-    expect(draft.sendTimeLabel).toBe('لم يحدد بعد');
-    expect(draft.sendDistanceLabel).toBeNull();
-    expect(draft.kindLabel).toBe('إشعار خاص');
-    expect(draft.recipientCountLabel).toBe('1,250 متجر');
+    expect(sentAtOnce.sendTimeLabel).toBe('لم يحدد بعد');
+    expect(sentAtOnce.sendDistanceLabel).toBeNull();
+    expect(sentAtOnce.kindLabel).toBe('إشعار خاص');
+    expect(sentAtOnce.recipientCountLabel).toBe('1,250 متجر');
   });
 });

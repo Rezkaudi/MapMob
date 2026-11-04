@@ -34,23 +34,11 @@ export class NotificationMockDatabase {
       totalCount: this.details.length,
       sentCount: countOf('sent'),
       scheduledCount: countOf('scheduled'),
-      draftCount: countOf('draft'),
     };
   }
 
   remove(id: string): void {
     this.details = this.details.filter((detail) => detail.id !== id);
-  }
-
-  duplicate(id: string): NotificationDetail {
-    const copy: NotificationDetail = {
-      ...this.find(id),
-      id: `notification-copy-${this.nextNumber++}`,
-      status: 'draft',
-      sendAt: null,
-    };
-    this.details = [copy, ...this.details];
-    return copy;
   }
 
   /** `now` is the wall-clock time a notification sent straight away goes out at. */
@@ -97,9 +85,6 @@ export class NotificationMockDatabase {
 }
 
 function resolveSavedStatus(draft: NotificationDraft): NotificationStatus {
-  if (draft.intent === 'draft') {
-    return 'draft';
-  }
   return draft.sendAt ? 'scheduled' : 'sent';
 }
 

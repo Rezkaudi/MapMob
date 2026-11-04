@@ -66,7 +66,7 @@ describe('ContentPageHttpRepository', () => {
       kind: 'provider-join',
       title: 'انضم إلينا كمقدم خدمة',
       updatedOn: null,
-      status: 'draft',
+      status: 'unpublished',
     });
   });
 
@@ -94,7 +94,6 @@ describe('ContentPageHttpRepository', () => {
         phone: '',
         email: '',
         address: '',
-        status: 'published',
         banner: null,
         isBannerRemoved: false,
       }),
@@ -114,7 +113,7 @@ describe('ContentPageHttpRepository', () => {
     expect(await read).toEqual({ title: 'سياسة الخصوصية', body: '' });
 
     const saved = firstValueFrom(
-      repository.saveLegalPage('terms', { title: 'الشروط', body: '<p>نص</p>', status: 'draft' }),
+      repository.saveLegalPage('terms', { title: 'الشروط', body: '<p>نص</p>' }),
     );
     const request = http.expectOne(`${PAGES_URL}/terms`);
     expect(request.request.method).toBe('POST');
@@ -129,7 +128,7 @@ describe('ContentPageHttpRepository', () => {
     http.expectOne(`${PAGES_URL}/contact`).flush(livePage(contact.title, contact));
     expect(await read).toEqual(contact);
 
-    const saved = firstValueFrom(repository.saveContactPage({ ...contact, status: 'published' }));
+    const saved = firstValueFrom(repository.saveContactPage(contact));
     const request = http.expectOne(`${PAGES_URL}/contact`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body._method).toBe('PUT');
@@ -145,7 +144,7 @@ describe('ContentPageHttpRepository', () => {
       .flush(livePage(page.title, { registrationFormUrl: page.registrationFormUrl }));
     expect(await read).toEqual(page);
 
-    const saved = firstValueFrom(repository.saveProviderJoinPage({ ...page, status: 'published' }));
+    const saved = firstValueFrom(repository.saveProviderJoinPage(page));
     const request = http.expectOne(`${PAGES_URL}/provider-join`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual({
@@ -161,7 +160,7 @@ describe('ContentPageHttpRepository', () => {
 
   it('fails the save when the server answers without the link, so the admin is not told it was kept', async () => {
     const saved = firstValueFrom(
-      repository.saveProviderJoinPage({ ...buildProviderJoinPage(), status: 'published' }),
+      repository.saveProviderJoinPage(buildProviderJoinPage()),
     );
 
     http
@@ -173,7 +172,7 @@ describe('ContentPageHttpRepository', () => {
 
   it('reads the link back from body, the field the server keeps for any page', async () => {
     const page = buildProviderJoinPage();
-    const saved = firstValueFrom(repository.saveProviderJoinPage({ ...page, status: 'published' }));
+    const saved = firstValueFrom(repository.saveProviderJoinPage(page));
 
     http
       .expectOne(`${PAGES_URL}/provider-join`)

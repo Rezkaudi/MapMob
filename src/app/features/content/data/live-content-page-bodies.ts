@@ -7,6 +7,8 @@ import { ProviderJoinPageDraft } from '../models/provider-join-page-draft';
 
 // PHP reads a body only on POST, so a save names its real method inside it.
 const PUT_OVER_POST = 'PUT';
+// The panel has no drafts: every save publishes the page.
+const PUBLISHED_STATUS = 'published';
 
 /** Multipart, so the banner travels with the fields. The server wants 1 or 0 for the flag. */
 export function toLiveAboutForm(draft: AboutPageDraft): FormData {
@@ -19,7 +21,7 @@ export function toLiveAboutForm(draft: AboutPageDraft): FormData {
   form.set('phone', draft.phone);
   form.set('email', draft.email);
   form.set('address', draft.address);
-  form.set('status', draft.status);
+  form.set('status', PUBLISHED_STATUS);
   form.set('isBannerRemoved', draft.isBannerRemoved ? '1' : '0');
   if (draft.banner) {
     form.set('banner', draft.banner);
@@ -32,7 +34,7 @@ export function toLiveLegalBody(draft: LegalPageDraft) {
     _method: PUT_OVER_POST,
     title: inBothLanguages(draft.title),
     body: inBothLanguages(draft.body),
-    status: draft.status,
+    status: PUBLISHED_STATUS,
   };
 }
 
@@ -42,6 +44,7 @@ export function toLiveContactBody({ title, introduction, ...contact }: ContactPa
     title: inBothLanguages(title),
     introduction: inBothLanguages(introduction),
     ...contact,
+    status: PUBLISHED_STATUS,
   };
 }
 
@@ -51,6 +54,7 @@ export function toLiveProviderJoinBody({ title, ...page }: ProviderJoinPageDraft
     title: inBothLanguages(title),
     ...page,
     body: inBothLanguages(page.registrationFormUrl),
+    status: PUBLISHED_STATUS,
   };
 }
 

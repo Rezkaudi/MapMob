@@ -33,7 +33,6 @@ const DRAFT: NotificationDraft = {
   areaId: null,
   recipientIds: ['1', '5'],
   sendAt: null,
-  intent: 'publish',
   image: null,
   isImageRemoved: false,
 };
@@ -88,10 +87,6 @@ describe('live notification mapping', () => {
 
     expect(form.get('intent')).toBe('schedule');
     expect(form.get('sendAt')).toBe('2030-01-01T10:00');
-  });
-
-  it('keeps a draft a draft', () => {
-    expect(toLiveNotificationForm({ ...DRAFT, intent: 'draft' }).get('intent')).toBe('draft');
   });
 
   it('sends the place only when the people are picked by place', () => {

@@ -16,7 +16,6 @@ const DRAFT: GameDraft = {
     sponsorName: 'متجر',
     maxWinnerCount: 3,
   },
-  status: 'scheduled',
 };
 
 describe('live game mapping', () => {
@@ -41,6 +40,10 @@ describe('live game mapping', () => {
 
   it('reads completed as finished', () => {
     expect(toGameEntry(buildLiveGame({ status: 'completed' })).status).toBe('finished');
+  });
+
+  it('reads an old server draft as scheduled, as the panel has no drafts', () => {
+    expect(toGameEntry(buildLiveGame({ status: 'draft' })).status).toBe('scheduled');
   });
 
   it('counts the questions when the list has no count', () => {
@@ -103,7 +106,7 @@ describe('live game mapping', () => {
     expect(toLiveGameBody({ ...DRAFT, maxPlayerCount: null }).max_players).toBeNull();
   });
 
-  it('builds the body the server saves, with the start as the wall time of its own zone', () => {
+  it('builds the body the server saves, always scheduled, with the start as the wall time of its own zone', () => {
     expect(toLiveGameBody(DRAFT)).toEqual({
       name: 'لعبة',
       description: null,

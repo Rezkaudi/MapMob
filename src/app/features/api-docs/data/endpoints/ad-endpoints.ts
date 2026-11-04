@@ -78,7 +78,7 @@ const AD_FORM_FIELDS = [
   optionalField(
     'media',
     'file',
-    'Image (png, jpg, webp; max 5 MB) or video (mp4; max 50 MB), matching contentType. Required on create unless status is draft.',
+    'Image (png, jpg, webp; max 5 MB) or video (mp4; max 50 MB), matching contentType. Required on create.',
   ),
   field('isMediaRemoved', 'boolean'),
 ];

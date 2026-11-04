@@ -1,2 +1,2 @@
-/** "حفظ التغييرات" publishes a page; "حفظ كمسودة" keeps it as a draft. */
-export type ContentPageStatus = 'published' | 'draft';
+/** The panel always publishes; a page the server has not published yet shows as unpublished. */
+export type ContentPageStatus = 'published' | 'unpublished';

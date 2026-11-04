@@ -39,11 +39,6 @@ export const GAME_DOMAIN: DbDomain = {
           note: 'Voucher only.',
         },
         { name: 'max_winner_count', type: 'smallint unsigned' },
-        {
-          name: 'is_draft',
-          type: 'boolean',
-          note: 'The rest of status is worked out from starts_at on every read.',
-        },
         adminReference('created_by', 'The admin who made the game.'),
         ...TIMESTAMPS,
       ],

@@ -6,6 +6,5 @@ describe('campaignPauseActionFor', () => {
     expect(campaignPauseActionFor('scheduled')).toBe('pause');
     expect(campaignPauseActionFor('paused')).toBe('resume');
     expect(campaignPauseActionFor('expired')).toBeNull();
-    expect(campaignPauseActionFor('draft')).toBeNull();
   });
 });

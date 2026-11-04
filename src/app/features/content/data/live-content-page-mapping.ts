@@ -13,13 +13,15 @@ import { LiveContentPage } from './live-content-page';
 import { LiveLegalPage } from './live-legal-page';
 import { LiveProviderJoinPage } from './live-provider-join-page';
 
+const PUBLISHED_STATUS = 'published';
+
 /** The server's list cannot tell the terms from the privacy page, so each row comes from its own page. */
 export function toContentPage(kind: ContentPageKind, live: LiveContentPage): ContentPage {
   return {
     kind,
     title: toArabicPageTitle(kind, live.title),
     updatedOn: toIsoDay(live.updatedAt),
-    status: live.status,
+    status: live.status === PUBLISHED_STATUS ? 'published' : 'unpublished',
   };
 }
 

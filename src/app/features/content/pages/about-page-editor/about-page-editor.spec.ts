@@ -78,7 +78,6 @@ describe('AboutPageEditor page', () => {
     expect(saves).toHaveLength(1);
     expect(saves[0].phone).toBe('+963 944 000 111');
     expect(saves[0].isBannerRemoved).toBe(true);
-    expect(saves[0].status).toBe('published');
     expect(element.querySelector('app-toast')?.textContent).toContain('تم حفظ التغييرات');
   });
 
@@ -86,7 +85,7 @@ describe('AboutPageEditor page', () => {
     const { fixture, element, saves } = render();
     type(element, '#about-email', 'mapmob');
 
-    buttonNamed(element, 'حفظ كمسودة').click();
+    buttonNamed(element, 'حفظ التغييرات').click();
     await fixture.whenStable();
     fixture.detectChanges();
 

@@ -1,7 +1,7 @@
 import { ApiField } from '../../models/api-field';
 import { field } from '../shared-fields';
 
-export const GAME_STATUS = 'enum: draft | scheduled | active | finished';
+export const GAME_STATUS = 'enum: scheduled | active | finished';
 export const PRIZE_KIND = 'enum: cash | voucher';
 export const DELIVERY_STATUS = 'enum: delivered | pending';
 
@@ -40,7 +40,7 @@ export const GAME_FIELDS: readonly ApiField[] = [
   field(
     'status',
     GAME_STATUS,
-    'draft until published. After that the server works it out on every read: scheduled before startsAt, active while questions are running, finished after the last vote closes.',
+    'The server works it out on every read: scheduled before startsAt, active while questions are running, finished after the last vote closes.',
   ),
 ];
 

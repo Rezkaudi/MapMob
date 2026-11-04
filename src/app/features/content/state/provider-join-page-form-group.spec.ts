@@ -18,14 +18,13 @@ describe('createProviderJoinPageFormGroup', () => {
     expect(form.valid).toBe(true);
   });
 
-  it('publishes the form as a draft with both fields trimmed', () => {
+  it('turns the form into what is saved, with both fields trimmed', () => {
     const form = createProviderJoinPageFormGroup();
     form.setValue({ title: '  انضم إلينا ', registrationFormUrl: ' https://forms.app/join ' });
 
     expect(toProviderJoinPageDraft(form.getRawValue())).toEqual({
       title: 'انضم إلينا',
       registrationFormUrl: 'https://forms.app/join',
-      status: 'published',
     });
   });
 });

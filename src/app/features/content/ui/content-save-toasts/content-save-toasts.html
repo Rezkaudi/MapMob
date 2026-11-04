@@ -5,6 +5,10 @@
     [message]="error"
     (dismissed)="errorDismissed.emit()"
   />
-} @else if (savedCopy(); as copy) {
-  <app-toast [title]="copy.title" [message]="copy.message" (dismissed)="savedDismissed.emit()" />
+} @else if (isSaved()) {
+  <app-toast
+    title="تم حفظ التغييرات"
+    message="ستظهر التغييرات للمستخدمين داخل التطبيق."
+    (dismissed)="savedDismissed.emit()"
+  />
 }

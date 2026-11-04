@@ -46,7 +46,7 @@ const UNSAVED_PROVIDER_JOIN_ROW: ContentPage = {
   kind: 'provider-join',
   title: CONTENT_PAGE_NAMES['provider-join'],
   updatedOn: null,
-  status: 'draft',
+  status: 'unpublished',
 };
 
 // The server answers 200 even when it drops a field it does not know, so a missing link means it was not kept.

@@ -4,7 +4,6 @@ import { NOTIFICATION_STATUS_LABELS, NotificationStatus } from '../../models/not
 const STATUS_BACKGROUNDS: Record<NotificationStatus, string> = {
   sent: 'bg-status-success',
   scheduled: 'bg-accent',
-  draft: 'bg-text-secondary',
 };
 
 @Component({

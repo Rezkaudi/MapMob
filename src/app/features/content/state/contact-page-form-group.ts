@@ -1,6 +1,5 @@
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ContactPageDraft } from '../models/contact-page-draft';
-import { ContentPageStatus } from '../models/content-page-status';
 import { contactEmail, phoneNumber, webAddress } from '../../../shared/forms/contact-validators';
 import { hasText } from '../../../shared/forms/has-text';
 
@@ -27,12 +26,9 @@ export function createContactPageFormGroup() {
 export type ContactPageFormGroup = ReturnType<typeof createContactPageFormGroup>;
 export type ContactPageFormValue = ReturnType<ContactPageFormGroup['getRawValue']>;
 
-export function toContactPageDraft(
-  value: ContactPageFormValue,
-  status: ContentPageStatus,
-): ContactPageDraft {
+export function toContactPageDraft(value: ContactPageFormValue): ContactPageDraft {
   const trimmed = Object.fromEntries(
     Object.entries(value).map(([field, text]) => [field, text.trim()]),
   ) as ContactPageFormValue;
-  return { ...trimmed, status };
+  return trimmed;
 }

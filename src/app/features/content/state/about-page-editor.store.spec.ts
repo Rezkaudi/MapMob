@@ -9,7 +9,6 @@ const DRAFT: AboutPageDraft = {
   ...buildAboutPage({ title: 'من نحن' }),
   banner: null,
   isBannerRemoved: true,
-  status: 'draft',
 };
 
 function createStore(overrides: Partial<ContentPageRepository> = {}) {
@@ -51,7 +50,7 @@ describe('AboutPageEditorStore', () => {
 
     expect(saves).toEqual([DRAFT]);
     expect(store.page()?.bannerUrl).toBeNull();
-    expect(store.savedStatus()).toBe('draft');
+    expect(store.isSavedMessageShown()).toBe(true);
   });
 
   it('reports a failed load', () => {

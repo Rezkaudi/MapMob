@@ -18,7 +18,7 @@ export const AboutPageEditorStore = signalStore(
       if (!store.page()) {
         return false;
       }
-      return store.savePageWith(repository.saveAboutPage(draft), draft.status);
+      return store.savePageWith(repository.saveAboutPage(draft));
     },
   })),
 );

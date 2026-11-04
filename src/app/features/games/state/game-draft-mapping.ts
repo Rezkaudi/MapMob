@@ -1,5 +1,5 @@
 import { GameDetail } from '../models/game-detail';
-import { GameDraft, GameSavedStatus } from '../models/game-draft';
+import { GameDraft } from '../models/game-draft';
 import { DEFAULT_GAME_TIME_ZONE, GAME_TIME_ZONES } from '../models/game-time-zone';
 import { toGameStartsAt, toZonedSchedule } from './game-schedule-text';
 import { GameFormValue } from './game-form-group';
@@ -8,7 +8,7 @@ function offsetOf(timeZone: string): string {
   return (GAME_TIME_ZONES.find((zone) => zone.id === timeZone) ?? DEFAULT_GAME_TIME_ZONE).utcOffset;
 }
 
-export function toGameDraft(value: GameFormValue, status: GameSavedStatus): GameDraft {
+export function toGameDraft(value: GameFormValue): GameDraft {
   const description = value.description.trim();
   return {
     name: value.name.trim(),
@@ -27,7 +27,6 @@ export function toGameDraft(value: GameFormValue, status: GameSavedStatus): Game
       sponsorName: value.prizeKind === 'voucher' ? value.sponsorName.trim() : null,
       maxWinnerCount: Number(value.maxWinnerCount),
     },
-    status,
   };
 }
 

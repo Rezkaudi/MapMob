@@ -29,7 +29,6 @@ const DRAFT: GameDraft = {
     sponsorName: null,
     maxWinnerCount: 3,
   },
-  status: 'scheduled',
 };
 
 function onePage<T>(data: readonly T[]) {
@@ -72,7 +71,7 @@ describe('GameHttpRepository', () => {
       onePage([
         buildLiveGame({ id: 1, name: 'ليلة الأسئلة' }),
         buildLiveGame({ id: 2, name: 'ليلة ثانية' }),
-        buildLiveGame({ id: 3, name: 'ليلة مسودة', status: 'draft' }),
+        buildLiveGame({ id: 3, name: 'ليلة منتهية', status: 'completed' }),
         buildLiveGame({ id: 4, name: 'أخرى' }),
       ]),
     );

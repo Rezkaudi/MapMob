@@ -39,14 +39,14 @@ describe('toOfferDraftFields', () => {
     expect(
       toOfferDraftFields(
         { ...value, title: '  خصم  ', description: ' نص ' },
-        { image, hadSavedImage: false, status: 'draft' },
+        { image, hadSavedImage: false, status: 'paused' },
       ),
     ).toEqual({
       title: 'خصم',
       discountPercent: 30,
       startsOn: '2026-09-01',
       endsOn: '2026-09-15',
-      status: 'draft',
+      status: 'paused',
       description: 'نص',
       scope: 'selectedItems',
       itemIds: ['a', 'b'],

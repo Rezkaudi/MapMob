@@ -14,7 +14,6 @@ import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-pa
 import { RichTextEditor } from '../../../../shared/ui/rich-text-editor/rich-text-editor';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { LegalPageKind } from '../../models/content-page-kind';
-import { ContentPageStatus } from '../../models/content-page-status';
 import {
   CONTENT_EDITOR_DESCRIPTION,
   CONTENT_EDIT_STEP_LABEL,
@@ -82,18 +81,10 @@ export class LegalPageEditor {
   }
 
   protected publish(): void {
-    this.save('published');
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private save(status: ContentPageStatus): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
     }
-    this.store.save(toLegalPageDraft(this.form.getRawValue(), status));
+    this.store.save(toLegalPageDraft(this.form.getRawValue()));
   }
 }

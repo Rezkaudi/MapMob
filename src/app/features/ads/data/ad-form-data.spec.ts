@@ -39,8 +39,7 @@ describe('toAdFormData', () => {
     expect(data.has('media[0][type]')).toBe(false);
   });
 
-  it('saves a paused ad and a draft as inactive', () => {
+  it('saves a paused ad as inactive', () => {
     expect(toAdFormData(buildAdDraft({ status: 'paused' })).get('status')).toBe('inactive');
-    expect(toAdFormData(buildAdDraft({ status: 'draft' })).get('status')).toBe('inactive');
   });
 });

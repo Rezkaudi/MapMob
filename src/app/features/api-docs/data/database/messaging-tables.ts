@@ -24,7 +24,7 @@ export const MESSAGING_DOMAIN: DbDomain = {
         },
         foreignKey('governorate_id', 'governorates.id', 'Only with location.', true),
         foreignKey('area_id', 'areas.id', 'Only with location.', true),
-        { name: 'status', type: "enum('draft','scheduled','sent')" },
+        { name: 'status', type: "enum('scheduled','sent')" },
         {
           name: 'send_at',
           type: 'datetime',

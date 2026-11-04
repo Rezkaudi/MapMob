@@ -44,10 +44,6 @@ export class NotificationMockRepository implements NotificationRepository {
     return mockRequest(() => this.database.remove(id));
   }
 
-  duplicateNotification(id: string): Observable<AppNotification> {
-    return mockRequest(() => this.database.duplicate(id));
-  }
-
   rescheduleNotification(id: string, sendAt: string): Observable<AppNotification> {
     return mockRequest(() => this.database.reschedule(id, sendAt));
   }

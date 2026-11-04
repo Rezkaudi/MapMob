@@ -8,7 +8,7 @@ export const CONTENT_PAGES = [
     updatedAt: '2026-09-18T10:00:00Z',
     status: 'published',
   },
-  { kind: 'privacy', title: 'سياسة الخصوصية', updatedAt: '2026-09-18T10:00:00Z', status: 'draft' },
+  { kind: 'privacy', title: 'سياسة الخصوصية', updatedAt: '2026-09-18T10:00:00Z', status: 'published' },
   {
     kind: 'provider-join',
     title: 'انضم إلينا كمقدم خدمة',

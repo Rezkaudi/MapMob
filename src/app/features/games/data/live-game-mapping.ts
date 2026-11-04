@@ -7,11 +7,15 @@ import { LiveGame, LiveGameQuestion, LiveGameStatus } from './live-game';
 import { toServerMoment } from './live-game-moment';
 import { toWonPrize } from './live-prize-mapping';
 
+// The panel has no drafts; every game it saves waits for its start time.
+const SAVED_GAME_STATUS: LiveGameStatus = 'scheduled';
+
 // The server keeps no player count yet.
 const UNKNOWN_PARTICIPANT_COUNT = 0;
 
+// An old server draft has not run yet, so it reads as scheduled.
 const GAME_STATUS_OF: Record<LiveGameStatus, GameStatus> = {
-  draft: 'draft',
+  draft: 'scheduled',
   scheduled: 'scheduled',
   active: 'active',
   completed: 'finished',
@@ -67,7 +71,7 @@ export function toLiveGameBody(draft: GameDraft) {
     starts_at: toServerMoment(draft.startsAt),
     timezone: draft.timeZone,
     answer_time_seconds: draft.voteSeconds,
-    status: draft.status,
+    status: SAVED_GAME_STATUS,
     prize_type: draft.prize.kind,
     prize_value: draft.prize.value.amount,
     currency_code: draft.prize.value.currency,

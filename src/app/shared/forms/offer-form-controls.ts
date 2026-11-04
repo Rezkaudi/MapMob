@@ -4,8 +4,8 @@ import { OfferScope } from '../models/offer-scope';
 import { hasText } from './has-text';
 import { offerPeriodValidator, selectedItemsValidator } from './offer-form-validators';
 
-/** The statuses "حالة العرض" lists; a draft comes from "حفظ كمسودة" instead. */
-export type OfferFormStatus = Exclude<OfferSavedStatus, 'draft'>;
+/** The statuses "حالة العرض" lists. */
+export type OfferFormStatus = OfferSavedStatus;
 
 const LOWEST_DISCOUNT_PERCENT = 1;
 const HIGHEST_DISCOUNT_PERCENT = 100;

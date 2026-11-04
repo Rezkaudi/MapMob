@@ -14,14 +14,14 @@ import {
 import { NO_CONTENT, field, optionalField } from '../shared-fields';
 
 const PAGE_META_FIELDS = [
-  field('status', 'enum: published | draft'),
+  field('status', 'enum: published', 'The dashboard has no drafts.'),
   field('updatedAt', 'datetime (ISO 8601)'),
 ];
 
 const PAGE_STATUS = field(
   'status',
-  'enum: published | draft',
-  '"حفظ التغييرات" publishes, "حفظ كمسودة" saves a draft.',
+  'enum: published',
+  'The dashboard has no drafts: "حفظ التغييرات" always sends published.',
 );
 const HTML_NOTE =
   'HTML from the rich-text editor. Store as is; clean it (allow-list) before the app shows it.';
@@ -78,7 +78,7 @@ export const CONTENT_FEATURE: ApiFeature = {
           ),
           field('title', 'string'),
           field('updatedAt', 'datetime (ISO 8601)'),
-          field('status', 'enum: published | draft'),
+          field('status', 'enum: published'),
         ],
       },
     },
@@ -196,8 +196,8 @@ export const CONTENT_FEATURE: ApiFeature = {
           ...PROVIDER_JOIN_FIELDS,
           field(
             'status',
-            'enum: published | draft',
-            'The dashboard has no draft button here and always sends published.',
+            'enum: published',
+            'The dashboard has no drafts and always sends published.',
           ),
         ],
         example: PROVIDER_JOIN_FORM,

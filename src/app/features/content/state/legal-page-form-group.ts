@@ -1,5 +1,4 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ContentPageStatus } from '../models/content-page-status';
 import { LegalPageDraft } from '../models/legal-page-draft';
 import { hasText } from '../../../shared/forms/has-text';
 
@@ -13,9 +12,6 @@ export function createLegalPageFormGroup() {
 export type LegalPageFormGroup = ReturnType<typeof createLegalPageFormGroup>;
 export type LegalPageFormValue = ReturnType<LegalPageFormGroup['getRawValue']>;
 
-export function toLegalPageDraft(
-  value: LegalPageFormValue,
-  status: ContentPageStatus,
-): LegalPageDraft {
-  return { title: value.title.trim(), body: value.body, status };
+export function toLegalPageDraft(value: LegalPageFormValue): LegalPageDraft {
+  return { title: value.title.trim(), body: value.body };
 }

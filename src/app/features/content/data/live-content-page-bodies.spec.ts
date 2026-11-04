@@ -16,7 +16,6 @@ describe('live content page bodies', () => {
       phone: '0936318327',
       email: 'info@mapmob.com',
       address: 'طرطوس',
-      status: 'published',
       banner,
       isBannerRemoved: false,
     });
@@ -29,6 +28,7 @@ describe('live content page bodies', () => {
     ]);
     expect(form.get('banner')).toBeInstanceOf(File);
     expect(form.get('isBannerRemoved')).toBe('0');
+    expect(form.get('status')).toBe('published');
   });
 
   it('says 1 when the admin removed the banner', () => {
@@ -38,7 +38,6 @@ describe('live content page bodies', () => {
       phone: '',
       email: '',
       address: '',
-      status: 'draft',
       banner: null,
       isBannerRemoved: true,
     });
@@ -47,22 +46,23 @@ describe('live content page bodies', () => {
     expect(form.has('banner')).toBe(false);
   });
 
-  it('sends a legal page as JSON with both languages', () => {
-    expect(toLiveLegalBody({ title: 'الشروط', body: '<p>نص</p>', status: 'draft' })).toEqual({
+  it('sends a legal page as JSON with both languages, always published', () => {
+    expect(toLiveLegalBody({ title: 'الشروط', body: '<p>نص</p>' })).toEqual({
       _method: 'PUT',
       title: { ar: 'الشروط', en: 'الشروط' },
       body: { ar: '<p>نص</p>', en: '<p>نص</p>' },
-      status: 'draft',
+      status: 'published',
     });
   });
 
   it('sends the contact page as JSON with the introduction in both languages', () => {
-    const body = toLiveContactBody({ ...buildContactPage(), status: 'published' });
+    const body = toLiveContactBody(buildContactPage());
 
     expect(body._method).toBe('PUT');
     expect(body.title).toEqual({ ar: 'تواصل معنا', en: 'تواصل معنا' });
     expect(body.introduction.ar).toBe(body.introduction.en);
     expect(body.supportPhone).toBe(buildContactPage().supportPhone);
+    expect(body.status).toBe('published');
   });
 
   it('sends a question and its answer in both languages', () => {

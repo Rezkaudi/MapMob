@@ -6,10 +6,10 @@ interface StatusSkin {
   readonly background: string;
 }
 
-/** The design only draws a published page; the draft pill follows the offers' amber drafts. */
+/** The design only draws a published page; an unpublished one is grey. */
 const STATUS_SKINS: Record<ContentPageStatus, StatusSkin> = {
   published: { label: 'منشورة ومتاحة', background: 'bg-status-success' },
-  draft: { label: 'مسودة', background: 'bg-status-warning' },
+  unpublished: { label: 'غير منشورة', background: 'bg-[#94a3b8]' },
 };
 
 @Component({

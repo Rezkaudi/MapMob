@@ -15,7 +15,5 @@ describe('NotificationStatusPill', () => {
     expect(render('sent').className).toContain('bg-status-success');
     expect(render('scheduled').textContent?.trim()).toBe('مجدول');
     expect(render('scheduled').className).toContain('bg-accent');
-    expect(render('draft').textContent?.trim()).toBe('مسودة');
-    expect(render('draft').className).toContain('bg-text-secondary');
   });
 });

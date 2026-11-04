@@ -20,7 +20,7 @@ describe('buildNotificationRow', () => {
         audience: 'companies',
         recipientMode: 'selected',
         kind: 'private',
-        status: 'draft',
+        status: 'sent',
         sendAt: null,
       }),
     );

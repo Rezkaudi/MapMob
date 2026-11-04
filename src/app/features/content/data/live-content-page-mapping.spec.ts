@@ -11,8 +11,14 @@ const SAVED_AT = '2026-10-15T18:09:59+00:00';
 describe('live content page mapping', () => {
   it('turns a saved page into its table row', () => {
     expect(
-      toContentPage('terms', { title: 'الشروط', status: 'draft', updatedAt: SAVED_AT }),
-    ).toEqual({ kind: 'terms', title: 'الشروط', updatedOn: '2026-10-15', status: 'draft' });
+      toContentPage('terms', { title: 'الشروط', status: 'published', updatedAt: SAVED_AT }),
+    ).toEqual({ kind: 'terms', title: 'الشروط', updatedOn: '2026-10-15', status: 'published' });
+  });
+
+  it('reads a page the server keeps as a draft as not published', () => {
+    expect(
+      toContentPage('terms', { title: 'الشروط', status: 'draft', updatedAt: SAVED_AT }).status,
+    ).toBe('unpublished');
   });
 
   it('shows the Arabic page name when the server sends a title with no Arabic in it', () => {

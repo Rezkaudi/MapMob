@@ -18,7 +18,7 @@ describe('buildAdSeed', () => {
 
     expect(
       details
-        .filter(({ ad }) => ad.status !== 'paused' && ad.status !== 'draft')
+        .filter(({ ad }) => ad.status !== 'paused')
         .every(({ ad }) => ad.status === resolveRunningStatus(ad, toCalendarDay(NOW))),
     ).toBe(true);
     expect(

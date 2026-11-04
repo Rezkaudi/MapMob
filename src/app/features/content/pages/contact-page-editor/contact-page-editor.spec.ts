@@ -76,7 +76,7 @@ describe('ContactPageEditor page', () => {
     fixture.detectChanges();
 
     expect(saves).toEqual([
-      { ...buildContactPage({ whatsappUrl: 'https://wa.me/963933123456' }), status: 'published' },
+      buildContactPage({ whatsappUrl: 'https://wa.me/963933123456' }),
     ]);
   });
 

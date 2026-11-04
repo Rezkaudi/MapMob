@@ -1,5 +1,5 @@
 import { UploadedImage } from '../../../shared/ui/image-upload-field/uploaded-image';
-import { NotificationDraft, NotificationSaveIntent } from '../models/notification-draft';
+import { NotificationDraft } from '../models/notification-draft';
 import { NotificationFormValue } from './notification-form-group';
 import { joinSendAt } from './send-moment';
 
@@ -7,7 +7,6 @@ export interface NotificationDraftExtras {
   readonly image: UploadedImage | null;
   /** Whether the notification had a picture when the form opened. */
   readonly hadSavedImage: boolean;
-  readonly intent: NotificationSaveIntent;
 }
 
 function readSendAt(value: NotificationFormValue): string | null {
@@ -31,7 +30,6 @@ export function toNotificationDraft(
     areaId: isByLocation ? value.areaId : null,
     recipientIds: value.recipientMode === 'selected' ? value.recipientIds : [],
     sendAt: readSendAt(value),
-    intent: extras.intent,
     image: extras.image?.file ?? null,
     isImageRemoved: extras.hadSavedImage && extras.image === null,
   };

@@ -19,7 +19,6 @@ describe('toGameRow', () => {
 
   it('lets only a game that has not finished be edited or deleted', () => {
     expect(toGameRow(buildGame({ status: 'scheduled' })).canChange).toBe(true);
-    expect(toGameRow(buildGame({ status: 'draft' })).canChange).toBe(true);
     expect(toGameRow(buildGame({ status: 'finished' })).canChange).toBe(false);
   });
 });

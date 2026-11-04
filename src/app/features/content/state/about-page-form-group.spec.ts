@@ -40,7 +40,6 @@ describe('toAboutPageDraft', () => {
     const draft = toAboutPageDraft(value, {
       banner: toUploadedImage('assets/images/about-app-banner.png'),
       hadSavedBanner: true,
-      status: 'published',
     });
 
     expect(draft).toEqual({
@@ -51,7 +50,6 @@ describe('toAboutPageDraft', () => {
       address: 'طرطوس، شارع الثورة',
       banner: null,
       isBannerRemoved: false,
-      status: 'published',
     });
   });
 
@@ -66,7 +64,7 @@ describe('toAboutPageDraft', () => {
       height: null,
     };
 
-    const draft = toAboutPageDraft(value, { banner, hadSavedBanner: true, status: 'draft' });
+    const draft = toAboutPageDraft(value, { banner, hadSavedBanner: true });
 
     expect(draft.banner).toBe(file);
     expect(draft.isBannerRemoved).toBe(false);
@@ -76,7 +74,6 @@ describe('toAboutPageDraft', () => {
     const draft = toAboutPageDraft(value, {
       banner: null,
       hadSavedBanner: true,
-      status: 'published',
     });
 
     expect(draft.isBannerRemoved).toBe(true);

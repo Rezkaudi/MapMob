@@ -19,7 +19,6 @@ const FIRST_ROUND = 81;
 const FINISHED_GAME_COUNT = 20;
 const DAYS_BETWEEN_GAMES = 3;
 const SCHEDULED_DAYS_AHEAD = [4, 8, 12];
-const DRAFT_DAYS_AHEAD = 20;
 const WINNERS_PER_GAME = 4;
 const VOTE_SECONDS = 10;
 
@@ -99,9 +98,8 @@ export function buildGameMockSeed(now: Date): GameMockSeed {
   const scheduled = SCHEDULED_DAYS_AHEAD.map((days) =>
     seedGame(round++, startOn(now, days), 'scheduled'),
   );
-  const draft = seedGame(round, startOn(now, DRAFT_DAYS_AHEAD), 'draft');
   return {
-    games: [...finished, active, ...scheduled, draft],
+    games: [...finished, active, ...scheduled],
     winners: finished.flatMap(seedWinners),
   };
 }

@@ -12,14 +12,13 @@ describe('createLegalPageFormGroup', () => {
     expect(form.valid).toBe(true);
   });
 
-  it('turns the form into a draft with the chosen status and a trimmed title', () => {
+  it('turns the form into what is saved, with a trimmed title', () => {
     const form = createLegalPageFormGroup();
     form.setValue({ title: '  الشروط  ', body: '<p>نص</p>' });
 
-    expect(toLegalPageDraft(form.getRawValue(), 'draft')).toEqual({
+    expect(toLegalPageDraft(form.getRawValue())).toEqual({
       title: 'الشروط',
       body: '<p>نص</p>',
-      status: 'draft',
     });
   });
 });

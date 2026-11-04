@@ -30,7 +30,6 @@ function titleOf(title: LiveOwnerOffer['title']): string {
   return typeof title === 'string' ? title : (arabicTextOf(title) ?? '');
 }
 
-// A draft is saved as inactive too, so it reads back as paused.
 function statusOf(status: string, startsOn: string, endsOn: string, today: string): CampaignStatus {
   if (status !== LIVE_ACTIVE) {
     return 'paused';

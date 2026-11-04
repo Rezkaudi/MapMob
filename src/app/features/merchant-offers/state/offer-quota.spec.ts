@@ -9,7 +9,6 @@ describe('describeOfferQuota', () => {
       buildMerchantOffer({ id: '3', status: 'active' }),
       buildMerchantOffer({ id: '4', status: 'expired' }),
       buildMerchantOffer({ id: '5', status: 'paused' }),
-      buildMerchantOffer({ id: '6', status: 'draft' }),
     ];
 
     expect(describeOfferQuota(offers, 5)).toEqual(

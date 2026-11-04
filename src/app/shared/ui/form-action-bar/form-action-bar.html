@@ -10,23 +10,10 @@
     type="submit"
     class="h-[46px] rounded bg-primary px-4 text-[14px]/[20px] font-medium text-white shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
     [disabled]="isBusy()"
-    [attr.aria-busy]="isSaveSpinning()"
-    (click)="pressedAction.press('save')"
+    [attr.aria-busy]="isBusy()"
   >
-    <app-busy-label [isBusy]="isSaveSpinning()">{{ saveLabel() }}</app-busy-label>
+    <app-busy-label [isBusy]="isBusy()">{{ saveLabel() }}</app-busy-label>
   </button>
-  @if (isDraftVisible()) {
-    <button
-      type="button"
-      data-checks-form
-      class="h-[46px] rounded border border-border px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
-      [disabled]="isBusy()"
-      [attr.aria-busy]="isDraftSpinning()"
-      (click)="pressedAction.press('draft'); saveDraft.emit()"
-    >
-      <app-busy-label [isBusy]="isDraftSpinning()">حفظ كمسودة</app-busy-label>
-    </button>
-  }
   <a
     class="flex h-[46px] items-center rounded border border-closed px-4 text-[14px]/[20px] font-medium text-closed hover:bg-closed/5"
     [class.pointer-events-none]="isBusy()"

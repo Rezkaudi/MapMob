@@ -21,7 +21,6 @@ import { UploadedImage } from '../../../../shared/ui/image-upload-field/uploaded
 import { toUploadedImage } from '../../../../shared/ui/image-upload-field/uploaded-image-from-url';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
-import { OfferSavedStatus } from '../../../../shared/models/offer-saved-status';
 import { toOfferDraft, toOfferFormValue } from '../../state/offer-draft-mapping';
 import { OfferFormErrors, buildOfferFormErrors } from '../../state/offer-form-errors';
 import { createOfferFormGroup } from '../../state/offer-form-group';
@@ -85,15 +84,7 @@ export class OfferForm {
     this.store.loadItems(placeId);
   }
 
-  protected publish(): void {
-    this.save(this.form.controls.status.value);
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private async save(status: OfferSavedStatus): Promise<void> {
+  protected async publish(): Promise<void> {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -101,7 +92,7 @@ export class OfferForm {
     const draft = toOfferDraft(this.form.getRawValue(), {
       image: this.image(),
       hadSavedImage: Boolean(this.store.editedDetail()?.imageUrl),
-      status,
+      status: this.form.controls.status.value,
     });
     if (await this.store.save(this.id() ?? null, draft)) {
       this.router.navigateByUrl(OFFERS_URL);

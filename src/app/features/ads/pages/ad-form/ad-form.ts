@@ -18,7 +18,6 @@ import { toUploadedImage } from '../../../../shared/ui/image-upload-field/upload
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { AdDetail } from '../../models/ad-detail';
-import { AdSavedStatus } from '../../models/ad-draft';
 import { toAdDraft, toAdFormValue } from '../../state/ad-draft-mapping';
 import { AdFormErrors, buildAdFormErrors } from '../../state/ad-form-errors';
 import { createAdFormGroup } from '../../state/ad-form-group';
@@ -76,15 +75,7 @@ export class AdForm {
     return buildAdFormErrors(this.form);
   }
 
-  protected publish(): void {
-    this.save(this.form.controls.status.value);
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private async save(status: AdSavedStatus): Promise<void> {
+  protected async publish(): Promise<void> {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -92,7 +83,7 @@ export class AdForm {
     const draft = toAdDraft(this.form.getRawValue(), {
       media: this.media(),
       hadSavedMedia: Boolean(this.store.editedDetail()?.mediaUrl),
-      status,
+      status: this.form.controls.status.value,
     });
     if (await this.store.save(this.id() ?? null, draft)) {
       this.router.navigateByUrl(ADS_URL);

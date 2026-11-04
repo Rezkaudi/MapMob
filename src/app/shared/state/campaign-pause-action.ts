@@ -6,10 +6,9 @@ const PAUSE_ACTION_BY_STATUS: Record<CampaignStatus, CampaignPauseAction | null>
   scheduled: 'pause',
   paused: 'resume',
   expired: null,
-  draft: null,
 };
 
-/** `null` once the campaign's days are over, or while it is still a draft. */
+/** `null` once the campaign's days are over. */
 export function campaignPauseActionFor(status: CampaignStatus): CampaignPauseAction | null {
   return PAUSE_ACTION_BY_STATUS[status];
 }

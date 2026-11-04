@@ -6,7 +6,7 @@ import { LegalPageDraft } from '../models/legal-page-draft';
 import { buildLegalPage } from '../testing/content-fixture';
 import { LegalPageEditorStore } from './legal-page-editor.store';
 
-const DRAFT: LegalPageDraft = { title: 'الخصوصية', body: '<p>جديد</p>', status: 'published' };
+const DRAFT: LegalPageDraft = { title: 'الخصوصية', body: '<p>جديد</p>' };
 
 function createStore(overrides: Partial<ContentPageRepository> = {}) {
   const loadedKinds: LegalPageKind[] = [];
@@ -62,10 +62,10 @@ describe('LegalPageEditorStore', () => {
 
     expect(saves).toEqual([['privacy', DRAFT]]);
     expect(store.page()).toEqual({ title: 'الخصوصية', body: '<p>جديد</p>' });
-    expect(store.savedStatus()).toBe('published');
+    expect(store.isSavedMessageShown()).toBe(true);
 
     store.dismissSavedMessage();
-    expect(store.savedStatus()).toBeNull();
+    expect(store.isSavedMessageShown()).toBe(false);
   });
 
   it('keeps the error when a save fails', async () => {
@@ -77,7 +77,7 @@ describe('LegalPageEditorStore', () => {
     expect(await store.save(DRAFT)).toBe(false);
 
     expect(store.saveError()).toBe('تعذر حفظ الصفحة');
-    expect(store.savedStatus()).toBeNull();
+    expect(store.isSavedMessageShown()).toBe(false);
   });
 
   it('does not save before a page has loaded', async () => {

@@ -8,7 +8,7 @@ import { LiveNotification } from './live-notification';
 const SEND_AT_LENGTH = 16;
 const NOT_A_DIGIT = /\D/g;
 
-type LiveIntent = 'publish' | 'schedule' | 'draft';
+type LiveIntent = 'publish' | 'schedule';
 
 /** The server sends "n12" as the id but its routes only take the number. */
 export function toLiveNotificationId(id: string): string {
@@ -50,9 +50,6 @@ export function toNotificationDetail(live: LiveNotification): NotificationDetail
 
 // "publish" sends at once even with a time; only "schedule" waits for it.
 function toLiveIntent(draft: NotificationDraft): LiveIntent {
-  if (draft.intent === 'draft') {
-    return 'draft';
-  }
   return draft.sendAt ? 'schedule' : 'publish';
 }
 

@@ -8,7 +8,7 @@ import { buildNotification } from '../testing/notification-fixture';
 import { NOTIFICATIONS_PAGE_SIZE, NotificationsStore } from './notifications.store';
 
 const SCHEDULED = buildNotification();
-const SUMMARY = { totalCount: 248, sentCount: 150, scheduledCount: 10, draftCount: 20 };
+const SUMMARY = { totalCount: 248, sentCount: 150, scheduledCount: 10 };
 const TODAY = new Date(2026, 8, 8, 9, 0);
 
 function createStore(overrides: Partial<NotificationRepository> = {}) {
@@ -25,7 +25,6 @@ function createStore(overrides: Partial<NotificationRepository> = {}) {
     },
     getSummary: () => of(SUMMARY),
     deleteNotification: (id) => recordWrite(`delete ${id}`),
-    duplicateNotification: (id) => recordWrite(`duplicate ${id}`),
     rescheduleNotification: (id, sendAt) => recordWrite(`reschedule ${id} ${sendAt}`),
     resendNotification: (id, sendAt) => recordWrite(`resend ${id} ${sendAt}`),
     ...overrides,
@@ -53,7 +52,7 @@ describe('NotificationsStore', () => {
 
     expect(store.rows().map((row) => row.recipientLabel)).toEqual(['جميع المستخدمين']);
     expect(store.totalCount()).toBe(1);
-    expect(store.statCards().map((card) => card.value)).toEqual(['248', '150', '10', '20']);
+    expect(store.statCards().map((card) => card.value)).toEqual(['248', '150', '10']);
     expect(store.isSummaryLoading()).toBe(false);
   });
 
@@ -116,21 +115,19 @@ describe('NotificationsStore', () => {
     });
   });
 
-  it('deletes, copies, reschedules and resends, then reloads the page', async () => {
+  it('deletes, reschedules and resends, then reloads the page', async () => {
     const { store, requestedQueries, writes } = createStore();
 
     expect(await store.deleteNotification('n1')).toBe(true);
-    expect(await store.duplicateNotification('n1')).toBe(true);
     expect(await store.rescheduleNotification('n1', '2026-09-18T16:30')).toBe(true);
     expect(await store.resendNotification('n1', null)).toBe(true);
 
     expect(writes).toEqual([
       'delete n1',
-      'duplicate n1',
       'reschedule n1 2026-09-18T16:30',
       'resend n1 null',
     ]);
-    expect(requestedQueries).toHaveLength(4);
+    expect(requestedQueries).toHaveLength(3);
   });
 
   it('keeps the reason a write failed', async () => {

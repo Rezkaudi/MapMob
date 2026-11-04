@@ -8,25 +8,22 @@ describe('buildNotificationSeed', () => {
     expect(buildNotificationSeed(NOW, 12)).toHaveLength(12);
   });
 
-  it('opens with the sent, scheduled, draft, sent rows the design draws', () => {
+  it('mixes sent and scheduled rows, with no drafts', () => {
     expect(buildNotificationSeed(NOW, 4).map((notification) => notification.status)).toEqual([
       'sent',
       'scheduled',
-      'draft',
+      'sent',
       'sent',
     ]);
   });
 
-  it('sends in the past, schedules in the future and leaves drafts without a time', () => {
+  it('sends in the past and schedules in the future', () => {
     for (const notification of buildNotificationSeed(NOW, 30)) {
       if (notification.status === 'sent') {
         expect(notification.sendAt! < '2026-09-08T09:00').toBe(true);
       }
       if (notification.status === 'scheduled') {
         expect(notification.sendAt! > '2026-09-08T09:00').toBe(true);
-      }
-      if (notification.status === 'draft') {
-        expect(notification.sendAt).toBeNull();
       }
     }
   });

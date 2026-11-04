@@ -14,7 +14,7 @@ export interface MerchantOffer {
   /** Calendar days written `yyyy-mm-dd`, both included in the offer. */
   readonly startsOn: string;
   readonly endsOn: string;
-  /** Worked out by the server from the days, the pause flag and the draft flag. */
+  /** Worked out by the server from the days and the pause flag. */
   readonly status: CampaignStatus;
   readonly imageUrl: string | null;
   /** ISO moment; sorts the table by newest or oldest. */

@@ -21,12 +21,11 @@ describe('buildOfferDetailView', () => {
     ).toBe('pause');
   });
 
-  it('offers to resume a paused offer, and nothing for an expired offer or a draft', () => {
-    const actionFor = (status: 'paused' | 'expired' | 'draft') =>
+  it('offers to resume a paused offer, and nothing for an expired offer', () => {
+    const actionFor = (status: 'paused' | 'expired') =>
       buildOfferDetailView(buildOfferDetail({ offer: buildOffer({ status }) })).pauseAction;
 
     expect(actionFor('paused')).toBe('resume');
     expect(actionFor('expired')).toBeNull();
-    expect(actionFor('draft')).toBeNull();
   });
 });

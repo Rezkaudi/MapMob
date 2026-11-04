@@ -89,7 +89,6 @@ export const GAME_DRAFT = {
     sponsorName: null,
     maxWinnerCount: 10,
   },
-  status: 'scheduled',
 } satisfies GameDraft;
 
 export const GAME_WINNER = {

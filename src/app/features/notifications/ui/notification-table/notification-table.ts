@@ -34,7 +34,6 @@ export class NotificationTable {
   readonly allToggle = output<void>();
   readonly view = output<AppNotification>();
   readonly edit = output<AppNotification>();
-  readonly duplicate = output<AppNotification>();
   readonly remove = output<AppNotification>();
 
   protected readonly columnWidths = COLUMN_WIDTHS;

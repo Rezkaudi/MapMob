@@ -5,8 +5,6 @@ import { LIVE_ACTIVE_OFFER_STATUS, LIVE_PAUSED_OFFER_STATUS } from './live-offer
 const LIVE_STATUS: Record<OfferSavedStatus, string> = {
   active: LIVE_ACTIVE_OFFER_STATUS,
   paused: LIVE_PAUSED_OFFER_STATUS,
-  // The server rejects "draft", so a draft is saved as a stopped offer.
-  draft: LIVE_PAUSED_OFFER_STATUS,
 };
 // An empty product makes the offer cover everything the store sells.
 const EVERY_PRODUCT = '';

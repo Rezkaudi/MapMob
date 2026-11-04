@@ -14,15 +14,15 @@ const SCHEDULED = buildNotification({
   status: 'scheduled',
   sendAt: '2026-09-20T10:00',
 });
-const DRAFT = buildNotification({
+const PICKED = buildNotification({
   id: 'n3',
-  title: 'مسودة ترحيب',
+  title: 'مرحباً بالمتاجر',
   recipientMode: 'selected',
   kind: 'private',
-  status: 'draft',
+  status: 'sent',
   sendAt: null,
 });
-const NOTIFICATIONS = [SENT, SCHEDULED, DRAFT];
+const NOTIFICATIONS = [SENT, SCHEDULED, PICKED];
 const FIRST_PAGE = { pageIndex: 0, pageSize: 4 };
 
 describe('queryNotifications', () => {
@@ -47,11 +47,11 @@ describe('queryNotifications', () => {
       queryNotifications(NOTIFICATIONS, { ...FIRST_PAGE, audience: 'companies' }).items,
     ).toEqual([SCHEDULED]);
     expect(queryNotifications(NOTIFICATIONS, { ...FIRST_PAGE, kind: 'private' }).items).toEqual([
-      DRAFT,
+      PICKED,
     ]);
-    expect(queryNotifications(NOTIFICATIONS, { ...FIRST_PAGE, status: 'sent' }).items).toEqual([
-      SENT,
-    ]);
+    expect(
+      queryNotifications(NOTIFICATIONS, { ...FIRST_PAGE, status: 'scheduled' }).items,
+    ).toEqual([SCHEDULED]);
   });
 
   it('keeps notifications sent inside the day range, and drops drafts with no time', () => {
@@ -63,7 +63,7 @@ describe('queryNotifications', () => {
     expect(between(undefined, '2026-12-31')).toEqual([SENT, SCHEDULED]);
   });
 
-  it('sorts by send time, drafts with no time last when newest first', () => {
+  it('sorts by send time, ones with no time last when newest first', () => {
     const idsFor = (sort: 'newest' | 'oldest' | 'name') =>
       queryNotifications(NOTIFICATIONS, { ...FIRST_PAGE, sort }).items.map((item) => item.id);
 

@@ -20,7 +20,6 @@ import { FormSection } from '../../../../shared/ui/form-section/form-section';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { GameDetail } from '../../models/game-detail';
-import { GameSavedStatus } from '../../models/game-draft';
 import { GAME_FORM_COPY } from '../../models/game-form-copy';
 import {
   CURRENCY_OPTIONS,
@@ -113,19 +112,14 @@ export class GameForm {
     if (isStartInPast(this.form, this.clock())) {
       return;
     }
-    this.save('scheduled');
+    this.save();
   }
 
-  protected saveDraft(): void {
-    this.form.markAllAsTouched();
-    this.save('draft');
-  }
-
-  private async save(status: GameSavedStatus): Promise<void> {
+  private async save(): Promise<void> {
     if (this.form.invalid) {
       return;
     }
-    const draft = toGameDraft(this.form.getRawValue(), status);
+    const draft = toGameDraft(this.form.getRawValue());
     if (await this.store.save(this.id() ?? null, draft)) {
       this.router.navigateByUrl(GAMES_URL);
     }

@@ -110,7 +110,7 @@ describe('AdForm', () => {
     expect(page.element.textContent).toContain('اختر الشركة أو المتجر التابع للإعلان');
   });
 
-  it('publishes a filled ad and goes back to the list, or saves it as a draft', async () => {
+  it('publishes a filled ad and goes back to the list', async () => {
     const page = createPage();
     setValue(page, '#ad-title', 'حملة الصيف');
     setValue(page, '#ad-place', 'place-3', 'change');
@@ -120,8 +120,6 @@ describe('AdForm', () => {
     setValue(page, '#ad-placement', 'searchResults', 'change');
 
     buttonNamed(page.element, 'حفظ الإعلان ونشره').click();
-    await settle(page);
-    buttonNamed(page.element, 'حفظ كمسودة').click();
     await settle(page);
 
     expect(page.created[0]).toMatchObject({
@@ -133,7 +131,6 @@ describe('AdForm', () => {
       endsOn: null,
       status: 'active',
     });
-    expect(page.created[1].status).toBe('draft');
     expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/ads');
   });
 

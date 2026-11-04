@@ -103,7 +103,7 @@ describe('OffersStore', () => {
     store.loadOffers();
     expect(store.hasNoOffers()).toBe(true);
 
-    store.applyFilters({ ...NO_OFFER_FILTERS, status: 'draft' });
+    store.applyFilters({ ...NO_OFFER_FILTERS, status: 'paused' });
     expect(store.hasNoOffers()).toBe(false);
     expect(store.emptyMessage()).toBe('لا توجد نتائج مطابقة للبحث أو الفلاتر');
   });

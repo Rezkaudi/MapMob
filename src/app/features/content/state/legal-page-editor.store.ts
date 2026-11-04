@@ -25,7 +25,7 @@ export const LegalPageEditorStore = signalStore(
       if (!kind || !store.page()) {
         return false;
       }
-      return store.savePageWith(repository.saveLegalPage(kind, draft), draft.status);
+      return store.savePageWith(repository.saveLegalPage(kind, draft));
     },
   })),
 );

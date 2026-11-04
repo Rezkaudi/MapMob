@@ -1,8 +1,7 @@
 import { GameStatus } from '../models/game-status';
 
-/** Scheduled and finished come from the frames; active and draft follow the app's other pills. */
+/** Scheduled and finished come from the frames; active follows the app's other pills. */
 export const GAME_STATUS_PILL_CLASSES: Record<GameStatus, string> = {
-  draft: 'bg-[#94a3b8]',
   scheduled: 'bg-accent',
   active: 'bg-status-success',
   finished: 'bg-closed',

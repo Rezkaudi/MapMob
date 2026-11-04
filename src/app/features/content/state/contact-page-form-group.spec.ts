@@ -31,14 +31,13 @@ describe('createContactPageFormGroup', () => {
 });
 
 describe('toContactPageDraft', () => {
-  it('trims every field and adds the status', () => {
+  it('trims every field', () => {
     const page = buildContactPage();
 
     const draft = toContactPageDraft(
       { ...page, title: ' تواصل معنا ', telegramUrl: ' https://t.me/x ' },
-      'draft',
     );
 
-    expect(draft).toEqual({ ...page, telegramUrl: 'https://t.me/x', status: 'draft' });
+    expect(draft).toEqual({ ...page, telegramUrl: 'https://t.me/x' });
   });
 });

@@ -18,7 +18,6 @@ const DRAFT: GameDraft = {
     sponsorName: null,
     maxWinnerCount: 5,
   },
-  status: 'scheduled',
 };
 
 function openDatabase(): GameMockDatabase {
@@ -89,8 +88,8 @@ describe('GameMockDatabase', () => {
     ]);
   });
 
-  it('saves a draft as a draft', () => {
-    expect(openDatabase().create({ ...DRAFT, status: 'draft' }).status).toBe('draft');
+  it('saves a new game as scheduled', () => {
+    expect(openDatabase().create(DRAFT).status).toBe('scheduled');
   });
 
   it('updates a game that has not finished, keeping its round', () => {

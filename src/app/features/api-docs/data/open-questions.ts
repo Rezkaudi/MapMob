@@ -3,7 +3,7 @@ export const OPEN_QUESTIONS: readonly string[] = [
   'Does POST /settings/admins email an invite where the new admin sets a password? The dashboard never sends one.',
   'Soft delete for users and places? This reference assumes yes, since reviews, complaints and payments point at them.',
   'Deleting a category, governorate or area that is still in use: this reference says refuse with 409. Is cascade wanted anywhere?',
-  'Campaign status: this reference has the server work it out from dates plus paused/draft flags, in Damascus time. Agreed?',
+  'Campaign status: this reference has the server work it out from dates plus a paused flag, in Damascus time. Agreed?',
   'Keep one admins table, or reuse users with a role? Either works if the API shapes match.',
   'The roles matrix has no "ads" module, so this reference guards ads with the offers permissions. Add an ads module instead?',
   'Recording a payment needs payments:add, but the roles matrix only offers "view" for payments. Add it?',

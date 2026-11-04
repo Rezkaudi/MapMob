@@ -52,12 +52,6 @@ describe('toOfferFilterParams', () => {
     });
   });
 
-  it('asks for drafts by name, which the server answers with none', () => {
-    expect(entriesOf(toOfferFilterParams({ ...PAGE, status: 'draft' }, TODAY))).toEqual({
-      status: 'draft',
-    });
-  });
-
   it('asks for running offers as active ones whose days hold today', () => {
     expect(entriesOf(toOfferFilterParams({ ...PAGE, status: 'active' }, TODAY))).toEqual({
       status: 'active',

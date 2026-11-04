@@ -6,8 +6,8 @@ import { NotificationTable } from './notification-table';
 const SENT = buildNotificationRow(
   buildNotification({ id: 'n1', title: 'عرض جديد', status: 'sent', sendAt: '2024-01-26T10:00' }),
 );
-const DRAFT = buildNotificationRow(
-  buildNotification({ id: 'n2', title: 'مسودة', status: 'draft', sendAt: null }),
+const SENT_AT_ONCE = buildNotificationRow(
+  buildNotification({ id: 'n2', title: 'تنبيه فوري', status: 'sent', sendAt: null }),
 );
 
 interface RenderOptions {
@@ -18,7 +18,7 @@ interface RenderOptions {
 
 function render(options: RenderOptions = {}) {
   const fixture = TestBed.createComponent(NotificationTable);
-  fixture.componentRef.setInput('rows', options.rows ?? [SENT, DRAFT]);
+  fixture.componentRef.setInput('rows', options.rows ?? [SENT, SENT_AT_ONCE]);
   fixture.componentRef.setInput('selectedIdSet', new Set(['n2']));
   fixture.componentRef.setInput('isLoading', options.isLoading ?? false);
   fixture.componentRef.setInput('hasNoResults', options.hasNoResults ?? false);
@@ -62,8 +62,8 @@ describe('NotificationTable', () => {
     ]);
   });
 
-  it('fills a row with the notification fields, and a dash for a draft with no time', () => {
-    const [sent, draft] = Array.from(
+  it('fills a row with the notification fields, and a dash for one with no time', () => {
+    const [sent, sentAtOnce] = Array.from(
       (render().nativeElement as HTMLElement).querySelectorAll('tbody tr'),
     );
 
@@ -75,7 +75,7 @@ describe('NotificationTable', () => {
       '٢٦ يناير ٢٠٢٤',
       'مُرسل',
     ]);
-    expect(cellsOf(draft)[5]).toBe('—');
+    expect(cellsOf(sentAtOnce)[5]).toBe('—');
   });
 
   it('marks the selected rows and reports ticks', () => {
@@ -100,16 +100,24 @@ describe('NotificationTable', () => {
     const picks: string[] = [];
     fixture.componentInstance.view.subscribe((row) => picks.push(`view ${row.id}`));
     fixture.componentInstance.edit.subscribe((row) => picks.push(`edit ${row.id}`));
-    fixture.componentInstance.duplicate.subscribe((row) => picks.push(`copy ${row.id}`));
     fixture.componentInstance.remove.subscribe((row) => picks.push(`delete ${row.id}`));
 
     (fixture.nativeElement.querySelector('[data-role="open-notification"]') as HTMLElement).click();
     openMenuItem(fixture, 0, 'عرض التفاصيل');
     openMenuItem(fixture, 0, 'تعديل');
-    openMenuItem(fixture, 1, 'نسخ الإشعار');
     openMenuItem(fixture, 1, 'حذف');
 
-    expect(picks).toEqual(['view n1', 'view n1', 'edit n1', 'copy n2', 'delete n2']);
+    expect(picks).toEqual(['view n1', 'view n1', 'edit n1', 'delete n2']);
+  });
+
+  it('has no "نسخ الإشعار" item, because the server saves every copy as a draft', () => {
+    const fixture = render();
+    const row = fixture.nativeElement.querySelector('tbody tr') as HTMLElement;
+    (row.querySelector('button[aria-haspopup]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const menu = fixture.nativeElement.querySelector('[data-testid="action-menu-panel"]') as HTMLElement;
+    expect(menu.textContent).not.toContain('نسخ');
   });
 
   it('shows skeleton rows while loading and the message when nothing matches', () => {

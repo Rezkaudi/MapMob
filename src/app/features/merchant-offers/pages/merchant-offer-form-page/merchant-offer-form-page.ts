@@ -16,7 +16,6 @@ import {
 } from '../../../../shared/forms/offer-draft-mapping';
 import { OFFER_FORM_COPY } from '../../../../shared/forms/offer-form-copy';
 import { createOfferFieldsFormGroup } from '../../../../shared/forms/offer-form-controls';
-import { OfferSavedStatus } from '../../../../shared/models/offer-saved-status';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
 import { FormActionBar } from '../../../../shared/ui/form-action-bar/form-action-bar';
 import { FormPageHeading } from '../../../../shared/ui/form-page-heading/form-page-heading';
@@ -69,15 +68,7 @@ export class MerchantOfferFormPage {
     });
   }
 
-  protected publish(): void {
-    this.save(this.form.controls.status.value);
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private async save(status: OfferSavedStatus): Promise<void> {
+  protected async publish(): Promise<void> {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -85,7 +76,7 @@ export class MerchantOfferFormPage {
     const draft = toOfferDraftFields(this.form.getRawValue(), {
       image: this.image(),
       hadSavedImage: Boolean(this.store.editedOffer()?.imageUrl),
-      status,
+      status: this.form.controls.status.value,
     });
     if (await this.store.save(draft)) {
       this.router.navigateByUrl(MERCHANT_OFFERS_URL);

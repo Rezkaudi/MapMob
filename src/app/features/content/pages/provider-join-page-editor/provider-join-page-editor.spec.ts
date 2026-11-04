@@ -10,8 +10,8 @@ function render(overrides: Partial<ContentPageRepository> = {}) {
   const saves: ProviderJoinPageDraft[] = [];
   const repository: Partial<ContentPageRepository> = {
     getProviderJoinPage: () => of(buildProviderJoinPage()),
-    saveProviderJoinPage: ({ status, ...page }) => {
-      saves.push({ ...page, status });
+    saveProviderJoinPage: (page) => {
+      saves.push(page);
       return of(page);
     },
     ...overrides,
@@ -85,7 +85,6 @@ describe('ProviderJoinPageEditor page', () => {
       {
         title: 'انضم إلينا كمقدم خدمة',
         registrationFormUrl: 'https://forms.app/join',
-        status: 'published',
       },
     ]);
     expect(element.querySelector('app-toast')?.textContent).toContain('تم حفظ التغييرات');

@@ -14,7 +14,6 @@ import { UploadedImage } from '../../../../shared/ui/image-upload-field/uploaded
 import { toUploadedImage } from '../../../../shared/ui/image-upload-field/uploaded-image-from-url';
 import { RichTextEditor } from '../../../../shared/ui/rich-text-editor/rich-text-editor';
 import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
-import { ContentPageStatus } from '../../models/content-page-status';
 import { AboutPageEditorStore } from '../../state/about-page-editor.store';
 import {
   createAboutPageFormGroup,
@@ -94,14 +93,6 @@ export class AboutPageEditor {
   }
 
   protected publish(): void {
-    this.save('published');
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
-  private save(status: ContentPageStatus): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -109,7 +100,6 @@ export class AboutPageEditor {
     const draft = toAboutPageDraft(this.form.getRawValue(), {
       banner: this.banner(),
       hadSavedBanner: Boolean(this.store.page()?.bannerUrl),
-      status,
     });
     this.store.save(draft);
   }

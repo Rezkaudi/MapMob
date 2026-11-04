@@ -2,13 +2,11 @@ import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';
 import { Ad } from '../models/ad';
 import { AdDetail } from '../models/ad-detail';
-import { AdDraft, AdSavedStatus } from '../models/ad-draft';
+import { AdDraft } from '../models/ad-draft';
 import { AdMetrics } from '../models/ad-metrics';
 
 /** The mock has one signed-in admin, so every save is written to that name. */
 const SAVED_BY = 'Admin';
-
-const KEPT_AS_SAVED: readonly AdSavedStatus[] = ['paused', 'draft'];
 
 /** In-memory store behind the mock repository, so saves and deletes stick. */
 export class AdMockDatabase {
@@ -79,7 +77,7 @@ export class AdMockDatabase {
 }
 
 function resolveSavedStatus(draft: AdDraft, today: string): CampaignStatus {
-  return KEPT_AS_SAVED.includes(draft.status) ? draft.status : resolveRunningStatus(draft, today);
+  return draft.status === 'paused' ? 'paused' : resolveRunningStatus(draft, today);
 }
 
 /** What a save carries over from the stored ad instead of reading off the draft. */

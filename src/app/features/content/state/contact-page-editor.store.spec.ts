@@ -7,7 +7,6 @@ import { ContactPageEditorStore } from './contact-page-editor.store';
 
 const DRAFT: ContactPageDraft = {
   ...buildContactPage({ supportPhone: '+1' }),
-  status: 'published',
 };
 
 function createStore() {
@@ -49,6 +48,6 @@ describe('ContactPageEditorStore', () => {
 
     expect(saves).toEqual([DRAFT]);
     expect(store.page()?.supportPhone).toBe('+1');
-    expect(store.savedStatus()).toBe('published');
+    expect(store.isSavedMessageShown()).toBe(true);
   });
 });

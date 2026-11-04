@@ -18,14 +18,14 @@ describe('buildOfferSeed', () => {
   it('gives running offers the status their days give them today', () => {
     const details = buildOfferSeed(NOW, 200);
     const running = details.filter(
-      (detail) => detail.offer.status !== 'paused' && detail.offer.status !== 'draft',
+      (detail) => detail.offer.status !== 'paused',
     );
 
     expect(
       running.every((detail) => detail.offer.status === resolveRunningStatus(detail.offer, TODAY)),
     ).toBe(true);
     expect(new Set(details.map((detail) => detail.offer.status))).toEqual(
-      new Set(['active', 'scheduled', 'paused', 'expired', 'draft']),
+      new Set(['active', 'scheduled', 'paused', 'expired']),
     );
   });
 

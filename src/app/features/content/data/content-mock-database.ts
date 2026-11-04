@@ -4,7 +4,6 @@ import { ContactPage } from '../models/contact-page';
 import { ContactPageDraft } from '../models/contact-page-draft';
 import { ContentPage } from '../models/content-page';
 import { ContentPageKind, LegalPageKind } from '../models/content-page-kind';
-import { ContentPageStatus } from '../models/content-page-status';
 import { FaqQuestion } from '../models/faq-question';
 import { FaqQuestionDraft } from '../models/faq-question-draft';
 import { LegalPage } from '../models/legal-page';
@@ -53,11 +52,11 @@ export class ContentMockDatabase {
     return this.about;
   }
 
-  saveAboutPage({ banner, isBannerRemoved, status, ...fields }: AboutPageDraft): AboutPage {
+  saveAboutPage({ banner, isBannerRemoved, ...fields }: AboutPageDraft): AboutPage {
     const keptBannerUrl = isBannerRemoved ? null : this.about.bannerUrl;
     const bannerUrl = banner ? URL.createObjectURL(banner) : keptBannerUrl;
     this.about = { ...fields, bannerUrl };
-    this.stampPage('about', fields.title, status);
+    this.stampPage('about', fields.title);
     return this.about;
   }
 
@@ -65,9 +64,9 @@ export class ContentMockDatabase {
     return this.legal[kind];
   }
 
-  saveLegalPage(kind: LegalPageKind, { status, ...page }: LegalPageDraft): LegalPage {
+  saveLegalPage(kind: LegalPageKind, page: LegalPageDraft): LegalPage {
     this.legal = { ...this.legal, [kind]: page };
-    this.stampPage(kind, page.title, status);
+    this.stampPage(kind, page.title);
     return page;
   }
 
@@ -75,9 +74,9 @@ export class ContentMockDatabase {
     return this.contact;
   }
 
-  saveContactPage({ status, ...page }: ContactPageDraft): ContactPage {
+  saveContactPage(page: ContactPageDraft): ContactPage {
     this.contact = page;
-    this.stampPage('contact', page.title, status);
+    this.stampPage('contact', page.title);
     return page;
   }
 
@@ -85,9 +84,9 @@ export class ContentMockDatabase {
     return this.providerJoin;
   }
 
-  saveProviderJoinPage({ status, ...page }: ProviderJoinPageDraft): ProviderJoinPage {
+  saveProviderJoinPage(page: ProviderJoinPageDraft): ProviderJoinPage {
     this.providerJoin = page;
-    this.stampPage('provider-join', page.title, status);
+    this.stampPage('provider-join', page.title);
     return page;
   }
 
@@ -134,13 +133,13 @@ export class ContentMockDatabase {
   private stampFaqPage(): void {
     const faqPage = this.pages.find((page) => page.kind === 'faq');
     if (faqPage) {
-      this.stampPage('faq', faqPage.title, faqPage.status);
+      this.stampPage('faq', faqPage.title);
     }
   }
 
-  private stampPage(kind: ContentPageKind, title: string, status: ContentPageStatus): void {
+  private stampPage(kind: ContentPageKind, title: string): void {
     this.pages = this.pages.map((page) =>
-      page.kind === kind ? { kind, title, status, updatedOn: this.today() } : page,
+      page.kind === kind ? { kind, title, status: 'published', updatedOn: this.today() } : page,
     );
   }
 }

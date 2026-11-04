@@ -22,8 +22,6 @@ const LIVE_STATUS: Record<CampaignStatus, string> = {
   scheduled: LIVE_ACTIVE_AD_STATUS,
   paused: LIVE_PAUSED_AD_STATUS,
   expired: LIVE_EXPIRED_AD_STATUS,
-  // The server keeps no drafts, so this word finds none, which is the right answer.
-  draft: 'draft',
 };
 
 /** The filters the list and the export share. */

@@ -18,5 +18,4 @@ export const STATUS_CHOICES: readonly ChoiceOption[] = [
   { value: null, label: 'الكل' },
   { value: 'sent', label: 'مرسل' },
   { value: 'scheduled', label: 'مجدول' },
-  { value: 'draft', label: 'مسودة' },
 ];

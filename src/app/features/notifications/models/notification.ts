@@ -12,7 +12,7 @@ export interface AppNotification {
   readonly recipientMode: RecipientMode;
   readonly kind: NotificationKind;
   readonly status: NotificationStatus;
-  /** Damascus wall-clock time written `yyyy-mm-ddThh:mm`; `null` for a draft with no time yet. */
+  /** Damascus wall-clock time written `yyyy-mm-ddThh:mm`; `null` when it was sent at once with no time. */
   readonly sendAt: string | null;
   readonly recipientCount: number;
 }

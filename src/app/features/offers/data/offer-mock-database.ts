@@ -1,7 +1,6 @@
 import { Offer } from '../models/offer';
 import { OfferDetail } from '../models/offer-detail';
 import { OfferDraft } from '../models/offer-draft';
-import { OfferSavedStatus } from '../../../shared/models/offer-saved-status';
 import { OfferPlace } from '../models/offer-place';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
 import { resolveRunningStatus } from '../../../shared/state/campaign-running-status';
@@ -66,8 +65,7 @@ export class OfferMockDatabase {
 }
 
 function resolveSavedStatus(draft: OfferDraft, today: string): CampaignStatus {
-  const keptAsSaved: readonly OfferSavedStatus[] = ['paused', 'draft'];
-  return keptAsSaved.includes(draft.status) ? draft.status : resolveRunningStatus(draft, today);
+  return draft.status === 'paused' ? 'paused' : resolveRunningStatus(draft, today);
 }
 
 function buildDetail(

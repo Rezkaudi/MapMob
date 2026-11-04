@@ -75,13 +75,12 @@
       saveLabel="حفظ التغييرات"
       [cancelLink]="contentUrl"
       [isBusy]="store.isSaving()"
-      (saveDraft)="saveDraft()"
     />
   </form>
 }
 
 <app-content-save-toasts
-  [savedStatus]="store.savedStatus()"
+  [isSaved]="store.isSavedMessageShown()"
   [saveError]="store.saveError()"
   (savedDismissed)="store.dismissSavedMessage()"
   (errorDismissed)="store.clearSaveError()"

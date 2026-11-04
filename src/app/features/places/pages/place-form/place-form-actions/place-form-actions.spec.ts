@@ -26,9 +26,7 @@ describe('PlaceFormActions', () => {
     expect(save.disabled).toBe(true);
     expect(save.getAttribute('aria-busy')).toBe('true');
     expect(save.querySelector('app-spinner')).not.toBeNull();
-    expect((element.querySelector('button[type="button"]') as HTMLButtonElement).disabled).toBe(
-      true,
-    );
+    expect(element.querySelector('button[type="button"]')).toBeNull();
     const cancel = element.querySelector('a') as HTMLAnchorElement;
     expect(cancel.getAttribute('aria-disabled')).toBe('true');
     expect(cancel.className).toContain('pointer-events-none');

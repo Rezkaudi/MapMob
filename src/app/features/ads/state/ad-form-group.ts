@@ -7,8 +7,8 @@ import { AdPosition } from '../models/ad-position';
 import { AdPriority } from '../models/ad-priority';
 import { adPeriodValidator, adPlaceValidator } from './ad-form-validators';
 
-/** The statuses "حالة الإعلان الأولية" lists; a draft comes from "حفظ كمسودة" instead. */
-export type AdFormStatus = Exclude<AdSavedStatus, 'draft'>;
+/** The statuses "حالة الإعلان الأولية" lists. */
+export type AdFormStatus = AdSavedStatus;
 
 const HAS_TEXT = /\S/;
 const TOP_PRIORITY: AdPriority = 5;

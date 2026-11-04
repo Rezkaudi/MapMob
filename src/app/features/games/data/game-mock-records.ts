@@ -33,7 +33,7 @@ export function toGameRecord(draft: GameDraft, keys: GameRecordKeys): GameDetail
     maxPlayerCount: draft.maxPlayerCount,
     questionCount: draft.questions.length,
     prize: draft.prize,
-    status: draft.status,
+    status: 'scheduled',
     questions: draft.questions.map((question, questionIndex) => ({
       id: `${keys.id}-q${questionIndex + 1}`,
       text: question.text,

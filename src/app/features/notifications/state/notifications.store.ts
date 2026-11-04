@@ -134,9 +134,6 @@ export const NotificationsStore = signalStore(
           store.forgetRemovedEntry(id),
         );
       },
-      duplicateNotification(id: string): Promise<boolean> {
-        return saveThenReload(repository.duplicateNotification(id));
-      },
       rescheduleNotification(id: string, sendAt: string): Promise<boolean> {
         return saveThenReload(repository.rescheduleNotification(id, sendAt));
       },

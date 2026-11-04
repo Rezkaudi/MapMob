@@ -31,7 +31,7 @@ export const CONTENT_DOMAIN: DbDomain = {
           type: 'json',
           note: 'Page-only fields: about {phone,email,address}; contact {supportPhone,...,whatsappUrl}; provider-join {registrationFormUrl}.',
         },
-        { name: 'status', type: "enum('published','draft')" },
+        { name: 'status', type: "enum('published')" },
         adminReference('updated_by_admin_id', ''),
         ...TIMESTAMPS,
       ],

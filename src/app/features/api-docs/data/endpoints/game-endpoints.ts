@@ -50,11 +50,6 @@ const DRAFT_FIELDS = [
   field('questions[].text', 'string', '"نص السؤال".'),
   field('questions[].options', 'string[]', 'Exactly two: the first and the second choice.'),
   ...PRIZE_FIELDS,
-  field(
-    'status',
-    'enum: draft | scheduled',
-    '"حفظ كمسودة" sends draft; "إنشاء اللعبة" sends scheduled.',
-  ),
 ];
 
 const GAME_NOT_FOUND = {
@@ -165,7 +160,7 @@ export const GAMES_FEATURE: ApiFeature = {
       notes: [
         'Give the game the next roundNumber.',
         'sponsorName is required when prize.kind is voucher and must be null for cash.',
-        'A draft may keep any day; a scheduled game must start later than now.',
+        'A game must start later than now. The dashboard has no drafts.',
       ],
     },
     {
@@ -186,7 +181,7 @@ export const GAMES_FEATURE: ApiFeature = {
       id: 'games-delete',
       method: 'DELETE',
       path: '/games/{id}',
-      summary: 'Delete a draft or scheduled game, after the admin confirms.',
+      summary: 'Delete a scheduled game, after the admin confirms.',
       response: NO_CONTENT,
       errors: [GAME_NOT_FOUND, GAME_FINISHED],
       notes: ['Also delete its questions and options.'],

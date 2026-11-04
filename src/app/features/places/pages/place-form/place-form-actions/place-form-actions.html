@@ -2,7 +2,7 @@
   The bar stays on screen while the long form scrolls. The negative margins and `-bottom-8`
   pull it through main's 32px padding on all sides, so it sits flush against the edges of the
   scroll area. RTL: `justify-end` packs the buttons against the left edge and the first child
-  lands rightmost, so the frame's left-to-right run of "إلغاء، حفظ كمسودة، حفظ المكان" is
+  lands rightmost, so the frame's left-to-right run of "إلغاء، حفظ المكان" is
   written here back to front.
 -->
 <div
@@ -16,13 +16,6 @@
     [attr.aria-busy]="isBusy()"
   >
     <app-busy-label [isBusy]="isBusy()">حفظ المكان</app-busy-label>
-  </button>
-  <button
-    type="button"
-    class="h-[46px] rounded border border-border bg-surface px-4 text-[14px]/[20px] font-medium text-[#191c1e] shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
-    [disabled]="isBusy()"
-  >
-    حفظ كمسودة
   </button>
   <a
     routerLink="/admin/places"

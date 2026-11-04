@@ -120,16 +120,6 @@ describe('MerchantOfferFormPage', () => {
     expect(page.navigateByUrl).toHaveBeenCalledWith('/merchant/offers');
   });
 
-  it('saves a draft from "حفظ كمسودة"', async () => {
-    const page = createPage();
-    fillRequiredFields(page);
-
-    buttonNamed(page.element, 'حفظ كمسودة').click();
-    await settle(page);
-
-    expect(page.repository.created[0].status).toBe('draft');
-  });
-
   it('opens an offer for editing with its saved values, and updates it', async () => {
     const page = createPage('offer-2');
 

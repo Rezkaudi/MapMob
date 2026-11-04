@@ -15,7 +15,6 @@ const EARLIEST_START_DAYS = -120;
 const LATEST_START_DAYS = 60;
 const SHORTEST_AD_DAYS = 7;
 const LONGEST_AD_DAYS = 60;
-const DRAFT_SHARE = 0.05;
 const PAUSED_SHARE = 0.1;
 const ADMIN_SHARE = 0.2;
 const ONGOING_SHARE = 0.1;
@@ -48,10 +47,7 @@ function pickStatus(
   today: string,
 ): CampaignStatus {
   const roll = next();
-  if (roll < DRAFT_SHARE) {
-    return 'draft';
-  }
-  if (roll < DRAFT_SHARE + PAUSED_SHARE) {
+  if (roll < PAUSED_SHARE) {
     return 'paused';
   }
   return resolveRunningStatus({ startsOn, endsOn }, today);

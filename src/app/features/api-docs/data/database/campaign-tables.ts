@@ -6,9 +6,8 @@ const STATUS_FLAGS: readonly DbColumn[] = [
   {
     name: 'is_paused',
     type: 'boolean',
-    note: 'Status is worked out from these flags and the dates.',
+    note: 'Status is worked out from this flag and the dates.',
   },
-  { name: 'is_draft', type: 'boolean' },
 ];
 
 export const CAMPAIGN_DOMAIN: DbDomain = {

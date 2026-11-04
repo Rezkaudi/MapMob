@@ -157,12 +157,11 @@ describe('NotificationForm', () => {
       title: 'عروض جديدة بانتظارك',
       recipientMode: 'all',
       sendAt: null,
-      intent: 'publish',
     });
     expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications');
   });
 
-  it('opens a notification for editing filled in, and saves it as a draft', async () => {
+  it('opens a notification for editing filled in, and saves it', async () => {
     const page = await createPage('n9');
 
     expect(page.element.querySelector('h1')?.textContent?.trim()).toBe('تعديل الإشعار');
@@ -171,14 +170,13 @@ describe('NotificationForm', () => {
     );
     expect(page.element.querySelector('app-notification-location-criteria')).toBeTruthy();
 
-    buttonNamed(page, 'حفظ كمسودة').click();
+    buttonNamed(page, 'حفظ الإشعار').click();
     await settle(page);
 
     expect(page.saved[0].id).toBe('n9');
     expect(page.saved[0].draft).toMatchObject({
       governorateId: 'g1',
       sendAt: '2026-09-20T08:00',
-      intent: 'draft',
     });
   });
 });

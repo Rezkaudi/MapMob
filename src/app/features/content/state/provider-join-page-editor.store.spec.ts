@@ -7,7 +7,6 @@ import { ProviderJoinPageEditorStore } from './provider-join-page-editor.store';
 
 const DRAFT: ProviderJoinPageDraft = {
   ...buildProviderJoinPage({ registrationFormUrl: 'https://forms.app/new' }),
-  status: 'published',
 };
 
 function createStore() {
@@ -52,6 +51,6 @@ describe('ProviderJoinPageEditorStore', () => {
 
     expect(saves).toEqual([DRAFT]);
     expect(store.page()?.registrationFormUrl).toBe('https://forms.app/new');
-    expect(store.savedStatus()).toBe('published');
+    expect(store.isSavedMessageShown()).toBe(true);
   });
 });

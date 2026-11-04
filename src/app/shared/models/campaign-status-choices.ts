@@ -5,7 +5,6 @@ const ALL_LABEL = 'الكل';
 /** The ads filter design's order; "متوقف" is not in that design, so it comes last. */
 const STATUS_ORDER: readonly CampaignStatus[] = [
   'active',
-  'draft',
   'scheduled',
   'expired',
   'paused',

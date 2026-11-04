@@ -39,8 +39,4 @@ describe('toOfferFormData', () => {
   it('saves a paused offer under the status the server keeps', () => {
     expect(toOfferFormData(buildOfferDraft({ status: 'paused' })).get('status')).toBe('inactive');
   });
-
-  it('saves a draft as a stopped offer, since the server keeps no drafts', () => {
-    expect(toOfferFormData(buildOfferDraft({ status: 'draft' })).get('status')).toBe('inactive');
-  });
 });

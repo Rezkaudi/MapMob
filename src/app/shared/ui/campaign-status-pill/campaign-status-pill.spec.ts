@@ -23,9 +23,8 @@ describe('CampaignStatusPill', () => {
     ]);
   });
 
-  it('gives expired offers and drafts their own words', () => {
+  it('gives expired offers their own word', () => {
     expect(pillFor('expired').textContent?.trim()).toBe('منتهي');
-    expect(pillFor('draft').textContent?.trim()).toBe('مسودة');
   });
 });
 
@@ -51,6 +50,5 @@ describe('CampaignStatusPill outlined', () => {
 
   it('keeps every status readable in the outlined skin', () => {
     expect(outlinedPillFor('paused').className).toContain('text-status-error');
-    expect(outlinedPillFor('draft').textContent?.trim()).toBe('مسودة');
   });
 });

@@ -26,9 +26,6 @@ function toStatusFilters(status: CampaignStatus, today: string): LiveOfferFilter
   switch (status) {
     case 'paused':
       return { status: LIVE_PAUSED_OFFER_STATUS };
-    case 'draft':
-      // The server keeps no drafts, so this word finds none, which is the right answer.
-      return { status: 'draft' };
     case 'scheduled':
       return { status: LIVE_ACTIVE_OFFER_STATUS, starts_from: addCalendarDays(today, 1) };
     case 'expired':

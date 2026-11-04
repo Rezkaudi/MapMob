@@ -6,18 +6,17 @@ import { NotificationRepository } from '../../data/notification.repository';
 import { buildNotification, buildNotificationDetail } from '../../testing/notification-fixture';
 import { NotificationList } from './notification-list';
 
-const SUMMARY = { totalCount: 248, sentCount: 150, scheduledCount: 10, draftCount: 20 };
+const SUMMARY = { totalCount: 248, sentCount: 150, scheduledCount: 10 };
 
 function createPage(overrides: Partial<NotificationRepository> = {}) {
   const deletedIds: string[] = [];
-  const copiedIds: string[] = [];
   const timeWrites: string[] = [];
   const repository: Partial<NotificationRepository> = {
     getNotifications: () =>
       of({
         items: [
           buildNotification({ id: 'n1', title: 'عرض جديد', status: 'sent' }),
-          buildNotification({ id: 'n2', title: 'عرض قديم', status: 'draft', sendAt: null }),
+          buildNotification({ id: 'n2', title: 'عرض قديم', status: 'scheduled' }),
         ],
         totalCount: 3000,
       }),
@@ -34,10 +33,6 @@ function createPage(overrides: Partial<NotificationRepository> = {}) {
     },
     resendNotification: (id, sendAt) => {
       timeWrites.push(`resend ${id} ${sendAt}`);
-      return of(buildNotification());
-    },
-    duplicateNotification: (id) => {
-      copiedIds.push(id);
       return of(buildNotification());
     },
     ...overrides,
@@ -57,7 +52,6 @@ function createPage(overrides: Partial<NotificationRepository> = {}) {
     element: fixture.nativeElement as HTMLElement,
     navigateByUrl,
     deletedIds,
-    copiedIds,
     timeWrites,
   };
 }
@@ -94,7 +88,7 @@ describe('NotificationList', () => {
       Array.from(element.querySelectorAll('app-stat-card [data-role="value"]'), (value) =>
         value.textContent?.trim(),
       ),
-    ).toEqual(['248', '150', '10', '20']);
+    ).toEqual(['248', '150', '10']);
     expect(element.querySelector('app-notification-toolbar')).toBeTruthy();
     expect(element.querySelectorAll('app-notification-table tbody tr')).toHaveLength(2);
     expect(element.textContent).toContain('من 3000 إشعار');
@@ -117,15 +111,6 @@ describe('NotificationList', () => {
 
     expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/new');
     expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/n1/edit');
-  });
-
-  it('copies a notification from its row menu', async () => {
-    const page = createPage();
-
-    pickRowMenuItem(page, 1, 'نسخ الإشعار');
-    await page.fixture.whenStable();
-
-    expect(page.copiedIds).toEqual(['n2']);
   });
 
   it('asks before deleting a notification, then deletes it', async () => {
@@ -157,20 +142,6 @@ describe('NotificationList', () => {
     page.fixture.detectChanges();
 
     expect(page.element.querySelector('app-notification-detail-dialog')).toBeNull();
-  });
-
-  it("goes to the edit page from a draft's details", () => {
-    const page = createPage({
-      getNotification: (id) => of(buildNotificationDetail({ id, status: 'draft', sendAt: null })),
-    });
-
-    pickRowMenuItem(page, 1, 'عرض التفاصيل');
-    buttonNamed(
-      page.element.querySelector('app-notification-detail-dialog')!,
-      'تعديل الإشعار',
-    ).click();
-
-    expect(page.navigateByUrl).toHaveBeenCalledWith('/admin/notifications/n2/edit');
   });
 
   it('deletes from the details dialog and closes it', async () => {

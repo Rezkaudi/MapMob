@@ -1,7 +1,5 @@
 import { GamePrize } from './game-prize';
 
-export type GameSavedStatus = 'draft' | 'scheduled';
-
 export interface GameQuestionDraft {
   readonly text: string;
   readonly options: readonly string[];
@@ -19,5 +17,4 @@ export interface GameDraft {
   readonly maxPlayerCount: number | null;
   readonly questions: readonly GameQuestionDraft[];
   readonly prize: GamePrize;
-  readonly status: GameSavedStatus;
 }

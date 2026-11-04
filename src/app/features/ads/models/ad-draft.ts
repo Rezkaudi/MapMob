@@ -5,8 +5,8 @@ import { AdPlacement } from './ad-placement';
 import { AdPosition } from './ad-position';
 import { AdPriority } from './ad-priority';
 
-/** "حالة الإعلان الأولية" offers the first two; "حفظ كمسودة" saves a draft. */
-export type AdSavedStatus = Extract<CampaignStatus, 'active' | 'paused' | 'draft'>;
+/** The two statuses "حالة الإعلان الأولية" offers. */
+export type AdSavedStatus = Extract<CampaignStatus, 'active' | 'paused'>;
 
 /** What the add and edit forms send. */
 export interface AdDraft {

@@ -30,7 +30,7 @@ describe('OfferFilterPanel', () => {
 
     expect(element.textContent).toContain('تصفية العروض');
     expect(element.textContent).toContain('تاريخ العرض');
-    expect(chips).toEqual(['الكل', 'نشط', 'مسودة', 'قادم', 'منتهي', 'متوقف']);
+    expect(chips).toEqual(['الكل', 'نشط', 'قادم', 'منتهي', 'متوقف']);
     expect(buttonNamed(element, 'إعادة ضبط')).toBeTruthy();
   });
 

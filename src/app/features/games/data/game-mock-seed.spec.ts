@@ -12,7 +12,6 @@ describe('buildGameMockSeed', () => {
     expect(scheduled.length).toBeGreaterThan(1);
     expect(finished.every((game) => new Date(game.startsAt) < NOW)).toBe(true);
     expect(scheduled.every((game) => new Date(game.startsAt) > NOW)).toBe(true);
-    expect(seed.games.some((game) => game.status === 'draft')).toBe(true);
   });
 
   it('gives each round its own number', () => {

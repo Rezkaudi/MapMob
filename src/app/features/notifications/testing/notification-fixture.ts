@@ -42,7 +42,6 @@ export function buildNotificationDraft(
     areaId: null,
     recipientIds: [],
     sendAt: null,
-    intent: 'publish',
     image: null,
     isImageRemoved: false,
     ...overrides,

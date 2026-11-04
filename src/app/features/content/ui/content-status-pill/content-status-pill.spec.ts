@@ -17,10 +17,10 @@ describe('ContentStatusPill', () => {
     expect(pill.classList).toContain('bg-status-success');
   });
 
-  it('shows a draft in amber', () => {
-    const pill = render('draft');
+  it('shows a page the server has not published in grey, never as a draft', () => {
+    const pill = render('unpublished');
 
-    expect(pill.textContent?.trim()).toBe('مسودة');
-    expect(pill.classList).toContain('bg-status-warning');
+    expect(pill.textContent?.trim()).toBe('غير منشورة');
+    expect(pill.classList).toContain('bg-[#94a3b8]');
   });
 });

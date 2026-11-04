@@ -13,56 +13,15 @@ function render(isBusy = false) {
 }
 
 describe('FormActionBar', () => {
-  it('orders save, draft and cancel from right to left', () => {
+  it('shows only save and cancel, right to left, with no draft button', () => {
     const element = render().nativeElement as HTMLElement;
     const labels = Array.from(element.querySelectorAll('button, a'), (item) =>
       item.textContent?.trim(),
     );
 
-    expect(labels).toEqual(['حفظ العرض', 'حفظ كمسودة', 'إلغاء']);
+    expect(labels).toEqual(['حفظ العرض', 'إلغاء']);
     expect(element.querySelector('a')?.getAttribute('href')).toBe('/admin/offers');
     expect(element.querySelector('button[type="submit"]')?.textContent?.trim()).toBe('حفظ العرض');
-  });
-
-  it('asks for a draft save from its own button', () => {
-    const fixture = render();
-    const saveDraft = vi.fn();
-    fixture.componentInstance.saveDraft.subscribe(saveDraft);
-
-    (fixture.nativeElement.querySelector('button[type="button"]') as HTMLButtonElement).click();
-
-    expect(saveDraft).toHaveBeenCalled();
-  });
-
-  it('marks the draft button so empty required fields are pointed out', () => {
-    const element = render().nativeElement as HTMLElement;
-
-    expect(element.querySelector('button[type="button"]')?.hasAttribute('data-checks-form')).toBe(
-      true,
-    );
-  });
-
-  it('leaves out the draft button on a page that has no drafts, cancel staying leftmost', () => {
-    TestBed.configureTestingModule({ providers: [provideRouter([])] });
-    const fixture = TestBed.createComponent(FormActionBar);
-    fixture.componentRef.setInput('saveLabel', 'حفظ التغييرات');
-    fixture.componentRef.setInput('cancelLink', '/admin/content');
-    fixture.componentRef.setInput('isDraftVisible', false);
-    fixture.detectChanges();
-    const element = fixture.nativeElement as HTMLElement;
-
-    const labels = Array.from(element.querySelectorAll('button, a'), (item) =>
-      item.textContent?.trim(),
-    );
-    expect(labels).toEqual(['حفظ التغييرات', 'إلغاء']);
-  });
-
-  it('holds both saves while one is running', () => {
-    const buttons = Array.from(
-      render(true).nativeElement.querySelectorAll('button'),
-    ) as HTMLButtonElement[];
-
-    expect(buttons.every((button) => button.disabled)).toBe(true);
   });
 
   it('spins on the save button and takes cancel out of reach while saving', () => {
@@ -75,19 +34,5 @@ describe('FormActionBar', () => {
     expect(cancel.getAttribute('aria-disabled')).toBe('true');
     expect(cancel.getAttribute('tabindex')).toBe('-1');
     expect(cancel.className).toContain('pointer-events-none');
-  });
-});
-
-describe('FormActionBar saving a draft', () => {
-  it('spins on the draft button, not on save, when the draft was asked for', () => {
-    const fixture = render();
-    const element = fixture.nativeElement as HTMLElement;
-    (element.querySelector('button[type="button"]') as HTMLButtonElement).click();
-
-    fixture.componentRef.setInput('isBusy', true);
-    fixture.detectChanges();
-
-    expect(element.querySelector('button[type="button"] app-spinner')).not.toBeNull();
-    expect(element.querySelector('button[type="submit"] app-spinner')).toBeNull();
   });
 });

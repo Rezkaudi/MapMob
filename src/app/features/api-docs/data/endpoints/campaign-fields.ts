@@ -1,8 +1,8 @@
 import { ApiErrorCase } from '../../models/api-error-case';
 import { field, optionalField } from '../shared-fields';
 
-export const CAMPAIGN_STATUS = 'enum: active | scheduled | paused | expired | draft';
-export const SAVED_CAMPAIGN_STATUS = 'enum: active | paused | draft';
+export const CAMPAIGN_STATUS = 'enum: active | scheduled | paused | expired';
+export const SAVED_CAMPAIGN_STATUS = 'enum: active | paused';
 
 export const CAMPAIGN_SUMMARY_FIELDS = [
   field('totalCount', 'integer'),
@@ -12,7 +12,7 @@ export const CAMPAIGN_SUMMARY_FIELDS = [
 ];
 
 export const CAMPAIGN_STATUS_RULES = [
-  'status is worked out on the server, never stored as one column: draft if saved as a draft; else paused if paused; else scheduled if startsOn is after today; else expired if endsOn is before today; else active. "Today" is the Damascus date.',
+  'status is worked out on the server, never stored as one column: paused if paused; else scheduled if startsOn is after today; else expired if endsOn is before today; else active. "Today" is the Damascus date.',
 ];
 
 export const RUNNING_RANGE_FIELDS = [
@@ -26,7 +26,7 @@ export const RUNNING_RANGE_FIELDS = [
 
 export const NOT_PAUSABLE: ApiErrorCase = {
   status: 409,
-  when: 'Pause: the campaign is a draft or has expired.',
+  when: 'Pause: the campaign has expired.',
   example: { message: 'Only a running or scheduled campaign can be paused.' },
 };
 

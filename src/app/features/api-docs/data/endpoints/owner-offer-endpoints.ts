@@ -86,7 +86,7 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
             'number | null',
             'plans.limit_active_offers of the current plan; null = no cap.',
           ),
-          field('items[]', 'object[]', 'Oldest first, drafts included. The fields below.'),
+          field('items[]', 'object[]', 'Oldest first. The fields below.'),
           ...OFFER_FIELDS.map((one) => ({ ...one, name: `items[].${one.name}` })),
         ],
       },
@@ -111,7 +111,7 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       id: 'owner-offers-create',
       method: 'POST',
       path: '/owner/offers',
-      summary: 'Add an offer from the "إضافة عرض جديد" page ("حفظ العرض" or "حفظ كمسودة").',
+      summary: 'Add an offer from the "إضافة عرض جديد" page ("حفظ العرض").',
       body: {
         contentType: 'multipart/form-data',
         fields: OFFER_WRITE_FIELDS,
@@ -125,7 +125,7 @@ export const OWNER_OFFERS_FEATURE: ApiFeature = {
       errors: [OVER_LIMIT],
       notes: [
         "The place is the owner's own and the category is that place's main category: neither is sent.",
-        'The screen turns the add button off at the limit, but the server must still refuse with 422. A draft or a paused offer is never live, so it is always accepted.',
+        'The screen turns the add button off at the limit, but the server must still refuse with 422. A paused offer is never live, so it is always accepted.',
       ],
     },
     {

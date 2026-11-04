@@ -67,15 +67,9 @@ export class NotificationList {
   }
 
   protected runPrimaryAction(kind: NotificationPrimaryActionKind): void {
-    const detail = this.detailStore.detail();
-    if (!detail) {
-      return;
+    if (this.detailStore.detail()) {
+      this.detailStore.showPanel(kind);
     }
-    if (kind === 'edit') {
-      this.editNotification(detail);
-      return;
-    }
-    this.detailStore.showPanel(kind);
   }
 
   protected reschedule(id: string, sendAt: string): void {
@@ -84,10 +78,6 @@ export class NotificationList {
 
   protected resend(id: string, sendAt: string | null): void {
     this.closeDialogWhenSaved(this.store.resendNotification(id, sendAt));
-  }
-
-  protected duplicateNotification(notification: AppNotification): void {
-    this.store.duplicateNotification(notification.id);
   }
 
   protected async confirmDeletion(): Promise<void> {

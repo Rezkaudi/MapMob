@@ -5,7 +5,7 @@ import { AppNotification } from '../models/notification';
 import { NotificationQuery } from '../models/notification-query';
 import { toSendDay } from '../state/send-day';
 
-/** Sorts below every real time, so a draft with no time sits last when newest leads. */
+/** Sorts below every real time, so one with no time sits last when newest leads. */
 const NO_SEND_TIME = '';
 
 export function queryNotifications<T extends AppNotification>(

@@ -20,7 +20,7 @@ const VALUE: GameFormValue = {
 
 describe('game draft mapping', () => {
   it('turns the form into what the server takes', () => {
-    expect(toGameDraft(VALUE, 'scheduled')).toEqual({
+    expect(toGameDraft(VALUE)).toEqual({
       name: 'الأكثرية والأقلية',
       description: null,
       startsAt: '2026-10-15T18:00:00+03:00',
@@ -34,18 +34,16 @@ describe('game draft mapping', () => {
         sponsorName: null,
         maxWinnerCount: 10,
       },
-      status: 'scheduled',
     });
   });
 
   it('keeps the sponsor of a voucher', () => {
-    const draft = toGameDraft({ ...VALUE, prizeKind: 'voucher' }, 'draft');
+    const draft = toGameDraft({ ...VALUE, prizeKind: 'voucher' });
     expect(draft.prize.sponsorName).toBe('كافية النور');
-    expect(draft.status).toBe('draft');
   });
 
   it('sends an empty player cap as no cap', () => {
-    expect(toGameDraft({ ...VALUE, maxPlayerCount: null }, 'scheduled').maxPlayerCount).toBeNull();
+    expect(toGameDraft({ ...VALUE, maxPlayerCount: null }).maxPlayerCount).toBeNull();
   });
 
   it('fills the player cap from a saved game', () => {

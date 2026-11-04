@@ -78,12 +78,10 @@
             <td class="ps-1">
               <app-row-actions-menu
                 primaryAction="view"
-                duplicateLabel="نسخ الإشعار"
                 [isEditVisible]="true"
                 [isStatusChangeVisible]="false"
                 (view)="view.emit(row.notification)"
                 (edit)="edit.emit(row.notification)"
-                (duplicate)="duplicate.emit(row.notification)"
                 (remove)="remove.emit(row.notification)"
               />
             </td>

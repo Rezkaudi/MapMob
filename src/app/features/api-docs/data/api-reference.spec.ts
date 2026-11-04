@@ -36,7 +36,7 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(199);
+    expect(countEndpoints(API_FEATURES).total).toBe(198);
   });
 
   it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {

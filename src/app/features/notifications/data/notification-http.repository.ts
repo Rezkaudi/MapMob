@@ -66,7 +66,8 @@ export class NotificationHttpRepository implements NotificationRepository {
     return this.httpClient.delete(this.urlOf(id)).pipe(map(() => undefined));
   }
 
-  duplicateNotification(id: string): Observable<AppNotification> {
+  /** The server saves a copy as a draft, so it is only used here, to be scheduled at once. */
+  private duplicateNotification(id: string): Observable<AppNotification> {
     return this.httpClient
       .post<LiveEnvelope<LiveNotification>>(`${this.urlOf(id)}/duplicate`, null)
       .pipe(map(({ data }) => toAppNotification(data)));

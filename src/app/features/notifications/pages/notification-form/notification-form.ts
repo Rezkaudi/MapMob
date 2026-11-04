@@ -27,7 +27,6 @@ import { Skeleton } from '../../../../shared/ui/skeleton/skeleton';
 import { Toast } from '../../../../shared/ui/toast/toast';
 import { NotificationAudience } from '../../models/notification-audience';
 import { NotificationDetail } from '../../models/notification-detail';
-import { NotificationSaveIntent } from '../../models/notification-draft';
 import { RecipientMode } from '../../models/recipient-mode';
 import { SendTiming } from '../../models/send-timing';
 import { toAudienceEstimateQuery } from '../../state/audience-estimate-query';
@@ -153,21 +152,13 @@ export class NotificationForm {
     this.form.controls.sendTime.markAsTouched();
   }
 
-  protected publish(): void {
-    this.save('publish');
-  }
-
-  protected saveDraft(): void {
-    this.save('draft');
-  }
-
   /** The full form value, read through the change signal so computeds rerun on every edit. */
   private trackedValue() {
     this.formChanges();
     return this.form.getRawValue();
   }
 
-  private async save(intent: NotificationSaveIntent): Promise<void> {
+  protected async publish(): Promise<void> {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -175,7 +166,6 @@ export class NotificationForm {
     const draft = toNotificationDraft(this.form.getRawValue(), {
       image: this.image(),
       hadSavedImage: Boolean(this.store.editedDetail()?.imageUrl),
-      intent,
     });
     if (await this.store.save(this.id() ?? null, draft)) {
       this.router.navigateByUrl(NOTIFICATIONS_URL);

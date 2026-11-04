@@ -26,7 +26,7 @@ describe('AdFilterPanel', () => {
       chipsIn(element, group).map((chip) => chip.textContent?.trim());
 
     expect(element.textContent).toContain('تصفية الإعلانات');
-    expect(labelsOf('الحالة')).toEqual(['الكل', 'نشط', 'مسودة', 'قادم', 'منتهي', 'متوقف']);
+    expect(labelsOf('الحالة')).toEqual(['الكل', 'نشط', 'قادم', 'منتهي', 'متوقف']);
     expect(labelsOf('نوع المحتوى')).toEqual(['صورة', 'فيديو']);
     expect(labelsOf('المعلن')).toEqual(['الإدارة', 'الشركة']);
     expect(element.querySelector('select[aria-label="مكان ظهور الإعلان"]')).toBeTruthy();
@@ -39,7 +39,7 @@ describe('AdFilterPanel', () => {
     fixture.componentInstance.applied.subscribe(applied);
     const element = fixture.nativeElement as HTMLElement;
 
-    chipsIn(element, 'الحالة')[3].click();
+    chipsIn(element, 'الحالة')[2].click();
     fixture.detectChanges();
     chipsIn(element, 'نوع المحتوى')[1].click();
     fixture.detectChanges();

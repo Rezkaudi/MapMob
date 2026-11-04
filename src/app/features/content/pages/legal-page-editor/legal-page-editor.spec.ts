@@ -75,19 +75,9 @@ describe('LegalPageEditor page', () => {
     await settle(fixture);
 
     expect(saves).toEqual([
-      { title: 'الشروط الجديدة', body: '<p>مرحباً بك في MapMob.</p>', status: 'published' },
+      { title: 'الشروط الجديدة', body: '<p>مرحباً بك في MapMob.</p>' },
     ]);
     expect(element.querySelector('app-toast')?.textContent).toContain('تم حفظ التغييرات');
-  });
-
-  it('saves a draft from the action bar', async () => {
-    const { fixture, element, saves } = render('privacy');
-
-    buttonNamed(element, 'حفظ كمسودة').click();
-    await settle(fixture);
-
-    expect(saves.map((draft) => draft.status)).toEqual(['draft']);
-    expect(element.querySelector('app-toast')?.textContent).toContain('تم حفظ المسودة');
   });
 
   it('does not save an empty title, and says why', async () => {

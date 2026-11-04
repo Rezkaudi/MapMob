@@ -127,11 +127,11 @@ describe('PlaceForm', () => {
     );
   });
 
-  it('shows the three footer actions', () => {
+  it('shows save and cancel in the footer, with no draft button', () => {
     const text = render().nativeElement.textContent;
 
     expect(text).toContain('حفظ المكان');
-    expect(text).toContain('حفظ كمسودة');
+    expect(text).not.toContain('حفظ كمسودة');
     expect(text).toContain('إلغاء');
   });
 
@@ -143,7 +143,6 @@ describe('PlaceForm', () => {
     // RTL packs them left and the first child lands rightmost, so this list is back to front.
     expect(actions.map((action) => action.textContent?.trim())).toEqual([
       'حفظ المكان',
-      'حفظ كمسودة',
       'إلغاء',
     ]);
   });

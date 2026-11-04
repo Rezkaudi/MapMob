@@ -18,7 +18,7 @@ export const ProviderJoinPageEditorStore = signalStore(
       if (!store.page()) {
         return false;
       }
-      return store.savePageWith(repository.saveProviderJoinPage(draft), draft.status);
+      return store.savePageWith(repository.saveProviderJoinPage(draft));
     },
   })),
 );

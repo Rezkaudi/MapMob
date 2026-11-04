@@ -15,14 +15,7 @@ const MOST_RECIPIENTS = 16_840;
 const LOCATION_GOVERNORATE_ID = 'governorate-1';
 const PICKED_RECIPIENT_IDS = ['recipient-1', 'recipient-2', 'recipient-3'];
 
-/** The design's first four rows run sent, scheduled, draft, sent. */
-const STATUS_CYCLE: readonly NotificationStatus[] = [
-  'sent',
-  'scheduled',
-  'draft',
-  'sent',
-  'scheduled',
-];
+const STATUS_CYCLE: readonly NotificationStatus[] = ['sent', 'scheduled', 'sent'];
 /** The design's rows all go to every user; later rows mix in the other choices. */
 const LEADING_ALL_ROWS = 4;
 const MODE_CYCLE: readonly RecipientMode[] = ['all', 'location', 'selected'];
@@ -44,10 +37,7 @@ const BODIES = [
   'انضمت متاجر جديدة إلى المنصة في منطقتك. تصفحها واكتشف ما تقدمه من خدمات.',
 ];
 
-function buildSendAt(status: NotificationStatus, now: Date, hoursAway: number): string | null {
-  if (status === 'draft') {
-    return null;
-  }
+function buildSendAt(status: NotificationStatus, now: Date, hoursAway: number): string {
   const direction = status === 'sent' ? -1 : 1;
   return toWallClockTime(new Date(now.getTime() + direction * hoursAway * HOUR_MS));
 }
