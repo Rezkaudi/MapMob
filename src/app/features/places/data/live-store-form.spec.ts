@@ -26,13 +26,13 @@ describe('toLiveStoreForm', () => {
     expect(form.has('_method')).toBe(false);
   });
 
-  it('sends no owner fields on an update without a new password', () => {
-    const value = { ...buildPlaceSaveRequest().value, ownerPassword: '' };
+  it('sends the owner name on an update, and no sign-in fields without a new password', () => {
+    const value = { ...buildPlaceSaveRequest().value, ownerName: ' أحمد الجديد ', ownerPassword: '' };
 
     const form = toLiveStoreForm(value, IDS, 'update');
 
     expect(form.get('_method')).toBe('PUT');
-    expect(form.has('ownerName')).toBe(false);
+    expect(form.get('ownerName')).toBe('أحمد الجديد');
     expect(form.has('ownerPhone')).toBe(false);
     expect(form.has('ownerEmail')).toBe(false);
     expect(form.has('ownerPassword')).toBe(false);
@@ -51,7 +51,6 @@ describe('toLiveStoreForm', () => {
     expect(form.has('ownerEmail')).toBe(false);
     expect(form.has('ownerPhone')).toBe(false);
     expect(form.has('ownerPassword')).toBe(false);
-    expect(form.has('ownerName')).toBe(false);
   });
 
   it('sends a new merchant password on an update when one is typed', () => {

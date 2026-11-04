@@ -5,7 +5,7 @@ import { toLivePlaceStatus } from './live-place-mapping';
 
 export type StoreSaveMode = 'create' | 'update';
 
-// A new place sends its whole owner; an update sends only the login fields that changed.
+// A new place sends its whole owner; an update sends the owner name and only the login fields that changed.
 const NEW_OWNER_FIELDS = ['ownerName', 'ownerPhone', 'ownerEmail', 'ownerPassword'] as const;
 const OPTIONAL_TEXT_FIELDS = [
   'extraPhone',
@@ -61,6 +61,7 @@ export function toLiveStoreForm(
     }
     return form;
   }
+  setIfFilled(form, 'ownerName', value.ownerName.trim());
   for (const field of findOwnerLoginChanges(value)) {
     form.set(field, value[field]);
   }
