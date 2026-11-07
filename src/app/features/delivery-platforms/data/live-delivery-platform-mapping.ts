@@ -19,7 +19,7 @@ export function toDeliveryPlatformEntry(live: LiveDeliveryPlatform): DeliveryPla
     name: live.name,
     latinName: live.name,
     logoUrl: live.logo,
-    websiteUrl: '',
+    websiteUrl: live.website_url ?? '',
     linkedStoreCount: null,
     referralCount: null,
     status: toActivationStatus(live.is_active),
@@ -56,6 +56,7 @@ export function toLiveDeliveryPlatformForm(
     form.set('name[ar]', draft.name);
   }
   form.set('name[en]', draft.latinName);
+  form.set('website_url', draft.websiteUrl);
   form.set('is_active', isActiveStatus(draft.status) ? '1' : '0');
   form.set('sort_order', String(draft.sortOrder));
   if (draft.logoFile) {

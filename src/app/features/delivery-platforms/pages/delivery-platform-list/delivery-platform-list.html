@@ -53,7 +53,6 @@
   [request]="dialogFlow.request()"
   [suggestedSortOrder]="store.nextSortOrder()"
   [isBusy]="store.isSaving()"
-  [isWebsiteShown]="store.keepsWebsiteUrl"
   (draftSubmitted)="dialogFlow.submitDraft($event)"
   (confirmed)="dialogFlow.confirm()"
   (closed)="closeDialog()"

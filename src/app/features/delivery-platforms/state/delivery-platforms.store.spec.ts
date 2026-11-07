@@ -120,9 +120,4 @@ describe('DeliveryPlatformsStore', () => {
     expect(store.saveError()).toBe('توجد منصة بهذا الاسم مسبقاً');
   });
 
-  it('tells whether the server keeps a web address', () => {
-    const { store } = createStore({ keepsWebsiteUrl: false });
-
-    expect(store.keepsWebsiteUrl).toBe(false);
-  });
 });

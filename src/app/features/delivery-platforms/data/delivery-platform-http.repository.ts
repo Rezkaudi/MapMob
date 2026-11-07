@@ -31,7 +31,6 @@ interface LiveLinkedStoreRow {
 /** The list ignores search and page size, so every page is read and queried here. */
 @Injectable()
 export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepository {
-  readonly keepsWebsiteUrl = false;
   private readonly httpClient = inject(HttpClient);
   private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
   private readonly platformsUrl = `${this.adminUrl}/deliveryplatforms`;

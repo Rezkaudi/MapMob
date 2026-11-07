@@ -38,7 +38,6 @@ export const DeliveryPlatformsStore = signalStore(
   withState(initialState),
   withListTable<DeliveryPlatformEntry>({ pageSize: PLATFORM_PAGE_SIZE }),
   withProps(() => ({
-    keepsWebsiteUrl: inject(DeliveryPlatformRepository).keepsWebsiteUrl,
   })),
   withComputed(({ search, summary }) => ({
     statCards: computed(() => buildDeliveryPlatformStatCards(summary())),

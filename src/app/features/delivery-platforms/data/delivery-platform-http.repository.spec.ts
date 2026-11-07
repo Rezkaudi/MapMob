@@ -44,10 +44,6 @@ describe('DeliveryPlatformHttpRepository', () => {
     request.flush({ data: platform });
   }
 
-  it('does not keep a web address', () => {
-    expect(repository.keepsWebsiteUrl).toBe(false);
-  });
-
   it('reads every page, then searches and pages here, as the server ignores both', async () => {
     const response = firstValueFrom(
       repository.getPlatforms({ pageIndex: 0, pageSize: 1, search: 'tal' }),

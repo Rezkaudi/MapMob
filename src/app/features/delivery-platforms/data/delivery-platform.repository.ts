@@ -9,7 +9,6 @@ import { LinkedStore } from '../models/linked-store';
 
 export abstract class DeliveryPlatformRepository {
   /** Whether a platform's web address is saved, so the form asks for it. */
-  abstract readonly keepsWebsiteUrl: boolean;
   abstract getPlatforms(query: ListQuery): Observable<DeliveryPlatformPage>;
   abstract getSummary(): Observable<DeliveryPlatformSummary>;
   abstract createPlatform(draft: DeliveryPlatformDraft): Observable<DeliveryPlatformEntry>;

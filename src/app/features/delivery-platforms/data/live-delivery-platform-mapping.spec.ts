@@ -27,6 +27,12 @@ describe('toDeliveryPlatformEntry', () => {
     });
   });
 
+  it('reads the web address when the server sends one', () => {
+    const platform = { ...buildLiveDeliveryPlatform(), website_url: 'https://talabat.com' };
+
+    expect(toDeliveryPlatformEntry(platform).websiteUrl).toBe('https://talabat.com');
+  });
+
   it('puts a platform with no position at zero', () => {
     expect(toDeliveryPlatformEntry(buildLiveDeliveryPlatform({ sort_order: null })).sortOrder).toBe(
       0,
@@ -60,6 +66,7 @@ describe('toLiveDeliveryPlatformForm', () => {
     expect(form.get('is_active')).toBe('0');
     expect(form.get('sort_order')).toBe('5');
     expect(form.get('logo')).toBeInstanceOf(File);
+    expect(form.get('website_url')).toBe('https://www.talabat.com');
     expect(form.has('_method')).toBe(false);
   });
 

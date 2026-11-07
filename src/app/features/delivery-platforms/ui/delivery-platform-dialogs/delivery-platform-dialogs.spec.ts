@@ -48,14 +48,13 @@ describe('DeliveryPlatformDialogs', () => {
     expect(element.textContent).toContain('هل أنت متأكد من تعطيل منصة طلبات؟');
   });
 
-  it('passes on whether the web address is shown', () => {
+  it('always shows the web address field', () => {
     const fixture = TestBed.createComponent(DeliveryPlatformDialogs);
     fixture.componentRef.setInput('request', { type: 'form', mode: 'create', entry: null });
     fixture.componentRef.setInput('suggestedSortOrder', 8);
-    fixture.componentRef.setInput('isWebsiteShown', false);
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('[data-testid="platform-website"]')).toBeNull();
+    expect(element.querySelector('[data-testid="platform-website"]')).not.toBeNull();
   });
 });
