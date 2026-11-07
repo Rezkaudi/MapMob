@@ -70,7 +70,7 @@ function flushOverview(http: HttpTestingController, hasPlan: boolean): void {
             id: '12',
             plan: { id: '1', name: 'الباقة الذهبية', features: ['دعم فني'] },
             startsAt: '2026-10-29T00:00:00+00:00',
-            endsAt: '2026-11-27T23:59:59+00:00',
+            endsAt: '2026-11-27T23:59:59+03:00',
             status: 'active',
           }
         : null,

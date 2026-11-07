@@ -30,7 +30,7 @@ const CURRENT: LiveOwnerSubscription = {
   id: '12',
   plan: buildLivePlan(),
   startsAt: '2026-10-29T00:00:00+00:00',
-  endsAt: '2026-11-27T23:59:59+00:00',
+  endsAt: '2026-11-27T23:59:59+03:00',
   status: 'active',
   paymentMethod: null,
   amountPaid: null,

@@ -28,6 +28,6 @@ export const LIVE_PAYMENT_SUBSCRIPTION: LivePaymentSubscription = {
   store: { id: 1, name: 'متجر دمشق' },
   plan: LIVE_GOLD_PLAN,
   starts_at: '2026-10-04T00:00:00+00:00',
-  ends_at: '2026-11-03T23:59:59+00:00',
+  ends_at: '2026-11-03T23:59:59+03:00',
   status: 'active',
 };
