@@ -6,7 +6,10 @@
       <p class="text-[24px]/[29px] text-text-secondary">{{ description() }}</p>
     }
   </div>
-  @if (addLabel()) {
-    <app-add-button [label]="addLabel()" (pressed)="add.emit()" />
-  }
+  <div class="flex flex-wrap items-center justify-center gap-3">
+    @if (addLabel()) {
+      <app-add-button [label]="addLabel()" (pressed)="add.emit()" />
+    }
+    <app-back-button />
+  </div>
 </div>

@@ -117,6 +117,7 @@ export class PlaceList {
   });
 
   constructor() {
+    this.store.resetFilters();
     this.store.loadPlaces();
     this.store.loadStatusCounts();
     this.store.loadCategoryOptions();

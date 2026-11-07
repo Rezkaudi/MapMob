@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { EmptyState } from './empty-state';
 
 @Component({
@@ -9,6 +10,17 @@ import { EmptyState } from './empty-state';
 class HostComponent {}
 
 describe('EmptyState', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+  });
+
+  it('offers a way back', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-back-button')).not.toBeNull();
+  });
+
   it('renders the title and description', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();

@@ -5,6 +5,7 @@ import { CLOCK } from '../../../../core/config/clock';
 import { FileSaver } from '../../../../shared/files/file-saver';
 import { PlaceRepository } from '../../data/place.repository';
 import { createPlace } from '../../testing/place-fixture';
+import { PlacesStore } from '../../state/places.store';
 import { PlaceList } from './place-list';
 
 const COUNTS = { all: 120, active: 90, pending: 10, suspended: 20 };
@@ -101,6 +102,37 @@ describe('PlaceList', () => {
 
     expect(fixture.nativeElement.textContent).toContain('لا توجد أماكن مضافة حتى الآن');
   });
+  it('keeps the filters on screen when a filter matches nothing', () => {
+    configure({ getPlaces: () => of({ items: [], totalCount: 0 }) });
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    TestBed.inject(PlacesStore).setCategoryFilter('مطعم');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-empty-state')).toBeNull();
+    expect(element.querySelector('app-place-filters')).not.toBeNull();
+    expect(element.textContent).toContain('لا توجد نتائج مطابقة');
+  });
+
+  it('opens with no filters left over from the last visit', () => {
+    const categories: (string | undefined)[] = [];
+    configure({
+      getPlaces: (query) => {
+        categories.push(query.category);
+        return of({ items: [], totalCount: 0 });
+      },
+    });
+    TestBed.inject(PlacesStore).setCategoryFilter('مطعم');
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    expect(categories.at(-1)).toBeUndefined();
+    expect(fixture.nativeElement.querySelector('app-empty-state')).not.toBeNull();
+  });
+
   it('shows placeholder rows while the places load', () => {
     configure({ getPlaces: () => NEVER });
 

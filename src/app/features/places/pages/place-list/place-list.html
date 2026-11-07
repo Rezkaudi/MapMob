@@ -5,7 +5,7 @@
       <p class="mt-1 text-[14px]/[20px] text-text-secondary">إدارة المتاجر والشركات ضمن المنصة</p>
     </div>
 
-    @if (!store.hasNoResults() || store.search()) {
+    @if (!store.isPlatformEmpty()) {
       <div class="flex items-center gap-3">
         <a
           routerLink="/admin/places/new"
@@ -34,7 +34,7 @@
 
   @if (store.error(); as error) {
     <app-error-state [message]="error" (retry)="reload()" />
-  } @else if (store.hasNoResults() && !store.search()) {
+  } @else if (store.isPlatformEmpty()) {
     <app-empty-state
       title="لا توجد أماكن مضافة حتى الآن"
       description="أضف أول مكان إلى المنصة للبدء بإدارة الشركات والمتاجر."
@@ -200,7 +200,7 @@
         }
       </table>
 
-      @if (store.hasNoResults() && store.search()) {
+      @if (store.hasNoMatches()) {
         <app-table-empty message="لا توجد نتائج مطابقة لبحثك" />
       }
 

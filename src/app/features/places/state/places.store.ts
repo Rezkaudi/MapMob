@@ -64,13 +64,27 @@ export const PlacesStore = signalStore(
       store.setPageSize(PLACES_PAGE_SIZE);
     },
   }),
-  withComputed(({ places, isLoading, selectedIdSet }) => ({
-    hasNoResults: computed(() => !isLoading() && places().length === 0),
-    selectedCount: computed(() => selectedIdSet().size),
-    hasSelection: computed(() => selectedIdSet().size > 0),
-    areAllVisibleSelected: computed(
-      () => places().length > 0 && places().every((place) => selectedIdSet().has(place.id)),
+  withComputed((store) => ({
+    hasNoResults: computed(() => !store.isLoading() && store.places().length === 0),
+    hasActiveFilters: computed(
+      () =>
+        store.search() !== '' ||
+        store.status() !== null ||
+        store.category() !== null ||
+        store.package() !== null,
     ),
+    selectedCount: computed(() => store.selectedIdSet().size),
+    hasSelection: computed(() => store.selectedIdSet().size > 0),
+    areAllVisibleSelected: computed(
+      () =>
+        store.places().length > 0 &&
+        store.places().every((place) => store.selectedIdSet().has(place.id)),
+    ),
+  })),
+  withComputed(({ hasNoResults, hasActiveFilters }) => ({
+    /** Nothing at all on the platform yet, so the page invites the first place. */
+    isPlatformEmpty: computed(() => hasNoResults() && !hasActiveFilters()),
+    hasNoMatches: computed(() => hasNoResults() && hasActiveFilters()),
   })),
   withMethods((store, repository = inject(PlaceRepository)) => {
     const currentQuery = (): PlaceQuery => ({
@@ -178,6 +192,12 @@ export const PlacesStore = signalStore(
       },
       setSort(sort: PlaceSort | null): void {
         applyFilter({ sort });
+      },
+      /** The filter boxes open blank, so the store must not keep filters they no longer show. */
+      resetFilters(): void {
+        patchState(store, { search: '', status: null, category: null, package: null, sort: null });
+        store.clearSelection();
+        store.goToPage(0);
       },
       toggleAllVisible(): void {
         if (store.areAllVisibleSelected()) {

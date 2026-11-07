@@ -38,6 +38,57 @@ describe('PlacesStore', () => {
     expect(store.hasNoResults()).toBe(true);
   });
 
+  it('tells an empty platform apart from a filter that matches nothing', () => {
+    const store = createStore({ getPlaces: () => of({ items: [], totalCount: 0 }) });
+
+    store.loadPlaces();
+    expect(store.isPlatformEmpty()).toBe(true);
+    expect(store.hasNoMatches()).toBe(false);
+
+    store.setCategoryFilter('مطعم');
+    expect(store.isPlatformEmpty()).toBe(false);
+    expect(store.hasNoMatches()).toBe(true);
+  });
+
+  it('counts the status and package filters too, but not the sort', () => {
+    const store = createStore({ getPlaces: () => of({ items: [], totalCount: 0 }) });
+
+    store.setSort('rating');
+    expect(store.hasActiveFilters()).toBe(false);
+
+    store.setStatusFilter('pending');
+    expect(store.hasActiveFilters()).toBe(true);
+
+    store.setStatusFilter(null);
+    store.setPackageFilter('premium');
+    expect(store.hasActiveFilters()).toBe(true);
+  });
+
+  it('clears every filter and the sort, back on the first page', () => {
+    const queries: string[] = [];
+    const store = createStore({
+      getPlaces: (query) => {
+        queries.push(
+          `${query.search}|${query.status}|${query.category}|${query.package}|${query.sort}`,
+        );
+        return of({ items: [], totalCount: 0 });
+      },
+    });
+    store.setSearch('حياة');
+    store.setStatusFilter('pending');
+    store.setCategoryFilter('مطعم');
+    store.setPackageFilter('premium');
+    store.setSort('rating');
+    store.changePage(2);
+
+    store.resetFilters();
+    store.loadPlaces();
+
+    expect(store.hasActiveFilters()).toBe(false);
+    expect(store.pageIndex()).toBe(0);
+    expect(queries.at(-1)).toBe('undefined|undefined|undefined|undefined|undefined');
+  });
+
   it('setStatusFilter resets to the first page and reloads with the filter', () => {
     let requestedStatus: string | undefined;
     const store = createStore({
