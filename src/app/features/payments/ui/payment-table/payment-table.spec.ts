@@ -49,6 +49,7 @@ describe('PaymentTable', () => {
       'طريقة الدفع',
       'رقم الايصال',
       'ملاحظات',
+      'الإجراء',
     ]);
   });
 
@@ -94,6 +95,42 @@ describe('PaymentTable', () => {
     ).dispatchEvent(new Event('change'));
 
     expect(rowToggle).toHaveBeenCalledWith('payment-1');
+    expect(view).not.toHaveBeenCalled();
+  });
+
+  it('offers view, edit and delete from the row menu without opening the row itself', () => {
+    const fixture = render();
+    const element = fixture.nativeElement as HTMLElement;
+    const view = vi.fn();
+    const edit = vi.fn();
+    const remove = vi.fn();
+    fixture.componentInstance.view.subscribe(view);
+    fixture.componentInstance.edit.subscribe(edit);
+    fixture.componentInstance.remove.subscribe(remove);
+    const openMenu = (): HTMLButtonElement[] => {
+      (element.querySelector('tbody tr app-row-actions-menu button') as HTMLButtonElement).click();
+      fixture.detectChanges();
+      const [, ...items] = Array.from(
+        element.querySelectorAll<HTMLButtonElement>(
+          'tbody tr:first-child app-row-actions-menu button',
+        ),
+      );
+      return items;
+    };
+
+    const items = openMenu();
+    expect(items.map((button) => button.textContent?.trim())).toEqual([
+      'عرض التفاصيل',
+      'تعديل',
+      'حذف',
+    ]);
+    expect(view).not.toHaveBeenCalled();
+
+    items[1].click();
+    fixture.detectChanges();
+    expect(edit).toHaveBeenCalledWith(PHARMACY);
+    openMenu()[2].click();
+    expect(remove).toHaveBeenCalledWith(PHARMACY);
     expect(view).not.toHaveBeenCalled();
   });
 

@@ -9,6 +9,7 @@ import { LivePlan } from '../../../shared/data/live-plan';
 import { toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { NewPaymentDraft } from '../models/new-payment-draft';
 import { Payment } from '../models/payment';
+import { PaymentChanges } from '../models/payment-changes';
 import { PaymentDetail } from '../models/payment-detail';
 import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentQuery } from '../models/payment-query';
@@ -16,6 +17,7 @@ import { PaymentSummary } from '../models/payment-summary';
 import { LivePayment } from './live-payment';
 import {
   toLivePaymentBody,
+  toLivePaymentChangesBody,
   toLiveSubscriptionBody,
   toPayment,
   toPaymentDetail,
@@ -99,6 +101,19 @@ export class PaymentHttpRepository implements PaymentRepository {
         ),
         map(({ data }) => toPayment(data)),
       );
+  }
+
+  updatePayment(id: string, changes: PaymentChanges): Observable<Payment> {
+    return this.httpClient
+      .put<LiveEnvelope<LivePayment>>(
+        `${this.paymentsUrl}/${id}`,
+        toLivePaymentChangesBody(changes),
+      )
+      .pipe(map(({ data }) => toPayment(data)));
+  }
+
+  deletePayment(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.paymentsUrl}/${id}`);
   }
 
   exportPayments(query: PaymentQuery): Observable<Blob> {

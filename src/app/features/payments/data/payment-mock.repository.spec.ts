@@ -35,6 +35,36 @@ describe('PaymentMockRepository', () => {
     await expect(firstValueFrom(repository.getPaymentDetail('missing'))).rejects.toThrowError();
   });
 
+  it('saves the changes to a payment and lists it with them', async () => {
+    const changes = { amount: 40, currency: 'SYP' as const, paidAt: '2026-11-01', notes: 'تصحيح' };
+
+    const saved = await firstValueFrom(repository.updatePayment('payment-10254', changes));
+    const detail = await firstValueFrom(repository.getPaymentDetail('payment-10254'));
+
+    expect(saved).toMatchObject({ id: 'payment-10254', ...changes });
+    expect(detail).toMatchObject({ ...changes, company: { name: 'صيدلية الحياة' } });
+  });
+
+  it('fails to change a payment that does not exist', async () => {
+    const changes = { amount: 1, currency: 'USD' as const, paidAt: '2026-11-01', notes: '' };
+
+    await expect(
+      firstValueFrom(repository.updatePayment('missing', changes)),
+    ).rejects.toThrowError();
+  });
+
+  it('deletes a payment so the list no longer has it', async () => {
+    const before = await firstValueFrom(repository.getPayments({ pageIndex: 0, pageSize: 4 }));
+
+    await firstValueFrom(repository.deletePayment('payment-10254'));
+    const after = await firstValueFrom(repository.getPayments({ pageIndex: 0, pageSize: 4 }));
+
+    expect(after.totalCount).toBe(before.totalCount - 1);
+    await expect(
+      firstValueFrom(repository.getPaymentDetail('payment-10254')),
+    ).rejects.toThrowError();
+  });
+
   it('exports every matching payment as a csv file', async () => {
     const file = await firstValueFrom(
       repository.exportPayments({ pageIndex: 0, pageSize: 4, search: 'الحياة' }),

@@ -131,6 +131,36 @@ describe('PaymentHttpRepository', () => {
     expect((await response).id).toBe('5');
   });
 
+  it('sends the changed amount, currency, day and notes with the names the create call uses', async () => {
+    const response = firstValueFrom(
+      repository.updatePayment('5', {
+        amount: 30,
+        currency: 'SYP',
+        paidAt: '2026-11-02',
+        notes: 'تصحيح المبلغ',
+      }),
+    );
+
+    const request = http.expectOne({ method: 'PUT', url: `${PAYMENTS_URL}/5` });
+    expect(request.request.body).toEqual({
+      amount: 30,
+      currency_code: 'SYP',
+      paid_at: '2026-11-02',
+      notes: 'تصحيح المبلغ',
+    });
+    request.flush({ data: { ...LIVE_PAYMENT, id: 5, amount: '30.00', currency_code: 'SYP' } });
+
+    expect(await response).toMatchObject({ id: '5', amount: 30, currency: 'SYP' });
+  });
+
+  it('deletes a payment by its id', async () => {
+    const response = firstValueFrom(repository.deletePayment('5'), { defaultValue: null });
+
+    http.expectOne({ method: 'DELETE', url: `${PAYMENTS_URL}/5` }).flush(null);
+
+    await expect(response).resolves.toBeNull();
+  });
+
   it('builds the export file here, so it has the table columns', async () => {
     const response = firstValueFrom(repository.exportPayments({ pageIndex: 0, pageSize: 10 }));
     answerList();

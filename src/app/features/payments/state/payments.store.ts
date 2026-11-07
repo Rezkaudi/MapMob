@@ -99,36 +99,48 @@ export const PaymentsStore = signalStore(
       ),
     };
   }),
-  withMethods((store, repository = inject(PaymentRepository)) => ({
-    setSearch(search: string): void {
-      store.applyQuery({ search });
+  withMethods((store, repository = inject(PaymentRepository)) => {
+    const reloadAll = (): void => {
       store.loadPayments();
-    },
-    setSort(sort: ListSort | null): void {
-      store.applyQuery({ sort });
-      store.loadPayments();
-    },
-    applyFilters(filters: PaymentFilters): void {
-      patchState(store, { filters });
-      store.resetToFirstPage();
-      store.loadPayments();
-    },
-    changePage(pageIndex: number): void {
-      store.goToPage(pageIndex);
-      store.clearSelection();
-      store.loadPayments();
-    },
-    /** Resolves the file to save, or `null` when the export failed and `saveError` says why. */
-    async exportPayments(): Promise<Blob | null> {
-      patchState(store, { isExporting: true, saveError: null });
-      try {
-        return await lastValueFrom(repository.exportPayments(store.currentPaymentQuery()));
-      } catch (error) {
-        patchState(store, { saveError: (error as Error).message });
-        return null;
-      } finally {
-        patchState(store, { isExporting: false });
-      }
-    },
-  })),
+      store.loadSummary();
+    };
+    return {
+      reloadAll,
+      deletePayment(id: string): Promise<boolean> {
+        return store.saveThenRefresh(repository.deletePayment(id), reloadAll, () =>
+          store.forgetRemovedEntry(id),
+        );
+      },
+      setSearch(search: string): void {
+        store.applyQuery({ search });
+        store.loadPayments();
+      },
+      setSort(sort: ListSort | null): void {
+        store.applyQuery({ sort });
+        store.loadPayments();
+      },
+      applyFilters(filters: PaymentFilters): void {
+        patchState(store, { filters });
+        store.resetToFirstPage();
+        store.loadPayments();
+      },
+      changePage(pageIndex: number): void {
+        store.goToPage(pageIndex);
+        store.clearSelection();
+        store.loadPayments();
+      },
+      /** Resolves the file to save, or `null` when the export failed and `saveError` says why. */
+      async exportPayments(): Promise<Blob | null> {
+        patchState(store, { isExporting: true, saveError: null });
+        try {
+          return await lastValueFrom(repository.exportPayments(store.currentPaymentQuery()));
+        } catch (error) {
+          patchState(store, { saveError: (error as Error).message });
+          return null;
+        } finally {
+          patchState(store, { isExporting: false });
+        }
+      },
+    };
+  }),
 );

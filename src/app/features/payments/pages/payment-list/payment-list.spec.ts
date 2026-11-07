@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
 import { FileSaver } from '../../../../shared/files/file-saver';
 import { PaymentRepository } from '../../data/payment.repository';
@@ -82,7 +82,10 @@ describe('PaymentList', () => {
   it('opens the add dialog from the header button', async () => {
     const { fixture, element } = createPage();
 
-    buttonNamed(element.querySelector('app-page-header') as HTMLElement, 'إضافة دفعة جديدة').click();
+    buttonNamed(
+      element.querySelector('app-page-header') as HTMLElement,
+      'إضافة دفعة جديدة',
+    ).click();
     await settle(fixture);
 
     expect(element.querySelector('app-new-payment-dialog')).not.toBeNull();
@@ -110,4 +113,69 @@ describe('PaymentList', () => {
 
     expect(element.querySelector('app-payment-detail-dialog')).toBeNull();
   });
+
+  it('edits a payment from the row menu, then reloads the table and the cards', async () => {
+    const updatePayment = vi.fn(() => of(DETAIL));
+    const getSummary = vi.fn(() => of(SUMMARY));
+    const { fixture, element } = createPage({ updatePayment, getSummary });
+
+    pickFromFirstRowMenu(fixture, element, 'تعديل');
+    const dialog = element.querySelector('app-edit-payment-dialog') as HTMLElement;
+    expect(dialog.textContent).toContain('تعديل الدفعة');
+    expect(element.querySelector('app-payment-detail-dialog')).toBeNull();
+
+    buttonNamed(dialog, 'حفظ التعديلات').click();
+    await settle(fixture);
+
+    expect(updatePayment).toHaveBeenCalledWith(DETAIL.id, expect.objectContaining({ amount: 25 }));
+    expect(element.querySelector('app-edit-payment-dialog')).toBeNull();
+    expect(getSummary).toHaveBeenCalledTimes(2);
+  });
+
+  it('asks before deleting a payment, then deletes it', async () => {
+    const deletePayment = vi.fn(() => of(undefined));
+    const { fixture, element } = createPage({ deletePayment });
+
+    pickFromFirstRowMenu(fixture, element, 'حذف');
+    const confirm = element.querySelector('app-confirm-action-dialog') as HTMLElement;
+    expect(confirm.textContent).toContain('حذف الدفعة');
+    expect(confirm.textContent).toContain('#pay-1024');
+    expect(deletePayment).not.toHaveBeenCalled();
+
+    buttonNamed(confirm, 'حذف الدفعة').click();
+    await settle(fixture);
+
+    expect(deletePayment).toHaveBeenCalledWith(DETAIL.id);
+    expect(element.querySelector('app-confirm-action-dialog')).toBeNull();
+  });
+
+  it('keeps the delete question open and says why when the delete fails', async () => {
+    const { fixture, element } = createPage({
+      deletePayment: () => throwError(() => new Error('تعذر حذف الدفعة')),
+    });
+
+    pickFromFirstRowMenu(fixture, element, 'حذف');
+    buttonNamed(
+      element.querySelector('app-confirm-action-dialog') as HTMLElement,
+      'حذف الدفعة',
+    ).click();
+    await settle(fixture);
+
+    expect(element.querySelector('app-confirm-action-dialog')).not.toBeNull();
+    expect(element.querySelector('app-toast')?.textContent).toContain('تعذر حذف الدفعة');
+  });
 });
+
+function pickFromFirstRowMenu(
+  fixture: ReturnType<typeof createPage>['fixture'],
+  element: HTMLElement,
+  label: string,
+): void {
+  const menu = element.querySelector(
+    'app-payment-table tbody tr app-row-actions-menu',
+  ) as HTMLElement;
+  (menu.querySelector('button') as HTMLButtonElement).click();
+  fixture.detectChanges();
+  buttonNamed(menu, label).click();
+  fixture.detectChanges();
+}

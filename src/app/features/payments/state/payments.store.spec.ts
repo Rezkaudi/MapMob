@@ -89,6 +89,53 @@ describe('PaymentsStore', () => {
     });
   });
 
+  it('deletes a payment, then reloads the rows and the cards', async () => {
+    let summaryCalls = 0;
+    const deletedIds: string[] = [];
+    const { store, requestedQueries } = createStore({
+      getSummary: () => {
+        summaryCalls += 1;
+        return of(SUMMARY);
+      },
+      deletePayment: (id) => {
+        deletedIds.push(id);
+        return of(undefined);
+      },
+    });
+    store.loadPayments();
+
+    const isDeleted = await store.deletePayment(PHARMACY.id);
+
+    expect(isDeleted).toBe(true);
+    expect(deletedIds).toEqual([PHARMACY.id]);
+    expect(requestedQueries).toHaveLength(2);
+    expect(summaryCalls).toBe(1);
+  });
+
+  it('keeps the reason when a delete fails', async () => {
+    const { store } = createStore({
+      deletePayment: () => throwError(() => new Error('تعذر حذف الدفعة')),
+    });
+
+    expect(await store.deletePayment(PHARMACY.id)).toBe(false);
+    expect(store.saveError()).toBe('تعذر حذف الدفعة');
+  });
+
+  it('reloads the rows and the cards after a payment is edited elsewhere', () => {
+    let summaryCalls = 0;
+    const { store, requestedQueries } = createStore({
+      getSummary: () => {
+        summaryCalls += 1;
+        return of(SUMMARY);
+      },
+    });
+
+    store.reloadAll();
+
+    expect(requestedQueries).toHaveLength(1);
+    expect(summaryCalls).toBe(1);
+  });
+
   it('exports with the current query, or reports why it could not', async () => {
     const { store } = createStore();
     expect(await store.exportPayments()).toBeInstanceOf(Blob);

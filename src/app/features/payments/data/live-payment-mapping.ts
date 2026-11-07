@@ -3,6 +3,7 @@ import { toIsoDay } from '../../../shared/formatting/iso-day';
 import { PaymentMethod } from '../../../shared/models/payment-method';
 import { toCurrencyCode } from '../../../shared/money/to-currency-code';
 import { NewPaymentDraft } from '../models/new-payment-draft';
+import { PaymentChanges } from '../models/payment-changes';
 import { Payment } from '../models/payment';
 import { PaymentDetail, PaymentSubscription } from '../models/payment-detail';
 import { PaymentFormOptions } from '../models/payment-form-options';
@@ -129,5 +130,15 @@ export function toLivePaymentBody(
     payment_method: CASH_METHOD,
     status: PAID_STATUS,
     notes: draft.notes,
+  };
+}
+
+/** Uses the same field names as the create body, so the server can share its rules. */
+export function toLivePaymentChangesBody(changes: PaymentChanges): Record<string, unknown> {
+  return {
+    amount: changes.amount,
+    currency_code: changes.currency,
+    paid_at: changes.paidAt,
+    notes: changes.notes,
   };
 }

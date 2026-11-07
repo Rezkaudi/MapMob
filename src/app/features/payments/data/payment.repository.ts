@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Payment } from '../models/payment';
 import { NewPaymentDraft } from '../models/new-payment-draft';
+import { PaymentChanges } from '../models/payment-changes';
 import { PaymentDetail } from '../models/payment-detail';
 import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentQuery } from '../models/payment-query';
@@ -14,6 +15,8 @@ export abstract class PaymentRepository {
   /** The merchants and plans the "إضافة دفعة جديدة" dialog offers. */
   abstract getPaymentFormOptions(): Observable<PaymentFormOptions>;
   abstract createPayment(draft: NewPaymentDraft): Observable<Payment>;
+  abstract updatePayment(id: string, changes: PaymentChanges): Observable<Payment>;
+  abstract deletePayment(id: string): Observable<void>;
   /** Every payment matching the filters, not just one page. */
   abstract exportPayments(query: PaymentQuery): Observable<Blob>;
 }

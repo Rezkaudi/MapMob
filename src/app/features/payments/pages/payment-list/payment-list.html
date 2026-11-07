@@ -54,6 +54,8 @@
       (rowToggle)="store.toggleSelected($event)"
       (allToggle)="store.toggleAllVisible()"
       (view)="detailStore.open($event.id)"
+      (edit)="editPayment.open($event)"
+      (remove)="pendingDeletion.set($event)"
     />
 
     <app-table-pagination
@@ -69,6 +71,28 @@
 
 @if (newPayment.isOpen()) {
   <app-new-payment-dialog />
+}
+
+@if (editPayment.isOpen()) {
+  <app-edit-payment-dialog />
+}
+
+@if (deleteCopy(); as copy) {
+  <app-confirm-action-dialog
+    [copy]="copy"
+    [isBusy]="store.isSaving()"
+    (confirmed)="confirmDeletion()"
+    (cancelled)="cancelDeletion()"
+  />
+}
+
+@if (store.saveError(); as saveError) {
+  <app-toast
+    tone="error"
+    title="تعذر إتمام العملية"
+    [message]="saveError"
+    (dismissed)="store.clearSaveError()"
+  />
 }
 
 @if (detailStore.isOpen()) {

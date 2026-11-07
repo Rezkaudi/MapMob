@@ -6,11 +6,12 @@ import { PagedResult } from '../../../core/models/paged-result';
 import { toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { NewPaymentDraft } from '../models/new-payment-draft';
 import { Payment } from '../models/payment';
+import { PaymentChanges } from '../models/payment-changes';
 import { PaymentDetail } from '../models/payment-detail';
 import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentQuery } from '../models/payment-query';
 import { PaymentSummary } from '../models/payment-summary';
-import { PaymentMockDataLoader } from './payment-mock-data-loader';
+import { PaymentMockData, PaymentMockDataLoader } from './payment-mock-data-loader';
 import { filterPayments, queryPayments } from './payment-list-query';
 import { buildPaymentsCsvFile } from './payments-csv';
 import { PaymentRepository } from './payment.repository';
@@ -40,6 +41,14 @@ export class PaymentMockRepository implements PaymentRepository {
 
   createPayment(draft: NewPaymentDraft): Observable<Payment> {
     return this.loader.request((data) => recordPayment(data, draft));
+  }
+
+  updatePayment(id: string, changes: PaymentChanges): Observable<Payment> {
+    return this.loader.request((data) => changePayment(data, id, changes));
+  }
+
+  deletePayment(id: string): Observable<void> {
+    return this.loader.request((data) => removePayment(data, id));
   }
 
   exportPayments(query: PaymentQuery): Observable<Blob> {
@@ -80,4 +89,15 @@ function findPayment(payments: readonly PaymentDetail[], id: string): PaymentDet
     throw new Error(`لم يتم العثور على الدفعة ${id}`);
   }
   return payment;
+}
+
+function changePayment(data: PaymentMockData, id: string, changes: PaymentChanges): Payment {
+  const changed = { ...findPayment(data.payments, id), ...changes };
+  data.payments = data.payments.map((payment) => (payment.id === id ? changed : payment));
+  return changed;
+}
+
+function removePayment(data: PaymentMockData, id: string): void {
+  findPayment(data.payments, id);
+  data.payments = data.payments.filter((payment) => payment.id !== id);
 }

@@ -5,7 +5,8 @@ import { PaymentDetail } from '../models/payment-detail';
 import { PaymentFormOptions } from '../models/payment-form-options';
 
 export interface PaymentMockData {
-  readonly payments: readonly PaymentDetail[];
+  /** Writable, so mock edits and deletes last until the page reloads. */
+  payments: readonly PaymentDetail[];
   readonly formOptions: PaymentFormOptions;
 }
 

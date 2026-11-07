@@ -138,6 +138,13 @@ export const PAYMENT_FORM_OPTIONS = {
   ],
 };
 
+export const PAYMENT_CHANGES = {
+  amount: 225000,
+  currency: 'SYP',
+  paidOn: '2026-09-21',
+  notes: 'تصحيح المبلغ بعد الخصم',
+};
+
 export const NEW_PAYMENT = {
   placeId: '12',
   kind: 'upgrade',

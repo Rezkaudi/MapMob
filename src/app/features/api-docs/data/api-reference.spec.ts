@@ -36,7 +36,22 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(198);
+    expect(countEndpoints(API_FEATURES).total).toBe(200);
+  });
+
+  it('lets the admin correct or delete a recorded payment', () => {
+    const payments = API_FEATURES.find((feature) => feature.id === 'payments');
+    const update = payments?.endpoints.find((endpoint) => endpoint.id === 'payments-update');
+    const remove = payments?.endpoints.find((endpoint) => endpoint.id === 'payments-delete');
+
+    expect(update).toMatchObject({ method: 'PUT', path: '/payments/{id}' });
+    expect(update?.body?.fields.map((field) => field.name)).toEqual([
+      'amount',
+      'currency',
+      'paidOn',
+      'notes',
+    ]);
+    expect(remove).toMatchObject({ method: 'DELETE', path: '/payments/{id}' });
   });
 
   it('keeps every /owner path in the place owner app and every other path in the admin dashboard', () => {
@@ -106,7 +121,9 @@ describe('the API reference data', () => {
     expect(update?.body?.example).not.toHaveProperty('ownerEmail');
     expect(update?.body?.example).not.toHaveProperty('ownerPhone');
     expect(create?.response.example).toMatchObject({ owner: { email: expect.any(String) } });
-    expect(update?.notes?.join(' ')).toContain('ownerEmail and ownerPhone are set when the place is added and never change');
+    expect(update?.notes?.join(' ')).toContain(
+      'ownerEmail and ownerPhone are set when the place is added and never change',
+    );
   });
 
   it('keeps the merchant sign-in in place_owner_accounts, not a second owner phone on the place', () => {

@@ -1,6 +1,7 @@
 import { ApiFeature } from '../../models/api-feature';
 import {
   NEW_PAYMENT,
+  PAYMENT_CHANGES,
   PAYMENT_DETAIL,
   PAYMENT_FORM_OPTIONS,
   PAYMENT_ROW,
@@ -8,6 +9,7 @@ import {
 } from '../examples/billing-examples';
 import {
   MONEY_NOTE,
+  NO_CONTENT,
   PAGED_QUERY_FIELDS,
   csvDownload,
   dayRangeFields,
@@ -57,13 +59,21 @@ const NEW_PAYMENT_FIELDS = [
   optionalField('notes', 'string', 'Max 500.'),
 ];
 
+const PAYMENT_CHANGE_FIELDS = [
+  field('amount', 'number', 'Greater than 0.'),
+  field('currency', 'enum: SYP | USD'),
+  field('paidOn', 'date (yyyy-mm-dd)', 'Not in the future.'),
+  field('notes', 'string | null', 'Max 500.'),
+];
+
 export const PAYMENTS_FEATURE: ApiFeature = {
   id: 'payments',
   name: 'Payments',
   app: 'admin',
   screen: '/admin/payments',
   permissionModule: 'payments',
-  intro: 'Money received, and a dialog to record a cash payment.',
+  intro:
+    'Money received, a dialog to record a cash payment, and row actions to correct or delete one.',
   endpoints: [
     {
       id: 'payments-list',
@@ -171,6 +181,36 @@ export const PAYMENTS_FEATURE: ApiFeature = {
         'Send an Idempotency-Key header (a UUID the dialog makes once). A repeat with the same key and body returns the first payment instead of recording it twice.',
         "In one transaction: store the payment as completed with method cash, store its exchange rate to the platform currency, then create (new), replace (upgrade) or extend (renewal) the place's subscription.",
         "kind must match the place's subscription: new only without a running one, renewal only on the same plan, upgrade only to a higher tier. Otherwise 422.",
+      ],
+    },
+    {
+      id: 'payments-update',
+      method: 'PUT',
+      path: '/payments/{id}',
+      summary: 'Correct the amount, currency, day or notes of a recorded payment.',
+      body: {
+        contentType: 'application/json',
+        fields: PAYMENT_CHANGE_FIELDS,
+        example: PAYMENT_CHANGES,
+      },
+      response: {
+        status: 200,
+        description: 'The updated payment, in the detail shape.',
+        example: PAYMENT_DETAIL,
+      },
+      notes: [
+        'The place, plan, kind and subscription period cannot change here; the panel shows them read-only.',
+        'Store the exchange rate again when amount or currency changes, so the summary totals stay right.',
+      ],
+    },
+    {
+      id: 'payments-delete',
+      method: 'DELETE',
+      path: '/payments/{id}',
+      summary: 'Delete a recorded payment.',
+      response: NO_CONTENT,
+      notes: [
+        "Removes the payment only. The place's subscription stays as it is; cancel it from the subscriptions screen if needed.",
       ],
     },
     {

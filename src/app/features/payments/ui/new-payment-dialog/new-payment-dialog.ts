@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { formatGroupedNumber } from '../../../../shared/formatting/grouped-number';
+import { formatGroupedNumber, parseGroupedNumber } from '../../../../shared/formatting/grouped-number';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { CurrencySelect } from '../../../../shared/ui/currency-select/currency-select';
 import { DialogFrame } from '../../../../shared/ui/dialog-frame/dialog-frame';
@@ -54,7 +54,7 @@ export class NewPaymentDialog {
 
   /** The box shows "300,000", so the commas come back out before the number is read. */
   protected onAmountInput(event: Event): void {
-    this.store.setAmount(Number((event.target as HTMLInputElement).value.replace(/,/g, '')) || 0);
+    this.store.setAmount(parseGroupedNumber((event.target as HTMLInputElement).value));
   }
 
   protected onCurrencyChange(currency: PaymentCurrency): void {

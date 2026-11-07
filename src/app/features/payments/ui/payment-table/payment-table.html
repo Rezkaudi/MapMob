@@ -26,6 +26,7 @@
         <th class="text-center">طريقة الدفع</th>
         <th class="text-center">رقم الايصال</th>
         <th class="ps-[7px]">ملاحظات</th>
+        <th class="text-center">الإجراء</th>
       </tr>
     </thead>
 
@@ -64,10 +65,27 @@
             <td class="text-center whitespace-nowrap text-text-secondary">
               {{ payment.paidAt | arabicDate }}
             </td>
-            <td class="text-center text-text-secondary">{{ methodLabels[payment.paymentMethod] }}</td>
+            <td class="text-center text-text-secondary">
+              {{ methodLabels[payment.paymentMethod] }}
+            </td>
             <td class="text-center text-text-secondary" dir="ltr">{{ payment.receiptNumber }}</td>
             <td class="ps-[7px] text-text-secondary">
               <span class="line-clamp-2">{{ payment.notes }}</span>
+            </td>
+            <!-- The menu sits inside the clickable row, so its clicks must not open the detail too. -->
+            <td
+              class="text-center"
+              (click)="$event.stopPropagation()"
+              (keydown.enter)="$event.stopPropagation()"
+            >
+              <app-row-actions-menu
+                primaryAction="view"
+                [isEditVisible]="true"
+                [isStatusChangeVisible]="false"
+                (view)="view.emit(payment)"
+                (edit)="edit.emit(payment)"
+                (remove)="remove.emit(payment)"
+              />
             </td>
           </tr>
         }
