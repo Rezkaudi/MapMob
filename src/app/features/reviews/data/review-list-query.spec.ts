@@ -55,7 +55,7 @@ describe('queryReviews', () => {
       queryReviews(REVIEWS, { ...FIRST_PAGE, rating }).items;
 
     expect(itemsFor('fiveStars')).toEqual([AHMAD]);
-    expect(itemsFor('fourStarsAndUp')).toEqual([AHMAD, MONA]);
+    expect(itemsFor('fourStars')).toEqual([MONA]);
     expect(itemsFor('twoStars')).toEqual([SARA]);
     expect(itemsFor('threeStars')).toEqual([]);
     expect(itemsFor('unrated')).toEqual([KHALED]);

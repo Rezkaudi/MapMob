@@ -45,24 +45,38 @@ describe('StoryHttpRepository', () => {
     expect((await response).items.map((story) => story.id)).toEqual(['2']);
   });
 
-  it('shows "all" as the active and the expired stories, searched here', async () => {
+  it('shows "all" as the active, expired and hidden stories, searched here', async () => {
     const response = firstValueFrom(
       repository.getStories({ pageIndex: 0, pageSize: 10, search: 'حلب' }),
     );
     answerStatus('active', [ACTIVE_STORY]);
     answerStatus('expired', [LIVE_STORY]);
+    answerStatus('hidden', []);
 
     const page = await response;
     expect(page.totalCount).toBe(1);
     expect(page.items[0].id).toBe('3');
   });
 
-  it('explains that the server cannot list hidden stories yet', async () => {
+  it('asks the server for the hidden stories', async () => {
     const response = firstValueFrom(
       repository.getStories({ pageIndex: 0, pageSize: 10, status: 'hidden' }),
     );
+    answerStatus('hidden', [LIVE_STORY]);
 
-    await expect(response).rejects.toThrow('القصص المخفية');
+    expect((await response).totalCount).toBe(1);
+  });
+
+  it('sends the search with every status it reads', () => {
+    repository.getStories({ pageIndex: 0, pageSize: 10, search: 'حلب' }).subscribe();
+
+    const requests = http.match((request) => request.url === STORIES_URL);
+    expect(requests.map((request) => request.request.params.get('search'))).toEqual([
+      'حلب',
+      'حلب',
+      'حلب',
+    ]);
+    requests.forEach((request) => request.flush({ data: [], pagination: { total: 0 } }));
   });
 
   it('reads the summary', async () => {
@@ -97,6 +111,7 @@ describe('StoryHttpRepository', () => {
     );
     answerStatus('active', [ACTIVE_STORY]);
     answerStatus('expired', [LIVE_STORY]);
+    answerStatus('hidden', []);
 
     expect((await response).type).toContain('text/csv');
   });

@@ -21,6 +21,11 @@ export class MerchantProductMockRepository implements MerchantProductRepository 
     return this.run((database) => database.readCatalog());
   }
 
+  // The page searches and sorts the products itself, so the mock answers them all.
+  getProducts(): Observable<readonly MerchantProduct[]> {
+    return this.run((database) => database.readCatalog().items);
+  }
+
   createProduct(draft: ProductDraft): Observable<MerchantProduct> {
     return this.run((database) => database.create(draft));
   }

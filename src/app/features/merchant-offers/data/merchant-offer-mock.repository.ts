@@ -22,6 +22,11 @@ export class MerchantOfferMockRepository implements MerchantOfferRepository {
     return this.run((database) => database.readCatalog());
   }
 
+  // The page filters the offers itself, so the mock answers them all.
+  getOffers(): Observable<readonly MerchantOffer[]> {
+    return this.run((database) => database.readCatalog().items);
+  }
+
   getOffer(id: string): Observable<MerchantOffer> {
     return this.run((database) => database.readOffer(id));
   }

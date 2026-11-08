@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
@@ -15,7 +15,15 @@ import { LiveUserPage } from './live-user-page';
 import { toUserFilterParams, toUserQueryParams } from './user-query-params';
 import { UserRepository } from './user.repository';
 
-const NO_USERS: PagedResult<AppUser> = { items: [], totalCount: 0 };
+// The server ignores account_type today, so rows of another type are dropped here.
+function keepAccountType(page: LiveUserPage, query: UserQuery): PagedResult<AppUser> {
+  const users = page.data.map(toAppUser);
+  const kept = users.filter((user) => !query.accountType || user.accountType === query.accountType);
+  return {
+    items: kept,
+    totalCount: kept.length === users.length ? page.meta.totalCount : kept.length,
+  };
+}
 
 @Injectable()
 export class UserHttpRepository implements UserRepository {
@@ -23,12 +31,7 @@ export class UserHttpRepository implements UserRepository {
   private readonly usersUrl = `${inject(API_BASE_URL)}/admin/users`;
 
   getUsers(query: UserQuery): Observable<PagedResult<AppUser>> {
-    if (query.accountType === 'visitor') {
-      return of(NO_USERS);
-    }
-    return this.getPage(query).pipe(
-      map((page) => ({ items: page.data.map(toAppUser), totalCount: page.meta.totalCount })),
-    );
+    return this.getPage(query).pipe(map((page) => keepAccountType(page, query)));
   }
 
   getSummary(): Observable<UserSummary> {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
@@ -26,6 +26,7 @@ import {
 import { LivePaymentStore } from './live-payment-store';
 import { LivePaymentSubscription } from './live-payment-subscription';
 import { filterPayments, queryPayments } from './payment-list-query';
+import { toPaymentFilterParams } from './payment-query-params';
 import { PaymentRepository } from './payment.repository';
 import { buildPaymentsCsvFile } from './payments-csv';
 import { summarizeLivePayments } from './summarize-live-payments';
@@ -45,7 +46,9 @@ export class PaymentHttpRepository implements PaymentRepository {
   private readonly paymentsUrl = `${this.adminUrl}/payments`;
 
   getPayments(query: PaymentQuery): Observable<PagedResult<Payment>> {
-    return this.loadAll().pipe(map((rows) => queryPayments(rows.map(toPayment), query)));
+    return this.loadAll(toPaymentFilterParams(query)).pipe(
+      map((rows) => queryPayments(rows.map(toPayment), query)),
+    );
   }
 
   getSummary(): Observable<PaymentSummary> {
@@ -117,15 +120,16 @@ export class PaymentHttpRepository implements PaymentRepository {
   }
 
   exportPayments(query: PaymentQuery): Observable<Blob> {
-    return this.loadAll().pipe(
+    return this.loadAll(toPaymentFilterParams(query)).pipe(
       map((rows) => buildPaymentsCsvFile(filterPayments(rows.map(toPayment), query))),
     );
   }
 
-  private loadAll(): Observable<readonly LivePayment[]> {
+  // The server still ignores some filters, so the rows are filtered here too.
+  private loadAll(filters = new HttpParams()): Observable<readonly LivePayment[]> {
     return this.httpClient
       .get<LiveEnvelope<readonly LivePayment[]>>(this.paymentsUrl, {
-        params: { per_page: ALL_ROWS_PAGE_SIZE },
+        params: filters.set('per_page', ALL_ROWS_PAGE_SIZE),
       })
       .pipe(map(({ data }) => data));
   }

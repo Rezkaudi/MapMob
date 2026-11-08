@@ -1,7 +1,8 @@
 import { HttpParams } from '@angular/common/http';
 import { addCalendarDays } from '../../../shared/formatting/calendar-day';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
-import { ListSort } from '../../../shared/models/list-sort';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { OfferQuery } from '../models/offer-query';
 import { LIVE_ACTIVE_OFFER_STATUS, LIVE_PAUSED_OFFER_STATUS } from './live-offer-status';
 
@@ -13,13 +14,6 @@ interface LiveOfferFilters {
   readonly ends_from?: string;
   readonly ends_to?: string;
 }
-
-// Newest first is what the server does when no sort is sent.
-const LIVE_SORT: Record<ListSort, string | null> = {
-  newest: null,
-  oldest: 'oldest',
-  name: 'name_asc',
-};
 
 /** The server knows active and inactive only, so the days tell coming, running and ended apart. */
 function toStatusFilters(status: CampaignStatus, today: string): LiveOfferFilters {
@@ -46,21 +40,14 @@ function laterDay(first?: string, second?: string): string | undefined {
 /** The filters the list and the export share. `today` is written `yyyy-mm-dd`. */
 export function toOfferFilterParams(query: OfferQuery, today: string): HttpParams {
   const byStatus = query.status ? toStatusFilters(query.status, today) : {};
-  const filters = {
+  return toLiveFilterParams({
     search: query.search,
-    sort_by: query.sort ? LIVE_SORT[query.sort] : null,
+    sort_by: toLiveSort(query.sort),
     ...byStatus,
     // An offer runs inside a range when it starts by the last day and ends on or after the first.
     starts_to: earlierDay(byStatus.starts_to, query.runningTo),
     ends_from: laterDay(byStatus.ends_from, query.runningFrom),
-  };
-  let params = new HttpParams();
-  for (const [name, value] of Object.entries(filters)) {
-    if (value) {
-      params = params.set(name, value);
-    }
-  }
-  return params;
+  });
 }
 
 export function toOfferQueryParams(query: OfferQuery, today: string): HttpParams {

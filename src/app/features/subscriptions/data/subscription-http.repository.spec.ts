@@ -20,7 +20,7 @@ describe('SubscriptionHttpRepository', () => {
   function answerLists(): void {
     http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
     http
-      .expectOne(SUBSCRIPTIONS_URL)
+      .expectOne((call) => call.url === SUBSCRIPTIONS_URL)
       .flush({ items: [LIVE_SUBSCRIPTION, EXPIRED_ROW], totalCount: 2 });
   }
 
@@ -60,6 +60,19 @@ describe('SubscriptionHttpRepository', () => {
     expect(page.items[0].id).toBe('8');
   });
 
+  it('sends the picked filters and asks for every row in one page', () => {
+    repository
+      .getSubscriptions({ pageIndex: 0, pageSize: 10, status: 'paused', tier: 'free' })
+      .subscribe();
+
+    http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
+    const request = http.expectOne((call) => call.url === SUBSCRIPTIONS_URL);
+    expect(request.request.params.get('status')).toBe('cancelled');
+    expect(request.request.params.get('plan_tier')).toBe('free');
+    expect(request.request.params.get('per_page')).toBe('1000');
+    request.flush({ items: [], totalCount: 0 });
+  });
+
   it('reads the active counts from the server summary and the rest from the lists', async () => {
     const response = firstValueFrom(repository.getSummary());
     http.expectOne(`${SUBSCRIPTIONS_URL}/summary`).flush({
@@ -91,7 +104,7 @@ describe('SubscriptionHttpRepository', () => {
     expect(request.request.body).toEqual({ is_active: false });
     request.flush({ data: { ...LIVE_GOLD_PLAN, is_active: false } });
     http.expectOne(PLANS_URL).flush({ data: [{ ...LIVE_GOLD_PLAN, is_active: false }] });
-    http.expectOne(SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
+    http.expectOne((call) => call.url === SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
 
     expect((await response).isActive).toBe(false);
   });
@@ -101,7 +114,7 @@ describe('SubscriptionHttpRepository', () => {
 
     http.expectOne(`${PLANS_URL}/1`).flush({ data: { ...LIVE_GOLD_PLAN, is_active: false } });
     http.expectOne(PLANS_URL).flush({ data: [] });
-    http.expectOne(SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
+    http.expectOne((call) => call.url === SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
 
     const saved = await response;
     expect(saved.id).toBe('1');
@@ -135,7 +148,7 @@ describe('SubscriptionHttpRepository', () => {
     http
       .expectOne(PLANS_URL)
       .flush({ data: [LIVE_GOLD_PLAN, { ...LIVE_GOLD_PLAN, id: 8, name: 'فضية', price: 5000 }] });
-    http.expectOne(SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
+    http.expectOne((call) => call.url === SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
 
     const created = await response;
     expect(created.id).toBe('8');
@@ -152,7 +165,7 @@ describe('SubscriptionHttpRepository', () => {
   it('deletes a plan nobody uses', async () => {
     const response = firstValueFrom(repository.deletePlan('1'));
     http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
-    http.expectOne(SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
+    http.expectOne((call) => call.url === SUBSCRIPTIONS_URL).flush({ items: [], totalCount: 0 });
 
     const request = http.expectOne(`${PLANS_URL}/1`);
     expect(request.request.method).toBe('DELETE');

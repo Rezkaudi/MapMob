@@ -15,7 +15,7 @@ type RatingMatcher = (rating: number | null) => boolean;
 
 const RATING_MATCHERS: Record<ReviewRatingFilter, RatingMatcher> = {
   fiveStars: (rating) => rating === 5,
-  fourStarsAndUp: (rating) => rating !== null && rating >= 4,
+  fourStars: (rating) => rating === 4,
   threeStars: (rating) => rating === 3,
   twoStars: (rating) => rating === 2,
   oneStar: (rating) => rating === 1,

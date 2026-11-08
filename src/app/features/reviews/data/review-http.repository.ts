@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { EMPTY, Observable, catchError, expand, forkJoin, map, of, reduce, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
@@ -13,13 +13,18 @@ import { LiveReview } from './live-review';
 import { toLiveReviewStatus, toReview, toReviewDetail } from './live-review-mapping';
 import { LiveReviewedStore, LiveReviewer } from './live-review-people';
 import { filterReviews, queryReviews } from './review-list-query';
+import { toReviewFilterParams } from './review-query-params';
 import { ReviewRepository } from './review.repository';
 import { buildReviewsCsvFile } from './reviews-csv';
 
 const FIRST_PAGE = 1;
+// The server's largest page, so the walk takes few calls.
+const ROWS_PER_PAGE = 100;
 // The server asks for a note when a report is settled; the panel has no field for one.
 const ACCEPT_NOTE = 'قُبل البلاغ من لوحة التحكم';
 const REJECT_NOTE = 'رُفض البلاغ من لوحة التحكم';
+
+const NO_FILTERS: ReviewQuery = { pageIndex: 0, pageSize: ROWS_PER_PAGE };
 
 interface LiveReviewPage {
   readonly data: readonly LiveReview[];
@@ -34,7 +39,7 @@ interface LiveReviewSummary {
   readonly reported_reviews: number;
 }
 
-/** The list ignores every filter and the page size, so all pages are read and filtered here. */
+/** Every filter is sent; the server still ignores some, so the rows are filtered here too. */
 @Injectable()
 export class ReviewHttpRepository implements ReviewRepository {
   private readonly httpClient = inject(HttpClient);
@@ -42,7 +47,7 @@ export class ReviewHttpRepository implements ReviewRepository {
   private readonly reviewsUrl = `${this.adminUrl}/reviews`;
 
   getReviews(query: ReviewQuery): Observable<PagedResult<Review>> {
-    return this.loadAll().pipe(map((reviews) => queryReviews(reviews.map(toReview), query)));
+    return this.loadAll(query).pipe(map((reviews) => queryReviews(reviews.map(toReview), query)));
   }
 
   getSummary(): Observable<ReviewSummary> {
@@ -62,7 +67,7 @@ export class ReviewHttpRepository implements ReviewRepository {
         forkJoin({
           reviewer: this.readOrNull<LiveReviewer>(`${this.adminUrl}/users/${review.user_id}`),
           store: this.readOrNull<LiveReviewedStore>(`${this.adminUrl}/stores/${review.store_id}`),
-          all: this.loadAll(),
+          all: this.loadAll(NO_FILTERS),
         }).pipe(
           map(({ reviewer, store, all }) =>
             toReviewDetail(
@@ -97,7 +102,7 @@ export class ReviewHttpRepository implements ReviewRepository {
 
   // The server's own file lists ids, not names, and ignores the filters.
   exportReviews(query: ReviewQuery): Observable<Blob> {
-    return this.loadAll().pipe(
+    return this.loadAll(query).pipe(
       map((reviews) => buildReviewsCsvFile(filterReviews(reviews.map(toReview), query))),
     );
   }
@@ -112,17 +117,20 @@ export class ReviewHttpRepository implements ReviewRepository {
     return this.httpClient.get<LiveReview>(`${this.reviewsUrl}/${id}`);
   }
 
-  private loadAll(): Observable<readonly LiveReview[]> {
-    return this.readPage(FIRST_PAGE).pipe(
+  private loadAll(query: ReviewQuery): Observable<readonly LiveReview[]> {
+    const filters = toReviewFilterParams(query).set('per_page', ROWS_PER_PAGE);
+    return this.readPage(filters, FIRST_PAGE).pipe(
       expand((page) =>
-        page.current_page < page.last_page ? this.readPage(page.current_page + 1) : EMPTY,
+        page.current_page < page.last_page ? this.readPage(filters, page.current_page + 1) : EMPTY,
       ),
       reduce<LiveReviewPage, readonly LiveReview[]>((all, page) => [...all, ...page.data], []),
     );
   }
 
-  private readPage(page: number): Observable<LiveReviewPage> {
-    return this.httpClient.get<LiveReviewPage>(this.reviewsUrl, { params: { page } });
+  private readPage(filters: HttpParams, page: number): Observable<LiveReviewPage> {
+    return this.httpClient.get<LiveReviewPage>(this.reviewsUrl, {
+      params: filters.set('page', page),
+    });
   }
 
   // A deleted user or store must not hide the review, so it only shortens the drawer.

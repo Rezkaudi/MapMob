@@ -65,6 +65,35 @@ describe('OwnerReviewsHttpRepository', () => {
     ]);
   });
 
+  it('sends every picked filter with each page it reads', () => {
+    repository
+      .getReviews({
+        pageIndex: 0,
+        pageSize: 4,
+        search: 'خدمة',
+        sort: 'newest',
+        rating: 4,
+        reportStatus: 'pending',
+        submittedFrom: '2026-11-01',
+        submittedTo: '2026-11-08',
+      })
+      .subscribe();
+
+    const request = http.expectOne((one) => one.url === REVIEWS_URL);
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'خدمة'],
+      ['sort_by', 'latest'],
+      ['rating', '4'],
+      ['report_status', 'pending'],
+      ['date_from', '2026-11-01'],
+      ['date_to', '2026-11-08'],
+      ['page', '1'],
+      ['per_page', '50'],
+    ]);
+    request.flush({ data: [], meta: { current_page: 1, last_page: 1 } });
+  });
+
   it('reads the report state of a review the owner reported', async () => {
     const response = firstValueFrom(repository.getReviews({ pageIndex: 0, pageSize: 4 }));
 

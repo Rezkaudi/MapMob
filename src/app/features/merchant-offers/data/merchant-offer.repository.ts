@@ -3,9 +3,12 @@ import { OfferDraftFields } from '../../../shared/models/offer-draft-fields';
 import { OfferItem } from '../../../shared/models/offer-item';
 import { MerchantOffer } from '../models/merchant-offer';
 import { MerchantOfferCatalog } from '../models/merchant-offer-catalog';
+import { MerchantOfferQuery } from '../models/merchant-offer-query';
 
 export abstract class MerchantOfferRepository {
   abstract getCatalog(): Observable<MerchantOfferCatalog>;
+  /** The offers that match the page's search, sort and filters. */
+  abstract getOffers(query: MerchantOfferQuery): Observable<readonly MerchantOffer[]>;
   abstract getOffer(id: string): Observable<MerchantOffer>;
   /** The products and services an offer can cover. */
   abstract getItems(): Observable<readonly OfferItem[]>;

@@ -80,6 +80,14 @@ describe('GameHttpRepository', () => {
     expect(result.items).toHaveLength(1);
   });
 
+  it('sends the sort with the games list', () => {
+    repository.getGames({ pageIndex: 0, pageSize: 4, sort: 'newest' }).subscribe();
+
+    const request = http.expectOne((call) => call.url === GAMES_URL);
+    expect(request.request.params.get('sort_by')).toBe('latest');
+    request.flush(onePage([]));
+  });
+
   it('reads the summary counts from the server and the next game from the list', async () => {
     const summary = firstValueFrom(repository.getSummary());
     http
@@ -137,6 +145,24 @@ describe('GameHttpRepository', () => {
     const result = await winners;
     expect(result.totalCount).toBe(1);
     expect(result.items[0].game.roundNumber).toBe(9);
+  });
+
+  it('sends the search, the game and the sort with the winners list', () => {
+    repository
+      .getWinners({ pageIndex: 0, pageSize: 4, search: 'سارة', gameId: '9', sort: 'oldest' })
+      .subscribe();
+
+    const request = http.expectOne((call) => call.url === WINNERS_URL);
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'سارة'],
+      ['game_id', '9'],
+      ['sort_by', 'oldest'],
+      ['page', '1'],
+      ['per_page', '100'],
+    ]);
+    request.flush(onePage([]));
+    flushGames([]);
   });
 
   it('records a delivery with the server field name', async () => {

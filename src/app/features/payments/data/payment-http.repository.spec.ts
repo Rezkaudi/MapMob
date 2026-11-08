@@ -56,6 +56,44 @@ describe('PaymentHttpRepository', () => {
     expect(page.items[0].companyName).toBe('حلب');
   });
 
+  it('sends every picked filter in the list request', () => {
+    repository
+      .getPayments({
+        pageIndex: 0,
+        pageSize: 10,
+        search: 'PAY',
+        sort: 'newest',
+        companyName: 'حلب',
+        paymentMethod: 'cash',
+        currency: 'SYP',
+        paidOn: { from: '2026-11-01', to: '2026-11-08' },
+      })
+      .subscribe();
+
+    const request = http.expectOne((candidate) => candidate.url === PAYMENTS_URL);
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'PAY'],
+      ['sort_by', 'latest'],
+      ['store_name', 'حلب'],
+      ['payment_method', 'cash'],
+      ['currency', 'SYP'],
+      ['date_from', '2026-11-01'],
+      ['date_to', '2026-11-08'],
+      ['per_page', '1000'],
+    ]);
+    request.flush({ data: [], pagination: { total: 0 } });
+  });
+
+  it('asks for every method but cash when the filter says "other"', () => {
+    repository.getPayments({ pageIndex: 0, pageSize: 10, paymentMethod: 'other' }).subscribe();
+
+    const request = http.expectOne((candidate) => candidate.url === PAYMENTS_URL);
+    expect(request.request.params.get('payment_method_not')).toBe('cash');
+    expect(request.request.params.has('payment_method')).toBe(false);
+    request.flush({ data: [], pagination: { total: 0 } });
+  });
+
   it('counts the summary from the list', async () => {
     const response = firstValueFrom(repository.getSummary());
     answerList();

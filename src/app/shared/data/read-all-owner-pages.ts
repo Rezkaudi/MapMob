@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { LiveMetaPage, readAllMetaPages } from '../../core/http/read-all-meta-pages';
 
@@ -16,14 +16,17 @@ interface LiveOwnerPage<T> {
   };
 }
 
-/** Every row of an /owner list; the pages filter, sort and count on their own. */
+/** Every row of an /owner list that matches the filters sent with each page. */
 export function readAllOwnerPages<T>(
   httpClient: HttpClient,
   url: string,
+  filters = new HttpParams(),
 ): Observable<readonly T[]> {
   return readAllMetaPages((page) =>
     httpClient
-      .get<LiveOwnerPage<T>>(url, { params: { page, per_page: OWNER_PAGE_SIZE } })
+      .get<LiveOwnerPage<T>>(url, {
+        params: filters.set('page', page).set('per_page', OWNER_PAGE_SIZE),
+      })
       .pipe(map(toMetaPage)),
   );
 }

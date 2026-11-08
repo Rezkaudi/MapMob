@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, map, switchMap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
@@ -19,6 +19,7 @@ import { toSubscription } from './live-subscription-mapping';
 import { LiveSubscriptionSummary } from './live-subscription-summary';
 import { canServerExport, toServerExportParams } from './subscription-export-filters';
 import { filterSubscriptions, querySubscriptions } from './subscription-list-query';
+import { toSubscriptionFilterParams } from './subscription-query-params';
 import { SubscriptionRepository } from './subscription.repository';
 import { buildSubscriptionsCsvFile } from './subscriptions-csv';
 import { summarizeLiveSubscriptions } from './summarize-live-subscriptions';
@@ -26,6 +27,7 @@ import { summarizeLiveSubscriptions } from './summarize-live-subscriptions';
 // An inactive plan may be left out of the list, so the saved one stands alone.
 const NO_SUBSCRIBERS = 0;
 const MONTH_DAY_COUNT = 30;
+const ALL_ROWS_PAGE_SIZE = 1000;
 const PLAN_IN_USE_MESSAGE = 'لا يمكن حذف باقة عليها اشتراكات. ألغِ اشتراكاتها أولاً.';
 
 interface LiveLists {
@@ -33,7 +35,7 @@ interface LiveLists {
   readonly subscriptions: readonly Subscription[];
 }
 
-/** The list ignores filters, so they run here; the export uses the server file when it can. */
+/** Every filter is sent; the server still ignores some, so they run here too. The export uses the server file when it can. */
 @Injectable()
 export class SubscriptionHttpRepository implements SubscriptionRepository {
   private readonly httpClient = inject(HttpClient);
@@ -97,7 +99,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   }
 
   getSubscriptions(query: SubscriptionQuery): Observable<PagedResult<Subscription>> {
-    return this.loadLists().pipe(
+    return this.loadLists(toSubscriptionFilterParams(query)).pipe(
       map(({ subscriptions }) => querySubscriptions(subscriptions, query)),
     );
   }
@@ -109,7 +111,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
         responseType: 'blob',
       });
     }
-    return this.loadLists().pipe(
+    return this.loadLists(toSubscriptionFilterParams(query)).pipe(
       map(({ subscriptions }) =>
         buildSubscriptionsCsvFile(filterSubscriptions(subscriptions, query)),
       ),
@@ -132,10 +134,12 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
     );
   }
 
-  private loadLists(): Observable<LiveLists> {
+  private loadLists(filters = new HttpParams()): Observable<LiveLists> {
     return forkJoin({
       plans: this.httpClient.get<LiveEnvelope<readonly LivePlan[]>>(this.plansUrl),
-      subscriptions: this.httpClient.get<PagedResult<LiveSubscription>>(this.subscriptionsUrl),
+      subscriptions: this.httpClient.get<PagedResult<LiveSubscription>>(this.subscriptionsUrl, {
+        params: filters.set('per_page', ALL_ROWS_PAGE_SIZE),
+      }),
     }).pipe(map(({ plans, subscriptions }) => toLiveLists(plans.data, subscriptions.items)));
   }
 }

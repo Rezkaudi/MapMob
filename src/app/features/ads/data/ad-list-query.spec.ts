@@ -1,5 +1,5 @@
 import { buildAd } from '../testing/ad-fixture';
-import { filterAds, queryAds } from './ad-mock-query';
+import { filterAds, queryAds } from './ad-list-query';
 
 const WINTER = buildAd({
   id: 'a1',

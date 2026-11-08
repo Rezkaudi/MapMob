@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { LiveReference } from '../../../core/http/live-reference';
 import { PagedResult } from '../../../core/models/paged-result';
@@ -39,7 +41,7 @@ interface LivePlaceRow {
   readonly governorate: LiveReference | null;
 }
 
-/** The list ignores every filter and the page size, so it is queried here. */
+/** Every filter is sent; the server ignores them today, so the list is queried here too. */
 @Injectable()
 export class NotificationHttpRepository implements NotificationRepository {
   private readonly httpClient = inject(HttpClient);
@@ -47,8 +49,18 @@ export class NotificationHttpRepository implements NotificationRepository {
   private readonly notificationsUrl = `${this.adminUrl}/notifications`;
 
   getNotifications(query: NotificationQuery): Observable<PagedResult<AppNotification>> {
+    const params = toLiveFilterParams({
+      search: query.search,
+      sort_by: toLiveSort(query.sort),
+      audience: query.audience,
+      kind: query.kind,
+      status: query.status,
+      date_from: query.sentFrom,
+      date_to: query.sentTo,
+      per_page: ALL_ROWS_PAGE_SIZE,
+    });
     return this.httpClient
-      .get<PagedResult<LiveNotification>>(this.notificationsUrl)
+      .get<PagedResult<LiveNotification>>(this.notificationsUrl, { params })
       .pipe(map((page) => queryNotifications(page.items.map(toAppNotification), query)));
   }
 

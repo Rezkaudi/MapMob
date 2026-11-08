@@ -43,7 +43,7 @@ describe('ReviewFilterPanel', () => {
     fixture.componentInstance.applied.subscribe(applied);
     const element = fixture.nativeElement as HTMLElement;
 
-    buttonNamed(element, '4+ نجوم').click();
+    buttonNamed(element, '4 نجوم').click();
     buttonNamed(element, 'مُبلّغ عنه').click();
     placeInput(element).value = 'صيدلية الحياة';
     placeInput(element).dispatchEvent(new Event('input'));
@@ -53,7 +53,7 @@ describe('ReviewFilterPanel', () => {
     buttonNamed(element, 'تطبيق الفلاتر').click();
 
     expect(applied).toHaveBeenCalledWith({
-      rating: 'fourStarsAndUp',
+      rating: 'fourStars',
       status: 'reported',
       placeName: 'صيدلية الحياة',
       period: 'last7Days',

@@ -51,17 +51,30 @@ describe('AdHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('asks for a page of ads and reads the total from pagination', async () => {
+  it('sends the filters, reads every row in one page, and filters and pages here', async () => {
     const response = firstValueFrom(
-      repository.getAds({ pageIndex: 1, pageSize: 4, status: 'paused' }),
+      repository.getAds({ pageIndex: 0, pageSize: 4, contentType: AD.contentType }),
     );
 
     const request = http.expectOne((candidate) => candidate.url === ADS_URL);
-    expect(request.request.params.get('status')).toBe('inactive');
-    expect(request.request.params.get('page')).toBe('2');
-    request.flush({ data: [LIVE_AD], pagination: { total: 9 } });
+    expect(request.request.params.get('media_type')).toBe(AD.contentType);
+    expect(request.request.params.get('per_page')).toBe('1000');
+    request.flush({ data: [LIVE_AD], pagination: { total: 1 } });
 
-    expect(await response).toEqual({ items: [AD], totalCount: 9 });
+    expect(await response).toEqual({ items: [AD], totalCount: 1 });
+  });
+
+  it('drops rows the server sends back that the filter does not want', async () => {
+    const otherType = AD.contentType === 'video' ? 'image' : 'video';
+    const response = firstValueFrom(
+      repository.getAds({ pageIndex: 0, pageSize: 4, contentType: otherType }),
+    );
+
+    http
+      .expectOne((candidate) => candidate.url === ADS_URL)
+      .flush({ data: [LIVE_AD], pagination: { total: 1 } });
+
+    expect(await response).toEqual({ items: [], totalCount: 0 });
   });
 
   it('reads the summary and one ad in detail', async () => {

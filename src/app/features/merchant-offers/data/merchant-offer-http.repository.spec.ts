@@ -111,6 +111,35 @@ describe('MerchantOfferHttpRepository', () => {
     expect(items[3].description).toBeNull();
   });
 
+  it('sends the search, sort and filters when it reads the matching offers', async () => {
+    const response = firstValueFrom(
+      repository.getOffers({
+        search: 'خصم',
+        sort: 'newest',
+        status: 'paused',
+        scope: 'allItems',
+        runningFrom: '2026-11-01',
+        runningTo: '2026-11-30',
+      }),
+    );
+
+    const request = http.expectOne((one) => one.url === OFFERS_URL);
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'خصم'],
+      ['sort_by', 'latest'],
+      ['status', 'inactive'],
+      ['scope', 'allItems'],
+      ['running_from', '2026-11-01'],
+      ['running_to', '2026-11-30'],
+      ['page', '1'],
+      ['per_page', '50'],
+    ]);
+    request.flush({ data: [buildLiveOffer()], meta: ONE_PAGE });
+
+    expect((await response).map((offer) => offer.id)).toEqual(['42']);
+  });
+
   it('reads one offer for the edit page', async () => {
     const response = firstValueFrom(repository.getOffer('42'));
 

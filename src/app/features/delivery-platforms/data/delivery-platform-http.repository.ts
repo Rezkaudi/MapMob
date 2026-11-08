@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { LiveMetaPage, readAllMetaPages } from '../../../core/http/read-all-meta-pages';
 import { LiveDeliveryPlatform } from '../../../shared/data/live-delivery-platform';
@@ -28,7 +30,7 @@ interface LiveLinkedStoreRow {
   readonly id: number | string;
 }
 
-/** The list ignores search and page size, so every page is read and queried here. */
+/** The search and sort are sent, but the server ignores them, so every page is queried here. */
 @Injectable()
 export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepository {
   private readonly httpClient = inject(HttpClient);
@@ -36,9 +38,10 @@ export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepositor
   private readonly platformsUrl = `${this.adminUrl}/deliveryplatforms`;
 
   getPlatforms(query: ListQuery): Observable<DeliveryPlatformPage> {
+    const filters = toLiveFilterParams({ search: query.search, sort_by: toLiveSort(query.sort) });
     return readAllMetaPages((page) =>
       this.httpClient.get<LiveMetaPage<LiveDeliveryPlatform>>(this.platformsUrl, {
-        params: { page },
+        params: filters.set('page', page),
       }),
     ).pipe(map((rows) => queryDeliveryPlatforms(rows.map(toDeliveryPlatformEntry), query)));
   }

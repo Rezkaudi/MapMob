@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Complaint } from '../models/complaint';
@@ -16,7 +18,9 @@ import { LiveReport } from './live-report';
 import { toComplaint, toComplaintDetail, toLiveReportStatus } from './live-report-mapping';
 import { LiveReportedStore } from './live-reported-store';
 
-/** The list comes all at once with no filters, so it is searched and paged here. */
+const ALL_ROWS_PAGE_SIZE = 1000;
+
+/** Every filter is sent; the server still ignores the days, so the rows are filtered here too. */
 @Injectable()
 export class ComplaintHttpRepository implements ComplaintRepository {
   readonly canDeleteComplaints = true;
@@ -25,7 +29,7 @@ export class ComplaintHttpRepository implements ComplaintRepository {
   private readonly reportsUrl = `${this.adminUrl}/reports`;
 
   getComplaints(query: ComplaintQuery): Observable<PagedResult<Complaint>> {
-    return this.loadAll().pipe(map((complaints) => queryComplaints(complaints, query)));
+    return this.loadAll(query).pipe(map((complaints) => queryComplaints(complaints, query)));
   }
 
   getSummary(): Observable<ComplaintSummary> {
@@ -56,14 +60,23 @@ export class ComplaintHttpRepository implements ComplaintRepository {
   }
 
   exportComplaints(query: ComplaintQuery): Observable<Blob> {
-    return this.loadAll().pipe(
+    return this.loadAll(query).pipe(
       map((complaints) => buildComplaintsCsvFile(filterComplaints(complaints, query))),
     );
   }
 
-  private loadAll(): Observable<readonly Complaint[]> {
+  // The list has no page count, so one large page is asked for.
+  private loadAll(query: ComplaintQuery): Observable<readonly Complaint[]> {
+    const params = toLiveFilterParams({
+      search: query.search,
+      sort_by: toLiveSort(query.sort),
+      status: query.status ? toLiveReportStatus(query.status) : null,
+      date_from: query.reportedFrom,
+      date_to: query.reportedTo,
+      per_page: ALL_ROWS_PAGE_SIZE,
+    });
     return this.httpClient
-      .get<LiveEnvelope<readonly LiveReport[]>>(this.reportsUrl)
+      .get<LiveEnvelope<readonly LiveReport[]>>(this.reportsUrl, { params })
       .pipe(map(({ data }) => data.map(toComplaint)));
   }
 

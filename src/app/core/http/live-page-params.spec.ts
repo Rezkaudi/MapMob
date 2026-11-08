@@ -22,9 +22,9 @@ describe('toLivePageParams', () => {
     );
   });
 
-  it('sends no sort for newest, the server default', () => {
-    expect(toLivePageParams({ pageIndex: 0, pageSize: 5, sort: 'newest' }).has('sort_by')).toBe(
-      false,
+  it('sends "latest" for newest, the server word for it', () => {
+    expect(toLivePageParams({ pageIndex: 0, pageSize: 5, sort: 'newest' }).get('sort_by')).toBe(
+      'latest',
     );
   });
 });

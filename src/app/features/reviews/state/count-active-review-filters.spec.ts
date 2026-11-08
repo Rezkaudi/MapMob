@@ -9,7 +9,7 @@ describe('countActiveReviewFilters', () => {
   it('counts each group set to something other than "الكل", ignoring a blank place', () => {
     expect(
       countActiveReviewFilters({
-        rating: 'fourStarsAndUp',
+        rating: 'fourStars',
         status: 'reported',
         placeName: 'صيدلية الحياة',
         period: 'custom',

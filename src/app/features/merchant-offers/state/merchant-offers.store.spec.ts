@@ -73,6 +73,45 @@ describe('MerchantOffersStore', () => {
     expect(store.countTiles()[0].count).toBe(2);
   });
 
+  it('asks the server for the matching offers with every change of search, sort or filter', () => {
+    const { store, repository } = setUp();
+
+    store.setSearch('الصيف');
+    store.setSort('oldest');
+    store.applyFilters({ ...store.filters(), status: 'expired', scope: 'allItems' });
+
+    expect(repository.offerQueries.at(-1)).toEqual({
+      search: 'الصيف',
+      sort: 'oldest',
+      status: 'expired',
+      scope: 'allItems',
+      runningFrom: null,
+      runningTo: null,
+    });
+    expect(repository.offerQueries).toHaveLength(3);
+  });
+
+  it('sends the days of the picked period', () => {
+    const { store, repository } = setUp();
+
+    store.applyFilters({ ...store.filters(), period: 'today' });
+
+    expect(repository.offerQueries.at(-1)).toMatchObject({
+      runningFrom: '2026-09-10',
+      runningTo: '2026-09-10',
+    });
+  });
+
+  it('shows the rows the server matched, still filtered here', () => {
+    const { store, repository } = setUp();
+    repository.matchingOffers = [SUMMER];
+
+    store.setSearch('عرض');
+
+    expect(rowIds(store)).toEqual(['2']);
+    expect(store.countTiles()[0].count).toBe(2);
+  });
+
   it('says "nothing matched" when a search hides every row', () => {
     const { store } = setUp();
 

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
 import { LiveOwnerReview } from '../../../shared/data/live-owner-review';
@@ -21,9 +23,17 @@ export class OwnerReviewsHttpRepository implements OwnerReviewsRepository {
   private readonly httpClient = inject(HttpClient);
   private readonly reviewsUrl = `${inject(API_BASE_URL)}/owner/reviews`;
 
-  // The server filters nothing yet, so the page filters, sorts and pages here.
+  // Every filter is sent; the server ignores them today, so the page filters here too.
   getReviews(query: OwnerReviewQuery): Observable<PagedResult<OwnerReview>> {
-    return readAllOwnerPages<LiveOwnerReview>(this.httpClient, this.reviewsUrl).pipe(
+    const filters = toLiveFilterParams({
+      search: query.search,
+      sort_by: toLiveSort(query.sort),
+      rating: query.rating,
+      report_status: query.reportStatus,
+      date_from: query.submittedFrom,
+      date_to: query.submittedTo,
+    });
+    return readAllOwnerPages<LiveOwnerReview>(this.httpClient, this.reviewsUrl, filters).pipe(
       map((reviews) => queryOwnerReviews(reviews.map(toOwnerReview), query)),
     );
   }

@@ -68,6 +68,15 @@ describe('MerchantProductHttpRepository', () => {
     });
   });
 
+  it('sends the search and the sort when it reads the matching products', () => {
+    repository.getProducts({ search: 'شامبو', sort: 'newest' }).subscribe();
+
+    const request = http.expectOne((one) => one.url === PRODUCTS_URL);
+    expect(request.request.params.get('search')).toBe('شامبو');
+    expect(request.request.params.get('sort_by')).toBe('latest');
+    request.flush({ data: [], meta: { current_page: 1, last_page: 1 } });
+  });
+
   it('names the plan "بدون باقة" with no room while the place has no plan', async () => {
     const response = firstValueFrom(repository.getCatalog());
 

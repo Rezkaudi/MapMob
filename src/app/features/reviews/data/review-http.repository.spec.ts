@@ -49,6 +49,26 @@ describe('ReviewHttpRepository', () => {
     expect(page.items[0].id).toBe('8');
   });
 
+  it('sends every picked filter on each page it reads', () => {
+    repository
+      .getReviews({
+        pageIndex: 0,
+        pageSize: 10,
+        rating: 'threeStars',
+        status: 'hidden',
+        sort: 'newest',
+      })
+      .subscribe();
+
+    const request = http.expectOne((candidate) => candidate.url === REVIEWS_URL);
+    expect(request.request.params.get('rating')).toBe('3');
+    expect(request.request.params.get('status')).toBe('hidden');
+    expect(request.request.params.get('sort_by')).toBe('latest');
+    expect(request.request.params.get('page')).toBe('1');
+    expect(request.request.params.get('per_page')).toBe('100');
+    request.flush({ data: [], current_page: 1, last_page: 1, total: 0 });
+  });
+
   it('reads the summary from the server', async () => {
     const response = firstValueFrom(repository.getSummary());
 

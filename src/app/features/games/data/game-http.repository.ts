@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
@@ -17,7 +17,7 @@ import { PrizeDeliveryStatus } from '../models/prize-delivery-status';
 import { WinnerPage } from '../models/winner-page';
 import { WinnerQuery } from '../models/winner-query';
 import { matchGames, matchWinners } from './game-list-query';
-import { toWinnerExportParams } from './game-query-params';
+import { toGameListParams, toWinnerExportParams, toWinnerListParams } from './game-query-params';
 import { GameRepository } from './game.repository';
 import { LiveGame } from './live-game';
 import { toGameDetail, toGameEntry, toLiveGameBody } from './live-game-mapping';
@@ -42,7 +42,7 @@ function countDeliveredPrizes(winners: readonly GameWinner[], gameId: string): n
   ).length;
 }
 
-/** The server ignores the sort, so every list is read whole and queried here. */
+/** Filters are sent, but each list is still read whole and queried here. */
 @Injectable()
 export class GameHttpRepository implements GameRepository {
   private readonly httpClient = inject(HttpClient);
@@ -51,7 +51,7 @@ export class GameHttpRepository implements GameRepository {
   private readonly winnersUrl = `${this.gamesUrl}/winners`;
 
   getGames(query: GameQuery): Observable<GamePage> {
-    return this.loadGames().pipe(
+    return this.loadGames(toGameListParams(query)).pipe(
       map((games) => paginate(matchGames(games, query), query.pageIndex, query.pageSize)),
     );
   }
@@ -103,7 +103,7 @@ export class GameHttpRepository implements GameRepository {
 
   getWinners(query: WinnerQuery): Observable<WinnerPage> {
     return forkJoin({
-      winners: this.readAll<LiveWinner>(this.winnersUrl),
+      winners: this.readAll<LiveWinner>(this.winnersUrl, toWinnerListParams(query)),
       games: this.loadGames(),
     }).pipe(
       map(({ winners, games }) =>
@@ -129,14 +129,16 @@ export class GameHttpRepository implements GameRepository {
     });
   }
 
-  private loadGames(): Observable<readonly GameEntry[]> {
-    return this.readAll<LiveGame>(this.gamesUrl).pipe(map((games) => games.map(toGameEntry)));
+  private loadGames(filters = new HttpParams()): Observable<readonly GameEntry[]> {
+    return this.readAll<LiveGame>(this.gamesUrl, filters).pipe(
+      map((games) => games.map(toGameEntry)),
+    );
   }
 
-  private readAll<T>(url: string): Observable<readonly T[]> {
+  private readAll<T>(url: string, filters = new HttpParams()): Observable<readonly T[]> {
     return readAllMetaPages((page) =>
       this.httpClient.get<LiveMetaPage<T>>(url, {
-        params: { page, per_page: ALL_ROWS_PAGE_SIZE },
+        params: filters.set('page', page).set('per_page', ALL_ROWS_PAGE_SIZE),
       }),
     );
   }

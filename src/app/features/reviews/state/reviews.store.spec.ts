@@ -75,7 +75,7 @@ describe('ReviewsStore', () => {
     const { store, requestedQueries } = createStore();
 
     store.applyFilters({
-      rating: 'fourStarsAndUp',
+      rating: 'fourStars',
       status: 'reported',
       placeName: '  صيدلية الحياة ',
       period: 'last7Days',
@@ -86,7 +86,7 @@ describe('ReviewsStore', () => {
     expect(requestedQueries.at(-1)).toEqual({
       pageIndex: 0,
       pageSize: REVIEWS_PAGE_SIZE,
-      rating: 'fourStarsAndUp',
+      rating: 'fourStars',
       status: 'reported',
       placeName: 'صيدلية الحياة',
       submittedFrom: '2026-09-09',

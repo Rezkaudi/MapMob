@@ -26,6 +26,9 @@ class FakeRepository extends MerchantProductRepository {
   getCatalog(): Observable<MerchantProductCatalog> {
     return this.isFailing ? throwError(() => new Error('انقطع الاتصال')) : of(this.catalog);
   }
+  getProducts(): Observable<readonly MerchantProduct[]> {
+    return of(this.catalog.items);
+  }
   createProduct(draft: ProductDraft): Observable<MerchantProduct> {
     if (this.isCreatePending) {
       return NEVER;

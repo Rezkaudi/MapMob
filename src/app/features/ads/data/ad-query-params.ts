@@ -1,6 +1,9 @@
 import { HttpParams } from '@angular/common/http';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
+import { addCalendarDays } from '../../../shared/formatting/calendar-day';
 import { CampaignStatus } from '../../../shared/models/campaign-status';
-import { ListSort } from '../../../shared/models/list-sort';
+import { AdAdvertiserType } from '../models/ad-advertiser-type';
 import { AdQuery } from '../models/ad-query';
 import { toLiveAdPlacement } from './live-ad-placement';
 import {
@@ -9,38 +12,34 @@ import {
   LIVE_PAUSED_AD_STATUS,
 } from './live-ad-status';
 
-// Newest first is what the server does when no sort is sent.
-const LIVE_SORT: Record<ListSort, string | null> = {
-  newest: null,
-  oldest: 'oldest',
-  name: 'name_asc',
+// The filter words Postman lists for advertiser_type.
+const LIVE_ADVERTISER_TYPE: Record<AdAdvertiserType, string> = {
+  place: 'company',
+  admin: 'admin',
 };
 
-// The server has no day filters for ads, so running and coming ads are both "active".
-const LIVE_STATUS: Record<CampaignStatus, string> = {
+// The server refuses "scheduled", so coming ads are asked for from tomorrow on.
+const LIVE_STATUS: Partial<Record<CampaignStatus, string>> = {
   active: LIVE_ACTIVE_AD_STATUS,
-  scheduled: LIVE_ACTIVE_AD_STATUS,
   paused: LIVE_PAUSED_AD_STATUS,
   expired: LIVE_EXPIRED_AD_STATUS,
 };
 
-/** The filters the list and the export share. */
-export function toAdFilterParams(query: AdQuery): HttpParams {
-  const filters = {
-    search: query.search,
-    sort_by: query.sort ? LIVE_SORT[query.sort] : null,
-    status: query.status ? LIVE_STATUS[query.status] : null,
-    placement: query.placement ? toLiveAdPlacement(query.placement) : null,
-  };
-  let params = new HttpParams();
-  for (const [name, value] of Object.entries(filters)) {
-    if (value) {
-      params = params.set(name, value);
-    }
-  }
-  return params;
+function laterDay(first: string | undefined, second: string | undefined): string | undefined {
+  return first && second ? (first > second ? first : second) : (first ?? second);
 }
 
-export function toAdQueryParams(query: AdQuery): HttpParams {
-  return toAdFilterParams(query).set('page', query.pageIndex + 1).set('per_page', query.pageSize);
+/** The filters the list and the export share, with Postman's names. `today` is `yyyy-mm-dd`. */
+export function toAdFilterParams(query: AdQuery, today: string): HttpParams {
+  const comingFrom = query.status === 'scheduled' ? addCalendarDays(today, 1) : undefined;
+  return toLiveFilterParams({
+    search: query.search,
+    sort_by: toLiveSort(query.sort),
+    status: query.status ? LIVE_STATUS[query.status] : null,
+    media_type: query.contentType,
+    advertiser_type: query.advertiserType ? LIVE_ADVERTISER_TYPE[query.advertiserType] : null,
+    placement: query.placement ? toLiveAdPlacement(query.placement) : null,
+    date_from: laterDay(comingFrom, query.runningFrom),
+    date_to: query.runningTo,
+  });
 }

@@ -18,8 +18,8 @@ const REVIEW_FILTER_FIELDS = [
   ...PAGED_QUERY_FIELDS,
   optionalField(
     'rating',
-    'enum: fiveStars | fourStarsAndUp | threeStars | twoStars | oneStar | unrated',
-    'Named buckets: fourStarsAndUp is 4 or 5; unrated is rating null.',
+    'enum: fiveStars | fourStars | threeStars | twoStars | oneStar | unrated',
+    'Exact star counts; unrated is rating null.',
   ),
   optionalField('status', REVIEW_STATUS),
   optionalField('placeName', 'string', 'Part of a place name.'),

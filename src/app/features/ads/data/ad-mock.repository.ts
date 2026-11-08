@@ -13,7 +13,7 @@ import { AdDraft } from '../models/ad-draft';
 import { AdFormOptions } from '../models/ad-form-options';
 import { AdQuery } from '../models/ad-query';
 import { AdMockDatabase } from './ad-mock-database';
-import { filterAds, queryAds } from './ad-mock-query';
+import { filterAds, queryAds } from './ad-list-query';
 import { AdRepository } from './ad.repository';
 import { buildAdsCsvFile } from './ads-csv';
 

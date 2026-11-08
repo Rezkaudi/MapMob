@@ -31,11 +31,12 @@ describe('toOfferQueryParams', () => {
     });
   });
 
-  it('leaves out filters that are not set, and the default sort', () => {
-    expect(toOfferQueryParams({ ...PAGE, sort: 'newest' }, TODAY).keys()).toEqual([
-      'page',
-      'per_page',
-    ]);
+  it('leaves out filters that are not set', () => {
+    expect(toOfferQueryParams(PAGE, TODAY).keys()).toEqual(['page', 'per_page']);
+  });
+
+  it('sends "latest" for newest, the server word for it', () => {
+    expect(toOfferQueryParams({ ...PAGE, sort: 'newest' }, TODAY).get('sort_by')).toBe('latest');
   });
 });
 

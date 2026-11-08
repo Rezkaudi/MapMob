@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
+import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { LiveOwnerQuotaSummary } from '../../../shared/data/live-owner-quota-summary';
 import { ownerPlanOf } from '../../../shared/data/owner-plan-of';
@@ -9,6 +11,7 @@ import { readAllOwnerPages } from '../../../shared/data/read-all-owner-pages';
 import { ProductDraft } from '../../../shared/models/product-draft';
 import { MerchantProduct } from '../models/merchant-product';
 import { MerchantProductCatalog } from '../models/merchant-product-catalog';
+import { MerchantProductQuery } from '../models/merchant-product-query';
 import { LiveOwnerProduct } from './live-owner-product';
 import { toNewProductFormData, toProductUpdateFormData } from './merchant-product-form-data';
 import { MerchantProductRepository } from './merchant-product.repository';
@@ -31,6 +34,17 @@ export class MerchantProductHttpRepository implements MerchantProductRepository 
         productLimit: summary.quota.limit,
         items: products.map(toMerchantProduct),
       })),
+    );
+  }
+
+  // The server searches but ignores the sort today; the page sorts the answer itself.
+  getProducts(query: MerchantProductQuery): Observable<readonly MerchantProduct[]> {
+    const params = toLiveFilterParams({
+      search: query.search.trim(),
+      sort_by: toLiveSort(query.sort),
+    });
+    return readAllOwnerPages<LiveOwnerProduct>(this.httpClient, this.productsUrl, params).pipe(
+      map((products) => products.map(toMerchantProduct)),
     );
   }
 

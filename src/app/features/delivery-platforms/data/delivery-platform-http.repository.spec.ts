@@ -70,6 +70,16 @@ describe('DeliveryPlatformHttpRepository', () => {
     expect(page.items.map((platform) => platform.id)).toEqual(['2']);
   });
 
+  it('sends the search and the sort on every page it reads', () => {
+    repository.getPlatforms({ pageIndex: 0, pageSize: 1, search: 'tal', sort: 'name' }).subscribe();
+
+    const request = http.expectOne((candidate) => candidate.url === PLATFORMS_URL);
+    expect(request.request.params.get('search')).toBe('tal');
+    expect(request.request.params.get('sort_by')).toBe('name_asc');
+    expect(request.request.params.get('page')).toBe('1');
+    request.flush(livePage([], 1, 1));
+  });
+
   it('reads the active and total counts', async () => {
     const response = firstValueFrom(repository.getSummary());
 

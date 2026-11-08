@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map, throwError } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
+import { toLiveFilterParams } from '../../../core/http/live-filter-params';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { paginate } from '../../../shared/lists/paginate';
 import { StoryStatus } from '../../../shared/models/story-status';
@@ -16,9 +17,8 @@ import { LiveStorySummary, toStoryEntry, toStorySummary } from './live-story-map
 import { StoryRepository } from './story.repository';
 
 const ALL_ROWS_PAGE_SIZE = 1000;
-// Listing a hidden story makes the server fail, so only these two statuses can be read.
-const LISTABLE_STATUSES: readonly StoryStatus[] = ['active', 'expired'];
-const HIDDEN_LIST_MESSAGE = 'الخادم لا يعرض القصص المخفية حالياً. عددها ظاهر في البطاقات أعلاه.';
+// The list without a status leaves some stories out, so "all" reads each status.
+const LISTABLE_STATUSES: readonly StoryStatus[] = ['active', 'expired', 'hidden'];
 
 @Injectable()
 export class StoryHttpRepository implements StoryRepository {
@@ -26,9 +26,6 @@ export class StoryHttpRepository implements StoryRepository {
   private readonly storiesUrl = `${inject(API_BASE_URL)}/admin/stories`;
 
   getStories(query: StoryQuery): Observable<StoryPage> {
-    if (query.status === 'hidden') {
-      return throwError(() => new Error(HIDDEN_LIST_MESSAGE));
-    }
     return this.loadMatching(query).pipe(
       map((stories) => paginate(stories, query.pageIndex, query.pageSize)),
     );
@@ -65,7 +62,7 @@ export class StoryHttpRepository implements StoryRepository {
   private loadMatching(query: StoryQuery): Observable<readonly StoryEntry[]> {
     const statuses = query.status ? [query.status] : LISTABLE_STATUSES;
     const search = query.search?.trim() ?? '';
-    return forkJoin(statuses.map((status) => this.loadStatus(status))).pipe(
+    return forkJoin(statuses.map((status) => this.loadStatus(status, search))).pipe(
       map((lists) =>
         lists
           .flat()
@@ -75,10 +72,10 @@ export class StoryHttpRepository implements StoryRepository {
     );
   }
 
-  private loadStatus(status: StoryStatus): Observable<readonly StoryEntry[]> {
+  private loadStatus(status: StoryStatus, search: string): Observable<readonly StoryEntry[]> {
     return this.httpClient
       .get<LiveEnvelope<readonly LiveStory[]>>(this.storiesUrl, {
-        params: { status, per_page: ALL_ROWS_PAGE_SIZE },
+        params: toLiveFilterParams({ status, search, per_page: ALL_ROWS_PAGE_SIZE }),
       })
       .pipe(map(({ data }) => data.map(toStoryEntry)));
   }

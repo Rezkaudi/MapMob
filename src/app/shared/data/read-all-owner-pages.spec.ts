@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
@@ -26,6 +26,17 @@ describe('readAllOwnerPages', () => {
       .flush({ data: [2], meta: { current_page: 2, last_page: 2 } });
 
     expect(await rows).toEqual([1, 2]);
+  });
+
+  it('sends the given filters with every page', () => {
+    const http = TestBed.inject(HttpTestingController);
+    const filters = new HttpParams().set('search', 'قهوة');
+    readAllOwnerPages<number>(TestBed.inject(HttpClient), URL, filters).subscribe();
+
+    const first = http.expectOne((one) => one.url === URL);
+    expect(first.request.params.get('search')).toBe('قهوة');
+    expect(first.request.params.get('page')).toBe('1');
+    first.flush({ data: [], meta: { current_page: 1, last_page: 1 } });
   });
 
   it('also follows the camelCase page info some lists send', async () => {

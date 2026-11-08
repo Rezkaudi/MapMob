@@ -53,12 +53,28 @@ describe('UserHttpRepository', () => {
     expect(await response).toEqual({ items: [toAppUser(LIVE_USER)], totalCount: 7 });
   });
 
-  it('answers an empty page for visitors without a call, since the server keeps none', async () => {
-    const page = await firstValueFrom(
+  it('asks the server for visitors, and drops the registered users it answers with', async () => {
+    const response = firstValueFrom(
       repository.getUsers({ pageIndex: 0, pageSize: 6, accountType: 'visitor' }),
     );
 
-    expect(page).toEqual({ items: [], totalCount: 0 });
+    const request = http.expectOne((candidate) => candidate.url === USERS_URL);
+    expect(request.request.params.get('account_type')).toBe('visitor');
+    request.flush({ data: [LIVE_USER], meta: { totalCount: 7 } });
+
+    expect(await response).toEqual({ items: [], totalCount: 0 });
+  });
+
+  it('sends the registered account type and keeps the server count', async () => {
+    const response = firstValueFrom(
+      repository.getUsers({ pageIndex: 0, pageSize: 6, accountType: 'registered' }),
+    );
+
+    const request = http.expectOne((candidate) => candidate.url === USERS_URL);
+    expect(request.request.params.get('account_type')).toBe('registered');
+    request.flush({ data: [LIVE_USER], meta: { totalCount: 7 } });
+
+    expect(await response).toEqual({ items: [toAppUser(LIVE_USER)], totalCount: 7 });
   });
 
   it('reads the summary from the server summary route', async () => {

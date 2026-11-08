@@ -4,6 +4,7 @@ import { OfferItem } from '../../../shared/models/offer-item';
 import { MerchantOfferRepository } from '../data/merchant-offer.repository';
 import { MerchantOffer } from '../models/merchant-offer';
 import { MerchantOfferCatalog } from '../models/merchant-offer-catalog';
+import { MerchantOfferQuery } from '../models/merchant-offer-query';
 import { buildMerchantOffer, buildMerchantOfferCatalog } from './merchant-offer-fixture';
 
 /** Answers at once, remembers every write, and fails every call while `failure` is set. */
@@ -16,9 +17,16 @@ export class FakeMerchantOfferRepository extends MerchantOfferRepository {
   paused: string[] = [];
   resumed: string[] = [];
   deleted: string[] = [];
+  offerQueries: MerchantOfferQuery[] = [];
+  /** What the filtered read answers; `null` answers every offer of the catalog. */
+  matchingOffers: readonly MerchantOffer[] | null = null;
 
   getCatalog(): Observable<MerchantOfferCatalog> {
     return this.answer(this.catalog);
+  }
+  getOffers(query: MerchantOfferQuery): Observable<readonly MerchantOffer[]> {
+    this.offerQueries.push(query);
+    return this.answer(this.matchingOffers ?? this.catalog.items);
   }
   getOffer(id: string): Observable<MerchantOffer> {
     const offer = this.catalog.items.find((candidate) => candidate.id === id);

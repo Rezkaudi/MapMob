@@ -120,14 +120,14 @@ describe('PlaceHttpRepository', () => {
     http.expectOne((candidate) => candidate.url === STORES_URL).flush({ items: [], totalCount: 0 });
   });
 
-  it('asks for the best rated first, and sends no sort for newest', () => {
+  it('asks for the best rated first, and sends "latest" for newest', () => {
     repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'rating' }).subscribe();
     repository.getPlaces({ pageIndex: 0, pageSize: 8, sort: 'newest' }).subscribe();
     answerPlans();
 
     const [byRating, newest] = http.match((candidate) => candidate.url === STORES_URL);
     expect(byRating.request.params.get('sort_by')).toBe('rating_desc');
-    expect(newest.request.params.has('sort_by')).toBe(false);
+    expect(newest.request.params.get('sort_by')).toBe('latest');
     byRating.flush({ items: [], totalCount: 0 });
     newest.flush({ items: [], totalCount: 0 });
   });

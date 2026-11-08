@@ -19,8 +19,8 @@ describe('ReviewRatingPicker', () => {
 
     expect(radios(element).map((radio) => radio.textContent?.trim())).toEqual([
       'الكل',
-      '5+ نجوم',
-      '4+ نجوم',
+      '5 نجوم',
+      '4 نجوم',
       '3 نجوم',
       'نجمتين',
       'نجمة',
@@ -34,13 +34,13 @@ describe('ReviewRatingPicker', () => {
   });
 
   it('marks the picked choice in blue and reports a new pick', () => {
-    const fixture = render('fourStarsAndUp');
+    const fixture = render('fourStars');
     const selectedChange = vi.fn();
     fixture.componentInstance.selectedChange.subscribe(selectedChange);
-    const [all, , fourAndUp] = radios(fixture.nativeElement);
+    const [all, , fourStars] = radios(fixture.nativeElement);
 
-    expect(fourAndUp.getAttribute('aria-checked')).toBe('true');
-    expect(fourAndUp.classList).toContain('bg-primary');
+    expect(fourStars.getAttribute('aria-checked')).toBe('true');
+    expect(fourStars.classList).toContain('bg-primary');
     expect(all.getAttribute('aria-checked')).toBe('false');
     all.click();
 

@@ -15,7 +15,9 @@ describe('ComplaintHttpRepository', () => {
   let http: HttpTestingController;
 
   function answerList(): void {
-    http.expectOne(REPORTS_URL).flush({ data: [LIVE_REPORT, NEW_REPORT] });
+    http
+      .expectOne((candidate) => candidate.url === REPORTS_URL)
+      .flush({ data: [LIVE_REPORT, NEW_REPORT] });
   }
 
   beforeEach(() => {
@@ -55,6 +57,33 @@ describe('ComplaintHttpRepository', () => {
     const page = await response;
     expect(page.totalCount).toBe(1);
     expect(page.items[0].id).toBe('12');
+  });
+
+  it('sends every picked filter in the list request', () => {
+    repository
+      .getComplaints({
+        pageIndex: 0,
+        pageSize: 4,
+        search: 'الأمل',
+        sort: 'newest',
+        status: 'inReview',
+        reportedFrom: '2026-11-01',
+        reportedTo: '2026-11-08',
+      })
+      .subscribe();
+
+    const request = http.expectOne((candidate) => candidate.url === REPORTS_URL);
+    expect(
+      request.request.params.keys().map((key) => [key, request.request.params.get(key)]),
+    ).toEqual([
+      ['search', 'الأمل'],
+      ['sort_by', 'latest'],
+      ['status', 'under_review'],
+      ['date_from', '2026-11-01'],
+      ['date_to', '2026-11-08'],
+      ['per_page', '1000'],
+    ]);
+    request.flush({ data: [] });
   });
 
   it('searches by the place name', async () => {

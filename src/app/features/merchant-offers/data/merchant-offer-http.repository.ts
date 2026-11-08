@@ -18,6 +18,8 @@ import { LiveOwnerOffer } from './live-owner-offer';
 import { MerchantOfferRepository } from './merchant-offer.repository';
 import { toOwnerOfferFormData, toOwnerOfferUpdateFormData } from './owner-offer-form-data';
 import { toMerchantOffer } from './to-merchant-offer';
+import { toOwnerOfferQueryParams } from './owner-offer-query-params';
+import { MerchantOfferQuery } from '../models/merchant-offer-query';
 
 @Injectable()
 export class MerchantOfferHttpRepository implements MerchantOfferRepository {
@@ -41,6 +43,14 @@ export class MerchantOfferHttpRepository implements MerchantOfferRepository {
           items: offers.map((offer) => toMerchantOffer(offer, today)),
         };
       }),
+    );
+  }
+
+  // The server ignores these filters today; the page still filters the answer itself.
+  getOffers(query: MerchantOfferQuery): Observable<readonly MerchantOffer[]> {
+    const params = toOwnerOfferQueryParams(query);
+    return readAllOwnerPages<LiveOwnerOffer>(this.httpClient, this.offersUrl, params).pipe(
+      map((offers) => offers.map((offer) => toMerchantOffer(offer, this.today()))),
     );
   }
 

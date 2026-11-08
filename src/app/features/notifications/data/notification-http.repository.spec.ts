@@ -62,15 +62,50 @@ describe('NotificationHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('reads every notification once, then filters and pages here, as the server ignores both', async () => {
+  it('sends every picked filter in the list request', () => {
+    repository
+      .getNotifications({
+        pageIndex: 0,
+        pageSize: 4,
+        search: 'عرض',
+        sort: 'newest',
+        audience: 'companies',
+        kind: 'private',
+        status: 'sent',
+        sentFrom: '2026-11-01',
+        sentTo: '2026-11-08',
+      })
+      .subscribe();
+
+    const request = http.expectOne((call) => call.url === NOTIFICATIONS_URL);
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'عرض'],
+      ['sort_by', 'latest'],
+      ['audience', 'companies'],
+      ['kind', 'private'],
+      ['status', 'sent'],
+      ['date_from', '2026-11-01'],
+      ['date_to', '2026-11-08'],
+      ['per_page', '1000'],
+    ]);
+    request.flush({ items: [], totalCount: 0 });
+  });
+
+  it('still filters and pages here, as the server ignores the filters', async () => {
     const response = firstValueFrom(
       repository.getNotifications({ pageIndex: 0, pageSize: 4, status: 'scheduled' }),
     );
 
-    http.expectOne(NOTIFICATIONS_URL).flush({
-      items: [live(), live({ id: 'n6', status: 'scheduled', sendAt: '2030-01-01T10:00:00+00:00' })],
-      totalCount: 2,
-    });
+    http
+      .expectOne((call) => call.url === NOTIFICATIONS_URL)
+      .flush({
+        items: [
+          live(),
+          live({ id: 'n6', status: 'scheduled', sendAt: '2030-01-01T10:00:00+00:00' }),
+        ],
+        totalCount: 2,
+      });
 
     const page = await response;
     expect(page.totalCount).toBe(1);

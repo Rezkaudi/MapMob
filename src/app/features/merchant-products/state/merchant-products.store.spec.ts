@@ -6,6 +6,7 @@ import { ProductDraft } from '../../../shared/models/product-draft';
 import { MerchantProductRepository } from '../data/merchant-product.repository';
 import { MerchantProduct } from '../models/merchant-product';
 import { MerchantProductCatalog } from '../models/merchant-product-catalog';
+import { MerchantProductQuery } from '../models/merchant-product-query';
 import {
   buildMerchantProduct,
   buildMerchantProductCatalog,
@@ -23,9 +24,15 @@ class FakeRepository extends MerchantProductRepository {
   created: ProductDraft[] = [];
   updated: [string, ProductDraft][] = [];
   deleted: string[] = [];
+  productQueries: MerchantProductQuery[] = [];
+  matchingProducts: readonly MerchantProduct[] | null = null;
 
   getCatalog(): Observable<MerchantProductCatalog> {
     return this.failure ? throwError(() => this.failure) : of(this.catalog);
+  }
+  getProducts(query: MerchantProductQuery): Observable<readonly MerchantProduct[]> {
+    this.productQueries.push(query);
+    return this.answer(this.matchingProducts ?? this.catalog.items);
   }
   createProduct(draft: ProductDraft): Observable<MerchantProduct> {
     this.created.push(draft);
@@ -74,6 +81,27 @@ describe('MerchantProductsStore', () => {
     const { store } = setUp((repository) => (repository.failure = new Error('انقطع الاتصال')));
 
     expect(store.error()).toBe('انقطع الاتصال');
+  });
+
+  it('asks the server for the matching products when the search or sort changes', () => {
+    const { store, repository } = setUp();
+
+    store.setSearch('سير');
+    store.setSort('name');
+
+    expect(repository.productQueries).toEqual([
+      { search: 'سير', sort: null },
+      { search: 'سير', sort: 'name' },
+    ]);
+  });
+
+  it('shows the rows the server matched, still searched here', () => {
+    const { store } = setUp((repository) => (repository.matchingProducts = [SERUM]));
+
+    store.setSort('newest');
+
+    expect(store.rows().map((row) => row.product.id)).toEqual(['2']);
+    expect(store.countTiles()[0].count).toBe(2);
   });
 
   it('searches and sorts the rows without touching the counts', () => {
