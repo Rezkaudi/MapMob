@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, Observable, catchError, expand, forkJoin, map, of, reduce, switchMap } from 'rxjs';
+import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Review } from '../models/review';
 import { ReviewDetail } from '../models/review-detail';
@@ -12,23 +13,16 @@ import { ReviewSummary } from '../models/review-summary';
 import { LiveReview } from './live-review';
 import { toLiveReviewStatus, toReview, toReviewDetail } from './live-review-mapping';
 import { LiveReviewedStore, LiveReviewer } from './live-review-people';
-import { queryReviews } from './review-list-query';
 import { toReviewFilterParams } from './review-query-params';
 import { ReviewRepository } from './review.repository';
 
-const FIRST_PAGE = 1;
-// The server's largest page, so the walk takes few calls.
-const ROWS_PER_PAGE = 100;
 // The server asks for a note when a report is settled; the panel has no field for one.
 const ACCEPT_NOTE = 'قُبل البلاغ من لوحة التحكم';
 const REJECT_NOTE = 'رُفض البلاغ من لوحة التحكم';
 
-const NO_FILTERS: ReviewQuery = { pageIndex: 0, pageSize: ROWS_PER_PAGE };
-
 interface LiveReviewPage {
   readonly data: readonly LiveReview[];
-  readonly current_page: number;
-  readonly last_page: number;
+  readonly total: number;
 }
 
 interface LiveReviewSummary {
@@ -38,7 +32,6 @@ interface LiveReviewSummary {
   readonly reported_reviews: number;
 }
 
-/** Every filter is sent; the server still ignores some, so the rows are filtered here too. */
 @Injectable()
 export class ReviewHttpRepository implements ReviewRepository {
   private readonly httpClient = inject(HttpClient);
@@ -46,7 +39,11 @@ export class ReviewHttpRepository implements ReviewRepository {
   private readonly reviewsUrl = `${this.adminUrl}/reviews`;
 
   getReviews(query: ReviewQuery): Observable<PagedResult<Review>> {
-    return this.loadAll(query).pipe(map((reviews) => queryReviews(reviews.map(toReview), query)));
+    return this.httpClient
+      .get<LiveReviewPage>(this.reviewsUrl, {
+        params: withPageNumber(toReviewFilterParams(query), query),
+      })
+      .pipe(map((page) => ({ items: page.data.map(toReview), totalCount: page.total })));
   }
 
   getSummary(): Observable<ReviewSummary> {
@@ -66,17 +63,7 @@ export class ReviewHttpRepository implements ReviewRepository {
         forkJoin({
           reviewer: this.readOrNull<LiveReviewer>(`${this.adminUrl}/users/${review.user_id}`),
           store: this.readOrNull<LiveReviewedStore>(`${this.adminUrl}/stores/${review.store_id}`),
-          all: this.loadAll(NO_FILTERS),
-        }).pipe(
-          map(({ reviewer, store, all }) =>
-            toReviewDetail(
-              review,
-              reviewer,
-              store,
-              all.filter((other) => other.user_id === review.user_id).length,
-            ),
-          ),
-        ),
+        }).pipe(map(({ reviewer, store }) => toReviewDetail(review, reviewer, store))),
       ),
     );
   }
@@ -114,22 +101,6 @@ export class ReviewHttpRepository implements ReviewRepository {
 
   private readReview(id: string): Observable<LiveReview> {
     return this.httpClient.get<LiveReview>(`${this.reviewsUrl}/${id}`);
-  }
-
-  private loadAll(query: ReviewQuery): Observable<readonly LiveReview[]> {
-    const filters = toReviewFilterParams(query).set('per_page', ROWS_PER_PAGE);
-    return this.readPage(filters, FIRST_PAGE).pipe(
-      expand((page) =>
-        page.current_page < page.last_page ? this.readPage(filters, page.current_page + 1) : EMPTY,
-      ),
-      reduce<LiveReviewPage, readonly LiveReview[]>((all, page) => [...all, ...page.data], []),
-    );
-  }
-
-  private readPage(filters: HttpParams, page: number): Observable<LiveReviewPage> {
-    return this.httpClient.get<LiveReviewPage>(this.reviewsUrl, {
-      params: filters.set('page', page),
-    });
   }
 
   // A deleted user or store must not hide the review, so it only shortens the drawer.

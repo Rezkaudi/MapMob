@@ -13,14 +13,6 @@ describe('StoryHttpRepository', () => {
   let repository: StoryHttpRepository;
   let http: HttpTestingController;
 
-  function answerStatus(status: string, rows: readonly unknown[]): void {
-    http
-      .expectOne(
-        (request) => request.url === STORIES_URL && request.params.get('status') === status,
-      )
-      .flush({ data: rows, pagination: { total: rows.length } });
-  }
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -36,47 +28,29 @@ describe('StoryHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('reads one status the server can list', async () => {
+  it('asks the server for one page of one status and shows it as it comes', async () => {
     const response = firstValueFrom(
-      repository.getStories({ pageIndex: 0, pageSize: 10, status: 'expired' }),
+      repository.getStories({ pageIndex: 1, pageSize: 10, status: 'expired', search: 'حلب' }),
     );
-    answerStatus('expired', [LIVE_STORY]);
 
-    expect((await response).items.map((story) => story.id)).toEqual(['2']);
-  });
-
-  it('shows "all" as the active, expired and hidden stories, searched here', async () => {
-    const response = firstValueFrom(
-      repository.getStories({ pageIndex: 0, pageSize: 10, search: 'حلب' }),
-    );
-    answerStatus('active', [ACTIVE_STORY]);
-    answerStatus('expired', [LIVE_STORY]);
-    answerStatus('hidden', []);
+    const request = http.expectOne((call) => call.url === STORIES_URL);
+    expect(request.request.params.get('status')).toBe('expired');
+    expect(request.request.params.get('search')).toBe('حلب');
+    expect(request.request.params.get('page')).toBe('2');
+    expect(request.request.params.get('per_page')).toBe('10');
+    request.flush({ data: [LIVE_STORY, ACTIVE_STORY], pagination: { total: 12 } });
 
     const page = await response;
-    expect(page.totalCount).toBe(1);
-    expect(page.items[0].id).toBe('3');
+    expect(page.totalCount).toBe(12);
+    expect(page.items.map((story) => story.id)).toEqual(['2', '3']);
   });
 
-  it('asks the server for the hidden stories', async () => {
-    const response = firstValueFrom(
-      repository.getStories({ pageIndex: 0, pageSize: 10, status: 'hidden' }),
-    );
-    answerStatus('hidden', [LIVE_STORY]);
+  it('reads "all" in one call without a status', () => {
+    repository.getStories({ pageIndex: 0, pageSize: 10 }).subscribe();
 
-    expect((await response).totalCount).toBe(1);
-  });
-
-  it('sends the search with every status it reads', () => {
-    repository.getStories({ pageIndex: 0, pageSize: 10, search: 'حلب' }).subscribe();
-
-    const requests = http.match((request) => request.url === STORIES_URL);
-    expect(requests.map((request) => request.request.params.get('search'))).toEqual([
-      'حلب',
-      'حلب',
-      'حلب',
-    ]);
-    requests.forEach((request) => request.flush({ data: [], pagination: { total: 0 } }));
+    const request = http.expectOne((call) => call.url === STORIES_URL);
+    expect(request.request.params.has('status')).toBe(false);
+    request.flush({ data: [], pagination: { total: 0 } });
   });
 
   it('reads the summary', async () => {

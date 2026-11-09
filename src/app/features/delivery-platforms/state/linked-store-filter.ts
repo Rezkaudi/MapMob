@@ -1,12 +1,8 @@
 import { SelectOption } from '../../../shared/ui/select-field/select-option';
 import { LinkedStore } from '../models/linked-store';
+import { LinkedStoreFilter } from '../models/linked-store-filter';
 
-export interface LinkedStoreFilter {
-  readonly search: string;
-  readonly categoryId: string | null;
-}
-
-/** The dialog holds the whole list, so it filters in place instead of asking again. */
+/** The mock answers the dialog's filters the way the server should. */
 export function filterLinkedStores(
   stores: readonly LinkedStore[],
   filter: LinkedStoreFilter,

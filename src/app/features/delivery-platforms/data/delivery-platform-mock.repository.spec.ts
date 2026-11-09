@@ -53,11 +53,23 @@ describe('DeliveryPlatformMockRepository', () => {
   it('lists the stores linked to talabat and forgets a deleted platform', async () => {
     const repository = createRepository();
 
-    const stores = await firstValueFrom(repository.getLinkedStores('3'));
+    const stores = await firstValueFrom(
+      repository.getLinkedStores('3', { search: '', categoryId: null }),
+    );
     await firstValueFrom(repository.deletePlatform('3'), { defaultValue: undefined });
     const page = await firstValueFrom(repository.getPlatforms({ pageIndex: 0, pageSize: 10 }));
 
     expect(stores[0].name).toBe('مطعم المدينة');
     expect(page.items.some((platform) => platform.id === '3')).toBe(false);
+  });
+
+  it('answers the linked-store search the way the server should', async () => {
+    const repository = createRepository();
+
+    const stores = await firstValueFrom(
+      repository.getLinkedStores('3', { search: 'لا شيء يطابق', categoryId: null }),
+    );
+
+    expect(stores).toEqual([]);
   });
 });

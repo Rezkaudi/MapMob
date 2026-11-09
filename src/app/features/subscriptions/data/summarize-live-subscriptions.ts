@@ -1,10 +1,8 @@
-import { addCalendarDays } from '../../../shared/formatting/calendar-day';
 import { PackagePlan } from '../models/package-plan';
-import { Subscription } from '../models/subscription';
 import { SubscriptionSummary } from '../models/subscription-summary';
 import { LiveSubscriptionSummary } from './live-subscription-summary';
 
-const ENDING_SOON_DAY_COUNT = 7;
+const NO_SUBSCRIPTIONS = 0;
 
 function findTopPlan(plans: readonly PackagePlan[]): PackagePlan | null {
   return plans.reduce<PackagePlan | null>(
@@ -13,23 +11,18 @@ function findTopPlan(plans: readonly PackagePlan[]): PackagePlan | null {
   );
 }
 
-/** The server counts the subscribers; the plan cards and "ending soon" come from the lists. */
 export function summarizeLiveSubscriptions(
   plans: readonly PackagePlan[],
-  subscriptions: readonly Subscription[],
   counts: LiveSubscriptionSummary,
-  today: string,
 ): SubscriptionSummary {
   const topPlan = findTopPlan(plans);
-  const active = subscriptions.filter((entry) => entry.status === 'active');
-  const lastSoonDay = addCalendarDays(today, ENDING_SOON_DAY_COUNT);
   return {
     topPlanName: topPlan?.name ?? '',
-    topPlanSubscriberCount: topPlan?.subscriberCount ?? 0,
+    topPlanSubscriberCount: topPlan?.subscriberCount ?? NO_SUBSCRIPTIONS,
     availablePlanCount: plans.filter((plan) => plan.isActive).length,
-    endingSoonCount: active.filter((entry) => entry.endsOn >= today && entry.endsOn <= lastSoonDay)
-      .length,
+    endingSoonCount: counts.ending_soon_count ?? NO_SUBSCRIPTIONS,
     activeSubscriberCount: counts.active_count,
-    activeSubscriberShare: counts.total_count === 0 ? 0 : counts.active_count / counts.total_count,
+    activeSubscriberShare:
+      counts.total_count === NO_SUBSCRIPTIONS ? 0 : counts.active_count / counts.total_count,
   };
 }

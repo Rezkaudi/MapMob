@@ -57,11 +57,12 @@ function toReviewReport(report: LiveReviewReport | null): ReviewReport | null {
   };
 }
 
+const NO_REVIEWS = 0;
+
 export function toReviewDetail(
   review: LiveReview,
   reviewer: LiveReviewer | null,
   store: LiveReviewedStore | null,
-  reviewerReviewCount: number,
 ): ReviewDetail {
   return {
     review: toReview(review),
@@ -75,7 +76,7 @@ export function toReviewDetail(
     reviewer: {
       name: reviewer?.name ?? review.user?.name ?? '',
       memberSince: reviewer?.created_at ?? review.created_at,
-      reviewCount: reviewerReviewCount,
+      reviewCount: reviewer?.stats?.reviewCount ?? NO_REVIEWS,
       isPhoneVerified: Boolean(reviewer?.email_verified_at),
     },
     report: toReviewReport(findOpenReport(review)),

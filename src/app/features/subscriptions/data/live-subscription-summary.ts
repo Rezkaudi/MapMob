@@ -2,4 +2,6 @@
 export interface LiveSubscriptionSummary {
   readonly total_count: number;
   readonly active_count: number;
+  /** Asked of the server; missing today. */
+  readonly ending_soon_count?: number;
 }

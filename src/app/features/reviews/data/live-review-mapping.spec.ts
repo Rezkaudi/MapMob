@@ -37,7 +37,7 @@ describe('live review mapping', () => {
   });
 
   it("fills the drawer from the review, its writer, its place and the writer's review count", () => {
-    const detail = toReviewDetail(REPORTED, LIVE_REVIEWER, LIVE_REVIEWED_STORE, 4);
+    const detail = toReviewDetail(REPORTED, LIVE_REVIEWER, LIVE_REVIEWED_STORE);
 
     expect(detail.place).toEqual({
       referenceNumber: 18,
@@ -56,9 +56,10 @@ describe('live review mapping', () => {
   });
 
   it('keeps the drawer open when the writer or the place cannot be read', () => {
-    const detail = toReviewDetail(LIVE_REVIEW, null, null, 1);
+    const detail = toReviewDetail(LIVE_REVIEW, null, null);
 
     expect(detail.place.categoryName).toBe('');
+    expect(detail.reviewer.reviewCount).toBe(0);
     expect(detail.reviewer.name).toBe('خولة');
     expect(detail.report).toBeNull();
   });

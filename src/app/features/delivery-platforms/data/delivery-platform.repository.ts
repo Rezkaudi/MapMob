@@ -6,6 +6,7 @@ import { DeliveryPlatformPage } from '../models/delivery-platform-page';
 import { DeliveryPlatformStatus } from '../models/delivery-platform-status';
 import { DeliveryPlatformSummary } from '../models/delivery-platform-summary';
 import { LinkedStore } from '../models/linked-store';
+import { LinkedStoreFilter } from '../models/linked-store-filter';
 
 export abstract class DeliveryPlatformRepository {
   /** Whether a platform's web address is saved, so the form asks for it. */
@@ -21,5 +22,8 @@ export abstract class DeliveryPlatformRepository {
     status: DeliveryPlatformStatus,
   ): Observable<DeliveryPlatformEntry>;
   abstract deletePlatform(id: string): Observable<void>;
-  abstract getLinkedStores(id: string): Observable<readonly LinkedStore[]>;
+  abstract getLinkedStores(
+    id: string,
+    filter: LinkedStoreFilter,
+  ): Observable<readonly LinkedStore[]>;
 }

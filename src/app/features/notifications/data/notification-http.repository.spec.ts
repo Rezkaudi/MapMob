@@ -87,12 +87,13 @@ describe('NotificationHttpRepository', () => {
       ['status', 'sent'],
       ['date_from', '2026-11-01'],
       ['date_to', '2026-11-08'],
-      ['per_page', '1000'],
+      ['page', '1'],
+      ['per_page', '4'],
     ]);
     request.flush({ items: [], totalCount: 0 });
   });
 
-  it('still filters and pages here, as the server ignores the filters', async () => {
+  it('shows the server page as it comes, without filtering it here', async () => {
     const response = firstValueFrom(
       repository.getNotifications({ pageIndex: 0, pageSize: 4, status: 'scheduled' }),
     );
@@ -104,12 +105,12 @@ describe('NotificationHttpRepository', () => {
           live(),
           live({ id: 'n6', status: 'scheduled', sendAt: '2030-01-01T10:00:00+00:00' }),
         ],
-        totalCount: 2,
+        totalCount: 8,
       });
 
     const page = await response;
-    expect(page.totalCount).toBe(1);
-    expect(page.items[0].id).toBe('n6');
+    expect(page.totalCount).toBe(8);
+    expect(page.items.map((notification) => notification.id)).toEqual(['n5', 'n6']);
   });
 
   it('reads the four counts', async () => {
@@ -200,7 +201,7 @@ describe('NotificationHttpRepository', () => {
     expect(await response).toEqual({ governorates: [] });
   });
 
-  it('searches the users here, as the server ignores the search', async () => {
+  it('lets the server search the users and shows what it finds', async () => {
     const response = firstValueFrom(repository.searchRecipients('users', 'moh'));
 
     http
@@ -211,6 +212,7 @@ describe('NotificationHttpRepository', () => {
       ]);
 
     expect(await response).toEqual([
+      { id: '1', name: 'map mop', phone: '', city: 'دمشق' },
       { id: '11', name: 'mohamad', phone: '963956336101', city: 'دمشق' },
     ]);
   });
@@ -220,6 +222,7 @@ describe('NotificationHttpRepository', () => {
 
     const request = http.expectOne((candidate) => candidate.url === `${ADMIN_URL}/stores`);
     expect(request.request.params.get('search')).toBe('happy');
+    expect(request.request.params.has('per_page')).toBe(false);
     request.flush({
       items: [{ id: '4', name: 'happy store', governorate: { id: '1', name: 'دمشق' } }],
       totalCount: 1,

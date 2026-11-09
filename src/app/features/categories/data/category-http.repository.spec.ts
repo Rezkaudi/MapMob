@@ -24,10 +24,14 @@ describe('CategoryHttpRepository', () => {
   let http: HttpTestingController;
   const madeIcons: string[] = [];
 
-  function answerAll(): void {
+  function answerMainCategories(): void {
     http
       .expectOne((request) => request.url === CATEGORIES_URL && request.method === 'GET')
-      .flush({ data: [LIVE_MAIN_CATEGORY, LIVE_SUB_CATEGORY], meta: { total: 2 } });
+      .flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 1 } });
+  }
+
+  function isCountCall(request: { params: { get(name: string): string | null } }): boolean {
+    return request.params.get('per_page') === '1';
   }
 
   async function settle(): Promise<void> {
@@ -59,58 +63,62 @@ describe('CategoryHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('reads every category in one call when no filter is picked, and counts them', async () => {
-    const response = firstValueFrom(repository.getCategories({ pageIndex: 0, pageSize: 5 }));
-
-    const request = http.expectOne((candidate) => candidate.url === CATEGORIES_URL);
-    expect(request.request.params.get('per_page')).toBe('1000');
-    request.flush({ data: [LIVE_MAIN_CATEGORY, LIVE_SUB_CATEGORY], meta: { total: 2 } });
-
-    const page = await response;
-    expect(page.totalCount).toBe(2);
-    expect(page.kindCounts).toEqual({ all: 2, main: 1, sub: 1 });
-  });
-
-  it('sends the filters for the rows, and counts the tabs from an unfiltered call', async () => {
+  it('asks the server for one filtered page, the tab counts and the Arabic parent names', async () => {
     const response = firstValueFrom(
       repository.getCategories({
-        pageIndex: 0,
+        pageIndex: 1,
         pageSize: 5,
         kind: 'sub',
         search: 'وجبات',
         status: 'suspended',
-        parentId: '1',
         sort: 'newest',
       }),
     );
 
-    const [filtered, unfiltered] = http.match((call) => call.url === CATEGORIES_URL);
-    const params = filtered.request.params;
-    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+    const calls = http.match((call) => call.url === CATEGORIES_URL);
+    const rows = calls.find((call) => call.request.params.get('page') === '2');
+    const counts = calls.filter((call) => isCountCall(call.request));
+    const allCount = counts.find((call) => !call.request.params.has('parent_id'));
+    const mainCount = counts.find((call) => call.request.params.has('parent_id'));
+    const mains = calls.find(
+      (call) => call !== rows && !isCountCall(call.request) && call.request.params.has('parent_id'),
+    );
+
+    const rowParams = rows!.request.params;
+    expect(rowParams.keys().map((key) => [key, rowParams.get(key)])).toEqual([
       ['search', 'وجبات'],
       ['sort_by', 'latest'],
       ['is_active', '0'],
       ['has_parent', '1'],
-      ['parent_id', '1'],
-      ['per_page', '1000'],
+      ['page', '2'],
+      ['per_page', '5'],
     ]);
-    expect(unfiltered.request.params.keys()).toEqual(['per_page']);
-    filtered.flush({ data: [LIVE_SUB_CATEGORY], meta: { total: 1 } });
-    unfiltered.flush({ data: [LIVE_MAIN_CATEGORY, LIVE_SUB_CATEGORY], meta: { total: 2 } });
+    expect(allCount!.request.params.has('has_parent')).toBe(false);
+    expect(allCount!.request.params.get('search')).toBe('وجبات');
+    expect(mainCount!.request.params.get('parent_id')).toBe('');
+    rows!.flush({ data: [LIVE_SUB_CATEGORY], meta: { total: 6 } });
+    allCount!.flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 9 } });
+    mainCount!.flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 3 } });
+    mains!.flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 1 } });
 
     const page = await response;
+    expect(page.totalCount).toBe(6);
     expect(page.items.map((category) => category.id)).toEqual(['17']);
     expect(page.items[0].parentName).toBe('مطاعم');
-    expect(page.kindCounts).toEqual({ all: 1, main: 0, sub: 1 });
+    expect(page.kindCounts).toEqual({ all: 9, main: 3, sub: 6 });
   });
 
-  it('asks for main categories with the empty parent id the server knows', () => {
-    repository.getCategories({ pageIndex: 0, pageSize: 5, kind: 'main' }).subscribe();
+  it('shows the rows the server sends, even of another kind', async () => {
+    const response = firstValueFrom(
+      repository.getCategories({ pageIndex: 0, pageSize: 5, kind: 'sub' }),
+    );
 
-    const [filtered, unfiltered] = http.match((call) => call.url === CATEGORIES_URL);
-    expect(filtered.request.urlWithParams).toContain('parent_id=&');
-    filtered.flush({ data: [], meta: { total: 0 } });
-    unfiltered.flush({ data: [], meta: { total: 0 } });
+    const calls = http.match((call) => call.url === CATEGORIES_URL);
+    for (const call of calls) {
+      call.flush({ data: [LIVE_MAIN_CATEGORY, LIVE_SUB_CATEGORY], meta: { total: 2 } });
+    }
+
+    expect((await response).items.map((category) => category.id)).toEqual(['1', '17']);
   });
 
   it('asks the server for the main categories with an empty parent id', async () => {
@@ -132,7 +140,7 @@ describe('CategoryHttpRepository', () => {
     expect(body.get('icon')).toBe(ICON_FILE);
     expect(body.get('parent_id')).toBe('1');
     request.flush({ data: LIVE_SUB_CATEGORY });
-    answerAll();
+    answerMainCategories();
 
     expect((await response).id).toBe('17');
     expect(madeIcons).toEqual(['store']);
@@ -147,7 +155,7 @@ describe('CategoryHttpRepository', () => {
     expect(body.get('_method')).toBe('PUT');
     expect(body.has('icon')).toBe(false);
     request.flush({ data: LIVE_SUB_CATEGORY });
-    answerAll();
+    answerMainCategories();
 
     expect((await response).parentName).toBe('مطاعم');
     expect(madeIcons).toEqual([]);
@@ -159,7 +167,7 @@ describe('CategoryHttpRepository', () => {
     const request = http.expectOne({ method: 'PUT', url: `${CATEGORIES_URL}/17` });
     expect(request.request.body).toEqual({ is_active: true });
     request.flush({ data: { ...LIVE_SUB_CATEGORY, is_active: true } });
-    answerAll();
+    answerMainCategories();
 
     expect((await response).status).toBe('active');
   });

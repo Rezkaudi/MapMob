@@ -1,5 +1,4 @@
 import { PackagePlan } from '../models/package-plan';
-import { Subscription } from '../models/subscription';
 import { summarizeLiveSubscriptions } from './summarize-live-subscriptions';
 
 const PLAN: PackagePlan = {
@@ -16,25 +15,11 @@ const PLAN: PackagePlan = {
   features: [],
   isActive: true,
 };
-const ROW: Subscription = {
-  id: '1',
-  companyName: 'أ',
-  planName: 'ذهبية',
-  planTier: 'featured',
-  price: 10,
-  currencySymbol: 'ل.س',
-  startedOn: '2026-10-01',
-  endsOn: '2026-10-20',
-  status: 'active',
-};
-
 describe('summarizeLiveSubscriptions', () => {
-  it('takes the active counts from the server and the rest from the lists', () => {
+  it('takes the counts from the server summary and the plans', () => {
     const summary = summarizeLiveSubscriptions(
       [PLAN, { ...PLAN, id: '2', name: 'فضية', subscriberCount: 1, isActive: false }],
-      [ROW, { ...ROW, id: '2', endsOn: '2026-12-30' }, { ...ROW, id: '3', status: 'expired' }],
-      { total_count: 4, active_count: 3 },
-      '2026-10-14',
+      { total_count: 4, active_count: 3, ending_soon_count: 1 },
     );
 
     expect(summary).toEqual({
@@ -49,7 +34,7 @@ describe('summarizeLiveSubscriptions', () => {
 
   it('reports zeros when there is nothing yet', () => {
     expect(
-      summarizeLiveSubscriptions([], [], { total_count: 0, active_count: 0 }, '2026-10-14'),
+      summarizeLiveSubscriptions([], { total_count: 0, active_count: 0 }),
     ).toEqual({
       topPlanName: '',
       topPlanSubscriberCount: 0,

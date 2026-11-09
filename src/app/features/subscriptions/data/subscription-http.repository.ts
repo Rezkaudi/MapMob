@@ -1,63 +1,47 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map, switchMap, throwError } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { PagedResult } from '../../../core/models/paged-result';
-import { toCalendarDay } from '../../../shared/formatting/calendar-day';
+import { LivePlan } from '../../../shared/data/live-plan';
+import { toNameSlug } from '../../../shared/data/name-slug';
 import { PackagePlan } from '../models/package-plan';
 import { PlanDraft } from '../models/plan-draft';
 import { Subscription } from '../models/subscription';
 import { SubscriptionQuery } from '../models/subscription-query';
 import { SubscriptionSummary } from '../models/subscription-summary';
-import { LivePlan } from '../../../shared/data/live-plan';
-import { toNameSlug } from '../../../shared/data/name-slug';
 import { toLivePlanBody, toPackagePlan } from './live-plan-mapping';
 import { LiveSubscription } from './live-subscription';
 import { toSubscription } from './live-subscription-mapping';
 import { LiveSubscriptionSummary } from './live-subscription-summary';
-import { querySubscriptions } from './subscription-list-query';
 import { toSubscriptionFilterParams } from './subscription-query-params';
 import { SubscriptionRepository } from './subscription.repository';
 import { summarizeLiveSubscriptions } from './summarize-live-subscriptions';
 
-// An inactive plan may be left out of the list, so the saved one stands alone.
-const NO_SUBSCRIBERS = 0;
 const MONTH_DAY_COUNT = 30;
-const ALL_ROWS_PAGE_SIZE = 1000;
-const PLAN_IN_USE_MESSAGE = 'لا يمكن حذف باقة عليها اشتراكات. ألغِ اشتراكاتها أولاً.';
 
-interface LiveLists {
-  readonly plans: readonly PackagePlan[];
-  readonly subscriptions: readonly Subscription[];
-}
-
-/** Every filter is sent; the server still ignores some, so they run here too. */
 @Injectable()
 export class SubscriptionHttpRepository implements SubscriptionRepository {
   private readonly httpClient = inject(HttpClient);
-  private readonly clock = inject(CLOCK);
   private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
   private readonly plansUrl = `${this.adminUrl}/plans`;
   private readonly subscriptionsUrl = `${this.adminUrl}/subscriptions`;
 
   getSummary(): Observable<SubscriptionSummary> {
-    const today = toCalendarDay(this.clock());
     return forkJoin({
       counts: this.httpClient.get<LiveEnvelope<LiveSubscriptionSummary>>(
         `${this.subscriptionsUrl}/summary`,
       ),
-      lists: this.loadLists(),
-    }).pipe(
-      map(({ counts, lists }) =>
-        summarizeLiveSubscriptions(lists.plans, lists.subscriptions, counts.data, today),
-      ),
-    );
+      plans: this.getPlans(),
+    }).pipe(map(({ counts, plans }) => summarizeLiveSubscriptions(plans, counts.data)));
   }
 
   getPlans(): Observable<readonly PackagePlan[]> {
-    return this.loadLists().pipe(map(({ plans }) => plans));
+    return this.readLivePlans().pipe(
+      map((plans) => plans.map((plan) => toPackagePlan(plan, plans))),
+    );
   }
 
   // The panel sells monthly plans, so a new plan runs for a month.
@@ -68,7 +52,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
         slug: toNameSlug(draft.name),
         duration_days: MONTH_DAY_COUNT,
       })
-      .pipe(switchMap(({ data }) => this.withSubscribers(data)));
+      .pipe(switchMap(({ data }) => this.withPlanList(data)));
   }
 
   updatePlan(id: string, draft: PlanDraft): Observable<PackagePlan> {
@@ -79,26 +63,29 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
     return this.savePlan(id, { is_active: isActive });
   }
 
-  // The server answers 500 when a plan still has subscriptions, so that case stops here.
   deletePlan(id: string): Observable<void> {
-    return this.getPlans().pipe(
-      switchMap((plans) => {
-        const plan = plans.find((candidate) => candidate.id === id);
-        if (plan && plan.subscriberCount > 0) {
-          return throwError(() => new Error(PLAN_IN_USE_MESSAGE));
-        }
-        return this.httpClient.delete(`${this.plansUrl}/${id}`).pipe(map(() => undefined));
-      }),
-    );
+    return this.httpClient.delete(`${this.plansUrl}/${id}`).pipe(map(() => undefined));
   }
 
   cancelSubscription(id: string): Observable<void> {
     return this.httpClient.delete(`${this.subscriptionsUrl}/${id}`).pipe(map(() => undefined));
   }
 
+  // Rows name their plan by id, so the plans give each row its tier.
   getSubscriptions(query: SubscriptionQuery): Observable<PagedResult<Subscription>> {
-    return this.loadLists(toSubscriptionFilterParams(query)).pipe(
-      map(({ subscriptions }) => querySubscriptions(subscriptions, query)),
+    return this.readLivePlans().pipe(
+      switchMap((plans) =>
+        this.httpClient
+          .get<PagedResult<LiveSubscription>>(this.subscriptionsUrl, {
+            params: withPageNumber(toSubscriptionFilterParams(query), query),
+          })
+          .pipe(
+            map((page) => ({
+              items: page.items.map((row) => toSubscription(row, plans)),
+              totalCount: page.totalCount,
+            })),
+          ),
+      ),
     );
   }
 
@@ -112,37 +99,22 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   private savePlan(id: string, body: Record<string, unknown>): Observable<PackagePlan> {
     return this.httpClient
       .put<LiveEnvelope<LivePlan>>(`${this.plansUrl}/${id}`, body)
-      .pipe(switchMap(({ data }) => this.withSubscribers(data)));
+      .pipe(switchMap(({ data }) => this.withPlanList(data)));
   }
 
-  private withSubscribers(saved: LivePlan): Observable<PackagePlan> {
+  // An inactive plan may be left out of the list, so the saved one stands alone.
+  private withPlanList(saved: LivePlan): Observable<PackagePlan> {
     return this.getPlans().pipe(
       map(
         (plans) =>
-          plans.find((plan) => plan.id === String(saved.id)) ??
-          toPackagePlan(saved, [saved], NO_SUBSCRIBERS),
+          plans.find((plan) => plan.id === String(saved.id)) ?? toPackagePlan(saved, [saved]),
       ),
     );
   }
 
-  private loadLists(filters = new HttpParams()): Observable<LiveLists> {
-    return forkJoin({
-      plans: this.httpClient.get<LiveEnvelope<readonly LivePlan[]>>(this.plansUrl),
-      subscriptions: this.httpClient.get<PagedResult<LiveSubscription>>(this.subscriptionsUrl, {
-        params: filters.set('per_page', ALL_ROWS_PAGE_SIZE),
-      }),
-    }).pipe(map(({ plans, subscriptions }) => toLiveLists(plans.data, subscriptions.items)));
+  private readLivePlans(): Observable<readonly LivePlan[]> {
+    return this.httpClient
+      .get<LiveEnvelope<readonly LivePlan[]>>(this.plansUrl)
+      .pipe(map(({ data }) => data));
   }
-}
-
-function toLiveLists(
-  livePlans: readonly LivePlan[],
-  liveSubscriptions: readonly LiveSubscription[],
-): LiveLists {
-  const subscriptions = liveSubscriptions.map((row) => toSubscription(row, livePlans));
-  const activeRows = liveSubscriptions.filter((row) => row.status === 'active');
-  const plans = livePlans.map((plan) =>
-    toPackagePlan(plan, livePlans, activeRows.filter((row) => row.plan.id === plan.id).length),
-  );
-  return { plans, subscriptions };
 }

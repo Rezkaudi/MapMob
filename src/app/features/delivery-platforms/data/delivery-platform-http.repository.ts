@@ -5,6 +5,8 @@ import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { toLiveFilterParams } from '../../../core/http/live-filter-params';
 import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { LivePage, toPagedResult } from '../../../core/http/live-page';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { LiveMetaPage, readAllMetaPages } from '../../../core/http/read-all-meta-pages';
 import { LiveDeliveryPlatform } from '../../../shared/data/live-delivery-platform';
 import { LiveStoreDeliveryLink } from '../../../shared/data/live-store-delivery-link';
@@ -15,7 +17,7 @@ import { DeliveryPlatformPage } from '../models/delivery-platform-page';
 import { DeliveryPlatformStatus } from '../models/delivery-platform-status';
 import { DeliveryPlatformSummary } from '../models/delivery-platform-summary';
 import { LinkedStore } from '../models/linked-store';
-import { queryDeliveryPlatforms } from './delivery-platform-list-query';
+import { LinkedStoreFilter } from '../models/linked-store-filter';
 import {
   toDeliveryPlatformEntry,
   toDeliveryPlatformSummary,
@@ -30,7 +32,6 @@ interface LiveLinkedStoreRow {
   readonly id: number | string;
 }
 
-/** The search and sort are sent, but the server ignores them, so every page is queried here. */
 @Injectable()
 export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepository {
   private readonly httpClient = inject(HttpClient);
@@ -39,11 +40,11 @@ export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepositor
 
   getPlatforms(query: ListQuery): Observable<DeliveryPlatformPage> {
     const filters = toLiveFilterParams({ search: query.search, sort_by: toLiveSort(query.sort) });
-    return readAllMetaPages((page) =>
-      this.httpClient.get<LiveMetaPage<LiveDeliveryPlatform>>(this.platformsUrl, {
-        params: filters.set('page', page),
-      }),
-    ).pipe(map((rows) => queryDeliveryPlatforms(rows.map(toDeliveryPlatformEntry), query)));
+    return this.httpClient
+      .get<LivePage<LiveDeliveryPlatform>>(this.platformsUrl, {
+        params: withPageNumber(filters, query),
+      })
+      .pipe(map((page) => toPagedResult(page, toDeliveryPlatformEntry)));
   }
 
   getSummary(): Observable<DeliveryPlatformSummary> {
@@ -90,11 +91,15 @@ export class DeliveryPlatformHttpRepository implements DeliveryPlatformRepositor
     return this.httpClient.delete(`${this.platformsUrl}/${id}`).pipe(map(() => undefined));
   }
 
-  /** The platform's list names the stores; each store's own page and links fill the row. */
-  getLinkedStores(id: string): Observable<readonly LinkedStore[]> {
+  /** The dialog has no pages, so it reads them all; each store's own page and links fill the row. */
+  getLinkedStores(id: string, filter: LinkedStoreFilter): Observable<readonly LinkedStore[]> {
+    const filters = toLiveFilterParams({
+      search: filter.search.trim(),
+      category_id: filter.categoryId,
+    });
     return readAllMetaPages((page) =>
       this.httpClient.get<LiveMetaPage<LiveLinkedStoreRow>>(`${this.platformsUrl}/${id}/stores`, {
-        params: { page },
+        params: filters.set('page', page),
       }),
     ).pipe(
       switchMap((rows) =>

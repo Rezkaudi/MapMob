@@ -50,21 +50,34 @@ describe('LinkedStoresStore', () => {
     expect(store.isLoading()).toBe(false);
   });
 
-  it('filters by search and category without asking the server again', () => {
-    let requestCount = 0;
-    const store = createStore(() => {
-      requestCount++;
-      return of([CITY, CORNER]);
+  it('asks the server again on each search or category and shows what it sends', () => {
+    const filters: unknown[] = [];
+    const store = createStore((_id, filter) => {
+      filters.push(filter);
+      return of(filter.search ? [] : [CITY, CORNER]);
     });
     store.open(TALABAT);
 
     store.setCategory('category-2');
-    expect(store.rows().map((row) => row.store.id)).toEqual(['place-2']);
+    expect(store.rows().map((row) => row.store.id)).toEqual(['place-1', 'place-2']);
     store.setSearch('المدينة');
 
+    expect(filters).toEqual([
+      { search: '', categoryId: null },
+      { search: '', categoryId: 'category-2' },
+      { search: 'المدينة', categoryId: 'category-2' },
+    ]);
     expect(store.rows()).toEqual([]);
     expect(store.emptyMessage()).toBe('لا توجد نتائج مطابقة لبحثك');
-    expect(requestCount).toBe(1);
+  });
+
+  it('keeps the category choices of the first, unfiltered list', () => {
+    const store = createStore((_id, filter) => of(filter.categoryId ? [CORNER] : [CITY, CORNER]));
+    store.open(TALABAT);
+
+    store.setCategory('category-2');
+
+    expect(store.categoryOptions()).toHaveLength(2);
   });
 
   it('says when a platform has no linked stores yet', () => {

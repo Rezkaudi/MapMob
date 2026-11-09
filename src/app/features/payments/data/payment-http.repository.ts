@@ -1,9 +1,11 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
+import { LivePaginationPage } from '../../../core/http/live-pagination-page';
 import { PagedResult } from '../../../core/models/paged-result';
 import { LivePlan } from '../../../shared/data/live-plan';
 import { toCalendarDay } from '../../../shared/formatting/calendar-day';
@@ -23,15 +25,15 @@ import {
   toPaymentDetail,
   toPaymentFormOptions,
 } from './live-payment-mapping';
+import { LiveOfferStoreOptions } from './live-offer-store-options';
 import { LivePaymentStore } from './live-payment-store';
 import { LivePaymentSubscription } from './live-payment-subscription';
-import { queryPayments } from './payment-list-query';
+import { LivePaymentSummary } from './live-payment-summary';
 import { toPaymentFilterParams } from './payment-query-params';
 import { PaymentRepository } from './payment.repository';
-import { summarizeLivePayments } from './summarize-live-payments';
 
-// One big page brings every row, so the panel's own filters and cards can use them all.
-const ALL_ROWS_PAGE_SIZE = 1000;
+const YEAR_MONTH_LENGTH = 7;
+const FIRST_DAY_OF_MONTH = '01';
 
 interface LiveItems<T> {
   readonly items: readonly T[];
@@ -45,14 +47,26 @@ export class PaymentHttpRepository implements PaymentRepository {
   private readonly paymentsUrl = `${this.adminUrl}/payments`;
 
   getPayments(query: PaymentQuery): Observable<PagedResult<Payment>> {
-    return this.loadAll(toPaymentFilterParams(query)).pipe(
-      map((rows) => queryPayments(rows.map(toPayment), query)),
-    );
+    return this.httpClient
+      .get<LivePaginationPage<LivePayment>>(this.paymentsUrl, {
+        params: withPageNumber(toPaymentFilterParams(query), query),
+      })
+      .pipe(map((page) => ({ items: page.data.map(toPayment), totalCount: page.pagination.total })));
   }
 
   getSummary(): Observable<PaymentSummary> {
-    const today = toCalendarDay(this.clock());
-    return this.loadAll().pipe(map((rows) => summarizeLivePayments(rows, today)));
+    const monthStart = `${toCalendarDay(this.clock()).slice(0, YEAR_MONTH_LENGTH)}-${FIRST_DAY_OF_MONTH}`;
+    return forkJoin({
+      allTime: this.readSummary(),
+      thisMonth: this.readSummary(monthStart),
+    }).pipe(
+      map(({ allTime, thisMonth }) => ({
+        transactionCount: allTime.total_count,
+        pendingCount: allTime.pending_count,
+        cumulativeTotal: Number(allTime.total_amount),
+        monthTotal: Number(thisMonth.total_amount),
+      })),
+    );
   }
 
   getPaymentDetail(id: string): Observable<PaymentDetail> {
@@ -72,17 +86,20 @@ export class PaymentHttpRepository implements PaymentRepository {
 
   getPaymentFormOptions(): Observable<PaymentFormOptions> {
     return forkJoin({
-      stores: this.httpClient.get<LiveItems<{ id: string; name: string }>>(
-        `${this.adminUrl}/stores`,
-        { params: { per_page: ALL_ROWS_PAGE_SIZE } },
+      storeOptions: this.httpClient.get<LiveEnvelope<LiveOfferStoreOptions>>(
+        `${this.adminUrl}/offers/formoptions`,
       ),
       subscriptions: this.httpClient.get<LiveItems<LivePaymentSubscription>>(
         `${this.adminUrl}/subscriptions`,
       ),
       plans: this.httpClient.get<LiveEnvelope<readonly LivePlan[]>>(`${this.adminUrl}/plans`),
     }).pipe(
-      map(({ stores, subscriptions, plans }) =>
-        toPaymentFormOptions(stores.items, subscriptions.items, plans.data),
+      map(({ storeOptions, subscriptions, plans }) =>
+        toPaymentFormOptions(
+          storeOptions.data.stores.map((store) => ({ id: String(store.id), name: store.name })),
+          subscriptions.items,
+          plans.data,
+        ),
       ),
     );
   }
@@ -125,11 +142,10 @@ export class PaymentHttpRepository implements PaymentRepository {
     });
   }
 
-  // The server still ignores some filters, so the rows are filtered here too.
-  private loadAll(filters = new HttpParams()): Observable<readonly LivePayment[]> {
+  private readSummary(dateFrom?: string): Observable<LivePaymentSummary> {
     return this.httpClient
-      .get<LiveEnvelope<readonly LivePayment[]>>(this.paymentsUrl, {
-        params: filters.set('per_page', ALL_ROWS_PAGE_SIZE),
+      .get<LiveEnvelope<LivePaymentSummary>>(`${this.paymentsUrl}/summary`, {
+        params: dateFrom ? { date_from: dateFrom } : {},
       })
       .pipe(map(({ data }) => data));
   }

@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { toLiveFilterParams } from '../../../core/http/live-filter-params';
 import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { LiveReference } from '../../../core/http/live-reference';
 import { PagedResult } from '../../../core/models/paged-result';
 import { AppNotification } from '../models/notification';
@@ -23,10 +24,7 @@ import {
   toLiveNotificationId,
   toNotificationDetail,
 } from './live-notification-mapping';
-import { queryNotifications } from './notification-list-query';
 import { NotificationRepository } from './notification.repository';
-
-const ALL_ROWS_PAGE_SIZE = 1000;
 
 interface LiveRecipient {
   readonly id: string;
@@ -41,7 +39,6 @@ interface LivePlaceRow {
   readonly governorate: LiveReference | null;
 }
 
-/** Every filter is sent; the server ignores them today, so the list is queried here too. */
 @Injectable()
 export class NotificationHttpRepository implements NotificationRepository {
   private readonly httpClient = inject(HttpClient);
@@ -57,11 +54,17 @@ export class NotificationHttpRepository implements NotificationRepository {
       status: query.status,
       date_from: query.sentFrom,
       date_to: query.sentTo,
-      per_page: ALL_ROWS_PAGE_SIZE,
     });
     return this.httpClient
-      .get<PagedResult<LiveNotification>>(this.notificationsUrl, { params })
-      .pipe(map((page) => queryNotifications(page.items.map(toAppNotification), query)));
+      .get<PagedResult<LiveNotification>>(this.notificationsUrl, {
+        params: withPageNumber(params, query),
+      })
+      .pipe(
+        map((page) => ({
+          items: page.items.map(toAppNotification),
+          totalCount: page.totalCount,
+        })),
+      );
   }
 
   getSummary(): Observable<NotificationSummary> {
@@ -147,23 +150,18 @@ export class NotificationHttpRepository implements NotificationRepository {
   }
 
   private searchUsers(search: string): Observable<readonly NotificationRecipient[]> {
-    const term = search.trim().toLowerCase();
     return this.httpClient
       .get<readonly LiveRecipient[]>(`${this.notificationsUrl}/recipients`, {
         params: { audience: 'users', search },
       })
       .pipe(
         map((people) =>
-          people
-            .filter((person) =>
-              [person.name, person.phone ?? ''].some((text) => text.toLowerCase().includes(term)),
-            )
-            .map((person) => ({
-              id: person.id,
-              name: person.name,
-              phone: person.phone ?? '',
-              city: person.city ?? '',
-            })),
+          people.map((person) => ({
+            id: person.id,
+            name: person.name,
+            phone: person.phone ?? '',
+            city: person.city ?? '',
+          })),
         ),
       );
   }
@@ -171,7 +169,7 @@ export class NotificationHttpRepository implements NotificationRepository {
   private searchPlaces(search: string): Observable<readonly NotificationRecipient[]> {
     return this.httpClient
       .get<PagedResult<LivePlaceRow>>(`${this.adminUrl}/stores`, {
-        params: { search, per_page: ALL_ROWS_PAGE_SIZE },
+        params: { search },
       })
       .pipe(
         map((page) =>

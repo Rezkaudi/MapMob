@@ -1,22 +1,19 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
-import { LiveMetaPage, readAllMetaPages } from '../../../core/http/read-all-meta-pages';
-import { paginate } from '../../../shared/lists/paginate';
+import { LivePage } from '../../../core/http/live-page';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { GameDetail } from '../models/game-detail';
 import { GameDraft } from '../models/game-draft';
 import { GameEntry } from '../models/game-entry';
 import { GamePage } from '../models/game-page';
 import { GameQuery } from '../models/game-query';
 import { GameSummary } from '../models/game-summary';
-import { GameWinner } from '../models/game-winner';
 import { PrizeDeliveryStatus } from '../models/prize-delivery-status';
 import { WinnerPage } from '../models/winner-page';
 import { WinnerQuery } from '../models/winner-query';
-import { matchGames, matchWinners } from './game-list-query';
 import { toGameListParams, toWinnerListParams } from './game-query-params';
 import { GameRepository } from './game.repository';
 import { LiveGame } from './live-game';
@@ -26,63 +23,42 @@ import { toGameSummary } from './live-game-summary-mapping';
 import { LiveWinner } from './live-winner';
 import { toGameWinner } from './live-winner-mapping';
 
-const ALL_ROWS_PAGE_SIZE = 100;
+const NO_DELIVERED_PRIZES = 0;
+const NEXT_GAME_QUERY: GameQuery = { pageIndex: 0, pageSize: 1, status: 'scheduled', sort: 'oldest' };
 
-// A winner row names its game only, so the games list fills in the round and prize.
-function toGameWinners(
-  winners: readonly LiveWinner[],
-  games: readonly GameEntry[],
-): readonly GameWinner[] {
-  return winners.map((winner) => toGameWinner(winner, games));
+function gameIdOf(winner: LiveWinner): string {
+  return String(winner.game?.id ?? winner.game_id ?? '');
 }
 
-function countDeliveredPrizes(winners: readonly GameWinner[], gameId: string): number {
-  return winners.filter(
-    (winner) => winner.game.id === gameId && winner.deliveryStatus === 'delivered',
-  ).length;
-}
-
-/** Filters are sent, but each list is still read whole and queried here. */
 @Injectable()
 export class GameHttpRepository implements GameRepository {
   private readonly httpClient = inject(HttpClient);
-  private readonly clock = inject(CLOCK);
   private readonly gamesUrl = `${inject(API_BASE_URL)}/admin/games`;
   private readonly winnersUrl = `${this.gamesUrl}/winners`;
 
   getGames(query: GameQuery): Observable<GamePage> {
-    return this.loadGames(toGameListParams(query)).pipe(
-      map((games) => paginate(matchGames(games, query), query.pageIndex, query.pageSize)),
-    );
+    return this.httpClient
+      .get<LivePage<LiveGame>>(this.gamesUrl, {
+        params: withPageNumber(toGameListParams(query), query),
+      })
+      .pipe(map((page) => ({ items: page.data.map(toGameEntry), totalCount: page.meta.total })));
   }
 
   getSummary(): Observable<GameSummary> {
     return forkJoin({
       counts: this.httpClient.get<LiveEnvelope<LiveGameSummary>>(`${this.gamesUrl}/summary`),
-      games: this.loadGames(),
-      winners: this.readAll<LiveWinner>(this.winnersUrl),
+      nextGames: this.getGames(NEXT_GAME_QUERY),
     }).pipe(
-      map(({ counts, games, winners }) =>
-        toGameSummary(counts.data, games, toGameWinners(winners, games), this.clock()),
-      ),
+      map(({ counts, nextGames }) => toGameSummary(counts.data, nextGames.items[0] ?? null)),
     );
   }
 
   getGameDetail(id: string): Observable<GameDetail> {
-    return forkJoin({
-      game: this.httpClient.get<LiveEnvelope<LiveGame>>(`${this.gamesUrl}/${id}`),
-      winners: this.readAll<LiveWinner>(this.winnersUrl),
-    }).pipe(
-      map(({ game, winners }) =>
-        toGameDetail(
-          game.data,
-          countDeliveredPrizes(
-            winners.map((winner) => toGameWinner(winner, [])),
-            id,
-          ),
-        ),
-      ),
-    );
+    return this.httpClient
+      .get<LiveEnvelope<LiveGame>>(`${this.gamesUrl}/${id}`)
+      .pipe(
+        map(({ data }) => toGameDetail(data, data.deliveredPrizeCount ?? NO_DELIVERED_PRIZES)),
+      );
   }
 
   createGame(draft: GameDraft): Observable<GameEntry> {
@@ -102,18 +78,20 @@ export class GameHttpRepository implements GameRepository {
   }
 
   getWinners(query: WinnerQuery): Observable<WinnerPage> {
-    return forkJoin({
-      winners: this.readAll<LiveWinner>(this.winnersUrl, toWinnerListParams(query)),
-      games: this.loadGames(),
-    }).pipe(
-      map(({ winners, games }) =>
-        paginate(
-          matchWinners(toGameWinners(winners, games), query),
-          query.pageIndex,
-          query.pageSize,
+    return this.httpClient
+      .get<LivePage<LiveWinner>>(this.winnersUrl, {
+        params: withPageNumber(toWinnerListParams(query), query),
+      })
+      .pipe(
+        switchMap((page) =>
+          this.readGamesOf(page.data).pipe(
+            map((games) => ({
+              items: page.data.map((winner) => toGameWinner(winner, games)),
+              totalCount: page.meta.total,
+            })),
+          ),
         ),
-      ),
-    );
+      );
   }
 
   setPrizeDelivery(winnerId: string, deliveryStatus: PrizeDeliveryStatus): Observable<void> {
@@ -129,17 +107,18 @@ export class GameHttpRepository implements GameRepository {
     });
   }
 
-  private loadGames(filters = new HttpParams()): Observable<readonly GameEntry[]> {
-    return this.readAll<LiveGame>(this.gamesUrl, filters).pipe(
-      map((games) => games.map(toGameEntry)),
-    );
-  }
-
-  private readAll<T>(url: string, filters = new HttpParams()): Observable<readonly T[]> {
-    return readAllMetaPages((page) =>
-      this.httpClient.get<LiveMetaPage<T>>(url, {
-        params: filters.set('page', page).set('per_page', ALL_ROWS_PAGE_SIZE),
-      }),
+  // A winner row names its game only, so the page's own games fill in the round and prize.
+  private readGamesOf(winners: readonly LiveWinner[]): Observable<readonly GameEntry[]> {
+    const gameIds = [...new Set(winners.map(gameIdOf).filter(Boolean))];
+    if (gameIds.length === 0) {
+      return of([]);
+    }
+    return forkJoin(
+      gameIds.map((id) =>
+        this.httpClient
+          .get<LiveEnvelope<LiveGame>>(`${this.gamesUrl}/${id}`)
+          .pipe(map(({ data }) => toGameEntry(data))),
+      ),
     );
   }
 }

@@ -15,23 +15,15 @@ import { LiveUserPage } from './live-user-page';
 import { toUserFilterParams, toUserQueryParams } from './user-query-params';
 import { UserRepository } from './user.repository';
 
-// The server ignores account_type today, so rows of another type are dropped here.
-function keepAccountType(page: LiveUserPage, query: UserQuery): PagedResult<AppUser> {
-  const users = page.data.map(toAppUser);
-  const kept = users.filter((user) => !query.accountType || user.accountType === query.accountType);
-  return {
-    items: kept,
-    totalCount: kept.length === users.length ? page.meta.totalCount : kept.length,
-  };
-}
-
 @Injectable()
 export class UserHttpRepository implements UserRepository {
   private readonly httpClient = inject(HttpClient);
   private readonly usersUrl = `${inject(API_BASE_URL)}/admin/users`;
 
   getUsers(query: UserQuery): Observable<PagedResult<AppUser>> {
-    return this.getPage(query).pipe(map((page) => keepAccountType(page, query)));
+    return this.getPage(query).pipe(
+      map((page) => ({ items: page.data.map(toAppUser), totalCount: page.meta.totalCount })),
+    );
   }
 
   getSummary(): Observable<UserSummary> {

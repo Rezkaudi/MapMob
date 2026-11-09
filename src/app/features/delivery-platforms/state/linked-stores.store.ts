@@ -6,7 +6,9 @@ import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { DeliveryPlatformRepository } from '../data/delivery-platform.repository';
 import { DeliveryPlatformEntry } from '../models/delivery-platform-entry';
 import { LinkedStore } from '../models/linked-store';
-import { filterLinkedStores, listStoreCategories } from './linked-store-filter';
+import { SelectOption } from '../../../shared/ui/select-field/select-option';
+import { LinkedStoreFilter } from '../models/linked-store-filter';
+import { listStoreCategories } from './linked-store-filter';
 import { buildLinkedStoreRows } from './linked-store-rows';
 
 const NO_STORES_MESSAGE = 'لا توجد متاجر مرتبطة بهذه المنصة بعد';
@@ -17,6 +19,7 @@ interface LinkedStoresState {
   readonly stores: readonly LinkedStore[];
   readonly search: string;
   readonly categoryId: string | null;
+  readonly categoryOptions: readonly SelectOption[];
 }
 
 const initialState: LinkedStoresState = {
@@ -24,30 +27,37 @@ const initialState: LinkedStoresState = {
   stores: [],
   search: '',
   categoryId: null,
+  categoryOptions: [],
 };
 
-/** The "عرض المتاجر المرتبطة" dialog: one platform's stores, searched in place. */
+/** The "عرض المتاجر المرتبطة" dialog: one platform's stores, searched by the server. */
 export const LinkedStoresStore = signalStore(
   withState(initialState),
   withRequestStatus(),
-  withComputed(({ stores, search, categoryId }) => {
-    const visibleStores = computed(() =>
-      filterLinkedStores(stores(), { search: search(), categoryId: categoryId() }),
-    );
-    return {
-      rows: computed(() => buildLinkedStoreRows(visibleStores())),
-      categoryOptions: computed(() => listStoreCategories(stores())),
-      emptyMessage: computed(() => (stores().length ? NO_MATCHES_MESSAGE : NO_STORES_MESSAGE)),
-    };
-  }),
+  withComputed(({ stores, search, categoryId }) => ({
+    rows: computed(() => buildLinkedStoreRows(stores())),
+    emptyMessage: computed(() =>
+      search().trim() || categoryId() ? NO_MATCHES_MESSAGE : NO_STORES_MESSAGE,
+    ),
+  })),
   withMethods((store, repository = inject(DeliveryPlatformRepository)) => {
+    const currentFilter = (): LinkedStoreFilter => ({
+      search: store.search(),
+      categoryId: store.categoryId(),
+    });
+
+    // The first list has no filter, so it holds every category the dialog can offer.
     const loadStores = rxMethod<string>(
       pipe(
         tap(() => store.setLoading()),
         switchMap((platformId) =>
-          repository.getLinkedStores(platformId).pipe(
+          repository.getLinkedStores(platformId, currentFilter()).pipe(
             tap((stores) => {
-              patchState(store, { stores });
+              const isFirstList = store.categoryOptions().length === 0;
+              patchState(store, {
+                stores,
+                ...(isFirstList ? { categoryOptions: listStoreCategories(stores) } : {}),
+              });
               store.setLoaded();
             }),
             catchError((error: Error) => {
@@ -58,6 +68,13 @@ export const LinkedStoresStore = signalStore(
         ),
       ),
     );
+
+    const reload = (): void => {
+      const platform = store.platform();
+      if (platform) {
+        loadStores(platform.id);
+      }
+    };
 
     return {
       open(platform: DeliveryPlatformEntry): void {
@@ -70,9 +87,11 @@ export const LinkedStoresStore = signalStore(
       },
       setSearch(search: string): void {
         patchState(store, { search });
+        reload();
       },
       setCategory(categoryId: string | null): void {
         patchState(store, { categoryId });
+        reload();
       },
     };
   }),

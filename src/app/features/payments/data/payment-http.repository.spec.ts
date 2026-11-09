@@ -20,12 +20,6 @@ describe('PaymentHttpRepository', () => {
   let repository: PaymentHttpRepository;
   let http: HttpTestingController;
 
-  function answerList(): void {
-    http
-      .expectOne((request) => request.url === PAYMENTS_URL && request.method === 'GET')
-      .flush({ data: [LIVE_PAYMENT, CASH_IN_SYP], pagination: { total: 2 } });
-  }
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -42,18 +36,22 @@ describe('PaymentHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('reads all payments in one call and filters and pages them here', async () => {
+  it('asks the server for one filtered page and shows it as it comes', async () => {
     const response = firstValueFrom(
-      repository.getPayments({ pageIndex: 0, pageSize: 10, currency: 'SYP' }),
+      repository.getPayments({ pageIndex: 1, pageSize: 10, currency: 'SYP' }),
     );
 
     const request = http.expectOne((candidate) => candidate.url === PAYMENTS_URL);
-    expect(request.request.params.get('per_page')).toBe('1000');
-    request.flush({ data: [LIVE_PAYMENT, CASH_IN_SYP], pagination: { total: 2 } });
+    expect(request.request.params.get('page')).toBe('2');
+    expect(request.request.params.get('per_page')).toBe('10');
+    request.flush({ data: [LIVE_PAYMENT, CASH_IN_SYP], pagination: { total: 12 } });
 
     const page = await response;
-    expect(page.totalCount).toBe(1);
-    expect(page.items[0].companyName).toBe('حلب');
+    expect(page.totalCount).toBe(12);
+    expect(page.items.map((payment) => payment.companyName)).toEqual([
+      LIVE_PAYMENT.store.name,
+      'حلب',
+    ]);
   });
 
   it('sends every picked filter in the list request', () => {
@@ -80,7 +78,8 @@ describe('PaymentHttpRepository', () => {
       ['currency', 'SYP'],
       ['date_from', '2026-11-01'],
       ['date_to', '2026-11-08'],
-      ['per_page', '1000'],
+      ['page', '1'],
+      ['per_page', '10'],
     ]);
     request.flush({ data: [], pagination: { total: 0 } });
   });
@@ -94,11 +93,27 @@ describe('PaymentHttpRepository', () => {
     request.flush({ data: [], pagination: { total: 0 } });
   });
 
-  it('counts the summary from the list', async () => {
+  it('reads the cards from the summary route, the month card from this month on', async () => {
     const response = firstValueFrom(repository.getSummary());
-    answerList();
 
-    expect((await response).transactionCount).toBe(2);
+    const summaries = http.match((candidate) => candidate.url === `${PAYMENTS_URL}/summary`);
+    expect(summaries.map((request) => request.request.params.get('date_from'))).toEqual([
+      null,
+      '2026-10-01',
+    ]);
+    summaries[0].flush({
+      data: { total_amount: '900.50', total_count: 7, paid_count: 5, pending_count: 2 },
+    });
+    summaries[1].flush({
+      data: { total_amount: '120.00', total_count: 2, paid_count: 2, pending_count: 0 },
+    });
+
+    expect(await response).toEqual({
+      transactionCount: 7,
+      pendingCount: 2,
+      cumulativeTotal: 900.5,
+      monthTotal: 120,
+    });
   });
 
   it('reads one payment with its store and subscription', async () => {
@@ -131,14 +146,15 @@ describe('PaymentHttpRepository', () => {
     const response = firstValueFrom(repository.getPaymentFormOptions());
 
     http
-      .expectOne((request) => request.url === `${BASE_URL}/admin/stores`)
-      .flush({ items: [{ id: '1', name: 'متجر دمشق' }], totalCount: 1 });
+      .expectOne(`${BASE_URL}/admin/offers/formoptions`)
+      .flush({ data: { stores: [{ id: 1, name: 'متجر دمشق' }] } });
     http
       .expectOne(`${BASE_URL}/admin/subscriptions`)
       .flush({ items: [LIVE_PAYMENT_SUBSCRIPTION], totalCount: 1 });
     http.expectOne(`${BASE_URL}/admin/plans`).flush({ data: [LIVE_GOLD_PLAN] });
 
     const options = await response;
+    expect(options.merchants[0].id).toBe('1');
     expect(options.merchants[0].currentPlanName).toBe('الباقة الذهبية');
     expect(options.plans[0].monthlyPrice).toBe(150000);
   });

@@ -183,9 +183,13 @@ export const DELIVERY_PLATFORMS_FEATURE: ApiFeature = {
       method: 'GET',
       path: '/delivery-platforms/{id}/stores',
       summary: 'The places linked to one platform, for the "عرض المتاجر المرتبطة" dialog.',
+      queryParams: [
+        field('search', 'string', 'Matches the place, governorate or area name.'),
+        field('categoryId', 'string', 'Only places in this main category.'),
+      ],
       response: {
         status: 200,
-        description: `Not paged: the dialog searches and filters by category itself. ${LINKED} Newest link first.`,
+        description: `Not paged: the dialog has no pages. The search and the category are applied here. ${LINKED} Newest link first.`,
         example: LINKED_STORES,
         fields: [
           field('[].id / name', 'string', 'The place.'),

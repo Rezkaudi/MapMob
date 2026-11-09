@@ -17,11 +17,9 @@ function toLiveLimit(limit: number | null): number {
   return limit ?? UNLIMITED_LIMIT;
 }
 
-export function toPackagePlan(
-  plan: LivePlan,
-  allPlans: readonly LivePlan[],
-  subscriberCount: number,
-): PackagePlan {
+const NO_SUBSCRIBERS = 0;
+
+export function toPackagePlan(plan: LivePlan, allPlans: readonly LivePlan[]): PackagePlan {
   return {
     id: String(plan.id),
     name: plan.name,
@@ -31,7 +29,7 @@ export function toPackagePlan(
     monthlyPrice: plan.price,
     yearlyPrice: null,
     currency: toCurrencyCode(plan.currency_code),
-    subscriberCount,
+    subscriberCount: plan.subscriberCount ?? NO_SUBSCRIBERS,
     limits: {
       adsPerMonth: toLimit(plan.max_ads),
       activeOffers: toLimit(plan.max_offers),

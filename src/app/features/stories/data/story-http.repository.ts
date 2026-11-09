@@ -1,12 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { toLiveFilterParams } from '../../../core/http/live-filter-params';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
-import { paginate } from '../../../shared/lists/paginate';
-import { StoryStatus } from '../../../shared/models/story-status';
-import { StoryEntry } from '../models/story-entry';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
+import { LivePaginationPage } from '../../../core/http/live-pagination-page';
 import { StoryExportRequest } from '../models/story-export-request';
 import { StoryPage } from '../models/story-page';
 import { StoryQuery } from '../models/story-query';
@@ -15,19 +14,22 @@ import { LiveStory } from './live-story';
 import { LiveStorySummary, toStoryEntry, toStorySummary } from './live-story-mapping';
 import { StoryRepository } from './story.repository';
 
-const ALL_ROWS_PAGE_SIZE = 1000;
-// The list without a status leaves some stories out, so "all" reads each status.
-const LISTABLE_STATUSES: readonly StoryStatus[] = ['active', 'expired', 'hidden'];
-
 @Injectable()
 export class StoryHttpRepository implements StoryRepository {
   private readonly httpClient = inject(HttpClient);
   private readonly storiesUrl = `${inject(API_BASE_URL)}/admin/stories`;
 
   getStories(query: StoryQuery): Observable<StoryPage> {
-    return this.loadMatching(query).pipe(
-      map((stories) => paginate(stories, query.pageIndex, query.pageSize)),
-    );
+    return this.httpClient
+      .get<LivePaginationPage<LiveStory>>(this.storiesUrl, {
+        params: withPageNumber(this.toFilters(query), query),
+      })
+      .pipe(
+        map((page) => ({
+          items: page.data.map(toStoryEntry),
+          totalCount: page.pagination.total,
+        })),
+      );
   }
 
   getSummary(): Observable<StorySummary> {
@@ -48,31 +50,14 @@ export class StoryHttpRepository implements StoryRepository {
   }
 
   exportStories({ query, ids }: StoryExportRequest): Observable<Blob> {
-    let params = toLiveFilterParams({ status: query.status, search: query.search?.trim() });
+    let params = this.toFilters(query);
     for (const id of ids) {
       params = params.append('ids[]', id);
     }
     return this.httpClient.get(`${this.storiesUrl}/export`, { params, responseType: 'blob' });
   }
 
-  private loadMatching(query: StoryQuery): Observable<readonly StoryEntry[]> {
-    const statuses = query.status ? [query.status] : LISTABLE_STATUSES;
-    const search = query.search?.trim() ?? '';
-    return forkJoin(statuses.map((status) => this.loadStatus(status, search))).pipe(
-      map((lists) =>
-        lists
-          .flat()
-          .filter((story) => story.place.name.includes(search))
-          .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt)),
-      ),
-    );
-  }
-
-  private loadStatus(status: StoryStatus, search: string): Observable<readonly StoryEntry[]> {
-    return this.httpClient
-      .get<LiveEnvelope<readonly LiveStory[]>>(this.storiesUrl, {
-        params: toLiveFilterParams({ status, search, per_page: ALL_ROWS_PAGE_SIZE }),
-      })
-      .pipe(map(({ data }) => data.map(toStoryEntry)));
+  private toFilters(query: StoryQuery): HttpParams {
+    return toLiveFilterParams({ status: query.status, search: query.search?.trim() });
   }
 }

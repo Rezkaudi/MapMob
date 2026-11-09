@@ -7,8 +7,8 @@ const LIVE_SILVER_PLAN: LivePlan = { ...LIVE_GOLD_PLAN, id: 3, slug: 'silver', p
 const ALL_PLANS = [LIVE_GOLD_PLAN, LIVE_FREE_PLAN, LIVE_SILVER_PLAN];
 
 describe('live plan mapping', () => {
-  it('reads a plan as a card, counting its subscribers', () => {
-    expect(toPackagePlan(LIVE_GOLD_PLAN, ALL_PLANS, 4)).toEqual({
+  it('reads a plan as a card, with the subscriber count the server gives', () => {
+    expect(toPackagePlan({ ...LIVE_GOLD_PLAN, subscriberCount: 4 }, ALL_PLANS)).toEqual({
       id: '1',
       name: 'الباقة الذهبية',
       tier: 'featured',
@@ -34,21 +34,24 @@ describe('live plan mapping', () => {
     const plan = toPackagePlan(
       { ...LIVE_GOLD_PLAN, currency_code: 'EUR', features: null },
       ALL_PLANS,
-      0,
     );
 
     expect(plan.currency).toBe('SYP');
     expect(plan.features).toEqual([]);
   });
 
+  it('reads a plan without a subscriber count as none', () => {
+    expect(toPackagePlan(LIVE_GOLD_PLAN, ALL_PLANS).subscriberCount).toBe(0);
+  });
+
   it('reads the unlimited marker as no limit', () => {
-    const plan = toPackagePlan({ ...LIVE_GOLD_PLAN, max_ads: 9999 }, [LIVE_GOLD_PLAN], 0);
+    const plan = toPackagePlan({ ...LIVE_GOLD_PLAN, max_ads: 9999 }, [LIVE_GOLD_PLAN]);
 
     expect(plan.limits.adsPerMonth).toBeNull();
   });
 
   it('reads a plan with no stories cap as no limit', () => {
-    const plan = toPackagePlan({ ...LIVE_GOLD_PLAN, limit_active_stories: null }, ALL_PLANS, 0);
+    const plan = toPackagePlan({ ...LIVE_GOLD_PLAN, limit_active_stories: null }, ALL_PLANS);
 
     expect(plan.limits.activeStories).toBeNull();
   });

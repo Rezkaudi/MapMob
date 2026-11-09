@@ -14,13 +14,6 @@ describe('ReviewHttpRepository', () => {
   let repository: ReviewHttpRepository;
   let http: HttpTestingController;
 
-  function answerPage(page: number, rows: readonly unknown[], lastPage: number): void {
-    const request = http.expectOne(
-      (candidate) => candidate.url === REVIEWS_URL && candidate.params.get('page') === String(page),
-    );
-    request.flush({ data: rows, current_page: page, last_page: lastPage, total: 2 });
-  }
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -36,20 +29,22 @@ describe('ReviewHttpRepository', () => {
 
   afterEach(() => http.verify());
 
-  it('walks every server page, then filters and pages the reviews here', async () => {
+  it('asks the server for one page and shows it as it comes', async () => {
     const response = firstValueFrom(
-      repository.getReviews({ pageIndex: 0, pageSize: 10, rating: 'fiveStars' }),
+      repository.getReviews({ pageIndex: 2, pageSize: 4, rating: 'fiveStars' }),
     );
 
-    answerPage(1, [LIVE_REVIEW], 2);
-    answerPage(2, [FIVE_STARS], 2);
+    const request = http.expectOne((candidate) => candidate.url === REVIEWS_URL);
+    expect(request.request.params.get('page')).toBe('3');
+    expect(request.request.params.get('per_page')).toBe('4');
+    request.flush({ data: [LIVE_REVIEW, FIVE_STARS], current_page: 3, last_page: 5, total: 18 });
 
     const page = await response;
-    expect(page.totalCount).toBe(1);
-    expect(page.items[0].id).toBe('8');
+    expect(page.totalCount).toBe(18);
+    expect(page.items.map((review) => review.id)).toEqual([String(LIVE_REVIEW.id), '8']);
   });
 
-  it('sends every picked filter on each page it reads', () => {
+  it('sends every picked filter', () => {
     repository
       .getReviews({
         pageIndex: 0,
@@ -65,7 +60,7 @@ describe('ReviewHttpRepository', () => {
     expect(request.request.params.get('status')).toBe('hidden');
     expect(request.request.params.get('sort_by')).toBe('latest');
     expect(request.request.params.get('page')).toBe('1');
-    expect(request.request.params.get('per_page')).toBe('100');
+    expect(request.request.params.get('per_page')).toBe('10');
     request.flush({ data: [], current_page: 1, last_page: 1, total: 0 });
   });
 
@@ -87,16 +82,15 @@ describe('ReviewHttpRepository', () => {
     });
   });
 
-  it("reads one review with its writer, its place and the writer's other reviews", async () => {
+  it('reads one review with its writer, whose review count comes from the user route', async () => {
     const response = firstValueFrom(repository.getReviewDetail('7'));
 
     http.expectOne(`${REVIEWS_URL}/7`).flush(LIVE_REVIEW);
     http.expectOne(`${BASE_URL}/admin/users/16`).flush({ data: LIVE_REVIEWER });
     http.expectOne(`${BASE_URL}/admin/stores/18`).flush({ data: LIVE_REVIEWED_STORE });
-    answerPage(1, [LIVE_REVIEW, FIVE_STARS], 1);
 
     const detail = await response;
-    expect(detail.reviewer.reviewCount).toBe(2);
+    expect(detail.reviewer.reviewCount).toBe(4);
     expect(detail.place.areaName).toBe('المزة');
   });
 

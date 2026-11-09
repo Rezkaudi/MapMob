@@ -53,7 +53,7 @@ describe('UserHttpRepository', () => {
     expect(await response).toEqual({ items: [toAppUser(LIVE_USER)], totalCount: 7 });
   });
 
-  it('asks the server for visitors, and drops the registered users it answers with', async () => {
+  it('asks the server for visitors and shows the page as it comes', async () => {
     const response = firstValueFrom(
       repository.getUsers({ pageIndex: 0, pageSize: 6, accountType: 'visitor' }),
     );
@@ -62,7 +62,7 @@ describe('UserHttpRepository', () => {
     expect(request.request.params.get('account_type')).toBe('visitor');
     request.flush({ data: [LIVE_USER], meta: { totalCount: 7 } });
 
-    expect(await response).toEqual({ items: [], totalCount: 0 });
+    expect(await response).toEqual({ items: [toAppUser(LIVE_USER)], totalCount: 7 });
   });
 
   it('sends the registered account type and keeps the server count', async () => {

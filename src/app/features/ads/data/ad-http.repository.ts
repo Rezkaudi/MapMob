@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { CLOCK } from '../../../core/config/clock';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { LivePaginationPage } from '../../../core/http/live-pagination-page';
 import { PagedResult } from '../../../core/models/paged-result';
 import { toCalendarDay } from '../../../shared/formatting/calendar-day';
@@ -15,14 +16,11 @@ import { AdFormOptions } from '../models/ad-form-options';
 import { AdQuery } from '../models/ad-query';
 import { toAdFormData } from './ad-form-data';
 import { toAdFilterParams } from './ad-query-params';
-import { queryAds } from './ad-list-query';
 import { AdRepository } from './ad.repository';
 import { LiveAd } from './live-ad';
 import { toAd, toAdDetail, toAdSummary } from './live-ad-mapping';
 import { LiveAdPlaceOptions } from './live-ad-place-options';
 import { LiveAdSummary } from './live-ad-summary';
-
-const ALL_ROWS_PAGE_SIZE = 1000;
 
 @Injectable()
 export class AdHttpRepository implements AdRepository {
@@ -31,20 +29,17 @@ export class AdHttpRepository implements AdRepository {
   private readonly adminUrl = `${inject(API_BASE_URL)}/admin`;
   private readonly adsUrl = `${this.adminUrl}/ads`;
 
-  // The server ignores some filters, so every matching row is read and filtered here too.
   getAds(query: AdQuery): Observable<PagedResult<Ad>> {
     const today = this.today();
     return this.httpClient
       .get<LivePaginationPage<LiveAd>>(this.adsUrl, {
-        params: toAdFilterParams(query, today).set('per_page', ALL_ROWS_PAGE_SIZE),
+        params: withPageNumber(toAdFilterParams(query, today), query),
       })
       .pipe(
-        map((page) =>
-          queryAds(
-            page.data.map((ad) => toAd(ad, today)),
-            query,
-          ),
-        ),
+        map((page) => ({
+          items: page.data.map((ad) => toAd(ad, today)),
+          totalCount: page.pagination.total,
+        })),
       );
   }
 

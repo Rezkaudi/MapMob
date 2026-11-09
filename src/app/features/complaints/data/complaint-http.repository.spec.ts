@@ -48,15 +48,36 @@ describe('ComplaintHttpRepository', () => {
     await response;
   });
 
-  it('reads every report once and filters and pages them on this side', async () => {
+  it('shows the server page as it comes, without filtering it here', async () => {
     const response = firstValueFrom(
       repository.getComplaints({ pageIndex: 0, pageSize: 4, status: 'new' }),
     );
     answerList();
 
-    const page = await response;
-    expect(page.totalCount).toBe(1);
-    expect(page.items[0].id).toBe('12');
+    expect((await response).items.map((complaint) => complaint.id)).toEqual(['11', '12']);
+  });
+
+  it('reads the total from meta when the server sends it', async () => {
+    const response = firstValueFrom(repository.getComplaints({ pageIndex: 0, pageSize: 4 }));
+    http
+      .expectOne((candidate) => candidate.url === REPORTS_URL)
+      .flush({ data: [LIVE_REPORT], meta: { total: 9 } });
+
+    expect((await response).totalCount).toBe(9);
+  });
+
+  it('opens one more page when a page without meta comes back full', async () => {
+    const response = firstValueFrom(repository.getComplaints({ pageIndex: 1, pageSize: 2 }));
+    answerList();
+
+    expect((await response).totalCount).toBe(5);
+  });
+
+  it('ends the list at a page without meta that is not full', async () => {
+    const response = firstValueFrom(repository.getComplaints({ pageIndex: 1, pageSize: 4 }));
+    answerList();
+
+    expect((await response).totalCount).toBe(6);
   });
 
   it('sends every picked filter in the list request', () => {
@@ -81,18 +102,10 @@ describe('ComplaintHttpRepository', () => {
       ['status', 'under_review'],
       ['date_from', '2026-11-01'],
       ['date_to', '2026-11-08'],
-      ['per_page', '1000'],
+      ['page', '1'],
+      ['per_page', '4'],
     ]);
     request.flush({ data: [] });
-  });
-
-  it('searches by the place name', async () => {
-    const response = firstValueFrom(
-      repository.getComplaints({ pageIndex: 0, pageSize: 4, search: 'الأمل' }),
-    );
-    answerList();
-
-    expect((await response).items.map((complaint) => complaint.id)).toEqual(['11']);
   });
 
   it('reads the five counts from the summary route', async () => {

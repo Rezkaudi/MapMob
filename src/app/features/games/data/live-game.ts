@@ -27,6 +27,8 @@ export interface LiveGame {
   readonly timezone: string;
   readonly answer_time_seconds: number | string;
   readonly status: LiveGameStatus;
+  /** Asked of the server; missing today. */
+  readonly deliveredPrizeCount?: number;
   readonly prize: LivePrize;
   /** Left out by the server since 2026-11-04. */
   readonly max_winners?: number | string;

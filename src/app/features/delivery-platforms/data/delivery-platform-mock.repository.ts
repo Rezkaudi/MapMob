@@ -9,6 +9,8 @@ import { DeliveryPlatformPage } from '../models/delivery-platform-page';
 import { DeliveryPlatformStatus } from '../models/delivery-platform-status';
 import { DeliveryPlatformSummary } from '../models/delivery-platform-summary';
 import { LinkedStore } from '../models/linked-store';
+import { LinkedStoreFilter } from '../models/linked-store-filter';
+import { filterLinkedStores } from '../state/linked-store-filter';
 import type { DeliveryPlatformMockDatabase } from './delivery-platform-mock-database';
 import { DeliveryPlatformRepository } from './delivery-platform.repository';
 
@@ -42,8 +44,8 @@ export class DeliveryPlatformMockRepository implements DeliveryPlatformRepositor
     return this.run((database) => database.remove(id));
   }
 
-  getLinkedStores(id: string): Observable<readonly LinkedStore[]> {
-    return this.run((database) => database.linkedStores(id));
+  getLinkedStores(id: string, filter: LinkedStoreFilter): Observable<readonly LinkedStore[]> {
+    return this.run((database) => filterLinkedStores(database.linkedStores(id), filter));
   }
 
   private async openDatabase(): Promise<DeliveryPlatformMockDatabase> {

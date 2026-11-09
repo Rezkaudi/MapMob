@@ -13,6 +13,8 @@ export interface LivePlan {
   readonly limit_active_stories?: number | null;
   readonly features: readonly string[] | null;
   readonly is_active: boolean;
+  /** Asked of the server; missing today. */
+  readonly subscriberCount?: number;
   readonly sort_order: number;
   readonly created_at: string;
 }

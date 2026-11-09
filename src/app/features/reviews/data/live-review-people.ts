@@ -3,6 +3,7 @@ export interface LiveReviewer {
   readonly name: string | null;
   readonly email_verified_at: string | null;
   readonly created_at: string;
+  readonly stats?: { readonly reviewCount: number };
 }
 
 /** The fields of `GET /admin/stores/{id}` the reviewed place card shows. */

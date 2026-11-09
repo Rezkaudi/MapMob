@@ -18,6 +18,7 @@ export const LIVE_REVIEWER: LiveReviewer = {
   name: 'خولة',
   email_verified_at: '2026-10-04T19:19:31.000000Z',
   created_at: '2026-10-04T19:19:01.000000Z',
+  stats: { reviewCount: 4 },
 };
 
 export const LIVE_REVIEWED_STORE: LiveReviewedStore = {

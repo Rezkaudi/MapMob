@@ -3,22 +3,26 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, from, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
+import { LivePage } from '../../../core/http/live-page';
+import { withPageNumber } from '../../../core/http/live-page-number-params';
 import { replaceRefusalMessage } from '../../../core/http/replace-refusal-message';
+import { PagedQuery } from '../../../core/models/paged-query';
 import { Category } from '../models/category';
 import { CategoryDraft } from '../models/category-draft';
 import { CategoryPage } from '../models/category-page';
 import { CategoryQuery } from '../models/category-query';
 import { CategoryStatus } from '../models/category-status';
 import { MainCategory } from '../models/main-category';
-import { queryCategories } from './category-list-query';
 import { MAIN_CATEGORY_PARENT_ID, toCategoryFilterParams } from './category-query-params';
 import { CategoryIconFileMaker } from './category-icon-file-maker';
 import { CategoryRepository } from './category.repository';
 import { LiveCategory } from './live-category';
 import { toCategory, toLiveCategoryForm } from './live-category-mapping';
 
-// There are few categories, so one big page brings them all; the kind counts need them all.
-const ALL_CATEGORIES_PAGE_SIZE = 1000;
+// The parent choices of the form: one long page holds every main category.
+const MAIN_CATEGORY_CHOICES_PAGE_SIZE = 1000;
+// A page of one row is enough to read the server's total.
+const COUNT_ONLY_PAGE: PagedQuery = { pageIndex: 0, pageSize: 1 };
 
 export const CATEGORY_HAS_CHILDREN_MESSAGE =
   'لا يمكن حذف هذا التصنيف لأن له تصنيفات فرعية. احذفها أو انقلها إلى تصنيف آخر أولاً.';
@@ -29,27 +33,25 @@ export class CategoryHttpRepository implements CategoryRepository {
   private readonly iconFileMaker = inject(CategoryIconFileMaker);
   private readonly categoriesUrl = `${inject(API_BASE_URL)}/admin/categories`;
 
-  // Tab counts and Arabic parent names need every category, so a filtered list reads both.
+  // A sub category names its parent in English, so the main categories give the Arabic name.
   getCategories(query: CategoryQuery): Observable<CategoryPage> {
-    const filters = toCategoryFilterParams(query);
-    if (filters.keys().length === 0) {
-      return this.loadAll().pipe(map((categories) => queryCategories(categories, query)));
-    }
-    return forkJoin({ matching: this.loadLive(filters), all: this.loadLive() }).pipe(
-      map(({ matching, all }) => {
-        const page = queryCategories(
-          matching.map((category) => toCategory(category, all)),
-          query,
-        );
-        const everyCategory = all.map((category) => toCategory(category, all));
-        return { ...page, kindCounts: queryCategories(everyCategory, query).kindCounts };
-      }),
+    return forkJoin({
+      page: this.readPage(toCategoryFilterParams(query), query),
+      allCount: this.countMatching({ ...query, kind: undefined }),
+      mainCount: this.countMatching({ ...query, kind: 'main' }),
+      mains: this.loadMainCategories(),
+    }).pipe(
+      map(({ page, allCount, mainCount, mains }) => ({
+        items: page.data.map((category) => toCategory(category, mains)),
+        totalCount: page.meta.total,
+        kindCounts: { all: allCount, main: mainCount, sub: allCount - mainCount },
+      })),
     );
   }
 
   // The server reads `parent_id=null` as the word "null"; an empty value means "no parent".
   getMainCategories(): Observable<readonly MainCategory[]> {
-    return this.loadLive(new HttpParams().set('parent_id', MAIN_CATEGORY_PARENT_ID)).pipe(
+    return this.loadMainCategories().pipe(
       map((categories) =>
         categories.map((category) => {
           const { id, name } = toCategory(category, categories);
@@ -101,17 +103,27 @@ export class CategoryHttpRepository implements CategoryRepository {
 
   // A saved sub category names its parent in English, so the list supplies the Arabic name.
   private withParentNames(saved: LiveCategory): Observable<Category> {
-    return this.loadLive().pipe(map((all) => toCategory(saved, all)));
+    return this.loadMainCategories().pipe(map((mains) => toCategory(saved, mains)));
   }
 
-  private loadAll(): Observable<readonly Category[]> {
-    return this.loadLive().pipe(map((all) => all.map((category) => toCategory(category, all))));
+  private readPage(filters: HttpParams, query: PagedQuery): Observable<LivePage<LiveCategory>> {
+    return this.httpClient.get<LivePage<LiveCategory>>(this.categoriesUrl, {
+      params: withPageNumber(filters, query),
+    });
   }
 
-  private loadLive(filters = new HttpParams()): Observable<readonly LiveCategory[]> {
+  private countMatching(query: CategoryQuery): Observable<number> {
+    return this.readPage(toCategoryFilterParams(query), COUNT_ONLY_PAGE).pipe(
+      map((page) => page.meta.total),
+    );
+  }
+
+  private loadMainCategories(): Observable<readonly LiveCategory[]> {
     return this.httpClient
       .get<LiveEnvelope<readonly LiveCategory[]>>(this.categoriesUrl, {
-        params: filters.set('per_page', ALL_CATEGORIES_PAGE_SIZE),
+        params: new HttpParams()
+          .set('parent_id', MAIN_CATEGORY_PARENT_ID)
+          .set('per_page', MAIN_CATEGORY_CHOICES_PAGE_SIZE),
       })
       .pipe(map(({ data }) => data));
   }

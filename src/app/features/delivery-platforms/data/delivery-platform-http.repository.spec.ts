@@ -44,40 +44,27 @@ describe('DeliveryPlatformHttpRepository', () => {
     request.flush({ data: platform });
   }
 
-  it('reads every page, then searches and pages here, as the server ignores both', async () => {
+  it('asks the server for one searched page and shows it as it comes', async () => {
     const response = firstValueFrom(
-      repository.getPlatforms({ pageIndex: 0, pageSize: 1, search: 'tal' }),
+      repository.getPlatforms({ pageIndex: 1, pageSize: 4, search: 'tal', sort: 'name' }),
     );
-
-    const first = http.expectOne((candidate) => candidate.url === PLATFORMS_URL);
-    expect(first.request.params.get('page')).toBe('1');
-    first.flush(livePage([buildLiveDeliveryPlatform({ id: 1, name: 'tawseel' })], 1, 2));
-    const second = http.expectOne((candidate) => candidate.url === PLATFORMS_URL);
-    expect(second.request.params.get('page')).toBe('2');
-    second.flush(
-      livePage(
-        [
-          buildLiveDeliveryPlatform({ id: 2, name: 'talabat', sort_order: 2 }),
-          buildLiveDeliveryPlatform({ id: 3, name: 'Talabat Mart', sort_order: 3 }),
-        ],
-        2,
-        2,
-      ),
-    );
-
-    const page = await response;
-    expect(page.totalCount).toBe(2);
-    expect(page.items.map((platform) => platform.id)).toEqual(['2']);
-  });
-
-  it('sends the search and the sort on every page it reads', () => {
-    repository.getPlatforms({ pageIndex: 0, pageSize: 1, search: 'tal', sort: 'name' }).subscribe();
 
     const request = http.expectOne((candidate) => candidate.url === PLATFORMS_URL);
-    expect(request.request.params.get('search')).toBe('tal');
-    expect(request.request.params.get('sort_by')).toBe('name_asc');
-    expect(request.request.params.get('page')).toBe('1');
-    request.flush(livePage([], 1, 1));
+    const params = request.request.params;
+    expect(params.keys().map((key) => [key, params.get(key)])).toEqual([
+      ['search', 'tal'],
+      ['sort_by', 'name_asc'],
+      ['page', '2'],
+      ['per_page', '4'],
+    ]);
+    request.flush({
+      data: [buildLiveDeliveryPlatform({ id: 1, name: 'tawseel' })],
+      meta: { current_page: 2, last_page: 3, total: 9 },
+    });
+
+    const page = await response;
+    expect(page.totalCount).toBe(9);
+    expect(page.items.map((platform) => platform.id)).toEqual(['1']);
   });
 
   it('reads the active and total counts', async () => {
@@ -145,11 +132,14 @@ describe('DeliveryPlatformHttpRepository', () => {
   });
 
   it('builds each linked store from its page and its link to this platform', async () => {
-    const response = firstValueFrom(repository.getLinkedStores('9'));
+    const response = firstValueFrom(
+      repository.getLinkedStores('9', { search: ' المدينة ', categoryId: '1' }),
+    );
 
-    http
-      .expectOne((candidate) => candidate.url === `${PLATFORMS_URL}/9/stores`)
-      .flush(livePage([{ id: 4 }]));
+    const list = http.expectOne((candidate) => candidate.url === `${PLATFORMS_URL}/9/stores`);
+    expect(list.request.params.get('search')).toBe('المدينة');
+    expect(list.request.params.get('category_id')).toBe('1');
+    list.flush(livePage([{ id: 4 }]));
     http.expectOne(`${STORES_URL}/4`).flush({
       data: {
         id: '4',
@@ -172,7 +162,9 @@ describe('DeliveryPlatformHttpRepository', () => {
   });
 
   it('answers an empty list without asking for store pages', async () => {
-    const response = firstValueFrom(repository.getLinkedStores('9'));
+    const response = firstValueFrom(
+      repository.getLinkedStores('9', { search: '', categoryId: null }),
+    );
 
     http
       .expectOne((candidate) => candidate.url === `${PLATFORMS_URL}/9/stores`)
