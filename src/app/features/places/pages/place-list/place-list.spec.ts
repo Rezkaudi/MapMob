@@ -38,6 +38,16 @@ describe('PlaceList', () => {
     expect(text).toContain('صيدلية الحياة');
   });
 
+  it('asks to search by place name only', () => {
+    configure({ getPlaces: () => of({ items: [createPlace()], totalCount: 1 }) });
+
+    const fixture = TestBed.createComponent(PlaceList);
+    fixture.detectChanges();
+
+    const search: HTMLInputElement = fixture.nativeElement.querySelector('input[type="search"]');
+    expect(search.placeholder).toBe('ابحث عن مكان...');
+  });
+
   it('renders the place code and package next to each row', () => {
     configure({
       getPlaces: () => of({ items: [createPlace({ package: 'premium' })], totalCount: 1 }),
