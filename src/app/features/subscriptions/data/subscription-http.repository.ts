@@ -17,11 +17,9 @@ import { toLivePlanBody, toPackagePlan } from './live-plan-mapping';
 import { LiveSubscription } from './live-subscription';
 import { toSubscription } from './live-subscription-mapping';
 import { LiveSubscriptionSummary } from './live-subscription-summary';
-import { canServerExport, toServerExportParams } from './subscription-export-filters';
-import { filterSubscriptions, querySubscriptions } from './subscription-list-query';
+import { querySubscriptions } from './subscription-list-query';
 import { toSubscriptionFilterParams } from './subscription-query-params';
 import { SubscriptionRepository } from './subscription.repository';
-import { buildSubscriptionsCsvFile } from './subscriptions-csv';
 import { summarizeLiveSubscriptions } from './summarize-live-subscriptions';
 
 // An inactive plan may be left out of the list, so the saved one stands alone.
@@ -35,7 +33,7 @@ interface LiveLists {
   readonly subscriptions: readonly Subscription[];
 }
 
-/** Every filter is sent; the server still ignores some, so they run here too. The export uses the server file when it can. */
+/** Every filter is sent; the server still ignores some, so they run here too. */
 @Injectable()
 export class SubscriptionHttpRepository implements SubscriptionRepository {
   private readonly httpClient = inject(HttpClient);
@@ -105,17 +103,10 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   }
 
   exportSubscriptions(query: SubscriptionQuery): Observable<Blob> {
-    if (canServerExport(query)) {
-      return this.httpClient.get(`${this.subscriptionsUrl}/export`, {
-        params: toServerExportParams(query),
-        responseType: 'blob',
-      });
-    }
-    return this.loadLists(toSubscriptionFilterParams(query)).pipe(
-      map(({ subscriptions }) =>
-        buildSubscriptionsCsvFile(filterSubscriptions(subscriptions, query)),
-      ),
-    );
+    return this.httpClient.get(`${this.subscriptionsUrl}/export`, {
+      params: toSubscriptionFilterParams(query),
+      responseType: 'blob',
+    });
   }
 
   private savePlan(id: string, body: Record<string, unknown>): Observable<PackagePlan> {

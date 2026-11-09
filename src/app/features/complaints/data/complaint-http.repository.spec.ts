@@ -149,10 +149,20 @@ describe('ComplaintHttpRepository', () => {
     expect((await response).adminNotes).toBe('نتابع');
   });
 
-  it('builds the export file on this side', async () => {
-    const response = firstValueFrom(repository.exportComplaints({ pageIndex: 0, pageSize: 4 }));
-    answerList();
+  it('downloads the export file from the server, with the table filters', async () => {
+    const file = new Blob(['ID'], { type: 'text/csv' });
+    const response = firstValueFrom(
+      repository.exportComplaints({ pageIndex: 0, pageSize: 4, status: 'inReview', reportedFrom: '2026-11-01' }),
+    );
 
-    expect((await response).type).toContain('text/csv');
+    const request = http.expectOne((candidate) => candidate.url === `${REPORTS_URL}/export`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    expect(request.request.params.get('status')).toBe('under_review');
+    expect(request.request.params.get('date_from')).toBe('2026-11-01');
+    expect(request.request.params.has('per_page')).toBe(false);
+    request.flush(file);
+
+    expect(await response).toBe(file);
   });
 });

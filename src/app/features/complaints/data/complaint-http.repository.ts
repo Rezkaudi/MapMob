@@ -2,8 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api-base-url';
-import { toLiveFilterParams } from '../../../core/http/live-filter-params';
-import { toLiveSort } from '../../../core/http/live-list-sort';
 import { LiveEnvelope } from '../../../core/http/live-envelope';
 import { PagedResult } from '../../../core/models/paged-result';
 import { Complaint } from '../models/complaint';
@@ -11,9 +9,9 @@ import { ComplaintDetail } from '../models/complaint-detail';
 import { ComplaintQuery } from '../models/complaint-query';
 import { ComplaintReview } from '../models/complaint-review';
 import { ComplaintSummary } from '../models/complaint-summary';
-import { filterComplaints, queryComplaints } from './complaint-list-query';
+import { queryComplaints } from './complaint-list-query';
 import { ComplaintRepository } from './complaint.repository';
-import { buildComplaintsCsvFile } from './complaints-csv';
+import { toComplaintFilterParams } from './complaint-query-params';
 import { LiveReport } from './live-report';
 import { toComplaint, toComplaintDetail, toLiveReportStatus } from './live-report-mapping';
 import { LiveReportedStore } from './live-reported-store';
@@ -60,21 +58,15 @@ export class ComplaintHttpRepository implements ComplaintRepository {
   }
 
   exportComplaints(query: ComplaintQuery): Observable<Blob> {
-    return this.loadAll(query).pipe(
-      map((complaints) => buildComplaintsCsvFile(filterComplaints(complaints, query))),
-    );
+    return this.httpClient.get(`${this.reportsUrl}/export`, {
+      params: toComplaintFilterParams(query),
+      responseType: 'blob',
+    });
   }
 
   // The list has no page count, so one large page is asked for.
   private loadAll(query: ComplaintQuery): Observable<readonly Complaint[]> {
-    const params = toLiveFilterParams({
-      search: query.search,
-      sort_by: toLiveSort(query.sort),
-      status: query.status ? toLiveReportStatus(query.status) : null,
-      date_from: query.reportedFrom,
-      date_to: query.reportedTo,
-      per_page: ALL_ROWS_PAGE_SIZE,
-    });
+    const params = toComplaintFilterParams(query).set('per_page', ALL_ROWS_PAGE_SIZE);
     return this.httpClient
       .get<LiveEnvelope<readonly LiveReport[]>>(this.reportsUrl, { params })
       .pipe(map(({ data }) => data.map(toComplaint)));

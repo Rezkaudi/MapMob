@@ -5,8 +5,7 @@
     description="نظرة عامة على أداء المنصة و نشاط المستخدمين والشركات و الايرادات التشغيلية"
     descriptionSize="small"
     [isAddVisible]="false"
-    [isExportVisible]="true"
-    (exportRequested)="exportReport()"
+    [isExportVisible]="false"
   />
 
   @if (store.error(); as error) {

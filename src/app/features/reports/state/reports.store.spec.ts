@@ -147,18 +147,4 @@ describe('ReportsStore', () => {
     expect(store.growthChart().series.length).toBe(2);
     expect(store.revenueChart().xaxis.categories).toEqual(['Jul']);
   });
-
-  it('gathers what is on screen for the export', () => {
-    const store = createStore(fullRepository());
-
-    store.loadReports();
-
-    expect(store.snapshot()).toEqual({
-      categoryShares: CATEGORY_SHARES,
-      usageMetrics: USAGE,
-      governorateActivities: GOVERNORATES,
-      growthSeries: GROWTH,
-      revenueSeries: REVENUE,
-    });
-  });
 });

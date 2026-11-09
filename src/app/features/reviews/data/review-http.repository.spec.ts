@@ -130,10 +130,19 @@ describe('ReviewHttpRepository', () => {
     expect(await response).toBeUndefined();
   });
 
-  it('builds the export file here, with the table columns and filters', async () => {
-    const response = firstValueFrom(repository.exportReviews({ pageIndex: 0, pageSize: 10 }));
-    answerPage(1, [LIVE_REVIEW], 1);
+  it('downloads the export file from the server, with the table filters', async () => {
+    const file = new Blob(['ID'], { type: 'text/csv' });
+    const response = firstValueFrom(
+      repository.exportReviews({ pageIndex: 0, pageSize: 10, rating: 'fiveStars', search: 'جيد' }),
+    );
 
-    expect((await response).type).toContain('text/csv');
+    const request = http.expectOne((candidate) => candidate.url === `${REVIEWS_URL}/export`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    expect(request.request.params.get('rating')).toBe('5');
+    expect(request.request.params.get('search')).toBe('جيد');
+    request.flush(file);
+
+    expect(await response).toBe(file);
   });
 });

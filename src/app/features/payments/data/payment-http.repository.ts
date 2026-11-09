@@ -25,13 +25,12 @@ import {
 } from './live-payment-mapping';
 import { LivePaymentStore } from './live-payment-store';
 import { LivePaymentSubscription } from './live-payment-subscription';
-import { filterPayments, queryPayments } from './payment-list-query';
+import { queryPayments } from './payment-list-query';
 import { toPaymentFilterParams } from './payment-query-params';
 import { PaymentRepository } from './payment.repository';
-import { buildPaymentsCsvFile } from './payments-csv';
 import { summarizeLivePayments } from './summarize-live-payments';
 
-// One big page brings every row, so the panel's own filters, cards and export can use them all.
+// One big page brings every row, so the panel's own filters and cards can use them all.
 const ALL_ROWS_PAGE_SIZE = 1000;
 
 interface LiveItems<T> {
@@ -120,9 +119,10 @@ export class PaymentHttpRepository implements PaymentRepository {
   }
 
   exportPayments(query: PaymentQuery): Observable<Blob> {
-    return this.loadAll(toPaymentFilterParams(query)).pipe(
-      map((rows) => buildPaymentsCsvFile(filterPayments(rows.map(toPayment), query))),
-    );
+    return this.httpClient.get(`${this.paymentsUrl}/export`, {
+      params: toPaymentFilterParams(query),
+      responseType: 'blob',
+    });
   }
 
   // The server still ignores some filters, so the rows are filtered here too.

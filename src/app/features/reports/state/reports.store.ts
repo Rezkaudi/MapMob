@@ -8,7 +8,6 @@ import { ReportsRepository } from '../data/reports.repository';
 import { CategoryShare } from '../models/category-share';
 import { GovernorateActivity } from '../models/governorate-activity';
 import { PeriodChartState } from '../models/period-chart-state';
-import { ReportSnapshot } from '../models/report-snapshot';
 import { UsageMetric } from '../models/usage-metric';
 import { toGovernorateActivityRows } from './governorate-activity-rows';
 import { buildGrowthChartOptions } from './growth-chart-options';
@@ -48,13 +47,6 @@ export const ReportsStore = signalStore(
     ),
     growthChart: computed(() => buildGrowthChartOptions(store.growth().data)),
     revenueChart: computed(() => buildRevenueChartOptions(store.revenue().data)),
-    snapshot: computed<ReportSnapshot>(() => ({
-      categoryShares: store.categoryShares(),
-      usageMetrics: store.usage().data,
-      governorateActivities: store.governorateActivities(),
-      growthSeries: store.growth().data,
-      revenueSeries: store.revenue().data,
-    })),
   })),
   withMethods((store, repository = inject(ReportsRepository)) => ({
     loadReports: rxMethod<void>(

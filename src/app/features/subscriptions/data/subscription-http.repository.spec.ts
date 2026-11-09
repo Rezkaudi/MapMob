@@ -196,11 +196,17 @@ describe('SubscriptionHttpRepository', () => {
     expect((await response).type).toContain('text/csv');
   });
 
-  it('builds the file on this side when the server cannot apply a filter', async () => {
+  it('downloads the server file with every table filter, even ones the server may ignore', async () => {
     const response = firstValueFrom(
-      repository.exportSubscriptions({ pageIndex: 0, pageSize: 10, search: 'دمشق' }),
+      repository.exportSubscriptions({ pageIndex: 0, pageSize: 10, search: 'دمشق', status: 'paused', tier: 'free' }),
     );
-    answerLists();
+
+    const request = http.expectOne((call) => call.url === `${SUBSCRIPTIONS_URL}/export`);
+    expect(request.request.params.get('search')).toBe('دمشق');
+    expect(request.request.params.get('status')).toBe('cancelled');
+    expect(request.request.params.get('plan_tier')).toBe('free');
+    expect(request.request.responseType).toBe('blob');
+    request.flush(new Blob(['csv'], { type: 'text/csv' }));
 
     expect((await response).type).toContain('text/csv');
   });

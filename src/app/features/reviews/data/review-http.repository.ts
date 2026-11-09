@@ -12,10 +12,9 @@ import { ReviewSummary } from '../models/review-summary';
 import { LiveReview } from './live-review';
 import { toLiveReviewStatus, toReview, toReviewDetail } from './live-review-mapping';
 import { LiveReviewedStore, LiveReviewer } from './live-review-people';
-import { filterReviews, queryReviews } from './review-list-query';
+import { queryReviews } from './review-list-query';
 import { toReviewFilterParams } from './review-query-params';
 import { ReviewRepository } from './review.repository';
-import { buildReviewsCsvFile } from './reviews-csv';
 
 const FIRST_PAGE = 1;
 // The server's largest page, so the walk takes few calls.
@@ -100,11 +99,11 @@ export class ReviewHttpRepository implements ReviewRepository {
     return this.httpClient.delete(`${this.reviewsUrl}/${id}`).pipe(map(() => undefined));
   }
 
-  // The server's own file lists ids, not names, and ignores the filters.
   exportReviews(query: ReviewQuery): Observable<Blob> {
-    return this.loadAll(query).pipe(
-      map((reviews) => buildReviewsCsvFile(filterReviews(reviews.map(toReview), query))),
-    );
+    return this.httpClient.get(`${this.reviewsUrl}/export`, {
+      params: toReviewFilterParams(query),
+      responseType: 'blob',
+    });
   }
 
   private settle(url: string, note: string, id: string): Observable<Review> {

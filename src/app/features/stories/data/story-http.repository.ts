@@ -11,7 +11,6 @@ import { StoryExportRequest } from '../models/story-export-request';
 import { StoryPage } from '../models/story-page';
 import { StoryQuery } from '../models/story-query';
 import { StorySummary } from '../models/story-summary';
-import { buildStoriesCsvFile } from './stories-csv';
 import { LiveStory } from './live-story';
 import { LiveStorySummary, toStoryEntry, toStorySummary } from './live-story-mapping';
 import { StoryRepository } from './story.repository';
@@ -48,15 +47,12 @@ export class StoryHttpRepository implements StoryRepository {
     return this.httpClient.delete(`${this.storiesUrl}/${id}`).pipe(map(() => undefined));
   }
 
-  // The server's own file comes back empty, so the file is built from the rows it can list.
   exportStories({ query, ids }: StoryExportRequest): Observable<Blob> {
-    return this.loadMatching(query).pipe(
-      map((stories) =>
-        buildStoriesCsvFile(
-          ids.length ? stories.filter((story) => ids.includes(story.id)) : stories,
-        ),
-      ),
-    );
+    let params = toLiveFilterParams({ status: query.status, search: query.search?.trim() });
+    for (const id of ids) {
+      params = params.append('ids[]', id);
+    }
+    return this.httpClient.get(`${this.storiesUrl}/export`, { params, responseType: 'blob' });
   }
 
   private loadMatching(query: StoryQuery): Observable<readonly StoryEntry[]> {

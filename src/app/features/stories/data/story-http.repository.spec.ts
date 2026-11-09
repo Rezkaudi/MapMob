@@ -105,14 +105,23 @@ describe('StoryHttpRepository', () => {
     expect(await response).toBeUndefined();
   });
 
-  it('exports the ticked rows from what the server can list', async () => {
+  it('downloads the export file from the server, with the filters and the ticked rows', async () => {
+    const file = new Blob(['ID'], { type: 'text/csv' });
     const response = firstValueFrom(
-      repository.exportStories({ query: { pageIndex: 0, pageSize: 10 }, ids: ['2'] }),
+      repository.exportStories({
+        query: { pageIndex: 0, pageSize: 10, status: 'expired', search: 'حلب' },
+        ids: ['2', '5'],
+      }),
     );
-    answerStatus('active', [ACTIVE_STORY]);
-    answerStatus('expired', [LIVE_STORY]);
-    answerStatus('hidden', []);
 
-    expect((await response).type).toContain('text/csv');
+    const request = http.expectOne((candidate) => candidate.url === `${STORIES_URL}/export`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    expect(request.request.params.get('status')).toBe('expired');
+    expect(request.request.params.get('search')).toBe('حلب');
+    expect(request.request.params.getAll('ids[]')).toEqual(['2', '5']);
+    request.flush(file);
+
+    expect(await response).toBe(file);
   });
 });

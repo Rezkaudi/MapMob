@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { FileSaver } from '../../../../shared/files/file-saver';
 import { ReportsRepository } from '../../data/reports.repository';
 import { ReportOverview } from './report-overview';
 
@@ -18,7 +17,6 @@ function fullRepository(overrides: Partial<ReportsRepository> = {}): FakeReports
 }
 
 function createPage(repository: FakeReportsRepository = fullRepository()) {
-  const savedFiles: string[] = [];
   const requestedUsagePeriods: string[] = [];
   const watchedRepository: FakeReportsRepository = {
     ...repository,
@@ -30,10 +28,6 @@ function createPage(repository: FakeReportsRepository = fullRepository()) {
   TestBed.configureTestingModule({
     providers: [
       { provide: ReportsRepository, useValue: watchedRepository },
-      {
-        provide: FileSaver,
-        useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
-      },
     ],
   });
   const fixture = TestBed.createComponent(ReportOverview);
@@ -41,7 +35,6 @@ function createPage(repository: FakeReportsRepository = fullRepository()) {
   return {
     fixture,
     element: fixture.nativeElement as HTMLElement,
-    savedFiles,
     requestedUsagePeriods,
   };
 }
@@ -53,14 +46,14 @@ function chartPanelTitled(root: ParentNode, title: string): HTMLElement {
 }
 
 describe('ReportOverview', () => {
-  it('shows the header with the design copy and an export button', () => {
+  it('shows the header with the design copy and no export, since the server has no statistics file', () => {
     const { element } = createPage();
 
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('الاحصائيات و التقارير');
     expect(element.textContent).toContain(
       'نظرة عامة على أداء المنصة و نشاط المستخدمين والشركات و الايرادات التشغيلية',
     );
-    expect(element.querySelector('app-page-header app-export-button')).toBeTruthy();
+    expect(element.querySelector('app-page-header app-export-button')).toBeNull();
     expect(element.querySelector('app-page-header app-add-button')).toBeNull();
   });
 
@@ -107,14 +100,6 @@ describe('ReportOverview', () => {
     yearlyTab.click();
 
     expect(requestedUsagePeriods).toEqual(['weekly', 'yearly']);
-  });
-
-  it('saves the report as a CSV file when export is pressed', () => {
-    const { element, savedFiles } = createPage();
-
-    element.querySelector<HTMLButtonElement>('app-export-button button')!.click();
-
-    expect(savedFiles).toEqual(['mapmob-reports.csv']);
   });
 
   it('shows the error with a retry in place of the cards when loading fails', () => {

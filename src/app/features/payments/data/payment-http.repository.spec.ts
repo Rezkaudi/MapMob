@@ -199,10 +199,20 @@ describe('PaymentHttpRepository', () => {
     await expect(response).resolves.toBeNull();
   });
 
-  it('builds the export file here, so it has the table columns', async () => {
-    const response = firstValueFrom(repository.exportPayments({ pageIndex: 0, pageSize: 10 }));
-    answerList();
+  it('downloads the export file from the server, with the table filters', async () => {
+    const file = new Blob(['ID'], { type: 'text/csv' });
+    const response = firstValueFrom(
+      repository.exportPayments({ pageIndex: 0, pageSize: 10, paymentMethod: 'other', currency: 'USD' }),
+    );
 
-    expect((await response).type).toContain('text/csv');
+    const request = http.expectOne((candidate) => candidate.url === `${PAYMENTS_URL}/export`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    expect(request.request.params.get('payment_method_not')).toBe('cash');
+    expect(request.request.params.get('currency')).toBe('USD');
+    expect(request.request.params.has('per_page')).toBe(false);
+    request.flush(file);
+
+    expect(await response).toBe(file);
   });
 });
