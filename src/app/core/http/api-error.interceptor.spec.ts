@@ -44,4 +44,30 @@ describe('apiErrorInterceptor', () => {
 
     expect(((await response) as ApiError).message).toBe(SERVER_UNREACHABLE_MESSAGE);
   });
+
+  it('reads the server message from a failed file download', async () => {
+    const response = firstValueFrom(httpClient.get(URL, { responseType: 'blob' })).catch(
+      (error: unknown) => error,
+    );
+    const body = new Blob([JSON.stringify({ message: 'The selected status is invalid.' })], {
+      type: 'application/json',
+    });
+
+    http.expectOne(URL).flush(body, { status: 422, statusText: 'Unprocessable' });
+
+    const error = (await response) as ApiError;
+    expect(error).toBeInstanceOf(ApiError);
+    expect(error.status).toBe(422);
+    expect(error.message).toBe('The selected status is invalid.');
+  });
+
+  it('gives a plain message when a failed file download holds no message', async () => {
+    const response = firstValueFrom(httpClient.get(URL, { responseType: 'blob' })).catch(
+      (error: unknown) => error,
+    );
+
+    http.expectOne(URL).flush(new Blob(['<html>']), { status: 500, statusText: 'Server Error' });
+
+    expect(((await response) as ApiError).message).toBe(SERVER_UNREACHABLE_MESSAGE);
+  });
 });

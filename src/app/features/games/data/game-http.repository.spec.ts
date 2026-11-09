@@ -176,12 +176,19 @@ describe('GameHttpRepository', () => {
 
   it('downloads the winners file from the server', async () => {
     const file = firstValueFrom(
-      repository.exportWinners({ pageIndex: 1, pageSize: 4, search: 'سارة', gameId: '9' }),
+      repository.exportWinners({
+        pageIndex: 1,
+        pageSize: 4,
+        search: 'سارة',
+        gameId: '9',
+        sort: 'oldest',
+      }),
     );
     const request = http.expectOne((call) => call.url === `${WINNERS_URL}/export`);
     expect(request.request.params.has('page')).toBe(false);
     expect(request.request.params.get('search')).toBe('سارة');
     expect(request.request.params.get('game_id')).toBe('9');
+    expect(request.request.params.get('sort_by')).toBe('oldest');
     expect(request.request.responseType).toBe('blob');
     request.flush(new Blob(['csv']));
     expect(await file).toBeInstanceOf(Blob);

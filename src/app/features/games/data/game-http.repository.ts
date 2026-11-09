@@ -17,7 +17,7 @@ import { PrizeDeliveryStatus } from '../models/prize-delivery-status';
 import { WinnerPage } from '../models/winner-page';
 import { WinnerQuery } from '../models/winner-query';
 import { matchGames, matchWinners } from './game-list-query';
-import { toGameListParams, toWinnerExportParams, toWinnerListParams } from './game-query-params';
+import { toGameListParams, toWinnerListParams } from './game-query-params';
 import { GameRepository } from './game.repository';
 import { LiveGame } from './live-game';
 import { toGameDetail, toGameEntry, toLiveGameBody } from './live-game-mapping';
@@ -124,7 +124,7 @@ export class GameHttpRepository implements GameRepository {
 
   exportWinners(query: WinnerQuery): Observable<Blob> {
     return this.httpClient.get(`${this.winnersUrl}/export`, {
-      params: toWinnerExportParams(query),
+      params: toWinnerListParams(query),
       responseType: 'blob',
     });
   }
