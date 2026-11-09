@@ -5,7 +5,9 @@
     description="نظرة عامة على أداء المنصة و نشاط المستخدمين والشركات و الايرادات التشغيلية"
     descriptionSize="small"
     [isAddVisible]="false"
-    [isExportVisible]="false"
+    [isExportVisible]="true"
+    [isExporting]="store.isExporting()"
+    (exportRequested)="exportReports()"
   />
 
   @if (store.error(); as error) {
@@ -91,3 +93,12 @@
     </div>
   }
 </div>
+
+@if (store.exportError(); as exportError) {
+  <app-toast
+    tone="error"
+    title="تعذر تصدير التقرير"
+    [message]="exportError"
+    (dismissed)="store.clearExportError()"
+  />
+}

@@ -8,6 +8,8 @@ import {
 } from '../examples/report-examples';
 import { MONEY_NOTE, PERIOD_QUERY_FIELDS, SERIES_FIELDS, field } from '../shared-fields';
 
+const PERIOD_TYPE = 'enum: daily | weekly | monthly | yearly';
+
 const PERCENT_FIELD = field('sharePercent', 'number 0-100', 'One decimal. The rows add up to 100.');
 const LAST_30_DAYS = 'Counts the last 30 days.';
 
@@ -97,6 +99,23 @@ export const REPORTS_FEATURE: ApiFeature = {
         fields: [field('currency', 'enum: SYP | USD'), ...SERIES_FIELDS],
       },
       notes: [MONEY_NOTE],
+    },
+    {
+      id: 'reports-export',
+      method: 'GET',
+      path: '/reports/export',
+      summary: 'Download every figure on the statistics screen as one CSV file.',
+      queryParams: [
+        field('growthPeriod', PERIOD_TYPE, 'The period the user-growth card shows.'),
+        field('usagePeriod', PERIOD_TYPE, 'The period the usage card shows.'),
+        field('revenuePeriod', PERIOD_TYPE, 'The period the revenue card shows.'),
+      ],
+      response: {
+        status: 200,
+        contentType: 'text/csv',
+        description:
+          'Columns: section, item, value, percent. One row per category share, governorate, usage action, growth point and revenue point. UTF-8 with a BOM as the first bytes, Arabic headers. The file name carries the date, e.g. statistics-2026-11-09.csv.',
+      },
     },
   ],
 };

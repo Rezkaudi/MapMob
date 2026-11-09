@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { FileSaver } from '../../../../shared/files/file-saver';
 import { ReportsRepository } from '../../data/reports.repository';
 import { ReportOverview } from './report-overview';
 
@@ -12,12 +13,14 @@ function fullRepository(overrides: Partial<ReportsRepository> = {}): FakeReports
     getUsageMetrics: () => of([{ label: 'عمليات البحث والاستكشاف', count: 24150, share: 42 }]),
     getGrowthSeries: () => of([]),
     getRevenueSeries: () => of({ name: 'الإيرادات', points: [{ label: 'Jul', value: 48200 }] }),
+    exportReports: () => of(new Blob(['csv'])),
     ...overrides,
   };
 }
 
 function createPage(repository: FakeReportsRepository = fullRepository()) {
   const requestedUsagePeriods: string[] = [];
+  const fileSaver = { save: vi.fn() };
   const watchedRepository: FakeReportsRepository = {
     ...repository,
     getUsageMetrics: (period) => {
@@ -28,6 +31,7 @@ function createPage(repository: FakeReportsRepository = fullRepository()) {
   TestBed.configureTestingModule({
     providers: [
       { provide: ReportsRepository, useValue: watchedRepository },
+      { provide: FileSaver, useValue: fileSaver },
     ],
   });
   const fixture = TestBed.createComponent(ReportOverview);
@@ -36,6 +40,7 @@ function createPage(repository: FakeReportsRepository = fullRepository()) {
     fixture,
     element: fixture.nativeElement as HTMLElement,
     requestedUsagePeriods,
+    fileSaver,
   };
 }
 
@@ -46,14 +51,14 @@ function chartPanelTitled(root: ParentNode, title: string): HTMLElement {
 }
 
 describe('ReportOverview', () => {
-  it('shows the header with the design copy and no export, since the server has no statistics file', () => {
+  it('shows the header with the design copy and an export button', () => {
     const { element } = createPage();
 
     expect(element.querySelector('h1')?.textContent?.trim()).toBe('الاحصائيات و التقارير');
     expect(element.textContent).toContain(
       'نظرة عامة على أداء المنصة و نشاط المستخدمين والشركات و الايرادات التشغيلية',
     );
-    expect(element.querySelector('app-page-header app-export-button')).toBeNull();
+    expect(element.querySelector('app-page-header app-export-button')).toBeTruthy();
     expect(element.querySelector('app-page-header app-add-button')).toBeNull();
   });
 
@@ -111,5 +116,33 @@ describe('ReportOverview', () => {
 
     expect(element.querySelector('app-error-state')?.textContent).toContain('تعذر تحميل التقارير');
     expect(element.querySelector('app-chart-panel')).toBeNull();
+  });
+
+  it('saves the server statistics file with a dated name when export is pressed', async () => {
+    const file = new Blob(['csv']);
+    const { fixture, element, fileSaver } = createPage(
+      fullRepository({ exportReports: () => of(file) }),
+    );
+
+    element.querySelector<HTMLButtonElement>('app-export-button button')!.click();
+    await fixture.whenStable();
+
+    expect(fileSaver.save).toHaveBeenCalledWith(
+      file,
+      expect.stringMatching(/^statistics-\d{4}-\d{2}-\d{2}\.csv$/),
+    );
+  });
+
+  it('shows the server message in a toast when the export fails', async () => {
+    const { fixture, element, fileSaver } = createPage(
+      fullRepository({ exportReports: () => throwError(() => new Error('لا يوجد ملف')) }),
+    );
+
+    element.querySelector<HTMLButtonElement>('app-export-button button')!.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(fileSaver.save).not.toHaveBeenCalled();
+    expect(element.querySelector('app-toast')?.textContent).toContain('لا يوجد ملف');
   });
 });

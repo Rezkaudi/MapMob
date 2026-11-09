@@ -8,6 +8,7 @@ import { ChartPeriod } from '../../../shared/models/chart-period';
 import { ChartSeries } from '../../../shared/models/chart-series';
 import { CategoryShare } from '../models/category-share';
 import { GovernorateActivity } from '../models/governorate-activity';
+import { ReportExportRequest } from '../models/report-export-request';
 import { UsageMetric } from '../models/usage-metric';
 import { LiveCategoryShare } from './live-category-share';
 import { LiveGovernorateActivity } from './live-governorate-activity';
@@ -74,5 +75,16 @@ export class ReportsHttpRepository implements ReportsRepository {
     return this.httpClient
       .get<LiveChartSeries>(`${this.reportsUrl}/revenue`, { params: { period } })
       .pipe(map((series) => toChartSeries(series, period)));
+  }
+
+  exportReports(request: ReportExportRequest): Observable<Blob> {
+    return this.httpClient.get(`${this.reportsUrl}/statistics/export`, {
+      params: {
+        growth_period: request.growthPeriod,
+        usage_period: request.usagePeriod,
+        revenue_period: request.revenuePeriod,
+      },
+      responseType: 'blob',
+    });
   }
 }

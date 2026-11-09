@@ -89,4 +89,27 @@ describe('ReportsHttpRepository', () => {
 
     expect(await response).toEqual({ name: 'الإيرادات', points: [{ label: '2026', value: 1000 }] });
   });
+
+  it('downloads the statistics file from the server with the period of each card', async () => {
+    const file = new Blob(['csv']);
+    const response = firstValueFrom(
+      repository.exportReports({
+        growthPeriod: 'weekly',
+        usagePeriod: 'yearly',
+        revenuePeriod: 'monthly',
+      }),
+    );
+
+    const request = http.expectOne(
+      (candidate) => candidate.url === `${REPORTS_URL}/statistics/export`,
+    );
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    expect(request.request.params.get('growth_period')).toBe('weekly');
+    expect(request.request.params.get('usage_period')).toBe('yearly');
+    expect(request.request.params.get('revenue_period')).toBe('monthly');
+    request.flush(file);
+
+    expect(await response).toEqual(file);
+  });
 });

@@ -7,6 +7,7 @@ import { ChartPeriod } from '../../../shared/models/chart-period';
 import { ChartSeries } from '../../../shared/models/chart-series';
 import { CategoryShare } from '../models/category-share';
 import { GovernorateActivity } from '../models/governorate-activity';
+import { ReportExportRequest } from '../models/report-export-request';
 import { UsageMetric } from '../models/usage-metric';
 import {
   CATEGORY_SHARES,
@@ -16,6 +17,7 @@ import {
   WEEKLY_NEW_USERS,
   WEEKLY_USAGE_METRICS,
 } from './reports-mock-samples';
+import { buildReportsCsvFile } from './reports-csv';
 import { ReportsRepository } from './reports.repository';
 
 const ACTIVE_USERS_NAME = 'المستخدمون النشطون';
@@ -102,5 +104,17 @@ export class ReportsMockRepository implements ReportsRepository {
 
   getRevenueSeries(period: ChartPeriod): Observable<ChartSeries> {
     return mockResponse(buildRevenueSeries(period));
+  }
+
+  exportReports(request: ReportExportRequest): Observable<Blob> {
+    return mockResponse(
+      buildReportsCsvFile({
+        categoryShares: CATEGORY_SHARES,
+        usageMetrics: buildUsageMetrics(request.usagePeriod),
+        governorateActivities: GOVERNORATE_ACTIVITIES,
+        growthSeries: buildGrowthSeries(request.growthPeriod),
+        revenueSeries: buildRevenueSeries(request.revenuePeriod),
+      }),
+    );
   }
 }

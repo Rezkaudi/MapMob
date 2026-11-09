@@ -3,6 +3,7 @@ import { ChartPeriod } from '../../../shared/models/chart-period';
 import { ChartSeries } from '../../../shared/models/chart-series';
 import { CategoryShare } from '../models/category-share';
 import { GovernorateActivity } from '../models/governorate-activity';
+import { ReportExportRequest } from '../models/report-export-request';
 import { UsageMetric } from '../models/usage-metric';
 
 export abstract class ReportsRepository {
@@ -12,4 +13,5 @@ export abstract class ReportsRepository {
   abstract getGrowthSeries(period: ChartPeriod): Observable<readonly ChartSeries[]>;
   abstract getUsageMetrics(period: ChartPeriod): Observable<readonly UsageMetric[]>;
   abstract getRevenueSeries(period: ChartPeriod): Observable<ChartSeries>;
+  abstract exportReports(request: ReportExportRequest): Observable<Blob>;
 }

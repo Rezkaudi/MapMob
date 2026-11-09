@@ -36,7 +36,21 @@ const DAY = /^\d{4}-\d\d-\d\d$/;
 
 describe('the API reference data', () => {
   it('lists every call both apps make, the three the place form needs, and me/logout for each app', () => {
-    expect(countEndpoints(API_FEATURES).total).toBe(200);
+    expect(countEndpoints(API_FEATURES).total).toBe(201);
+  });
+
+  it('lets the admin download the statistics page as a file, one period per chart', () => {
+    const reports = API_FEATURES.find((feature) => feature.id === 'reports');
+    const download = reports?.endpoints.find((endpoint) => endpoint.id === 'reports-export');
+
+    expect(download?.method).toBe('GET');
+    expect(download?.path).toBe('/reports/export');
+    expect(download?.response.contentType).toBe('text/csv');
+    expect(download?.queryParams?.map((param) => param.name)).toEqual([
+      'growthPeriod',
+      'usagePeriod',
+      'revenuePeriod',
+    ]);
   });
 
   it('lets the admin correct or delete a recorded payment', () => {

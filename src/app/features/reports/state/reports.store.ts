@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, forkJoin, of, pipe, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, lastValueFrom, of, pipe, switchMap, tap } from 'rxjs';
 import { ChartSeries } from '../../../shared/models/chart-series';
 import { withRequestStatus } from '../../../shared/state/with-request-status';
 import { ReportsRepository } from '../data/reports.repository';
@@ -21,6 +21,8 @@ interface ReportsState {
   readonly growth: PeriodChartState<readonly ChartSeries[]>;
   readonly usage: PeriodChartState<readonly UsageMetric[]>;
   readonly revenue: PeriodChartState<ChartSeries | null>;
+  readonly isExporting: boolean;
+  readonly exportError: string | null;
 }
 
 /** The design marks اسبوعي active on growth and usage, and شهري on revenue. */
@@ -30,6 +32,8 @@ const initialState: ReportsState = {
   growth: { period: 'weekly', data: [], isLoading: false },
   usage: { period: 'weekly', data: [], isLoading: false },
   revenue: { period: 'monthly', data: null, isLoading: false },
+  isExporting: false,
+  exportError: null,
 };
 
 export const ReportsStore = signalStore(
@@ -99,5 +103,27 @@ export const ReportsStore = signalStore(
       load: (period) => repository.getRevenueSeries(period),
       reportError: store.setError,
     }),
+
+    async exportReports(): Promise<Blob | null> {
+      patchState(store, { isExporting: true, exportError: null });
+      try {
+        return await lastValueFrom(
+          repository.exportReports({
+            growthPeriod: store.growth().period,
+            usagePeriod: store.usage().period,
+            revenuePeriod: store.revenue().period,
+          }),
+        );
+      } catch (error) {
+        patchState(store, { exportError: (error as Error).message });
+        return null;
+      } finally {
+        patchState(store, { isExporting: false });
+      }
+    },
+
+    clearExportError(): void {
+      patchState(store, { exportError: null });
+    },
   })),
 );

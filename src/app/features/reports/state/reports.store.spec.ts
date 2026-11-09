@@ -21,6 +21,7 @@ function fullRepository(overrides: Partial<ReportsRepository> = {}): ReportsRepo
     getUsageMetrics: () => of(USAGE),
     getGrowthSeries: () => of(GROWTH),
     getRevenueSeries: () => of(REVENUE),
+    exportReports: () => of(new Blob(['csv'])),
     ...overrides,
   };
 }
@@ -146,5 +147,43 @@ describe('ReportsStore', () => {
     expect(store.governorateActivityRows()[0].valueText).toBe('16,750 زيارة');
     expect(store.growthChart().series.length).toBe(2);
     expect(store.revenueChart().xaxis.categories).toEqual(['Jul']);
+  });
+
+  it('exports the statistics with the period each card shows', async () => {
+    const file = new Blob(['csv']);
+    let exportedRequest: unknown = null;
+    const store = createStore(
+      fullRepository({
+        exportReports: (request) => {
+          exportedRequest = request;
+          return of(file);
+        },
+      }),
+    );
+    store.setUsagePeriod('yearly');
+
+    const exported = await store.exportReports();
+
+    expect(exported).toBe(file);
+    expect(exportedRequest).toEqual({
+      growthPeriod: 'weekly',
+      usagePeriod: 'yearly',
+      revenuePeriod: 'monthly',
+    });
+    expect(store.isExporting()).toBe(false);
+  });
+
+  it('keeps the export error apart from the page error', async () => {
+    const store = createStore(
+      fullRepository({ exportReports: () => throwError(() => new Error('لا يوجد ملف')) }),
+    );
+
+    const exported = await store.exportReports();
+
+    expect(exported).toBeNull();
+    expect(store.exportError()).toBe('لا يوجد ملف');
+    expect(store.error()).toBeNull();
+    store.clearExportError();
+    expect(store.exportError()).toBeNull();
   });
 });

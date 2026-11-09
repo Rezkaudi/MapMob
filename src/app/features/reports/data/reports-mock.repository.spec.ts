@@ -66,4 +66,19 @@ describe('ReportsMockRepository', () => {
     expect(revenue.points.length).toBe(12);
     expect(revenue.points.find((point) => point.label === 'Jul')?.value).toBe(48200);
   });
+
+  it('exports every card as one CSV file', async () => {
+    const file = await firstValueFrom(
+      repository.exportReports({
+        growthPeriod: 'weekly',
+        usagePeriod: 'weekly',
+        revenuePeriod: 'monthly',
+      }),
+    );
+    const text = await file.text();
+
+    expect(file.type).toContain('text/csv');
+    expect(text).toContain('القسم,البند,القيمة,النسبة');
+    expect(text).toContain('النشاط حسب الموقع الجغرافي,دمشق,16750,32%');
+  });
 });
