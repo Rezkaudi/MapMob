@@ -1,7 +1,7 @@
 import { LIVE_GOLD_PLAN } from '../../../shared/testing/live-plan-fixture';
 import {
   toLivePlaceStatus,
-  toLivePlanSlug,
+  toLivePackageSlug,
   toPlace,
   toPlacePackage,
   toPlaceStatus,
@@ -59,9 +59,9 @@ describe('live place mapping', () => {
   });
 
   it('turns a package filter into the slug of a plan of that level', () => {
-    expect(toLivePlanSlug('free', PLANS)).toBe('free');
-    expect(toLivePlanSlug('premium', PLANS)).toBe('golden-plan');
-    expect(toLivePlanSlug('basic', PLANS)).toBe('silver');
-    expect(toLivePlanSlug('basic', [LIVE_GOLD_PLAN])).toBe('basic');
+    expect(toLivePackageSlug('free', PLANS)).toBe('free');
+    expect(toLivePackageSlug('premium', PLANS)).toBe('golden-plan');
+    expect(toLivePackageSlug('basic', PLANS)).toBe('silver');
+    expect(toLivePackageSlug('basic', [LIVE_GOLD_PLAN])).toBe('basic');
   });
 });

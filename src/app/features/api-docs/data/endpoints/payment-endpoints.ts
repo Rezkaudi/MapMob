@@ -56,6 +56,7 @@ const NEW_PAYMENT_FIELDS = [
     'date (yyyy-mm-dd)',
     'Start of the paid period. The server sets endsOn from the term.',
   ),
+  field('paymentMethod', 'enum: cash | other', 'Picked in the dialog; cash first.'),
   optionalField('notes', 'string', 'Max 500.'),
 ];
 
@@ -162,7 +163,7 @@ export const PAYMENTS_FEATURE: ApiFeature = {
       id: 'payments-create',
       method: 'POST',
       path: '/payments',
-      summary: 'Record a cash payment by hand.',
+      summary: 'Record a payment by hand, cash or other.',
       permission: 'payments:add',
       body: { contentType: 'application/json', fields: NEW_PAYMENT_FIELDS, example: NEW_PAYMENT },
       response: {
@@ -179,7 +180,7 @@ export const PAYMENTS_FEATURE: ApiFeature = {
       ],
       notes: [
         'Send an Idempotency-Key header (a UUID the dialog makes once). A repeat with the same key and body returns the first payment instead of recording it twice.',
-        "In one transaction: store the payment as completed with method cash, store its exchange rate to the platform currency, then create (new), replace (upgrade) or extend (renewal) the place's subscription.",
+        "In one transaction: store the payment as completed with the picked method, store its exchange rate to the platform currency, then create (new), replace (upgrade) or extend (renewal) the place's subscription.",
         "kind must match the place's subscription: new only without a running one, renewal only on the same plan, upgrade only to a higher tier. Otherwise 422.",
       ],
     },

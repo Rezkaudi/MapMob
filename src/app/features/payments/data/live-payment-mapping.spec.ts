@@ -23,6 +23,7 @@ const DRAFT = {
   startsOn: '2026-10-14',
   endsOn: '2026-11-13',
   notes: 'نقداً',
+  paymentMethod: 'cash' as const,
 };
 
 describe('live payment mapping', () => {
@@ -113,6 +114,12 @@ describe('live payment mapping', () => {
       status: 'active',
       auto_renew: false,
     });
+  });
+
+  it('writes "other" when the admin picks آخرى', () => {
+    const body = toLivePaymentBody({ ...DRAFT, paymentMethod: 'other' }, 9);
+
+    expect(body['payment_method']).toBe('other');
   });
 
   it('writes a paid cash payment tied to that subscription', () => {

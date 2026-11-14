@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { CLOCK } from '../../../core/config/clock';
 import { toCalendarDay } from '../../../shared/formatting/calendar-day';
 import { PaymentRepository } from '../data/payment.repository';
+import { PaymentMethod } from '../../../shared/models/payment-method';
 import { PaymentCurrency } from '../models/payment-currency';
 import { PaymentFormOptions } from '../models/payment-form-options';
 import { PaymentKind } from '../models/payment-kind';
@@ -30,6 +31,7 @@ interface NewPaymentState {
   readonly pickedCurrency: PaymentCurrency | null;
   readonly paidAt: string;
   readonly notes: string;
+  readonly paymentMethod: PaymentMethod;
   readonly isSaving: boolean;
   readonly saveError: string | null;
 }
@@ -50,6 +52,7 @@ const initialState: NewPaymentState = {
   pickedCurrency: null,
   paidAt: '',
   notes: '',
+  paymentMethod: 'cash',
   isSaving: false,
   saveError: null,
 };
@@ -115,6 +118,9 @@ export const NewPaymentStore = signalStore(
     setNotes(notes: string): void {
       patchState(store, { notes });
     },
+    setPaymentMethod(paymentMethod: PaymentMethod): void {
+      patchState(store, { paymentMethod });
+    },
     clearSaveError(): void {
       patchState(store, { saveError: null });
     },
@@ -148,6 +154,7 @@ export const NewPaymentStore = signalStore(
             startsOn,
             endsOn,
             notes: store.notes(),
+            paymentMethod: store.paymentMethod(),
           }),
         );
         patchState(store, initialState);

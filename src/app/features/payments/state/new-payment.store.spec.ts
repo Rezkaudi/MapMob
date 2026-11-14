@@ -150,9 +150,22 @@ describe('NewPaymentStore', () => {
         startsOn: '2026-09-17',
         endsOn: '2026-10-17',
         notes: 'دفعة نقدية',
+        paymentMethod: 'cash',
       },
     ]);
     expect(store.isOpen()).toBe(false);
+  });
+
+  it('starts on cash and saves آخرى when the admin picks it', async () => {
+    const { store, created } = setUp();
+    await store.open();
+    store.setPlanId('basic');
+    expect(store.paymentMethod()).toBe('cash');
+
+    store.setPaymentMethod('other');
+    await store.submit();
+
+    expect(created[0].paymentMethod).toBe('other');
   });
 
   it('starts on the merchant currency and saves the one the admin picks instead', async () => {

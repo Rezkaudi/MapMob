@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { toLiveFilterParams } from '../../../core/http/live-filter-params';
 import { PlaceQuery } from '../models/place-query';
 import { PlaceSort } from '../models/place-sort';
-import { toLivePlaceStatus, toLivePlanSlug } from './live-place-mapping';
+import { toLivePlaceStatus, toLivePackageSlug } from './live-place-mapping';
 
 // The server refuses "newest" by name; "latest" is its word for it.
 const LIVE_SORT: Record<PlaceSort, string> = {
@@ -19,7 +19,7 @@ export function toPlaceFilterParams(query: PlaceQuery, plans: readonly LivePlan[
     search: query.search,
     status: query.status ? toLivePlaceStatus(query.status) : undefined,
     category_id: query.category,
-    plan_tier: query.package ? toLivePlanSlug(query.package, plans) : undefined,
+    plan_tier: query.package ? toLivePackageSlug(query.package, plans) : undefined,
     sort_by: query.sort ? LIVE_SORT[query.sort] : null,
   });
 }

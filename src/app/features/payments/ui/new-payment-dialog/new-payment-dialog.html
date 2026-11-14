@@ -131,12 +131,30 @@
     </div>
 
     <div class="flex flex-col gap-1">
-      <p class="text-[12px]/[16px] font-bold text-[#334155]">طريقة الدفع</p>
-      <p
-        class="flex h-12 items-center rounded-lg bg-[#F2F4F6] px-4 text-[12px]/[18px] text-[#10B981]"
-      >
-        {{ cashLabel }}
-      </p>
+      <label for="payment-method" class="text-[12px]/[16px] font-bold text-[#334155]">
+        طريقة الدفع <span class="text-status-error" aria-hidden="true">*</span>
+      </label>
+      <div class="relative">
+        <select
+          id="payment-method"
+          data-testid="payment-method-select"
+          required
+          class="h-12 w-full appearance-none rounded-lg bg-[#F2F4F6] ps-5 pe-8 text-right text-[16px] text-text-primary outline-none"
+          (change)="onMethodChange($event)"
+        >
+          @for (method of methods; track method) {
+            <option [value]="method" [selected]="method === store.paymentMethod()">
+              {{ methodLabels[method] }}
+            </option>
+          }
+        </select>
+        <app-icon
+          name="chevron-down"
+          [size]="16"
+          class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-text-primary"
+          aria-hidden="true"
+        />
+      </div>
     </div>
 
     <div class="flex flex-col gap-1">

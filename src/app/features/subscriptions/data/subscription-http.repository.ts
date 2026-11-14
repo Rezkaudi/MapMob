@@ -77,7 +77,7 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
       switchMap((plans) =>
         this.httpClient
           .get<PagedResult<LiveSubscription>>(this.subscriptionsUrl, {
-            params: withPageNumber(toSubscriptionFilterParams(query), query),
+            params: withPageNumber(toSubscriptionFilterParams(query, plans), query),
           })
           .pipe(
             map((page) => ({
@@ -90,10 +90,14 @@ export class SubscriptionHttpRepository implements SubscriptionRepository {
   }
 
   exportSubscriptions(query: SubscriptionQuery): Observable<Blob> {
-    return this.httpClient.get(`${this.subscriptionsUrl}/export`, {
-      params: toSubscriptionFilterParams(query),
-      responseType: 'blob',
-    });
+    return this.readLivePlans().pipe(
+      switchMap((plans) =>
+        this.httpClient.get(`${this.subscriptionsUrl}/export`, {
+          params: toSubscriptionFilterParams(query, plans),
+          responseType: 'blob',
+        }),
+      ),
+    );
   }
 
   private savePlan(id: string, body: Record<string, unknown>): Observable<PackagePlan> {

@@ -15,16 +15,24 @@ import {
 
 const USER_FILTER_FIELDS = [
   ...PAGED_QUERY_FIELDS,
-  optionalField('accountType', 'enum: registered | visitor'),
+  optionalField(
+    'accountType',
+    'enum: registered | visitor',
+    'visitor = an account that never confirmed its sign-up code.',
+  ),
   optionalField('status', ACTIVATION_STATUS),
   ...dayRangeFields('registeredFrom', 'registeredTo', 'of registration'),
 ];
 
 const USER_ROW_FIELDS = [
   field('id', 'string'),
-  field('name', 'string', 'A visitor gets a made-up name such as "زائر 1042".'),
-  field('email / phone', 'string | null', 'Both may be null for a visitor.'),
-  field('accountType', 'enum: registered | visitor'),
+  field('name', 'string'),
+  field('email / phone', 'string | null'),
+  field(
+    'accountType',
+    'enum: registered | visitor',
+    'visitor until the user confirms the sign-up code; the filter uses the same rule.',
+  ),
   field('governorate', 'object | null', '{ id, name }. null when unknown.'),
   field('createdAt', 'datetime (ISO 8601)', 'Registration time.'),
   field('lastActiveAt', 'datetime (ISO 8601) | null'),

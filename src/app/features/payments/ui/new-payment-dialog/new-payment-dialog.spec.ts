@@ -157,6 +157,30 @@ describe('NewPaymentDialog', () => {
     expect(textOf(element)).toContain('يبدأ الاشتراك فورياً من تاريخ استلام الدفعة اليوم.');
   });
 
+  it('offers cash and other as the payment method', async () => {
+    const { fixture, store, element } = await render();
+    const select = element.querySelector(
+      '[data-testid="payment-method-select"]',
+    ) as HTMLSelectElement;
+
+    expect(Array.from(select.options).map((option) => option.textContent?.trim())).toEqual([
+      'نقداً',
+      'آخرى',
+    ]);
+    select.value = 'other';
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expect(store.paymentMethod()).toBe('other');
+  });
+
+  it('marks the payment method as required, as the other required fields are', async () => {
+    const { element } = await render();
+    const label = element.querySelector('label[for="payment-method"]') as HTMLElement;
+
+    expect(label.querySelector('.text-status-error')?.textContent?.trim()).toBe('*');
+  });
+
   it('records the payment from its footer', async () => {
     const { fixture, store, element } = await render();
     const submit = vi.spyOn(store, 'submit');

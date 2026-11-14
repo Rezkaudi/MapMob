@@ -163,6 +163,7 @@ describe('SubscriptionHttpRepository', () => {
       repository.exportSubscriptions({ pageIndex: 2, pageSize: 10, status: 'expired' }),
     );
 
+    http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
     const request = http.expectOne((call) => call.url === `${SUBSCRIPTIONS_URL}/export`);
     expect(request.request.params.get('status')).toBe('expired');
     expect(request.request.params.has('page')).toBe(false);
@@ -174,13 +175,20 @@ describe('SubscriptionHttpRepository', () => {
 
   it('downloads the server file with every table filter, even ones the server may ignore', async () => {
     const response = firstValueFrom(
-      repository.exportSubscriptions({ pageIndex: 0, pageSize: 10, search: 'دمشق', status: 'paused', tier: 'free' }),
+      repository.exportSubscriptions({
+        pageIndex: 0,
+        pageSize: 10,
+        search: 'دمشق',
+        status: 'paused',
+        tier: 'featured',
+      }),
     );
 
+    http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
     const request = http.expectOne((call) => call.url === `${SUBSCRIPTIONS_URL}/export`);
     expect(request.request.params.get('search')).toBe('دمشق');
     expect(request.request.params.get('status')).toBe('cancelled');
-    expect(request.request.params.get('plan_tier')).toBe('free');
+    expect(request.request.params.get('plan_tier')).toBe(LIVE_GOLD_PLAN.slug);
     expect(request.request.responseType).toBe('blob');
     request.flush(new Blob(['csv'], { type: 'text/csv' }));
 

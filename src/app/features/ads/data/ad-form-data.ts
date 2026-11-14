@@ -1,6 +1,13 @@
 import { AdDraft } from '../models/ad-draft';
 import { toLiveAdPlacement } from './live-ad-placement';
-import { LIVE_ACTIVE_AD_STATUS, LIVE_PAUSED_AD_STATUS } from './live-ad-status';
+import {
+  LIVE_ACTIVE_AD_STATUS,
+  LIVE_ADVERTISER_TYPE,
+  LIVE_PAUSED_AD_STATUS,
+} from './live-ad-status';
+
+// An empty store turns an ad into an app ad; leaving the field out keeps the saved store.
+const NO_STORE = '';
 
 const FIRST_MEDIA_ORDER = '1';
 
@@ -17,9 +24,8 @@ export function toAdFormData(draft: AdDraft): FormData {
   if (draft.text) {
     setBothLanguages(data, 'description', draft.text);
   }
-  if (draft.advertiserType === 'place' && draft.placeId) {
-    data.set('store_id', draft.placeId);
-  }
+  data.set('advertiser_type', LIVE_ADVERTISER_TYPE[draft.advertiserType]);
+  data.set('store_id', draft.advertiserType === 'place' ? (draft.placeId ?? NO_STORE) : NO_STORE);
   data.set('placement', toLiveAdPlacement(draft.placement));
   data.set('starts_at', draft.startsOn);
   if (draft.endsOn) {

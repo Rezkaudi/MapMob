@@ -16,8 +16,8 @@ const YEAR_DAY_COUNT = 365;
 const MONTHLY_CYCLE = 'شهري';
 const YEARLY_CYCLE = 'سنوي';
 const ACTIVE_SUBSCRIPTION = 'active';
-// The dialog records cash taken in person, so the payment is paid already.
 const CASH_METHOD = 'cash';
+// The dialog records money already taken, so the payment is paid.
 const PAID_STATUS = 'paid';
 
 interface StoreChoice {
@@ -127,7 +127,8 @@ export function toLivePaymentBody(
     amount: draft.amount,
     currency_code: draft.currency,
     paid_at: draft.paidAt,
-    payment_method: CASH_METHOD,
+    // The server takes any word, so the panel's own two, cash and other, are saved as they are.
+    payment_method: draft.paymentMethod,
     status: PAID_STATUS,
     notes: draft.notes,
   };

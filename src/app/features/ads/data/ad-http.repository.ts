@@ -33,7 +33,7 @@ export class AdHttpRepository implements AdRepository {
     const today = this.today();
     return this.httpClient
       .get<LivePaginationPage<LiveAd>>(this.adsUrl, {
-        params: withPageNumber(toAdFilterParams(query, today), query),
+        params: withPageNumber(toAdFilterParams(query), query),
       })
       .pipe(
         map((page) => ({
@@ -90,7 +90,7 @@ export class AdHttpRepository implements AdRepository {
 
   exportAds(query: AdQuery): Observable<Blob> {
     return this.httpClient.get(`${this.adsUrl}/export`, {
-      params: toAdFilterParams(query, this.today()),
+      params: toAdFilterParams(query),
       responseType: 'blob',
     });
   }

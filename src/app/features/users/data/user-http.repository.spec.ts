@@ -17,6 +17,7 @@ const LIVE_USER: LiveUser = {
   status: 'suspended',
   'SELECTED LOCATION': 'محافظة دمشق',
   lastActiveAt: null,
+  email_verified_at: '2026-09-25T17:56:00.000000Z',
   created_at: '2026-09-25T17:55:30.000000Z',
 };
 

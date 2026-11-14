@@ -77,7 +77,7 @@ function recordPayment(
     companyName: merchant.name,
     amount: draft.amount,
     currency: draft.currency,
-    paymentMethod: 'cash',
+    paymentMethod: draft.paymentMethod,
     paidAt: draft.paidAt,
     notes: draft.notes,
   };

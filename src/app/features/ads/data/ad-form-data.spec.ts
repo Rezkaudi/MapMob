@@ -15,6 +15,7 @@ describe('toAdFormData', () => {
       'title[en]': 'حملة الصيف لصيدلية الحياة',
       'description[ar]': 'خصم 25% على جميع منتجات العناية بالبشرة.',
       'description[en]': 'خصم 25% على جميع منتجات العناية بالبشرة.',
+      advertiser_type: 'store',
       store_id: 'place-3',
       placement: 'search',
       starts_at: '2026-10-15',
@@ -27,12 +28,16 @@ describe('toAdFormData', () => {
     expect((data.get('media[0][file]') as File).name).toBe('summer-promo-ad.jpg');
   });
 
-  it('leaves out the store of an app ad, the last day of an ongoing ad, and media not picked', () => {
-    const data = toAdFormData(
-      buildAdDraft({ advertiserType: 'admin', placeId: 'place-3', endsOn: null, text: '' }),
-    );
+  it('turns an ad into an app ad by sending an empty store', () => {
+    const data = toAdFormData(buildAdDraft({ advertiserType: 'admin', placeId: 'place-3' }));
 
-    expect(data.has('store_id')).toBe(false);
+    expect(data.get('advertiser_type')).toBe('admin');
+    expect(data.get('store_id')).toBe('');
+  });
+
+  it('leaves out the last day of an ongoing ad and media not picked', () => {
+    const data = toAdFormData(buildAdDraft({ endsOn: null, text: '' }));
+
     expect(data.has('ends_at')).toBe(false);
     expect(data.has('description[ar]')).toBe(false);
     expect(data.has('media[0][file]')).toBe(false);

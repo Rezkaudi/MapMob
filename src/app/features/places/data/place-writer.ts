@@ -10,7 +10,7 @@ import { PlaceFormChoices } from '../models/place-form-choices';
 import { PlacePackage } from '../models/place-package';
 import { PlaceSaveRequest } from '../models/place-save-request';
 import { resolvePlaceIds } from './live-place-choices';
-import { toLivePlanSlug } from './live-place-mapping';
+import { toLivePackageSlug } from './live-place-mapping';
 import { toLiveStoreForm } from './live-store-form';
 import { findOwnerLoginChanges } from './owner-login-changes';
 import { PlacePartsWriter } from './place-parts-writer';
@@ -85,7 +85,7 @@ export class PlaceWriter {
     previousPackage: PlacePackage | null,
     plans: readonly LivePlan[],
   ): Observable<void> {
-    const slug = toLivePlanSlug(placePackage, plans);
+    const slug = toLivePackageSlug(placePackage, plans);
     const plan = plans.find((candidate) => candidate.slug === slug);
     if (placePackage === previousPackage || placePackage === 'free' || !plan) {
       return of(undefined);

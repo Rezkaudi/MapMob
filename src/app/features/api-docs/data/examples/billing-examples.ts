@@ -154,5 +154,6 @@ export const NEW_PAYMENT = {
   currency: 'SYP',
   paidOn: '2026-09-20',
   startsOn: '2026-09-20',
+  paymentMethod: 'other',
   notes: 'ترقية إلى المميزة',
 };

@@ -1,4 +1,5 @@
 import { LivePlan } from '../../../shared/data/live-plan';
+import { FREE_PLAN_SLUG, toLivePlanSlug } from '../../../shared/data/live-plan-slug';
 import { toPlanTier } from '../../../shared/data/live-plan-tier';
 import { PlanTier } from '../../../shared/models/plan-tier';
 import { Place } from '../models/place';
@@ -8,7 +9,6 @@ import { LivePlaceRow } from './live-place-row';
 
 // The server rejects "suspended" when saving and keeps a suspended place as "inactive".
 const LIVE_SUSPENDED = 'inactive';
-const FREE_PLAN_SLUG = 'free';
 
 export function toPlaceStatus(liveStatus: string): PlaceStatus {
   if (liveStatus === 'active' || liveStatus === 'pending') {
@@ -36,16 +36,14 @@ export function toPlacePackage(slug: string | null, plans: readonly LivePlan[]):
   return plan ? PACKAGE_OF_TIER[toPlanTier(plan, plans)] : 'basic';
 }
 
-/** The filter takes one slug, so a level with several plans filters by the first. */
-export function toLivePlanSlug(placePackage: PlacePackage, plans: readonly LivePlan[]): string {
-  if (placePackage === 'free') {
-    return FREE_PLAN_SLUG;
-  }
-  const plan = plans.find(
-    (candidate) =>
-      candidate.price > 0 && PACKAGE_OF_TIER[toPlanTier(candidate, plans)] === placePackage,
-  );
-  return plan?.slug ?? placePackage;
+const TIER_OF_PACKAGE: Record<PlacePackage, PlanTier> = {
+  free: 'free',
+  basic: 'basic',
+  premium: 'featured',
+};
+
+export function toLivePackageSlug(placePackage: PlacePackage, plans: readonly LivePlan[]): string {
+  return toLivePlanSlug(TIER_OF_PACKAGE[placePackage], plans);
 }
 
 export function toPlace(row: LivePlaceRow, plans: readonly LivePlan[]): Place {

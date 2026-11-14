@@ -1,8 +1,9 @@
+import { PaymentMethod } from '../../../shared/models/payment-method';
 import { PaymentCurrency } from './payment-currency';
 import { PaymentKind } from './payment-kind';
 import { PaymentTerm } from './payment-term';
 
-/** What the dialog sends when the admin records a cash payment. */
+/** What the dialog sends when the admin records a payment. */
 export interface NewPaymentDraft {
   readonly merchantId: string;
   readonly kind: PaymentKind;
@@ -15,4 +16,5 @@ export interface NewPaymentDraft {
   readonly startsOn: string;
   readonly endsOn: string;
   readonly notes: string;
+  readonly paymentMethod: PaymentMethod;
 }

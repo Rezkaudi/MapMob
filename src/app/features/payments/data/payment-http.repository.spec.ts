@@ -84,12 +84,12 @@ describe('PaymentHttpRepository', () => {
     request.flush({ data: [], pagination: { total: 0 } });
   });
 
-  it('asks for every method but cash when the filter says "other"', () => {
+  it('asks for the payments saved as "other" when the filter says آخرى', () => {
     repository.getPayments({ pageIndex: 0, pageSize: 10, paymentMethod: 'other' }).subscribe();
 
     const request = http.expectOne((candidate) => candidate.url === PAYMENTS_URL);
-    expect(request.request.params.get('payment_method_not')).toBe('cash');
-    expect(request.request.params.has('payment_method')).toBe(false);
+    expect(request.request.params.get('payment_method')).toBe('other');
+    expect(request.request.params.has('payment_method_not')).toBe(false);
     request.flush({ data: [], pagination: { total: 0 } });
   });
 
@@ -172,6 +172,7 @@ describe('PaymentHttpRepository', () => {
         startsOn: '2026-11-04',
         endsOn: '2026-12-03',
         notes: '',
+        paymentMethod: 'other',
       }),
     );
 
@@ -179,6 +180,7 @@ describe('PaymentHttpRepository', () => {
     expect(subscription.request.body.plan_id).toBe('1');
     subscription.flush({ data: { ...LIVE_PAYMENT_SUBSCRIPTION, id: 9 } });
     const payment = http.expectOne({ method: 'POST', url: PAYMENTS_URL });
+    expect(payment.request.body.payment_method).toBe('other');
     expect(payment.request.body.subscription_id).toBe(9);
     payment.flush({ data: { ...LIVE_PAYMENT, id: 5, subscription_id: 9 } });
 
@@ -218,13 +220,18 @@ describe('PaymentHttpRepository', () => {
   it('downloads the export file from the server, with the table filters', async () => {
     const file = new Blob(['ID'], { type: 'text/csv' });
     const response = firstValueFrom(
-      repository.exportPayments({ pageIndex: 0, pageSize: 10, paymentMethod: 'other', currency: 'USD' }),
+      repository.exportPayments({
+        pageIndex: 0,
+        pageSize: 10,
+        paymentMethod: 'other',
+        currency: 'USD',
+      }),
     );
 
     const request = http.expectOne((candidate) => candidate.url === `${PAYMENTS_URL}/export`);
     expect(request.request.method).toBe('GET');
     expect(request.request.responseType).toBe('blob');
-    expect(request.request.params.get('payment_method_not')).toBe('cash');
+    expect(request.request.params.get('payment_method')).toBe('other');
     expect(request.request.params.get('currency')).toBe('USD');
     expect(request.request.params.has('per_page')).toBe(false);
     request.flush(file);

@@ -9,6 +9,7 @@ const LIVE_USER: LiveUser = {
   status: 'active',
   'SELECTED LOCATION': 'محافظة دمشق',
   lastActiveAt: '2026-10-12T08:00:00.000000Z',
+  email_verified_at: '2026-09-29T18:54:00.000000Z',
   created_at: '2026-09-29T18:53:05.000000Z',
 };
 
@@ -25,6 +26,16 @@ describe('toAppUser', () => {
       lastActiveAt: '2026-10-12T08:00:00.000000Z',
       status: 'active',
     });
+  });
+
+  it('calls an account that never confirmed its sign-up a visitor, as the server filter does', () => {
+    expect(toAppUser({ ...LIVE_USER, email_verified_at: null }).accountType).toBe('visitor');
+  });
+
+  it('keeps the account registered when a reply leaves the sign-up field out', () => {
+    const { email_verified_at: _, ...withoutField } = LIVE_USER;
+
+    expect(toAppUser(withoutField).accountType).toBe('registered');
   });
 
   it('reads every status but active as suspended', () => {

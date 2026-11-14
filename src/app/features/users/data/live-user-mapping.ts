@@ -21,8 +21,7 @@ export function toAppUser(user: LiveUser): AppUser {
     name: user.name,
     email: user.email,
     phone: user.phone,
-    // The server lists accounts only; a visitor has none.
-    accountType: 'registered',
+    accountType: user.email_verified_at === null ? 'visitor' : 'registered',
     governorateName: user['SELECTED LOCATION'] ?? NO_GOVERNORATE_LABEL,
     registeredAt: user.created_at,
     // The server does not record visits yet, so the sign-up moment stands in.
