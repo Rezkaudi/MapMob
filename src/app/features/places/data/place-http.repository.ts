@@ -34,7 +34,8 @@ import { PlaceRepository } from './place.repository';
 import { PlaceWriter } from './place-writer';
 
 // Asked for, so a list that honours it answers in one page.
-const ALL_ROWS_PAGE_SIZE = 1000;
+// The largest page the server allows (delivery platforms refuse more with 422); readAll walks every page.
+const ALL_ROWS_PAGE_SIZE = 100;
 
 @Injectable()
 export class PlaceHttpRepository implements PlaceRepository {

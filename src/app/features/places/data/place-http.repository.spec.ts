@@ -57,10 +57,11 @@ describe('PlaceHttpRepository', () => {
     http.expectOne(PLANS_URL).flush({ data: [LIVE_GOLD_PLAN] });
   }
 
+  // The server refuses more than 100 rows a page, so every list is read 100 at a time.
   function answerPlatforms(): void {
-    http
-      .expectOne((candidate) => candidate.url === PLATFORMS_URL)
-      .flush({ data: [TAWSEEL], meta: { current_page: 1, last_page: 1 } });
+    const request = http.expectOne((candidate) => candidate.url === PLATFORMS_URL);
+    expect(request.request.params.get('per_page')).toBe('100');
+    request.flush({ data: [TAWSEEL], meta: { current_page: 1, last_page: 1 } });
   }
 
   function answerList(path: string, rows: readonly object[]): void {
