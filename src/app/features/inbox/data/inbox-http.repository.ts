@@ -1,3 +1,4 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, of, switchMap, throwError } from 'rxjs';
@@ -12,7 +13,6 @@ import { LiveInboxNotification } from './live-inbox-notification';
 
 const READ_IN_BACKGROUND = new HttpContext().set(SKIPS_WRITE_LOCK, true);
 
-const ALL_ROWS_PAGE_SIZE = 100;
 const NOT_FOUND_MESSAGE = 'لم يعد هذا الإشعار موجوداً.';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class InboxHttpRepository implements InboxRepository {
   getNotifications(): Observable<readonly InboxNotification[]> {
     return readAllMetaPages((page) =>
       this.httpClient.get<LiveMetaPage<LiveInboxNotification>>(this.inboxUrl, {
-        params: { page, per_page: ALL_ROWS_PAGE_SIZE },
+        params: { page, per_page: LIVE_MAX_PAGE_SIZE },
       }),
     ).pipe(map((rows) => rows.map(toInboxNotification)));
   }

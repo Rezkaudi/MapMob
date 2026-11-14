@@ -1,3 +1,4 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, forkJoin, map, shareReplay, switchMap } from 'rxjs';
@@ -34,8 +35,6 @@ import { PlaceRepository } from './place.repository';
 import { PlaceWriter } from './place-writer';
 
 // Asked for, so a list that honours it answers in one page.
-// The largest page the server allows (delivery platforms refuse more with 422); readAll walks every page.
-const ALL_ROWS_PAGE_SIZE = 100;
 
 @Injectable()
 export class PlaceHttpRepository implements PlaceRepository {
@@ -167,7 +166,7 @@ export class PlaceHttpRepository implements PlaceRepository {
   private readAll<T>(path: string): Observable<readonly T[]> {
     return readAllMetaPages((page) =>
       this.httpClient.get<LiveMetaPage<T>>(`${this.adminUrl}/${path}`, {
-        params: { page, per_page: ALL_ROWS_PAGE_SIZE },
+        params: { page, per_page: LIVE_MAX_PAGE_SIZE },
       }),
     );
   }

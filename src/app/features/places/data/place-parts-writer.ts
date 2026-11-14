@@ -1,3 +1,5 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
+import { LiveMetaPage, readAllMetaPages } from '../../../core/http/read-all-meta-pages';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, concat, last, map, of, switchMap } from 'rxjs';
@@ -34,7 +36,6 @@ interface LiveLinkRow extends LiveRow {
 
 type DeliveryLinkValue = PlaceFormValue['deliveryLinks'][number];
 
-const ALL_ROWS_PAGE_SIZE = 1000;
 const PUT_OVER_POST = { _method: 'PUT' };
 
 /** Runs the calls one at a time, so the slow server is never asked many things at once. */
@@ -100,12 +101,14 @@ export class PlacePartsWriter {
     const url = `${this.adminUrl}/products`;
     const read = isNew
       ? of([])
-      : this.httpClient
-          .get<LiveEnvelope<readonly LiveProductRow[]>>(url, {
-            params: { store_id: storeId, per_page: ALL_ROWS_PAGE_SIZE },
-          })
+      : // Every page, since a saved product missing from the form is deleted.
+        readAllMetaPages((page) =>
+          this.httpClient.get<LiveMetaPage<LiveProductRow>>(url, {
+            params: { store_id: storeId, page, per_page: LIVE_MAX_PAGE_SIZE },
+          }),
+        )
           // Only this place's rows are touched, even if the filter were ever ignored.
-          .pipe(map(({ data }) => data.filter((row) => String(row.store_id) === storeId)));
+          .pipe(map((rows) => rows.filter((row) => String(row.store_id) === storeId)));
     return read.pipe(
       switchMap((rows) => {
         const savedIds = new Set(rows.map((row) => String(row.id)));

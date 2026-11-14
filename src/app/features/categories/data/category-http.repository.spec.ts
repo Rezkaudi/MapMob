@@ -121,14 +121,21 @@ describe('CategoryHttpRepository', () => {
     expect((await response).items.map((category) => category.id)).toEqual(['1', '17']);
   });
 
-  it('asks the server for the main categories with an empty parent id', async () => {
+  it('reads every page of main categories, 100 at a time, with an empty parent id', async () => {
     const response = firstValueFrom(repository.getMainCategories());
-    const request = http.expectOne((call) => call.url === CATEGORIES_URL);
-    expect(request.request.params.get('parent_id')).toBe('');
-    expect(request.request.urlWithParams).toContain('parent_id=&');
-    request.flush({ data: [LIVE_MAIN_CATEGORY], meta: { total: 1 } });
+    const first = http.expectOne((call) => call.url === CATEGORIES_URL);
+    expect(first.request.params.get('parent_id')).toBe('');
+    expect(first.request.urlWithParams).toContain('parent_id=&');
+    expect(first.request.params.get('per_page')).toBe('100');
+    first.flush({ data: [LIVE_MAIN_CATEGORY], meta: { current_page: 1, last_page: 2, total: 2 } });
+    const second = http.expectOne((call) => call.url === CATEGORIES_URL);
+    expect(second.request.params.get('page')).toBe('2');
+    second.flush({
+      data: [{ ...LIVE_MAIN_CATEGORY, id: 2, name: 'صيدليات' }],
+      meta: { current_page: 2, last_page: 2, total: 2 },
+    });
 
-    expect(await response).toEqual([{ id: '1', name: 'مطاعم' }]);
+    expect((await response).map((category) => category.id)).toEqual(['1', '2']);
   });
 
   it('creates a category with the picked icon drawn as a file', async () => {

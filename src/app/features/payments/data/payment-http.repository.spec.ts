@@ -148,9 +148,9 @@ describe('PaymentHttpRepository', () => {
     http
       .expectOne(`${BASE_URL}/admin/offers/formoptions`)
       .flush({ data: { stores: [{ id: 1, name: 'متجر دمشق' }] } });
-    http
-      .expectOne(`${BASE_URL}/admin/subscriptions`)
-      .flush({ items: [LIVE_PAYMENT_SUBSCRIPTION], totalCount: 1 });
+    const subscriptions = http.expectOne((call) => call.url === `${BASE_URL}/admin/subscriptions`);
+    expect(subscriptions.request.params.get('per_page')).toBe('100');
+    subscriptions.flush({ items: [LIVE_PAYMENT_SUBSCRIPTION], totalCount: 1 });
     http.expectOne(`${BASE_URL}/admin/plans`).flush({ data: [LIVE_GOLD_PLAN] });
 
     const options = await response;

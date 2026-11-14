@@ -1,3 +1,4 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -13,7 +14,6 @@ import { gameDetailTabsFor } from './game-tabs';
 import { toWinnerRow } from './winner-row';
 
 /** A game has as many winners as its prize allows, so one page holds them all. */
-const ALL_WINNERS_PAGE_SIZE = 100;
 
 interface GameDetailState {
   readonly gameId: string | null;
@@ -57,7 +57,7 @@ export const GameDetailStore = signalStore(
       const search = store.winnerSearch().trim();
       return {
         pageIndex: 0,
-        pageSize: ALL_WINNERS_PAGE_SIZE,
+        pageSize: LIVE_MAX_PAGE_SIZE,
         gameId: store.gameId() ?? '',
         ...(search ? { search } : {}),
       };

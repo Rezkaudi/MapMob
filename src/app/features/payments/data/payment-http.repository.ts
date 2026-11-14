@@ -1,3 +1,5 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
+import { LiveCountedPage, readAllCountedPages } from '../../../core/http/read-all-counted-pages';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs';
@@ -35,10 +37,6 @@ import { PaymentRepository } from './payment.repository';
 const YEAR_MONTH_LENGTH = 7;
 const FIRST_DAY_OF_MONTH = '01';
 
-interface LiveItems<T> {
-  readonly items: readonly T[];
-}
-
 @Injectable()
 export class PaymentHttpRepository implements PaymentRepository {
   private readonly httpClient = inject(HttpClient);
@@ -51,7 +49,9 @@ export class PaymentHttpRepository implements PaymentRepository {
       .get<LivePaginationPage<LivePayment>>(this.paymentsUrl, {
         params: withPageNumber(toPaymentFilterParams(query), query),
       })
-      .pipe(map((page) => ({ items: page.data.map(toPayment), totalCount: page.pagination.total })));
+      .pipe(
+        map((page) => ({ items: page.data.map(toPayment), totalCount: page.pagination.total })),
+      );
   }
 
   getSummary(): Observable<PaymentSummary> {
@@ -89,15 +89,21 @@ export class PaymentHttpRepository implements PaymentRepository {
       storeOptions: this.httpClient.get<LiveEnvelope<LiveOfferStoreOptions>>(
         `${this.adminUrl}/offers/formoptions`,
       ),
-      subscriptions: this.httpClient.get<LiveItems<LivePaymentSubscription>>(
-        `${this.adminUrl}/subscriptions`,
+      // Every page, so a store's running plan is found however many subscriptions there are.
+      subscriptions: readAllCountedPages(
+        (page) =>
+          this.httpClient.get<LiveCountedPage<LivePaymentSubscription>>(
+            `${this.adminUrl}/subscriptions`,
+            { params: { page, per_page: LIVE_MAX_PAGE_SIZE } },
+          ),
+        LIVE_MAX_PAGE_SIZE,
       ),
       plans: this.httpClient.get<LiveEnvelope<readonly LivePlan[]>>(`${this.adminUrl}/plans`),
     }).pipe(
       map(({ storeOptions, subscriptions, plans }) =>
         toPaymentFormOptions(
           storeOptions.data.stores.map((store) => ({ id: String(store.id), name: store.name })),
-          subscriptions.items,
+          subscriptions,
           plans.data,
         ),
       ),

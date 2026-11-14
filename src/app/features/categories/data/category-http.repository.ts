@@ -1,3 +1,5 @@
+import { LIVE_MAX_PAGE_SIZE } from '../../../core/http/live-max-page-size';
+import { LiveMetaPage, readAllMetaPages } from '../../../core/http/read-all-meta-pages';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, from, map, of, switchMap } from 'rxjs';
@@ -20,7 +22,6 @@ import { LiveCategory } from './live-category';
 import { toCategory, toLiveCategoryForm } from './live-category-mapping';
 
 // The parent choices of the form: one long page holds every main category.
-const MAIN_CATEGORY_CHOICES_PAGE_SIZE = 1000;
 // A page of one row is enough to read the server's total.
 const COUNT_ONLY_PAGE: PagedQuery = { pageIndex: 0, pageSize: 1 };
 
@@ -119,12 +120,13 @@ export class CategoryHttpRepository implements CategoryRepository {
   }
 
   private loadMainCategories(): Observable<readonly LiveCategory[]> {
-    return this.httpClient
-      .get<LiveEnvelope<readonly LiveCategory[]>>(this.categoriesUrl, {
+    return readAllMetaPages((page) =>
+      this.httpClient.get<LiveMetaPage<LiveCategory>>(this.categoriesUrl, {
         params: new HttpParams()
           .set('parent_id', MAIN_CATEGORY_PARENT_ID)
-          .set('per_page', MAIN_CATEGORY_CHOICES_PAGE_SIZE),
-      })
-      .pipe(map(({ data }) => data));
+          .set('page', page)
+          .set('per_page', LIVE_MAX_PAGE_SIZE),
+      }),
+    );
   }
 }

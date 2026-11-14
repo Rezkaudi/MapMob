@@ -149,15 +149,25 @@ describe('PlaceWriter', () => {
       ],
     });
     next('DELETE', `${STORE_URL}/media/2`);
+    // The server allows 100 rows a page, so every page is read before anything is deleted.
+    const firstProducts = http.expectOne(
+      (candidate) =>
+        candidate.url === `${ADMIN_URL}/products` && candidate.params.get('page') === '1',
+    );
+    expect(firstProducts.request.params.get('per_page')).toBe('100');
+    firstProducts.flush({
+      data: [
+        { id: 3, store_id: 52 },
+        { id: 5, store_id: 1 },
+      ],
+      meta: { current_page: 1, last_page: 2 },
+    });
     http
-      .expectOne((candidate) => candidate.url === `${ADMIN_URL}/products`)
-      .flush({
-        data: [
-          { id: 3, store_id: 52 },
-          { id: 4, store_id: 52 },
-          { id: 5, store_id: 1 },
-        ],
-      });
+      .expectOne(
+        (candidate) =>
+          candidate.url === `${ADMIN_URL}/products` && candidate.params.get('page') === '2',
+      )
+      .flush({ data: [{ id: 4, store_id: 52 }], meta: { current_page: 2, last_page: 2 } });
     const update = next('POST', `${ADMIN_URL}/products/3`);
     expect((update.request.body as FormData).get('_method')).toBe('PUT');
     next('DELETE', `${ADMIN_URL}/products/4`);
