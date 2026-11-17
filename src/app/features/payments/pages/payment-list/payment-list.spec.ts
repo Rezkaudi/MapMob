@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { PaymentRepository } from '../../data/payment.repository';
 import { buildPaymentDetail } from '../../testing/payment-fixture';
 import { PaymentList } from './payment-list';
@@ -30,7 +30,7 @@ function createPage(overrides: Partial<PaymentRepository> = {}) {
       { provide: PaymentRepository, useValue: repository },
       { provide: CLOCK, useValue: () => new Date(2026, 8, 15) },
       {
-        provide: FileSaver,
+        provide: ExportFileSaver,
         useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
       },
     ],
@@ -97,7 +97,7 @@ describe('PaymentList', () => {
     buttonNamed(element, 'تصدير').click();
     await settle(fixture);
 
-    expect(savedFiles).toEqual(['payments-2026-09-15.csv']);
+    expect(savedFiles).toEqual(['payments-2026-09-15']);
   });
 
   it('opens the payment detail dialog from a row, and closes it from the cross', () => {

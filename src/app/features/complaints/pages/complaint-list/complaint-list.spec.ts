@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { ComplaintRepository } from '../../data/complaint.repository';
 import { buildComplaintDetail } from '../../testing/complaint-fixture';
 import { ComplaintList } from './complaint-list';
@@ -39,7 +39,7 @@ function createPage(overrides: Partial<ComplaintRepository> = {}) {
       { provide: ComplaintRepository, useValue: repository },
       { provide: CLOCK, useValue: () => new Date(2026, 8, 17) },
       {
-        provide: FileSaver,
+        provide: ExportFileSaver,
         useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
       },
     ],
@@ -103,7 +103,7 @@ describe('ComplaintList page', () => {
     buttonNamed(element, 'تصدير').click();
     await fixture.whenStable();
 
-    expect(savedFiles).toEqual(['complaints-2026-09-17.csv']);
+    expect(savedFiles).toEqual(['complaints-2026-09-17']);
   });
 
   it('asks before deleting, then deletes the complaint', async () => {

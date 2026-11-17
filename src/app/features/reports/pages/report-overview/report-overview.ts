@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ChartComponent } from 'ng-apexcharts';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ChartPeriod } from '../../../../shared/models/chart-period';
 import { ChartPanel } from '../../../../shared/ui/chart-panel/chart-panel';
@@ -35,7 +35,7 @@ import { UsageMetricList } from '../../ui/usage-metric-list/usage-metric-list';
 })
 export class ReportOverview {
   protected readonly store = inject(ReportsStore);
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly titles = REPORT_CARD_TITLES;
@@ -61,7 +61,7 @@ export class ReportOverview {
   protected async exportReports(): Promise<void> {
     const file = await this.store.exportReports();
     if (file) {
-      this.fileSaver.save(file, `statistics-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `statistics-${toCalendarDay(this.clock())}`);
     }
   }
 }

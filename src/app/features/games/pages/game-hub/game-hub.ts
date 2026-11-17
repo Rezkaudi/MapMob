@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
@@ -50,7 +50,7 @@ const GAMES_URL = '/admin/games';
 })
 export class GameHub {
   private readonly router = inject(Router);
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
   protected readonly games = inject(GamesStore);
   protected readonly winners = inject(WinnersStore);
@@ -107,7 +107,7 @@ export class GameHub {
   protected async exportAllWinners(): Promise<void> {
     const file = await this.winners.exportWinners();
     if (file) {
-      this.fileSaver.save(file, `game-winners-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `game-winners-${toCalendarDay(this.clock())}`);
     }
   }
 
@@ -115,7 +115,7 @@ export class GameHub {
     const round = this.detail.detail()?.roundNumber;
     const file = await this.detail.exportWinners();
     if (file) {
-      this.fileSaver.save(file, `game-${round}-winners-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `game-${round}-winners-${toCalendarDay(this.clock())}`);
     }
   }
 }

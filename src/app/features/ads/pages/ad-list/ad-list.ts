@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { EmptyPageMessage } from '../../../../shared/ui/empty-page-message/empty-page-message';
@@ -39,7 +39,7 @@ const NEW_AD_URL = '/admin/ads/new';
 })
 export class AdList {
   private readonly router = inject(Router);
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(AdsStore);
@@ -103,7 +103,7 @@ export class AdList {
   protected async exportAds(): Promise<void> {
     const file = await this.store.exportAds();
     if (file) {
-      this.fileSaver.save(file, `ads-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `ads-${toCalendarDay(this.clock())}`);
     }
   }
 }

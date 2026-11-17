@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { EmptyPageMessage } from '../../../../shared/ui/empty-page-message/empty-page-message';
@@ -51,7 +51,7 @@ import { buildPaymentDeleteCopy } from '../../ui/payment-delete-copy';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentList {
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(PaymentsStore);
@@ -106,7 +106,7 @@ export class PaymentList {
   protected async exportPayments(): Promise<void> {
     const file = await this.store.exportPayments();
     if (file) {
-      this.fileSaver.save(file, `payments-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `payments-${toCalendarDay(this.clock())}`);
     }
   }
 }

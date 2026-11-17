@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { ReportsRepository } from '../../data/reports.repository';
 import { ReportOverview } from './report-overview';
 
@@ -31,7 +31,7 @@ function createPage(repository: FakeReportsRepository = fullRepository()) {
   TestBed.configureTestingModule({
     providers: [
       { provide: ReportsRepository, useValue: watchedRepository },
-      { provide: FileSaver, useValue: fileSaver },
+      { provide: ExportFileSaver, useValue: fileSaver },
     ],
   });
   const fixture = TestBed.createComponent(ReportOverview);
@@ -129,7 +129,7 @@ describe('ReportOverview', () => {
 
     expect(fileSaver.save).toHaveBeenCalledWith(
       file,
-      expect.stringMatching(/^statistics-\d{4}-\d{2}-\d{2}\.csv$/),
+      expect.stringMatching(/^statistics-\d{4}-\d{2}-\d{2}$/),
     );
   });
 

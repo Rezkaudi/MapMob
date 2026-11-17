@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { ReviewRepository } from '../../data/review.repository';
 import { buildReview, buildReviewDetail } from '../../testing/review-fixture';
 import { ReviewList } from './review-list';
@@ -32,7 +32,7 @@ function createPage(overrides: Partial<ReviewRepository> = {}) {
       { provide: ReviewRepository, useValue: repository },
       { provide: CLOCK, useValue: () => new Date(2026, 8, 15) },
       {
-        provide: FileSaver,
+        provide: ExportFileSaver,
         useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
       },
     ],
@@ -115,6 +115,6 @@ describe('ReviewList', () => {
     buttonNamed(element, 'تصدير').click();
     await settle(fixture);
 
-    expect(savedFiles).toEqual(['reviews-2026-09-15.csv']);
+    expect(savedFiles).toEqual(['reviews-2026-09-15']);
   });
 });

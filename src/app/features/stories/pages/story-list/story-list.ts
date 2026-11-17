@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
@@ -32,7 +32,7 @@ import { StoryTable } from '../../ui/story-table/story-table';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StoryList {
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
   protected readonly store = inject(StoriesStore);
 
@@ -49,7 +49,7 @@ export class StoryList {
   protected async exportStories(): Promise<void> {
     const file = await this.store.exportStories();
     if (file) {
-      this.fileSaver.save(file, `stories-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `stories-${toCalendarDay(this.clock())}`);
     }
   }
 }

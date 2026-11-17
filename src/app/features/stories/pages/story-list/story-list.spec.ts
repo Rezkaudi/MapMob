@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { StoryRepository } from '../../data/story.repository';
 import {
   STORY_NOW,
@@ -28,7 +28,7 @@ function render(overrides: Partial<StoryRepository> = {}) {
   TestBed.configureTestingModule({
     providers: [
       { provide: StoryRepository, useValue: repository },
-      { provide: FileSaver, useValue: fileSaver },
+      { provide: ExportFileSaver, useValue: fileSaver },
       { provide: CLOCK, useValue: () => STORY_NOW },
     ],
   });
@@ -193,7 +193,7 @@ describe('StoryList', () => {
       query: { pageIndex: 0, pageSize: 4 },
       ids: [],
     });
-    expect(fileSaver.save).toHaveBeenCalledWith(FILE, 'stories-2026-10-01.csv');
+    expect(fileSaver.save).toHaveBeenCalledWith(FILE, 'stories-2026-10-01');
   });
 
   it('shows the error with a retry instead of the table', () => {

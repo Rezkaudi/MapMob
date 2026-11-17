@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { AppIcon } from '../../../../shared/ui/app-icon/app-icon';
 import { ActionMenu } from '../../../../shared/ui/action-menu/action-menu';
@@ -81,7 +81,7 @@ function toOptions<T extends string>(labels: Record<T, string>): SelectOption[] 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceList {
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(PlacesStore);
@@ -193,7 +193,7 @@ export class PlaceList {
     if (!file) {
       return false;
     }
-    this.fileSaver.save(file, `places-${toCalendarDay(this.clock())}.csv`);
+    await this.fileSaver.save(file, `places-${toCalendarDay(this.clock())}`);
     return true;
   }
 }

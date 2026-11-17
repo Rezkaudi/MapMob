@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
@@ -40,7 +40,7 @@ import { ReviewToolbar } from '../../ui/review-toolbar/review-toolbar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewList {
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(ReviewsStore);
@@ -88,7 +88,7 @@ export class ReviewList {
   protected async exportReviews(): Promise<void> {
     const file = await this.store.exportReviews();
     if (file) {
-      this.fileSaver.save(file, `reviews-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `reviews-${toCalendarDay(this.clock())}`);
     }
   }
 

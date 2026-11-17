@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { OfferRepository } from '../../data/offer.repository';
 import { buildOffer, buildOfferDetail } from '../../testing/offer-fixture';
 import { OfferList } from './offer-list';
@@ -38,7 +38,7 @@ function createPage(overrides: Partial<OfferRepository> = {}) {
       { provide: OfferRepository, useValue: repository },
       { provide: CLOCK, useValue: () => new Date(2026, 8, 15) },
       {
-        provide: FileSaver,
+        provide: ExportFileSaver,
         useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
       },
     ],
@@ -137,7 +137,7 @@ describe('OfferList', () => {
     buttonNamed(element, 'تصدير').click();
     await settle(fixture);
 
-    expect(savedFiles).toEqual(['offers-2026-09-15.csv']);
+    expect(savedFiles).toEqual(['offers-2026-09-15']);
   });
 
   it('opens an offer in the drawer and closes it once the offer is paused', async () => {

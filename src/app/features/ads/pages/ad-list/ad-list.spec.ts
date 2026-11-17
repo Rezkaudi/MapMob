@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { AdRepository } from '../../data/ad.repository';
 import { buildAd, buildAdDetail } from '../../testing/ad-fixture';
 import { AdList } from './ad-list';
@@ -32,7 +32,7 @@ function createPage(overrides: Partial<AdRepository> = {}) {
       { provide: AdRepository, useValue: repository },
       { provide: CLOCK, useValue: () => new Date(2026, 8, 15) },
       {
-        provide: FileSaver,
+        provide: ExportFileSaver,
         useValue: { save: (_file: Blob, name: string) => savedFiles.push(name) },
       },
     ],
@@ -139,6 +139,6 @@ describe('AdList', () => {
     buttonNamed(element, 'تصدير').click();
     await fixture.whenStable();
 
-    expect(savedFiles).toEqual(['ads-2026-09-15.csv']);
+    expect(savedFiles).toEqual(['ads-2026-09-15']);
   });
 });

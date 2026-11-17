@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmDialogFlow } from '../../../../shared/state/confirm-dialog-flow';
 import { ErrorState } from '../../../../shared/ui/error-state/error-state';
@@ -35,7 +35,7 @@ import { UserToolbar } from '../../ui/user-toolbar/user-toolbar';
 })
 export class UserList {
   private readonly router = inject(Router);
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(UsersStore);
@@ -56,7 +56,7 @@ export class UserList {
   protected async exportUsers(): Promise<void> {
     const file = await this.store.exportUsers();
     if (file) {
-      this.fileSaver.save(file, `users-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `users-${toCalendarDay(this.clock())}`);
     }
   }
 

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { NEVER, of } from 'rxjs';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { UserRepository } from '../../data/user.repository';
 import { buildUser } from '../../testing/user-fixture';
 import { UserList } from './user-list';
@@ -19,7 +19,7 @@ function render(repository: Partial<UserRepository>) {
     providers: [
       provideRouter([]),
       { provide: UserRepository, useValue: repository },
-      { provide: FileSaver, useValue: fileSaver },
+      { provide: ExportFileSaver, useValue: fileSaver },
     ],
   });
   const fixture = TestBed.createComponent(UserList);
@@ -84,7 +84,7 @@ describe('UserList', () => {
 
     expect(fileSaver.save).toHaveBeenCalledWith(
       file,
-      expect.stringMatching(/^users-\d{4}-\d{2}-\d{2}\.csv$/),
+      expect.stringMatching(/^users-\d{4}-\d{2}-\d{2}$/),
     );
   });
 });

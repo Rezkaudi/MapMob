@@ -2,7 +2,7 @@ import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { NEVER, of, throwError } from 'rxjs';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { PlaceRepository } from '../../data/place.repository';
 import { createPlace } from '../../testing/place-fixture';
 import { PlacesStore } from '../../state/places.store';
@@ -408,7 +408,7 @@ describe('PlaceList export', () => {
       getPlaces: () => of({ items: [createPlace()], totalCount: 1 }),
       exportPlaces: () => of(new Blob(['csv'])),
     });
-    TestBed.overrideProvider(FileSaver, {
+    TestBed.overrideProvider(ExportFileSaver, {
       useValue: { save: (_file: Blob, name: string) => saved.push(name) },
     });
     TestBed.overrideProvider(CLOCK, { useValue: () => new Date(2026, 8, 20) });
@@ -422,7 +422,7 @@ describe('PlaceList export', () => {
     exportButton?.click();
     await fixture.whenStable();
 
-    expect(saved).toEqual(['places-2026-09-20.csv']);
+    expect(saved).toEqual(['places-2026-09-20']);
   });
 });
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CLOCK } from '../../../../core/config/clock';
-import { FileSaver } from '../../../../shared/files/file-saver';
+import { ExportFileSaver } from '../../../../shared/files/export-file-saver';
 import { toCalendarDay } from '../../../../shared/formatting/calendar-day';
 import { ConfirmActionCopy } from '../../../../shared/ui/confirm-action-dialog/confirm-action-copy';
 import { ConfirmActionDialog } from '../../../../shared/ui/confirm-action-dialog/confirm-action-dialog';
@@ -59,7 +59,7 @@ interface PendingPlanAction {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionHub {
-  private readonly fileSaver = inject(FileSaver);
+  private readonly fileSaver = inject(ExportFileSaver);
   private readonly clock = inject(CLOCK);
 
   protected readonly store = inject(PackagesStore);
@@ -170,7 +170,7 @@ export class SubscriptionHub {
   protected async exportSubscriptions(): Promise<void> {
     const file = await this.records.exportSubscriptions();
     if (file) {
-      this.fileSaver.save(file, `subscriptions-${toCalendarDay(this.clock())}.csv`);
+      await this.fileSaver.save(file, `subscriptions-${toCalendarDay(this.clock())}`);
     }
   }
 }
