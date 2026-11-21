@@ -7,6 +7,7 @@ import { AdDetail } from '../models/ad-detail';
 import { AdPriority } from '../models/ad-priority';
 import { LiveAd } from './live-ad';
 import { toAdPlacement } from './live-ad-placement';
+import { toAdPosition } from './live-ad-position';
 import {
   LIVE_ACTIVE_AD_STATUS,
   LIVE_EXPIRED_AD_STATUS,
@@ -17,8 +18,7 @@ import { LiveAdSummary } from './live-ad-summary';
 const LOWEST_PRIORITY = 1;
 const HIGHEST_PRIORITY = 5;
 const VIDEO_MEDIA_TYPE = 'video';
-// The server has no banner position and no editor name; only admins edit ads.
-const DEFAULT_POSITION = 'topBanner';
+// The server has no editor name here; only admins edit ads.
 const EDITOR_NAME = 'Admin';
 
 // The server allows any number; the panel ranks 1 to 5.
@@ -60,7 +60,7 @@ export function toAdDetail(ad: LiveAd, today: string): AdDetail {
   return {
     ad: toAd(ad, today),
     placeId: ad.store === null ? null : String(ad.store.id),
-    position: DEFAULT_POSITION,
+    position: toAdPosition(ad.position),
     text: ad.description ?? '',
     mediaUrl: ad.media?.[0]?.url ?? null,
     createdOn: toIsoDay(ad.created_at),

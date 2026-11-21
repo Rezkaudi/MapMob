@@ -1,5 +1,6 @@
 import { AdDraft } from '../models/ad-draft';
 import { toLiveAdPlacement } from './live-ad-placement';
+import { toLiveAdPosition } from './live-ad-position';
 import {
   LIVE_ACTIVE_AD_STATUS,
   LIVE_ADVERTISER_TYPE,
@@ -27,6 +28,7 @@ export function toAdFormData(draft: AdDraft): FormData {
   data.set('advertiser_type', LIVE_ADVERTISER_TYPE[draft.advertiserType]);
   data.set('store_id', draft.advertiserType === 'place' ? (draft.placeId ?? NO_STORE) : NO_STORE);
   data.set('placement', toLiveAdPlacement(draft.placement));
+  data.set('position', toLiveAdPosition(draft.position));
   data.set('starts_at', draft.startsOn);
   if (draft.endsOn) {
     data.set('ends_at', draft.endsOn);

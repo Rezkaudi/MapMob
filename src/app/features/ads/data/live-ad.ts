@@ -15,6 +15,8 @@ export interface LiveAd {
   readonly description: string | null;
   /** home, map, search or category. */
   readonly placement: string;
+  /** top, middle or bottom. */
+  readonly position?: string | null;
   /** ISO moments; `ends_at` is `null` for an ad that never ends. */
   readonly starts_at: string;
   readonly ends_at: string | null;

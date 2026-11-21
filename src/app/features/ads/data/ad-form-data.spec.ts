@@ -18,6 +18,7 @@ describe('toAdFormData', () => {
       advertiser_type: 'store',
       store_id: 'place-3',
       placement: 'search',
+      position: 'top',
       starts_at: '2026-10-15',
       ends_at: '2026-10-30',
       priority: '5',
@@ -42,6 +43,10 @@ describe('toAdFormData', () => {
     expect(data.has('description[ar]')).toBe(false);
     expect(data.has('media[0][file]')).toBe(false);
     expect(data.has('media[0][type]')).toBe(false);
+  });
+
+  it('sends the chosen banner position', () => {
+    expect(toAdFormData(buildAdDraft({ position: 'bottomBanner' })).get('position')).toBe('bottom');
   });
 
   it('saves a paused ad as inactive', () => {
